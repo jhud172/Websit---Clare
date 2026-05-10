@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 260" role="img" aria-labelledby="title desc">
+  <title id="title">Clare’s Life Celebrations logo</title>
+  <desc id="desc">Two gold peacock feathers form a wreath around the Clare’s Life Celebrations name.</desc>
+  <rect width="760" height="260" rx="44" fill="#171915"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M294 52C201 75 151 139 151 205" stroke="#f4efe8" stroke-width="5"/>
+    <path d="M466 52c93 23 143 87 143 153" stroke="#f4efe8" stroke-width="5"/>
+    <path d="M250 73c-19 18-27 40-21 67 24-10 39-28 45-53" stroke="#d5b46a" stroke-width="4"/>
+    <path d="M510 73c19 18 27 40 21 67-24-10-39-28-45-53" stroke="#d5b46a" stroke-width="4"/>
+    <path d="M214 113c-20 17-29 39-25 65 25-8 41-25 49-50" stroke="#f4efe8" stroke-width="4"/>
+    <path d="M546 113c20 17 29 39 25 65-25-8-41-25-49-50" stroke="#f4efe8" stroke-width="4"/>
+    <path d="M180 160c-17 14-25 31-23 51 22-5 36-18 43-37" stroke="#d5b46a" stroke-width="4"/>
+    <path d="M580 160c17 14 25 31 23 51-22-5-36-18-43-37" stroke="#d5b46a" stroke-width="4"/>
+  </g>
+  <text x="380" y="122" text-anchor="middle" fill="#fbf6f0" font-family="Cormorant Garamond, Georgia, serif" font-size="50" font-weight="600">Clare’s</text>
+  <text x="380" y="171" text-anchor="middle" fill="#fbf6f0" font-family="Cormorant Garamond, Georgia, serif" font-size="38" font-weight="600">Life Celebrations</text>
+  <text x="380" y="207" text-anchor="middle" fill="#d5b46a" font-family="Manrope, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="5">FOR EVERY CHAPTER</text>
+</svg>

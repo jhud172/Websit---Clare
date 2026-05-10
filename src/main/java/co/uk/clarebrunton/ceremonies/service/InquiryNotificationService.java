@@ -147,11 +147,12 @@ public class InquiryNotificationService {
 				Clare will review your details and reply personally as soon as she can. If your plans are time-sensitive, you are also welcome to follow up on %s.
 
 				With thanks,
-				Clare Life Ceremonies
+				%s
 				""".formatted(
 				resolveGreetingName(inquiryForm),
 				inquiryForm.getServiceType().toLowerCase(),
-				siteProperties.getContactEmail()
+				siteProperties.getContactEmail(),
+				siteProperties.getName()
 		));
 		return message;
 	}

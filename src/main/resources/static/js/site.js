@@ -127,6 +127,12 @@ if (navToggle && siteNav) {
             closeNav();
         }
     });
+
+    document.addEventListener("click", (event) => {
+        if (siteHeader && !siteHeader.contains(event.target) && siteNav.classList.contains("is-open")) {
+            closeNav();
+        }
+    });
 }
 
 const revealTargets = Array.from(new Set(
@@ -233,20 +239,15 @@ const formatMonthLabel = (date) => new Intl.DateTimeFormat("en-GB", {
     year: "numeric"
 }).format(date);
 
-const customFieldRoots = Array.from(document.querySelectorAll("[data-choice-select], [data-date-picker]"));
+const customFieldRoots = Array.from(document.querySelectorAll("[data-choice-select], [data-date-picker], [data-phone-field]"));
 
 const closeCustomField = (root) => {
-    const trigger = root.querySelector("[data-choice-trigger], [data-date-trigger]");
-    const popup = root.querySelector("[data-choice-popup], [data-date-popup]");
+    const trigger = root.querySelector("[data-choice-trigger], [data-date-trigger], [data-phone-code-trigger]");
 
     root.classList.remove("is-open");
 
     if (trigger) {
         trigger.setAttribute("aria-expanded", "false");
-    }
-
-    if (popup) {
-        popup.hidden = true;
     }
 };
 
@@ -257,17 +258,12 @@ const openCustomField = (root) => {
         }
     });
 
-    const trigger = root.querySelector("[data-choice-trigger], [data-date-trigger]");
-    const popup = root.querySelector("[data-choice-popup], [data-date-popup]");
+    const trigger = root.querySelector("[data-choice-trigger], [data-date-trigger], [data-phone-code-trigger]");
 
     root.classList.add("is-open");
 
     if (trigger) {
         trigger.setAttribute("aria-expanded", "true");
-    }
-
-    if (popup) {
-        popup.hidden = false;
     }
 };
 
@@ -458,6 +454,59 @@ document.querySelectorAll("[data-date-picker]").forEach((root) => {
     renderCalendar();
 });
 
+document.querySelectorAll("[data-phone-field]").forEach((phoneRoot) => {
+    const trigger = phoneRoot.querySelector("[data-phone-code-trigger]");
+    const flagEl = phoneRoot.querySelector("[data-phone-flag]");
+    const codeEl = phoneRoot.querySelector("[data-phone-code]");
+    const numberInput = phoneRoot.querySelector("[data-phone-number]");
+    const combinedInput = phoneRoot.querySelector("[data-phone-combined]");
+    const options = Array.from(phoneRoot.querySelectorAll("[data-phone-option]"));
+
+    const updateCombined = () => {
+        const code = codeEl ? codeEl.textContent.trim() : "+44";
+        const number = numberInput ? numberInput.value.trim() : "";
+        if (combinedInput) {
+            combinedInput.value = number ? `${code} ${number}` : "";
+            combinedInput.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+    };
+
+    options.forEach((option) => {
+        option.addEventListener("click", () => {
+            if (flagEl) flagEl.textContent = option.dataset.flag || "";
+            if (codeEl) codeEl.textContent = option.dataset.code || "+44";
+            closeCustomField(phoneRoot);
+            if (numberInput) numberInput.focus();
+            updateCombined();
+        });
+    });
+
+    if (trigger) {
+        trigger.addEventListener("click", () => {
+            if (phoneRoot.classList.contains("is-open")) {
+                closeCustomField(phoneRoot);
+                return;
+            }
+            openCustomField(phoneRoot);
+        });
+    }
+
+    if (numberInput) {
+        numberInput.addEventListener("input", updateCombined);
+    }
+
+    // Pre-populate from existing combined value (e.g. after validation error re-render)
+    if (combinedInput && combinedInput.value) {
+        const existing = combinedInput.value.trim();
+        const matched = options.find((opt) => existing.startsWith(opt.dataset.code || ""));
+        if (matched) {
+            if (flagEl) flagEl.textContent = matched.dataset.flag || "";
+            if (codeEl) codeEl.textContent = matched.dataset.code || "+44";
+            if (numberInput) numberInput.value = existing.slice((matched.dataset.code || "").length).trim();
+        }
+    }
+});
+
 const contactForm = document.querySelector("[data-contact-form]");
 
 if (contactForm) {
@@ -590,8 +639,15 @@ if (contactForm) {
         },
         phone: {
             input: contactForm.querySelector("#phone"),
-            focusTarget: contactForm.querySelector("#phone"),
-            validate: (value) => value.trim() ? "" : "Please add a phone number."
+            focusTarget: contactForm.querySelector("#phoneNumber"),
+            validate: (value) => {
+                const trimmed = value.trim();
+                if (!trimmed) {
+                    return "Please add a phone number.";
+                }
+                const digits = trimmed.replace(/\D/g, "");
+                return digits.length >= 7 ? "" : "Please add a valid phone number.";
+            }
         },
         serviceType: {
             input: contactForm.querySelector("#serviceType"),
@@ -711,11 +767,6 @@ if (contactForm) {
     }
 
     contactForm.addEventListener("submit", (event) => {
-        if (privacyInput && !privacyInput.checked) {
-            privacyInput.checked = true;
-            privacyInput.dispatchEvent(new Event("change", { bubbles: true }));
-        }
-
         fieldOrder.forEach((fieldName) => clearFieldError(fieldName));
 
         const invalidFields = fieldOrder

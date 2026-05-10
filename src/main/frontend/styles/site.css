@@ -20,7 +20,7 @@
     --line-strong: rgba(36, 31, 27, 0.2);
     --shadow: 0 22px 70px rgba(36, 31, 27, 0.08);
     --shell: min(1200px, calc(100vw - 3rem));
-    --header-height: 92px;
+    --header-height: 86px;
     --radius: 30px;
     --page-glow-clay: rgba(157, 117, 94, 0.12);
     --page-glow-sage: rgba(113, 128, 107, 0.12);
@@ -325,16 +325,29 @@ blockquote {
     align-items: center;
     justify-content: space-between;
     min-height: var(--header-height);
-    gap: 2rem;
+    gap: clamp(1rem, 2vw, 1.8rem);
+    padding-block: 0.55rem;
 }
 
 .brand {
     display: inline-flex;
     align-items: center;
-    gap: 0.8rem;
     min-width: 0;
-    flex: 1 1 auto;
-    max-width: 18rem;
+    flex: 0 1 18rem;
+    max-width: min(18rem, 42vw);
+}
+
+.brand-lockup {
+    display: inline-flex;
+    align-items: center;
+    width: clamp(11.5rem, 18vw, 15.5rem);
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 18px;
+    background: rgba(255, 250, 244, 0.72);
+    box-shadow:
+        0 16px 36px rgba(36, 31, 27, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.62);
 }
 
 .brand-mark {
@@ -357,39 +370,46 @@ blockquote {
 }
 
 .brand-mark-image {
-    width: 5.25rem;
-    height: 5.25rem;
-    padding: 0.35rem;
+    width: clamp(3.9rem, 5.5vw, 4.7rem);
+    height: clamp(3.9rem, 5.5vw, 4.7rem);
+    padding: 0.28rem;
     overflow: hidden;
+    border-radius: 1.35rem;
+    box-shadow:
+        0 16px 36px rgba(36, 31, 27, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.62);
 }
 
 .brand-logo {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: inherit;
+    height: auto;
+    object-fit: contain;
+    border-radius: 18px;
 }
 
 .brand-wording {
     display: grid;
-    gap: 0.1rem;
+    gap: 0.18rem;
+    min-width: 0;
 }
 
 .brand-name {
     font-family: "Cormorant Garamond", serif;
-    font-size: clamp(1.15rem, 2.8vw, 1.48rem);
-    line-height: 1.1;
+    font-size: clamp(1.28rem, 2vw, 1.62rem);
+    line-height: 1;
     color: var(--ink);
-    word-break: break-word;
-    overflow-wrap: break-word;
+    white-space: nowrap;
 }
 
 .brand-tagline {
-    font-size: 0.85rem;
+    max-width: 28rem;
+    font-size: clamp(0.66rem, 0.9vw, 0.78rem);
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.2em;
+    line-height: 1.45;
     text-transform: uppercase;
     color: var(--clay);
+    text-wrap: balance;
 }
 
 .site-nav {
@@ -440,6 +460,37 @@ blockquote {
     border: 1px solid var(--line);
     background: var(--surface-strong);
     color: var(--ink);
+}
+
+.hamburger {
+    position: relative;
+    width: 1.15rem;
+    height: 0.84rem;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.hamburger-bar {
+    display: block;
+    width: 100%;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    transform-origin: center;
+    transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.nav-toggle[aria-expanded="true"] .hamburger-bar:nth-child(1) {
+    transform: translateY(0.41rem) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .hamburger-bar:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .hamburger-bar:nth-child(3) {
+    transform: translateY(-0.41rem) rotate(-45deg);
 }
 
 .header-actions {
@@ -794,7 +845,7 @@ blockquote {
 .brand-stage-logo {
     position: relative;
     z-index: 1;
-    width: min(100%, 31rem);
+    width: min(100%, 38rem);
     border-radius: 22px;
     box-shadow: 0 18px 46px rgba(36, 31, 27, 0.1);
 }
@@ -1714,13 +1765,14 @@ blockquote {
 
 .wedding-gallery {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr 0.8fr;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-flow: dense;
     gap: 1.5rem;
 }
 
 .gallery-card {
     overflow: hidden;
-    min-height: 19rem;
+    min-height: 20rem;
     border-radius: var(--radius);
     border: 1px solid var(--panel-border);
     box-shadow: var(--shadow);
@@ -1734,7 +1786,12 @@ blockquote {
 }
 
 .gallery-card-tall {
+    grid-row: span 2;
     min-height: 34rem;
+}
+
+.gallery-card-wide {
+    grid-column: span 2;
 }
 
 .prose-copy {
@@ -1765,8 +1822,11 @@ blockquote {
 }
 
 .footer-logo {
-    width: min(100%, 18rem);
+    display: block;
+    width: min(100%, 24rem);
+    border-radius: 18px;
     margin-bottom: 1.25rem;
+    box-shadow: 0 16px 42px rgba(36, 31, 27, 0.08);
 }
 
 .footer-note {
@@ -1851,6 +1911,29 @@ blockquote {
         box-shadow: var(--shadow);
     }
 
+    .header-inner {
+        position: relative;
+    }
+
+    .brand {
+        flex-basis: auto;
+        max-width: calc(100% - 4.5rem);
+    }
+
+    .brand-lockup {
+        width: clamp(10.25rem, 38vw, 13.5rem);
+    }
+
+    .brand-name {
+        font-size: clamp(1.22rem, 3.8vw, 1.5rem);
+    }
+
+    .brand-tagline {
+        max-width: min(27rem, calc(100vw - 8rem));
+        font-size: clamp(0.62rem, 1.7vw, 0.72rem);
+        letter-spacing: 0.18em;
+    }
+
     .nav-toggle {
         display: inline-flex;
     }
@@ -1870,8 +1953,12 @@ blockquote {
     }
 
     .brand {
-        max-width: 14rem;
-        gap: 0.5rem;
+        max-width: calc(100% - 3.8rem);
+    }
+
+    .brand-lockup {
+        width: clamp(9.4rem, 48vw, 11.75rem);
+        border-radius: 14px;
     }
 
     .brand-mark {
@@ -1880,16 +1967,20 @@ blockquote {
     }
 
     .brand-mark-image {
-        width: 3.75rem;
-        height: 3.75rem;
+        width: 3.55rem;
+        height: 3.55rem;
+        border-radius: 1.05rem;
     }
 
     .brand-name {
-        font-size: 1.05rem;
+        font-size: clamp(1.08rem, 5vw, 1.28rem);
     }
 
     .brand-tagline {
-        display: none;
+        max-width: calc(100vw - 7.6rem);
+        font-size: clamp(0.56rem, 2.4vw, 0.66rem);
+        letter-spacing: 0.14em;
+        line-height: 1.38;
     }
 
     .theme-toggle-label {
@@ -1911,7 +2002,12 @@ blockquote {
     }
 
     .gallery-card-tall {
+        grid-row: auto;
         min-height: 24rem;
+    }
+
+    .gallery-card-wide {
+        grid-column: auto;
     }
 
     .file-dropzone {
@@ -1920,6 +2016,46 @@ blockquote {
 
     .file-dropzone-action {
         justify-self: start;
+    }
+}
+
+@media (max-width: 430px) {
+    :root {
+        --header-height: 74px;
+    }
+
+    .header-inner {
+        gap: 0.7rem;
+        padding-block: 0.45rem;
+    }
+
+    .brand {
+        max-width: calc(100% - 3.35rem);
+    }
+
+    .brand-lockup {
+        width: clamp(8.8rem, 52vw, 10.8rem);
+    }
+
+    .brand-mark-image {
+        width: 3.1rem;
+        height: 3.1rem;
+        padding: 0.22rem;
+    }
+
+    .brand-name {
+        font-size: 1.03rem;
+    }
+
+    .brand-tagline {
+        max-width: calc(100vw - 6.9rem);
+        font-size: 0.52rem;
+        letter-spacing: 0.1em;
+    }
+
+    .nav-toggle {
+        min-height: 2.7rem;
+        padding-inline: 0.82rem;
     }
 }
 
@@ -2225,6 +2361,7 @@ main::before {
 .site-header,
 .header-inner,
 .brand,
+.brand-lockup,
 .brand-mark-image,
 .brand-name,
 .brand-tagline,
@@ -2277,8 +2414,9 @@ main::before {
 }
 
 .brand-ornament img {
-    width: 2.1rem;
-    height: 2.1rem;
+    width: clamp(5.5rem, 12vw, 8rem);
+    height: auto;
+    border-radius: 12px;
     flex: 0 0 auto;
 }
 
@@ -2403,6 +2541,50 @@ main::before {
     margin: 0.2rem 0 1rem;
 }
 
+.symbolism-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.72fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
+}
+
+.symbolism-copy {
+    max-width: 48rem;
+}
+
+.symbolism-copy p {
+    max-width: 43rem;
+}
+
+.symbolism-mark {
+    display: grid;
+    gap: 1.35rem;
+    justify-items: center;
+}
+
+.symbolism-mark img {
+    width: min(100%, 25rem);
+    border-radius: 24px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
+}
+
+.symbolism-points {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.symbolism-points span {
+    padding: 0.65rem 0.85rem;
+    border: 1px solid rgba(244, 239, 232, 0.16);
+    border-radius: 999px;
+    color: rgba(251, 246, 240, 0.82);
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
 @media (min-width: 1041px) {
     .site-header.is-condensed .header-inner {
         width: min(31rem, calc(100vw - 2rem));
@@ -2412,8 +2594,11 @@ main::before {
     }
 
     .site-header.is-condensed .brand {
-        gap: 0.75rem;
         flex: 1 1 auto;
+    }
+
+    .site-header.is-condensed .brand-lockup {
+        width: 12.5rem;
     }
 
     .site-header.is-condensed .brand-mark-image {
@@ -2486,6 +2671,7 @@ main::before {
     .site-header,
     .header-inner,
     .brand,
+    .brand-lockup,
     .site-nav,
     .header-actions {
         transition: none !important;
@@ -2497,6 +2683,10 @@ main::before {
 }
 
 @media (max-width: 1040px) {
+    .symbolism-layout {
+        grid-template-columns: 1fr;
+    }
+
     .page-hero-editorial::after {
         width: 18rem;
         height: 18rem;
@@ -2510,6 +2700,21 @@ main::before {
 }
 
 @media (max-width: 720px) {
+    .symbolism-mark img {
+        width: min(100%, 20rem);
+        border-radius: 18px;
+    }
+
+    .symbolism-points {
+        justify-content: flex-start;
+    }
+
+    .symbolism-points span {
+        width: 100%;
+        border-radius: 16px;
+        text-align: center;
+    }
+
     .brand-ornament {
         width: 100%;
         justify-content: center;

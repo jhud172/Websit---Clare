@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class SiteModelAdvice {
 
 	private static final Logger logger = LoggerFactory.getLogger(SiteModelAdvice.class);
+	private static final String DEFAULT_LOGO_PATH = "/images/brand/logo-main-dark.svg";
 
 	private final SiteProperties siteProperties;
 
@@ -25,6 +26,7 @@ public class SiteModelAdvice {
 	@ModelAttribute
 	public void addSiteData(Model model) {
 		model.addAttribute("site", siteProperties);
+		model.addAttribute("logoPath", DEFAULT_LOGO_PATH);
 	}
 
 	@ExceptionHandler(MaxUploadSizeExceededException.class)

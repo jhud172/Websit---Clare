@@ -89,9 +89,38 @@
                     </div>
 
                     <div class="field-group" data-form-field="phone">
-                        <label for="phone">Phone</label>
-                        <div class="field-control" th:classappend="${#fields.hasErrors('phone')} ? ' is-invalid'">
-                            <input id="phone" type="text" th:field="*{phone}" placeholder="Phone number" autocomplete="tel">
+                        <label for="phoneNumber">Phone</label>
+                        <div class="phone-field" data-phone-field>
+                            <div class="field-control field-control-phone" th:classappend="${#fields.hasErrors('phone')} ? ' is-invalid'">
+                                <button class="phone-code-btn" type="button"
+                                        data-phone-code-trigger
+                                        aria-haspopup="listbox"
+                                        aria-expanded="false"
+                                        aria-label="Select country code">
+                                    <span data-phone-flag>&#x1F1EC;&#x1F1E7;</span>
+                                    <span data-phone-code>+44</span>
+                                    <span class="phone-chevron" aria-hidden="true">&#x2304;</span>
+                                </button>
+                                <span class="phone-divider" aria-hidden="true"></span>
+                                <input id="phoneNumber" class="phone-number-input" type="tel"
+                                       data-phone-number placeholder="7700 900123" autocomplete="tel-national">
+                                <input id="phone" type="hidden" th:field="*{phone}" data-phone-combined>
+                            </div>
+                            <div class="field-popup field-popup-phone" data-phone-popup>
+                                <ul class="field-option-list" role="listbox" aria-label="Select country code">
+                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+44" data-flag="&#x1F1EC;&#x1F1E7;">&#x1F1EC;&#x1F1E7; United Kingdom (+44)</button></li>
+                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+353" data-flag="&#x1F1EE;&#x1F1EA;">&#x1F1EE;&#x1F1EA; Ireland (+353)</button></li>
+                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+1" data-flag="&#x1F1FA;&#x1F1F8;">&#x1F1FA;&#x1F1F8; US &amp; Canada (+1)</button></li>
+                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+61" data-flag="&#x1F1E6;&#x1F1FA;">&#x1F1E6;&#x1F1FA; Australia (+61)</button></li>
+                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+64" data-flag="&#x1F1F3;&#x1F1FF;">&#x1F1F3;&#x1F1FF; New Zealand (+64)</button></li>
+                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+27" data-flag="&#x1F1FF;&#x1F1E6;">&#x1F1FF;&#x1F1E6; South Africa (+27)</button></li>
+                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+33" data-flag="&#x1F1EB;&#x1F1F7;">&#x1F1EB;&#x1F1F7; France (+33)</button></li>
+                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+49" data-flag="&#x1F1E9;&#x1F1EA;">&#x1F1E9;&#x1F1EA; Germany (+49)</button></li>
+                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+34" data-flag="&#x1F1EA;&#x1F1F8;">&#x1F1EA;&#x1F1F8; Spain (+34)</button></li>
+                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+39" data-flag="&#x1F1EE;&#x1F1F9;">&#x1F1EE;&#x1F1F9; Italy (+39)</button></li>
+                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+31" data-flag="&#x1F1F3;&#x1F1F1;">&#x1F1F3;&#x1F1F1; Netherlands (+31)</button></li>
+                                </ul>
+                            </div>
                         </div>
                         <p class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone error</p>
                     </div>
@@ -112,10 +141,10 @@
                                 <span class="field-control-text" id="serviceTypeValue" data-choice-label>Select a ceremony type</span>
                                 <span class="field-icon" aria-hidden="true">⌄</span>
                             </button>
-                            <div class="field-popup field-popup-select" data-choice-popup hidden>
+                            <div class="field-popup field-popup-select" data-choice-popup>
                                 <ul class="field-option-list" id="serviceTypeList" role="listbox" aria-labelledby="serviceTypeLabel">
-                                    <li>
-                                        <button class="field-option" type="button" data-choice-option data-value="" role="option">Select a ceremony type</button>
+                                    <li role="presentation">
+                                        <div class="field-option-placeholder" aria-hidden="true">Select a ceremony type</div>
                                     </li>
                                     <li th:each="option : ${serviceOptions}">
                                         <button class="field-option" type="button" data-choice-option th:attr="data-value=${option}" th:text="${option}" role="option">Wedding ceremony</button>
@@ -140,7 +169,7 @@
                                 <span class="field-control-text" id="eventDateValue" data-date-label>dd/mm/yyyy</span>
                                 <span class="field-icon" aria-hidden="true">◷</span>
                             </button>
-                            <div class="field-popup field-popup-date" id="eventDatePicker" data-date-popup hidden>
+                            <div class="field-popup field-popup-date" id="eventDatePicker" data-date-popup>
                                 <div class="date-picker-shell">
                                     <div class="date-picker-header">
                                         <button class="date-picker-nav" type="button" data-date-nav="prev" aria-label="Previous month">‹</button>

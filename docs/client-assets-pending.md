@@ -1,4 +1,4 @@
-# Clare Life Ceremonies - Pending Client Assets
+# Clare’s Life Celebrations - Pending Client Assets
 
 These placeholders keep the website production-safe while final client content is gathered.
 

@@ -1,14 +1,13 @@
 package co.uk.clarebrunton.ceremonies;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThatCode;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
@@ -22,7 +21,7 @@ class InquiryNotificationServiceTest {
 
 	private SiteProperties buildProperties() {
 		SiteProperties props = new SiteProperties();
-		props.setName("Clare Life Ceremonies");
+		props.setName("Clare’s Life Celebrations");
 		props.setContactEmail("clarebruntoncelebrant@gmail.com");
 		props.setFromEmail("no-reply@clarebrunton.co.uk");
 		return props;

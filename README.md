@@ -1,4 +1,4 @@
-# Clare Brunton Life Ceremonies
+# Clare’s Life Celebrations
 
 Launch brochure website for Clare Brunton's celebrant business, built with Spring Boot, Thymeleaf, a dedicated JS file, and a dedicated compiled CSS file generated from a Tailwind-enabled source stylesheet.
 
@@ -103,8 +103,8 @@ If SMTP variables are missing, the site still runs and logs the enquiry rather t
 
 Set these in Render before launch:
 
-- `SITE_NAME`
-- `SITE_TAGLINE`
+- `SITE_NAME` defaults to `Clare’s Life Celebrations`
+- `SITE_TAGLINE` defaults to `for every chapter`
 - `SITE_CONTACT_EMAIL`
 - `SITE_PHONE_NUMBER`
 - `SITE_INSTAGRAM_URL`

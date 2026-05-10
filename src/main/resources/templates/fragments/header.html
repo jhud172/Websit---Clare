@@ -4,20 +4,24 @@
 <header class="site-header" data-site-header th:fragment="site-header(activePage)">
     <div class="shell header-inner">
         <a class="brand" th:href="@{/}" aria-label="Go to the home page">
-            <span class="brand-mark brand-mark-image">
+            <span class="brand-lockup">
                 <img class="brand-logo"
-                     th:src="@{/images/brand/feather-mark-primary.svg}"
-                     alt="Clare Life Ceremonies feather mark.">
+                     th:src="@{${logoPath}}"
+                     alt="Clare’s Life Celebrations logo">
             </span>
-            <span class="brand-wording">
-                <span class="brand-name" th:text="${site.name}">Clare Life Ceremonies</span>
-                <span class="brand-tagline" th:text="${site.tagline}">By Design</span>
+            <span class="brand-wording sr-only">
+                <span class="brand-name" th:text="${site.name}">Clare’s Life Celebrations</span>
+                <span class="brand-tagline" th:text="${site.tagline}">for every chapter</span>
             </span>
         </a>
 
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" data-nav-toggle>
-            <span class="sr-only">Open menu</span>
-            <span>Menu</span>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-navigation" aria-label="Toggle navigation menu" data-nav-toggle>
+            <span class="sr-only">Toggle menu</span>
+            <span class="hamburger" aria-hidden="true">
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+            </span>
         </button>
 
         <nav class="site-nav" id="site-navigation" data-site-nav>

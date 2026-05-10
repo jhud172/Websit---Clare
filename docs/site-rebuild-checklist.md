@@ -1,6 +1,6 @@
 # Site Rebuild Checklist
 
-Implementation run for the Clare Brunton Life Ceremonies site.
+Implementation run for the Clare’s Life Celebrations site.
 
 ## Core shell
 - [x] Refine shared header, brand treatment, and mobile navigation

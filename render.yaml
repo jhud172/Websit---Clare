@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: clare-brunton-life-ceremonies
+    name: clares-life-celebrations
     runtime: docker
     plan: free
     autoDeploy: true
@@ -9,9 +9,9 @@ services:
     healthCheckPath: /
     envVars:
       - key: SITE_NAME
-        value: Clare Brunton Life Ceremonies
+        value: Clare’s Life Celebrations
       - key: SITE_TAGLINE
-        value: Weddings, funerals and heartfelt ceremonies in between.
+        value: for every chapter
       - key: SITE_CONTACT_EMAIL
         value: clarebruntoncelebrant@gmail.com
       - key: SITE_PHONE_NUMBER
