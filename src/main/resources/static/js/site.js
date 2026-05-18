@@ -1,6 +1,7 @@
 const siteHeader = document.querySelector("[data-site-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
+const enquiryModal = document.querySelector("[data-enquiry-modal]");
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const themeToggleLabel = document.querySelector("[data-theme-toggle-label]");
 const fileInputs = document.querySelectorAll("[data-file-input]");
@@ -25,6 +26,8 @@ const revealSelectors = [
     ".policy-index",
     ".policy-card"
 ];
+
+const modalTriggerSelector = "[data-open-enquiry-modal]";
 
 const applyTheme = (theme) => {
     document.documentElement.dataset.theme = theme;
@@ -146,6 +149,179 @@ if (navToggle && siteNav) {
         }
     });
 }
+
+if (enquiryModal) {
+    const modalDialog = enquiryModal.querySelector("[data-enquiry-modal-dialog]");
+    const modalCloseButtons = enquiryModal.querySelectorAll("[data-enquiry-modal-close]");
+    const modalTriggers = document.querySelectorAll(modalTriggerSelector);
+    let previousFocus = null;
+
+    const getFocusableElements = () => Array.from(modalDialog.querySelectorAll(
+        "a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex='-1'])"
+    )).filter((element) => !element.hasAttribute("hidden"));
+
+    const lockScroll = (locked) => {
+        document.body.classList.toggle("is-modal-open", locked);
+    };
+
+    const closeModal = () => {
+        enquiryModal.hidden = true;
+        enquiryModal.classList.remove("is-open");
+        lockScroll(false);
+        if (previousFocus && typeof previousFocus.focus === "function") {
+            previousFocus.focus({ preventScroll: true });
+        }
+    };
+
+    const openModal = (trigger) => {
+        previousFocus = trigger || document.activeElement;
+        enquiryModal.hidden = false;
+        enquiryModal.classList.add("is-open");
+        lockScroll(true);
+
+        const serviceType = trigger?.dataset.enquiryService;
+        const serviceField = modalDialog.querySelector("#serviceType");
+        if (serviceType && serviceField) {
+            serviceField.value = serviceType;
+            serviceField.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+
+        window.setTimeout(() => {
+            const focusTargets = getFocusableElements();
+            if (focusTargets.length > 0) {
+                focusTargets[0].focus({ preventScroll: true });
+            }
+            else {
+                modalDialog.focus({ preventScroll: true });
+            }
+        }, 20);
+    };
+
+    modalTriggers.forEach((trigger) => {
+        trigger.addEventListener("click", () => openModal(trigger));
+    });
+
+    modalCloseButtons.forEach((button) => {
+        button.addEventListener("click", closeModal);
+    });
+
+    enquiryModal.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            event.preventDefault();
+            closeModal();
+            return;
+        }
+
+        if (event.key !== "Tab") {
+            return;
+        }
+
+        const focusables = getFocusableElements();
+        if (focusables.length === 0) {
+            event.preventDefault();
+            return;
+        }
+
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        }
+        else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    });
+}
+
+document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
+    const slides = Array.from(carouselRoot.querySelectorAll("[data-carousel-slide]"));
+    const dots = Array.from(carouselRoot.querySelectorAll("[data-carousel-dot]"));
+    const prevButton = carouselRoot.querySelector("[data-carousel-prev]");
+    const nextButton = carouselRoot.querySelector("[data-carousel-next]");
+    const intervalMs = Number(carouselRoot.dataset.carouselInterval || 6000);
+    let currentIndex = 0;
+    let timerId = null;
+
+    if (slides.length === 0) {
+        return;
+    }
+
+    const render = () => {
+        slides.forEach((slide, index) => {
+            const active = index === currentIndex;
+            slide.classList.toggle("is-active", active);
+            slide.setAttribute("aria-hidden", String(!active));
+        });
+
+        dots.forEach((dot, index) => {
+            const active = index === currentIndex;
+            dot.classList.toggle("is-active", active);
+            dot.setAttribute("aria-current", active ? "true" : "false");
+        });
+    };
+
+    const moveTo = (nextIndex) => {
+        currentIndex = (nextIndex + slides.length) % slides.length;
+        render();
+    };
+
+    const restartTimer = () => {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            return;
+        }
+
+        if (timerId) {
+            window.clearInterval(timerId);
+        }
+
+        timerId = window.setInterval(() => {
+            moveTo(currentIndex + 1);
+        }, intervalMs);
+    };
+
+    prevButton?.addEventListener("click", () => {
+        moveTo(currentIndex - 1);
+        restartTimer();
+    });
+
+    nextButton?.addEventListener("click", () => {
+        moveTo(currentIndex + 1);
+        restartTimer();
+    });
+
+    dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => {
+            moveTo(index);
+            restartTimer();
+        });
+    });
+
+    carouselRoot.addEventListener("mouseenter", () => {
+        if (timerId) {
+            window.clearInterval(timerId);
+        }
+    });
+
+    carouselRoot.addEventListener("mouseleave", restartTimer);
+
+    render();
+    restartTimer();
+});
+
+document.querySelectorAll(".protected-image, .hero-media img, .showcase-slide img").forEach((image) => {
+    image.setAttribute("draggable", "false");
+
+    image.addEventListener("dragstart", (event) => {
+        event.preventDefault();
+    });
+
+    image.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+    });
+});
 
 const revealTargets = Array.from(new Set(
     revealSelectors.flatMap((selector) => Array.from(document.querySelectorAll(selector)))

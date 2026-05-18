@@ -7,10 +7,10 @@
             <div class="story-copy">
                 <p class="eyebrow">Wedding ceremonies</p>
                 <h1>Modern wedding ceremonies, designed around your story</h1>
-                <p class="lead">A personal, heartfelt and beautifully written ceremony that feels like you.</p>
+                <p class="lead">A personal, heartfelt and beautifully written ceremony that feels unmistakably like you.</p>
                 <div class="hero-actions">
-                    <a class="button" th:href="@{/contact}">Enquire about your wedding</a>
-                    <a class="button button-secondary" href="#wedding-enquiry-placeholder">Start your wedding enquiry</a>
+                    <button class="button" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Enquire about your wedding</button>
+                    <button class="button button-secondary" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Start your wedding enquiry</button>
                 </div>
             </div>
             <figure class="visual-stage media-stage media-stage-weddings">
@@ -41,6 +41,28 @@
                     <p class="visual-caption">The wedding offer should feel modern and elegant, without losing warmth or personality.</p>
                 </figcaption>
             </figure>
+        </div>
+    </section>
+
+    <section class="section section-soft section-atmosphere-portrait section-divider section-reveal-zone">
+        <div class="shell section-heading">
+            <p class="eyebrow">Wedding gallery</p>
+            <h2>Elegant moving visuals that reflect joy, personality and atmosphere.</h2>
+        </div>
+        <div class="shell wedding-showcase" data-carousel data-carousel-interval="5600">
+            <figure class="showcase-slide is-active" data-carousel-slide>
+                <img th:src="@{/images/weddings/amy-wedding-9.jpg}" alt="Bride and groom smiling during an outdoor wedding ceremony." loading="lazy">
+            </figure>
+            <figure class="showcase-slide" data-carousel-slide>
+                <img th:src="@{/images/weddings/amy-wedding-6.jpg}" alt="Couple in a romantic portrait after their ceremony." loading="lazy">
+            </figure>
+            <figure class="showcase-slide" data-carousel-slide>
+                <img th:src="@{/images/weddings/amy-wedding-7.jpg}" alt="Wedding couple sharing a kiss beneath flowers." loading="lazy">
+            </figure>
+            <div class="carousel-controls">
+                <button class="carousel-arrow" type="button" data-carousel-prev aria-label="Previous wedding image">‹</button>
+                <button class="carousel-arrow" type="button" data-carousel-next aria-label="Next wedding image">›</button>
+            </div>
         </div>
     </section>
 
@@ -181,7 +203,7 @@
                 <p class="eyebrow">Wedding booking form</p>
                 <h2>The detailed booking journey is planned and ready to be connected as the next implementation step.</h2>
                 <p>The public-facing site starts with a clean enquiry route, then expands into a dedicated wedding booking form, questionnaire and contract flow once the final client content and documents are signed off.</p>
-                <a class="button" th:href="@{/contact}">Start your wedding enquiry</a>
+                <button class="button" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Start your wedding enquiry</button>
             </div>
             <div class="resource-grid">
                 <article class="resource-card">
@@ -213,7 +235,7 @@
                 <h2>Tell Clare about your date, your venue and the kind of ceremony you want to create.</h2>
                 <p>If you already know the feeling you want but not yet the final format, Clare can help shape the rest with you.</p>
             </div>
-            <a class="button" th:href="@{/contact}">Contact Clare</a>
+            <button class="button" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Contact Clare</button>
         </div>
     </section>
 </main>

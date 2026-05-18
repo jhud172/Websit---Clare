@@ -16,7 +16,7 @@
 
             <div class="article-body">
                 <p th:each="paragraph : ${post.paragraphs()}" th:text="${paragraph}">Placeholder paragraph.</p>
-                <a class="button button-secondary" th:href="@{/contact}">Ask about this service</a>
+                <button class="button button-secondary" type="button" data-open-enquiry-modal>Ask about this service</button>
             </div>
         </div>
     </article>

@@ -36,3 +36,11 @@ site:
 inquiry:
   notification-email: ${INQUIRY_NOTIFICATION_EMAIL:${SITE_CONTACT_EMAIL:hello@clarebrunton.co.uk}}
   fallback-directory: ${INQUIRY_FALLBACK_DIRECTORY:data/inquiries}
+
+reviews:
+  storage-directory: ${REVIEWS_STORAGE_DIRECTORY:data/reviews}
+  photo-directory: ${REVIEWS_PHOTO_DIRECTORY:uploads}
+  admin-username: ${REVIEWS_ADMIN_USERNAME:admin}
+  admin-password: ${REVIEWS_ADMIN_PASSWORD:change-me}
+  max-photo-count: ${REVIEWS_MAX_PHOTO_COUNT:10}
+  max-photo-size-bytes: ${REVIEWS_MAX_PHOTO_SIZE_BYTES:5242880}

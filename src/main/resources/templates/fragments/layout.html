@@ -8,6 +8,7 @@
 <body>
 <div th:replace="~{fragments/header :: site-header(${activePage})}"></div>
 <th:block th:replace="${mainContent}"></th:block>
+<th:block th:if="${activePage != 'contact'}" th:replace="~{fragments/enquiry-modal :: enquiry-modal}"></th:block>
 <div th:replace="~{fragments/footer :: site-footer}"></div>
 </body>
 </html>

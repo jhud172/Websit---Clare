@@ -22,9 +22,9 @@
                 <li><a th:href="@{/services}">Services</a></li>
                 <li><a th:href="@{/weddings}">Weddings</a></li>
                 <li><a th:href="@{/funerals}">Funerals</a></li>
-                <li><a th:href="@{/contact}">Contact</a></li>
                 <li><a th:href="@{/reviews}">Reviews</a></li>
                 <li><a th:href="@{/privacy}">Privacy Policy</a></li>
+                <li><button type="button" data-open-enquiry-modal>Enquiry</button></li>
             </ul>
         </div>
 
@@ -38,7 +38,7 @@
                 </li>
                 <li th:unless="${site.instagramUrl != null and !#strings.isEmpty(site.instagramUrl)}">Instagram coming soon</li>
                 <li><a th:href="@{/privacy}">Privacy</a></li>
-                <li><a th:href="@{/contact}">Start an enquiry</a></li>
+                <li><button type="button" data-open-enquiry-modal>Start an enquiry</button></li>
             </ul>
         </div>
         <div class="footer-copyright">

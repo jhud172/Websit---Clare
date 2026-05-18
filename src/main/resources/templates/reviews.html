@@ -5,49 +5,138 @@
     <section class="page-hero page-hero-editorial section-reveal-zone">
         <div class="shell section-heading">
             <p class="eyebrow">Reviews</p>
-            <h1>Kind words</h1>
-            <p class="lead">Reviews and testimonials will be added as Clare begins working with clients.</p>
+            <h1>Approved client reviews</h1>
+            <p class="lead">Every review is checked before publication so this page stays trustworthy, genuine and relevant.</p>
         </div>
     </section>
 
     <section class="section section-atmosphere-clay section-divider section-reveal-zone">
-        <div class="shell testimonial-placeholder-grid">
-            <article class="testimonial-placeholder-card">
-                <p class="testimonial-placeholder-label">Testimonial coming soon</p>
-                <h3>Client feedback will appear here</h3>
-                <p>Once Clare begins working with couples and families, this area will hold real written feedback.</p>
+        <div class="shell review-grid" th:if="${!#lists.isEmpty(approvedReviews)}">
+            <article class="review-gallery-card" th:each="review : ${approvedReviews}">
+                <p class="review-stars"><span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span></p>
+                <h3 th:text="${review.headline != null ? review.headline : 'A heartfelt experience'}">A heartfelt experience</h3>
+                <p th:text="${review.message}">Review text</p>
+                <p class="review-meta"><strong th:text="${review.reviewerName}">Reviewer</strong> · <span th:text="${review.ceremonyType}">Wedding ceremony</span></p>
+                <div class="review-photo-grid" th:if="${!#lists.isEmpty(review.photoFileNames)}">
+                    <img th:each="photo : ${review.photoFileNames}"
+                         th:src="@{'/review-photos/' + ${photo}}"
+                         alt="Client review photo"
+                         loading="lazy"
+                         draggable="false"
+                         class="protected-image">
+                </div>
             </article>
+        </div>
+        <div class="shell testimonial-placeholder-grid" th:if="${#lists.isEmpty(approvedReviews)}">
             <article class="testimonial-placeholder-card">
-                <p class="testimonial-placeholder-label">Testimonial coming soon</p>
-                <h3>Venue or professional recommendation</h3>
-                <p>This card is ready for future feedback from venues, funeral directors or trusted partners.</p>
-            </article>
-            <article class="testimonial-placeholder-card">
-                <p class="testimonial-placeholder-label">Testimonial coming soon</p>
-                <h3>More kind words to follow</h3>
-                <p>The structure is in place so genuine reviews can be added cleanly as the business grows.</p>
+                <p class="testimonial-placeholder-label">Reviews coming soon</p>
+                <h3>Approved client feedback will appear here</h3>
+                <p>Clare is now collecting verified feedback from couples, families and professional partners.</p>
             </article>
         </div>
     </section>
 
     <section class="section section-soft section-atmosphere-sage section-divider section-reveal-zone">
         <div class="shell section-heading">
-            <p class="eyebrow">Built on trust</p>
-            <h2>Even before formal testimonials arrive, the site should communicate care, personal service and professionalism.</h2>
+            <p class="eyebrow">Leave a review</p>
+            <h2>Share your experience for moderation and approval.</h2>
+            <p class="lead">Reviews are never published automatically. Submissions are reviewed before going live.</p>
         </div>
-        <div class="shell detail-grid">
-            <article class="detail-card">
-                <h3>Personal service</h3>
-                <p>Clare's enquiry process, communication style and ceremony design are built to feel direct and human from the beginning.</p>
-            </article>
-            <article class="detail-card">
-                <h3>Professional approach</h3>
-                <p>The site is structured to reassure venues, funeral directors and families that Clare is serious, organised and ready to deliver well.</p>
-            </article>
-            <article class="detail-card">
-                <h3>Care throughout</h3>
-                <p>Every page reinforces the warmth, clarity and thoughtful support Clare wants clients to experience.</p>
-            </article>
+        <div class="shell">
+            <p class="field-error" th:if="${reviewUploadError != null}" th:text="${reviewUploadError}">Upload error</p>
+            <p class="callout" th:if="${reviewSubmissionSuccess != null}" th:text="${reviewSubmissionSuccess}">Success message</p>
+            <form class="contact-form review-submission-form"
+                  th:action="@{/reviews/submit}"
+                  th:object="${reviewForm}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  novalidate>
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="reviewerName">Your name</label>
+                        <div class="field-control" th:classappend="${#fields.hasErrors('reviewerName')} ? ' is-invalid'">
+                            <input id="reviewerName" type="text" th:field="*{reviewerName}" autocomplete="name">
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('reviewerName')}" th:errors="*{reviewerName}">Name error</p>
+                    </div>
+                    <div class="field-group">
+                        <label for="reviewerRole">How do you know Clare?</label>
+                        <div class="field-control" th:classappend="${#fields.hasErrors('reviewerRole')} ? ' is-invalid'">
+                            <input id="reviewerRole" type="text" th:field="*{reviewerRole}" placeholder="Couple, family member, venue, funeral director...">
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('reviewerRole')}" th:errors="*{reviewerRole}">Role error</p>
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="ceremonyType">Ceremony type</label>
+                        <div class="field-control" th:classappend="${#fields.hasErrors('ceremonyType')} ? ' is-invalid'">
+                            <select id="ceremonyType" th:field="*{ceremonyType}">
+                                <option value="">Choose a ceremony type</option>
+                                <option th:each="option : ${reviewCeremonyOptions}" th:value="${option}" th:text="${option}">Wedding ceremony</option>
+                            </select>
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('ceremonyType')}" th:errors="*{ceremonyType}">Ceremony type error</p>
+                    </div>
+                    <div class="field-group">
+                        <label for="rating">Rating</label>
+                        <div class="field-control" th:classappend="${#fields.hasErrors('rating')} ? ' is-invalid'">
+                            <select id="rating" th:field="*{rating}">
+                                <option value="">Choose rating</option>
+                                <option value="5">5 stars</option>
+                                <option value="4">4 stars</option>
+                                <option value="3">3 stars</option>
+                                <option value="2">2 stars</option>
+                                <option value="1">1 star</option>
+                            </select>
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}">Rating error</p>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label for="headline">Short heading</label>
+                    <div class="field-control" th:classappend="${#fields.hasErrors('headline')} ? ' is-invalid'">
+                        <input id="headline" type="text" th:field="*{headline}" placeholder="Optional heading for your review">
+                    </div>
+                    <p class="field-error" th:if="${#fields.hasErrors('headline')}" th:errors="*{headline}">Headline error</p>
+                </div>
+
+                <div class="field-group">
+                    <label for="reviewMessage">Your review</label>
+                    <div class="field-control field-control-textarea" th:classappend="${#fields.hasErrors('message')} ? ' is-invalid'">
+                        <textarea id="reviewMessage" th:field="*{message}" rows="6" placeholder="Please share your experience."></textarea>
+                    </div>
+                    <p class="field-error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}">Message error</p>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label for="reviewEventDate">Event date (optional)</label>
+                        <div class="field-control" th:classappend="${#fields.hasErrors('eventDate')} ? ' is-invalid'">
+                            <input id="reviewEventDate" type="date" th:field="*{eventDate}">
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label for="reviewPhotos">Photos (up to 10)</label>
+                        <div class="field-control">
+                            <input id="reviewPhotos" name="reviewPhotos" type="file" accept=".jpg,.jpeg,.png,.webp" multiple>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkbox-row" th:classappend="${#fields.hasErrors('consentAccepted')} ? ' is-invalid'">
+                    <input class="checkbox-input" id="consentAccepted" type="checkbox" th:field="*{consentAccepted}">
+                    <label class="checkbox-label" for="consentAccepted">
+                        <span class="checkbox-box" aria-hidden="true"></span>
+                        <span>I understand my review will be checked before publication.</span>
+                    </label>
+                </div>
+                <p class="field-error" th:if="${#fields.hasErrors('consentAccepted')}" th:errors="*{consentAccepted}">Consent error</p>
+
+                <button class="button" type="submit">Submit review for approval</button>
+            </form>
         </div>
     </section>
 
@@ -58,7 +147,7 @@
                 <h2>You do not need to wait for a review page to know whether the tone feels right.</h2>
                 <p>If Clare's approach feels like the kind of support you want, the next step is simply an enquiry.</p>
             </div>
-            <a class="button" th:href="@{/contact}">Contact Clare</a>
+            <button class="button" type="button" data-open-enquiry-modal>Contact Clare</button>
         </div>
     </section>
 </main>

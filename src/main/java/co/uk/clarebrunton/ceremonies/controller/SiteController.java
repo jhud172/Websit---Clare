@@ -1,9 +1,14 @@
 package co.uk.clarebrunton.ceremonies.controller;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -13,13 +18,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import co.uk.clarebrunton.ceremonies.config.ReviewProperties;
 import co.uk.clarebrunton.ceremonies.model.InquiryForm;
+import co.uk.clarebrunton.ceremonies.model.ReviewForm;
 import co.uk.clarebrunton.ceremonies.service.BlogService;
 import co.uk.clarebrunton.ceremonies.service.InquiryNotificationService;
+import co.uk.clarebrunton.ceremonies.service.ReviewService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -37,14 +47,24 @@ public class SiteController {
 	private static final int MAX_ATTACHMENT_COUNT = 3;
 	private static final long MAX_ATTACHMENT_SIZE_BYTES = 5L * 1024L * 1024L;
 	private static final Set<String> ALLOWED_ATTACHMENT_EXTENSIONS = Set.of("jpg", "jpeg", "png", "webp", "pdf");
+	private static final String REVIEW_ADMIN_SESSION_KEY = "reviewAdminAuthenticated";
 
 	private final BlogService blogService;
 
 	private final InquiryNotificationService inquiryNotificationService;
 
-	public SiteController(BlogService blogService, InquiryNotificationService inquiryNotificationService) {
+	private final ReviewService reviewService;
+
+	private final ReviewProperties reviewProperties;
+
+	public SiteController(BlogService blogService,
+			InquiryNotificationService inquiryNotificationService,
+			ReviewService reviewService,
+			ReviewProperties reviewProperties) {
 		this.blogService = blogService;
 		this.inquiryNotificationService = inquiryNotificationService;
+		this.reviewService = reviewService;
+		this.reviewProperties = reviewProperties;
 	}
 
 	@ModelAttribute("serviceOptions")
@@ -52,19 +72,35 @@ public class SiteController {
 		return SERVICE_OPTIONS;
 	}
 
+	@ModelAttribute("inquiryForm")
+	public InquiryForm inquiryForm() {
+		return new InquiryForm();
+	}
+
+	@ModelAttribute("reviewCeremonyOptions")
+	public List<String> reviewCeremonyOptions() {
+		return SERVICE_OPTIONS;
+	}
+
+	@ModelAttribute("reviewForm")
+	public ReviewForm reviewForm() {
+		return new ReviewForm();
+	}
+
 	@GetMapping("/")
 	public String home(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Warm, elegant ceremonies for moments that matter");
-		model.addAttribute("pageDescription", "Clare's Life Celebrations offers warm, personal weddings, funerals and life ceremonies with a modern premium feel.");
+		model.addAttribute("pageTitle", "Clare's Life Celebrations | Weddings and funerals in Durham");
+		model.addAttribute("pageDescription", "Clare Riley Brunton of Clare Life Celebrations creates modern wedding-led ceremonies and dignified funeral services across Durham.");
+		model.addAttribute("featuredReviews", reviewService.getApprovedFiveStarReviews());
 		return "home";
 	}
 
 	@GetMapping("/about")
 	public String about(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Meet Clare");
-		model.addAttribute("pageDescription", "Meet Clare and discover the calm, caring approach behind Clare's Life Celebrations.");
+		model.addAttribute("pageTitle", "Meet Clare Riley Brunton");
+		model.addAttribute("pageDescription", "Meet Clare Brunton, the celebrant behind Clare's Life Celebrations, offering warm and professional ceremonies in Durham.");
 		return "about";
 	}
 
@@ -79,25 +115,156 @@ public class SiteController {
 	@GetMapping("/weddings")
 	public String weddings(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Wedding ceremonies");
-		model.addAttribute("pageDescription", "Modern wedding ceremonies shaped with warmth, style and personal detail.");
+		model.addAttribute("pageTitle", "Wedding ceremonies in Durham");
+		model.addAttribute("pageDescription", "Modern, bespoke wedding ceremonies by Clare Riley of Clare's Life Celebrations, designed with warmth and personality.");
 		return "weddings";
 	}
 
 	@GetMapping("/funerals")
 	public String funerals(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Funerals");
-		model.addAttribute("pageDescription", "Thoughtful funeral and memorial ceremonies created with warmth, clarity and care.");
+		model.addAttribute("pageTitle", "Funeral ceremonies in Durham");
+		model.addAttribute("pageDescription", "Thoughtful funeral and memorial ceremonies by Clare Brunton, created with dignity, warmth and professional care.");
 		return "funerals";
 	}
 
 	@GetMapping("/reviews")
 	public String reviews(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Reviews");
-		model.addAttribute("pageDescription", "A dedicated page for kind words, feedback and the experience Clare is building around her celebrant services.");
+		model.addAttribute("pageTitle", "Client reviews");
+		model.addAttribute("pageDescription", "Read approved reviews for Clare's Life Celebrations and share your own experience for moderation.");
+		model.addAttribute("approvedReviews", reviewService.getApprovedReviews());
 		return "reviews";
+	}
+
+	@PostMapping("/reviews/submit")
+	public String submitReview(@Valid @ModelAttribute("reviewForm") ReviewForm reviewForm,
+			BindingResult bindingResult,
+			@RequestParam(name = "reviewPhotos", required = false) List<MultipartFile> reviewPhotos,
+			Model model,
+			RedirectAttributes redirectAttributes) {
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("logoPath", LOGO_CLARE);
+			model.addAttribute("pageTitle", "Reviews");
+			model.addAttribute("pageDescription", "Read approved reviews for Clare's Life Celebrations and share your own experience for moderation.");
+			model.addAttribute("approvedReviews", reviewService.getApprovedReviews());
+			return "reviews";
+		}
+
+		try {
+			reviewService.submitReview(reviewForm, reviewPhotos);
+		}
+		catch (IllegalArgumentException exception) {
+			model.addAttribute("logoPath", LOGO_CLARE);
+			model.addAttribute("pageTitle", "Reviews");
+			model.addAttribute("pageDescription", "Read approved reviews for Clare's Life Celebrations and share your own experience for moderation.");
+			model.addAttribute("approvedReviews", reviewService.getApprovedReviews());
+			model.addAttribute("reviewUploadError", exception.getMessage());
+			return "reviews";
+		}
+
+		redirectAttributes.addFlashAttribute("reviewSubmissionSuccess", "Thank you. Your review has been received and is now pending approval.");
+		return "redirect:/reviews";
+	}
+
+	@GetMapping("/reviews/admin/login")
+	public String reviewAdminLogin(Model model, HttpSession session) {
+		if (isReviewAdminAuthenticated(session)) {
+			return "redirect:/reviews/admin";
+		}
+
+		model.addAttribute("logoPath", LOGO_CLARE);
+		model.addAttribute("pageTitle", "Review admin login");
+		model.addAttribute("pageDescription", "Admin login for review moderation.");
+		return "reviews-admin-login";
+	}
+
+	@PostMapping("/reviews/admin/login")
+	public String submitReviewAdminLogin(@RequestParam("username") String username,
+			@RequestParam("password") String password,
+			RedirectAttributes redirectAttributes,
+			HttpSession session) {
+		if (reviewProperties.getAdminUsername().equals(username) && reviewProperties.getAdminPassword().equals(password)) {
+			session.setAttribute(REVIEW_ADMIN_SESSION_KEY, Boolean.TRUE);
+			return "redirect:/reviews/admin";
+		}
+
+		redirectAttributes.addFlashAttribute("reviewAdminError", "Login details were not recognised.");
+		return "redirect:/reviews/admin/login";
+	}
+
+	@PostMapping("/reviews/admin/logout")
+	public String logoutReviewAdmin(HttpSession session) {
+		session.removeAttribute(REVIEW_ADMIN_SESSION_KEY);
+		return "redirect:/reviews/admin/login";
+	}
+
+	@GetMapping("/reviews/admin")
+	public String reviewAdmin(Model model, HttpSession session) {
+		if (!isReviewAdminAuthenticated(session)) {
+			return "redirect:/reviews/admin/login";
+		}
+
+		model.addAttribute("logoPath", LOGO_CLARE);
+		model.addAttribute("pageTitle", "Review moderation");
+		model.addAttribute("pageDescription", "Approve or reject submitted reviews.");
+		model.addAttribute("pendingReviews", reviewService.getPendingReviews());
+		model.addAttribute("approvedReviews", reviewService.getApprovedReviews());
+		return "reviews-admin";
+	}
+
+	@PostMapping("/reviews/admin/{reviewId}/approve")
+	public String approveReview(@PathVariable String reviewId,
+			@RequestParam(name = "note", required = false) String note,
+			RedirectAttributes redirectAttributes,
+			HttpSession session) {
+		if (!isReviewAdminAuthenticated(session)) {
+			return "redirect:/reviews/admin/login";
+		}
+
+		reviewService.approveReview(reviewId, note);
+		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review approved.");
+		return "redirect:/reviews/admin";
+	}
+
+	@PostMapping("/reviews/admin/{reviewId}/reject")
+	public String rejectReview(@PathVariable String reviewId,
+			@RequestParam(name = "note", required = false) String note,
+			RedirectAttributes redirectAttributes,
+			HttpSession session) {
+		if (!isReviewAdminAuthenticated(session)) {
+			return "redirect:/reviews/admin/login";
+		}
+
+		reviewService.rejectReview(reviewId, note);
+		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review rejected.");
+		return "redirect:/reviews/admin";
+	}
+
+	@GetMapping("/review-photos/{filename}")
+	@ResponseBody
+	public ResponseEntity<Resource> reviewPhoto(@PathVariable String filename) {
+		Path resourcePath = reviewService.resolvePhotoPath(filename);
+		Resource resource = new FileSystemResource(resourcePath);
+
+		if (!resource.exists()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		}
+
+		MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
+		String extension = StringUtils.getFilenameExtension(filename);
+
+		if ("jpg".equalsIgnoreCase(extension) || "jpeg".equalsIgnoreCase(extension)) {
+			mediaType = MediaType.IMAGE_JPEG;
+		}
+		else if ("png".equalsIgnoreCase(extension)) {
+			mediaType = MediaType.IMAGE_PNG;
+		}
+		else if ("webp".equalsIgnoreCase(extension)) {
+			mediaType = MediaType.parseMediaType("image/webp");
+		}
+
+		return ResponseEntity.ok().contentType(mediaType).body(resource);
 	}
 
 	@GetMapping("/ceremonies")
@@ -218,6 +385,11 @@ public class SiteController {
 		}
 
 		return null;
+	}
+
+	private boolean isReviewAdminAuthenticated(HttpSession session) {
+		Object value = session.getAttribute(REVIEW_ADMIN_SESSION_KEY);
+		return value instanceof Boolean authenticated && authenticated;
 	}
 
 }

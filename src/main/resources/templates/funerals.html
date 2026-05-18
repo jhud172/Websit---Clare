@@ -9,7 +9,7 @@
                 <h1>Thoughtful funeral ceremonies, written with care</h1>
                 <p class="lead">A respectful and personal way to honour a life, share memories and support those saying goodbye.</p>
                 <div class="hero-actions">
-                    <a class="button" th:href="@{/contact}">Contact Clare</a>
+                    <button class="button" type="button" data-open-enquiry-modal data-enquiry-service="Funeral or memorial">Contact Clare</button>
                 </div>
             </div>
             <figure class="visual-stage media-stage media-stage-detail">
@@ -55,7 +55,7 @@
                 <p class="package-tag">Option one</p>
                 <h3>Funeral Director Ceremony</h3>
                 <p class="package-price">Price to be confirmed</p>
-                <ul class="package-list">
+                <ul class="package-list feather-list">
                     <li>Structured liaison around the service</li>
                     <li>Written ceremony and tribute preparation</li>
                     <li>Delivery on the day</li>
@@ -66,7 +66,7 @@
                 <p class="package-tag">Option two</p>
                 <h3>Bespoke Celebration of Life</h3>
                 <p class="package-price">Price to be confirmed</p>
-                <ul class="package-list">
+                <ul class="package-list feather-list">
                     <li>More personalised planning and family collaboration</li>
                     <li>Flexible structure for memorials or unique venues</li>
                     <li>Carefully shaped personal tribute</li>
@@ -140,6 +140,7 @@
             <figure class="visual-stage media-stage media-stage-detail">
                 <img th:src="@{/images/funerals/memorial-flowers-detail.jpg}"
                      loading="lazy"
+                     class="feather-image-border"
                      alt="A close detail of soft memorial flowers, gentle and quietly beautiful.">
                 <figcaption class="media-stage-overlay">
                     <p class="media-stage-kicker">A gentle farewell</p>
@@ -149,6 +150,7 @@
             <figure class="visual-stage media-stage media-stage-detail">
                 <img th:src="@{/images/funerals/memorial-flowers-arrangement.jpg}"
                      loading="lazy"
+                     class="feather-image-border"
                      alt="A soft floral tribute arrangement, symbolising remembrance and care.">
                 <figcaption class="media-stage-overlay">
                     <p class="media-stage-kicker">Thoughtful and personal</p>
@@ -165,7 +167,7 @@
                 <h2>If you need support, the first step is a quiet personal conversation.</h2>
                 <p>Clare can talk through the type of service you need, the timing involved and how the ceremony can be shaped with care.</p>
             </div>
-            <a class="button" th:href="@{/contact}">Contact Clare</a>
+            <button class="button" type="button" data-open-enquiry-modal data-enquiry-service="Funeral or memorial">Contact Clare</button>
         </div>
     </section>
 </main>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'reviews', ~{::main})}">
+<main class="theme-trust">
+    <section class="page-hero page-hero-editorial section-reveal-zone">
+        <div class="shell section-heading">
+            <p class="eyebrow">Review moderation</p>
+            <h1>Pending reviews</h1>
+            <p class="lead">Approve suitable reviews for public display or reject unsuitable submissions.</p>
+        </div>
+    </section>
+
+    <section class="section section-atmosphere-clay section-divider section-reveal-zone">
+        <div class="shell">
+            <p class="callout" th:if="${reviewAdminMessage != null}" th:text="${reviewAdminMessage}">Action completed.</p>
+            <div class="detail-grid" th:if="${!#lists.isEmpty(pendingReviews)}">
+                <article class="detail-card" th:each="review : ${pendingReviews}">
+                    <p class="eyebrow" th:text="${review.ceremonyType}">Wedding ceremony</p>
+                    <h3 th:text="${review.headline != null ? review.headline : 'Review submission'}">Review</h3>
+                    <p><strong th:text="${review.reviewerName}">Reviewer</strong> · <span th:text="${review.rating + ' stars'}">5 stars</span></p>
+                    <p th:text="${review.message}">Review message</p>
+                    <div class="hero-actions">
+                        <form th:action="@{'/reviews/admin/' + ${review.id} + '/approve'}" method="post">
+                            <button class="button" type="submit">Approve</button>
+                        </form>
+                        <form th:action="@{'/reviews/admin/' + ${review.id} + '/reject'}" method="post">
+                            <button class="button button-secondary" type="submit">Reject</button>
+                        </form>
+                    </div>
+                </article>
+            </div>
+            <div class="contact-note-card" th:if="${#lists.isEmpty(pendingReviews)}">
+                <p class="eyebrow">No pending reviews</p>
+                <h2>All submissions have been reviewed.</h2>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-soft section-atmosphere-sage section-reveal-zone">
+        <div class="shell cta-panel">
+            <div>
+                <p class="eyebrow">Session</p>
+                <h2>Finished moderating?</h2>
+                <p>Sign out to end this admin session.</p>
+            </div>
+            <form th:action="@{/reviews/admin/logout}" method="post">
+                <button class="button" type="submit">Sign out</button>
+            </form>
+        </div>
+    </section>
+</main>
+</html>

@@ -1,0 +1,105 @@
+package co.uk.clarebrunton.ceremonies;
+
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.springframework.mock.web.MockMultipartFile;
+
+import co.uk.clarebrunton.ceremonies.config.ReviewProperties;
+import co.uk.clarebrunton.ceremonies.model.ReviewEntry;
+import co.uk.clarebrunton.ceremonies.model.ReviewForm;
+import co.uk.clarebrunton.ceremonies.model.ReviewStatus;
+import co.uk.clarebrunton.ceremonies.service.ReviewService;
+
+class ReviewServiceTest {
+
+	private ReviewService createService(Path tempDir) {
+		ReviewProperties properties = new ReviewProperties();
+		properties.setStorageDirectory(tempDir.toString());
+		properties.setPhotoDirectory("uploads");
+		properties.setMaxPhotoCount(2);
+		properties.setMaxPhotoSizeBytes(1024 * 1024);
+		return new ReviewService(properties);
+	}
+
+	private ReviewForm validForm() {
+		ReviewForm form = new ReviewForm();
+		form.setReviewerName("Alex Smith");
+		form.setReviewerRole("Bride");
+		form.setCeremonyType("Wedding ceremony");
+		form.setRating(5);
+		form.setHeadline("Beautiful ceremony");
+		form.setMessage("Clare created a warm and memorable ceremony that captured us perfectly and felt completely personal.");
+		form.setEventDate(LocalDate.now().minusDays(10));
+		form.setConsentAccepted(true);
+		return form;
+	}
+
+	@Test
+	void submitReviewStoresPendingReviewAndAllowsModeration(@TempDir Path tempDir) {
+		ReviewService service = createService(tempDir);
+
+		service.submitReview(validForm(), List.of());
+
+		List<ReviewEntry> pending = service.getPendingReviews();
+		assertThat(pending).hasSize(1);
+		ReviewEntry pendingEntry = pending.get(0);
+		assertThat(pendingEntry.getStatus()).isEqualTo(ReviewStatus.PENDING);
+		assertThat(service.getApprovedReviews()).isEmpty();
+
+		service.approveReview(pendingEntry.getId(), "Verified genuine");
+
+		List<ReviewEntry> approved = service.getApprovedReviews();
+		assertThat(approved).hasSize(1);
+		assertThat(approved.get(0).getStatus()).isEqualTo(ReviewStatus.APPROVED);
+		assertThat(approved.get(0).getModerationNote()).isEqualTo("Verified genuine");
+		assertThat(service.getApprovedFiveStarReviews()).hasSize(1);
+		assertThat(service.getPendingReviews()).isEmpty();
+	}
+
+	@Test
+	void rejectReviewMovesReviewOutOfPendingList(@TempDir Path tempDir) {
+		ReviewService service = createService(tempDir);
+		service.submitReview(validForm(), List.of());
+		ReviewEntry pendingEntry = service.getPendingReviews().get(0);
+
+		service.rejectReview(pendingEntry.getId(), "Insufficient detail");
+
+		assertThat(service.getPendingReviews()).isEmpty();
+		assertThat(service.getApprovedReviews()).isEmpty();
+	}
+
+	@Test
+	void submitReviewRejectsPhotoCountOverLimit(@TempDir Path tempDir) {
+		ReviewService service = createService(tempDir);
+		MockMultipartFile one = new MockMultipartFile("reviewPhotos", "one.jpg", "image/jpeg", new byte[] { 1 });
+		MockMultipartFile two = new MockMultipartFile("reviewPhotos", "two.jpg", "image/jpeg", new byte[] { 2 });
+		MockMultipartFile three = new MockMultipartFile("reviewPhotos", "three.jpg", "image/jpeg", new byte[] { 3 });
+
+		assertThatThrownBy(() -> service.submitReview(validForm(), List.of(one, two, three)))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Please upload up to 2 photos.");
+	}
+
+	@Test
+	void submitReviewStoresPhotoAndResolvePhotoPathBlocksTraversal(@TempDir Path tempDir) {
+		ReviewService service = createService(tempDir);
+		MockMultipartFile photo = new MockMultipartFile("reviewPhotos", "wedding.jpg", "image/jpeg", new byte[] { 1, 2, 3 });
+
+		service.submitReview(validForm(), List.of(photo));
+
+		ReviewEntry pending = service.getPendingReviews().get(0);
+		assertThat(pending.getPhotoFileNames()).hasSize(1);
+		Path storedPath = service.resolvePhotoPath(pending.getPhotoFileNames().get(0));
+		assertThat(storedPath).exists();
+
+		assertThatThrownBy(() -> service.resolvePhotoPath("../../outside.jpg"))
+				.isInstanceOf(IllegalArgumentException.class)
+				.hasMessage("Invalid photo path.");
+	}
+}

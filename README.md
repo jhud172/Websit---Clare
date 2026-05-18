@@ -115,6 +115,19 @@ Set these in Render before launch:
 - `SPRING_MAIL_PORT`
 - `SPRING_MAIL_USERNAME`
 - `SPRING_MAIL_PASSWORD`
+- `REVIEWS_STORAGE_DIRECTORY` defaults to `data/reviews`
+- `REVIEWS_PHOTO_DIRECTORY` defaults to `uploads`
+- `REVIEWS_ADMIN_USERNAME`
+- `REVIEWS_ADMIN_PASSWORD`
+
+## Reviews moderation
+
+- Public visitors can submit reviews from `/reviews`.
+- Submissions are stored as pending and do not auto-publish.
+- Admin moderation routes:
+  - `/reviews/admin/login`
+  - `/reviews/admin`
+- Approved reviews appear on `/reviews` and approved five-star reviews are featured on the homepage carousel.
 
 ## Docker / Render deployment
 

@@ -31,11 +31,10 @@
             <a th:href="@{/weddings}" th:classappend="${activePage == 'weddings'} ? ' is-active'">Weddings</a>
             <a th:href="@{/funerals}" th:classappend="${activePage == 'funerals'} ? ' is-active'">Funerals</a>
             <a th:href="@{/reviews}" th:classappend="${activePage == 'reviews'} ? ' is-active'">Reviews</a>
-            <a th:href="@{/contact}" th:classappend="${activePage == 'contact'} ? ' is-active'">Contact</a>
         </nav>
 
         <div class="header-actions">
-            <a class="button header-cta" th:href="@{/contact}">Make an enquiry</a>
+            <button class="button header-cta" type="button" data-open-enquiry-modal>Make an enquiry</button>
         </div>
     </div>
 </header>
