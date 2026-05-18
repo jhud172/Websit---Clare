@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'contact', ~{::main})}">
-<main>
+<main class="theme-contact">
     <section class="page-hero page-hero-editorial section-reveal-zone">
         <div class="shell section-heading">
             <p class="eyebrow">Contact</p>
@@ -97,7 +97,7 @@
                                         aria-haspopup="listbox"
                                         aria-expanded="false"
                                         aria-label="Select country code">
-                                    <span data-phone-flag>&#x1F1EC;&#x1F1E7;</span>
+                                    <span class="phone-region" data-phone-flag>GB</span>
                                     <span data-phone-code>+44</span>
                                     <span class="phone-chevron" aria-hidden="true">&#x2304;</span>
                                 </button>
@@ -107,18 +107,18 @@
                                 <input id="phone" type="hidden" th:field="*{phone}" data-phone-combined>
                             </div>
                             <div class="field-popup field-popup-phone" data-phone-popup>
-                                <ul class="field-option-list" role="listbox" aria-label="Select country code">
-                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+44" data-flag="&#x1F1EC;&#x1F1E7;">&#x1F1EC;&#x1F1E7; United Kingdom (+44)</button></li>
-                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+353" data-flag="&#x1F1EE;&#x1F1EA;">&#x1F1EE;&#x1F1EA; Ireland (+353)</button></li>
-                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+1" data-flag="&#x1F1FA;&#x1F1F8;">&#x1F1FA;&#x1F1F8; US &amp; Canada (+1)</button></li>
-                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+61" data-flag="&#x1F1E6;&#x1F1FA;">&#x1F1E6;&#x1F1FA; Australia (+61)</button></li>
-                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+64" data-flag="&#x1F1F3;&#x1F1FF;">&#x1F1F3;&#x1F1FF; New Zealand (+64)</button></li>
-                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+27" data-flag="&#x1F1FF;&#x1F1E6;">&#x1F1FF;&#x1F1E6; South Africa (+27)</button></li>
-                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+33" data-flag="&#x1F1EB;&#x1F1F7;">&#x1F1EB;&#x1F1F7; France (+33)</button></li>
-                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+49" data-flag="&#x1F1E9;&#x1F1EA;">&#x1F1E9;&#x1F1EA; Germany (+49)</button></li>
-                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+34" data-flag="&#x1F1EA;&#x1F1F8;">&#x1F1EA;&#x1F1F8; Spain (+34)</button></li>
-                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+39" data-flag="&#x1F1EE;&#x1F1F9;">&#x1F1EE;&#x1F1F9; Italy (+39)</button></li>
-                                    <li><button class="field-option" type="button" role="option" data-phone-option data-code="+31" data-flag="&#x1F1F3;&#x1F1F1;">&#x1F1F3;&#x1F1F1; Netherlands (+31)</button></li>
+                                <ul class="field-option-list phone-option-list" role="listbox" aria-label="Select country code">
+                                    <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-code="+44" data-flag="GB" data-national-min="10" data-national-max="10" data-national-format="4 6" data-placeholder="7700 900123"><span class="phone-option-region">GB</span><span class="phone-option-name">United Kingdom</span><span class="phone-option-code">+44</span></button></li>
+                                    <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-code="+353" data-flag="IE" data-national-min="9" data-national-max="9" data-national-format="2 3 4" data-placeholder="85 123 4567"><span class="phone-option-region">IE</span><span class="phone-option-name">Ireland</span><span class="phone-option-code">+353</span></button></li>
+                                    <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-code="+1" data-flag="US" data-national-min="10" data-national-max="10" data-national-format="3 3 4" data-placeholder="212 555 0198"><span class="phone-option-region">US</span><span class="phone-option-name">US &amp; Canada</span><span class="phone-option-code">+1</span></button></li>
+                                    <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-code="+61" data-flag="AU" data-national-min="9" data-national-max="9" data-national-format="3 3 3" data-placeholder="412 345 678"><span class="phone-option-region">AU</span><span class="phone-option-name">Australia</span><span class="phone-option-code">+61</span></button></li>
+                                    <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-code="+64" data-flag="NZ" data-national-min="8" data-national-max="9" data-national-format="2 3 4" data-placeholder="21 123 4567"><span class="phone-option-region">NZ</span><span class="phone-option-name">New Zealand</span><span class="phone-option-code">+64</span></button></li>
+                                    <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-code="+27" data-flag="ZA" data-national-min="9" data-national-max="9" data-national-format="2 3 4" data-placeholder="82 123 4567"><span class="phone-option-region">ZA</span><span class="phone-option-name">South Africa</span><span class="phone-option-code">+27</span></button></li>
+                                    <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-code="+33" data-flag="FR" data-national-min="9" data-national-max="9" data-national-format="1 2 2 2 2" data-placeholder="6 12 34 56 78"><span class="phone-option-region">FR</span><span class="phone-option-name">France</span><span class="phone-option-code">+33</span></button></li>
+                                    <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-code="+49" data-flag="DE" data-national-min="10" data-national-max="11" data-national-format="3 8" data-placeholder="151 23456789"><span class="phone-option-region">DE</span><span class="phone-option-name">Germany</span><span class="phone-option-code">+49</span></button></li>
+                                    <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-code="+34" data-flag="ES" data-national-min="9" data-national-max="9" data-national-format="3 3 3" data-placeholder="612 345 678"><span class="phone-option-region">ES</span><span class="phone-option-name">Spain</span><span class="phone-option-code">+34</span></button></li>
+                                    <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-code="+39" data-flag="IT" data-national-min="9" data-national-max="10" data-national-format="3 3 4" data-placeholder="312 345 6789"><span class="phone-option-region">IT</span><span class="phone-option-name">Italy</span><span class="phone-option-code">+39</span></button></li>
+                                    <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-code="+31" data-flag="NL" data-national-min="9" data-national-max="9" data-national-format="2 3 4" data-placeholder="61 234 5678"><span class="phone-option-region">NL</span><span class="phone-option-name">Netherlands</span><span class="phone-option-code">+31</span></button></li>
                                 </ul>
                             </div>
                         </div>

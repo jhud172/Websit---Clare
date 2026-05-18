@@ -25,11 +25,7 @@ import jakarta.validation.Valid;
 @Controller
 public class SiteController {
 
-	private static final String LOGO_MAIN_DARK = "/images/brand/logo-main-dark.svg";
-	private static final String LOGO_MAIN_SAGE = "/images/brand/logo-main-sage.svg";
-	private static final String LOGO_MAIN_WHITE_GOLD = "/images/brand/logo-main-white-gold.svg";
-	private static final String LOGO_FUNERAL_DARK = "/images/brand/logo-funeral-dark.svg";
-	private static final String LOGO_WEDDING_LIGHT = "/images/brand/logo-wedding-light.svg";
+	private static final String LOGO_CLARE = "/images/brand/logo-clare.png";
 
 	private static final List<String> SERVICE_OPTIONS = List.of(
 			"Wedding ceremony",
@@ -58,23 +54,23 @@ public class SiteController {
 
 	@GetMapping("/")
 	public String home(Model model) {
-		model.addAttribute("logoPath", LOGO_MAIN_WHITE_GOLD);
-		model.addAttribute("pageTitle", "Warm, elegant ceremonies for every chapter");
-		model.addAttribute("pageDescription", "Clare’s Life Celebrations offers warm, personal weddings, funerals and life ceremonies with a modern premium feel.");
+		model.addAttribute("logoPath", LOGO_CLARE);
+		model.addAttribute("pageTitle", "Warm, elegant ceremonies for moments that matter");
+		model.addAttribute("pageDescription", "Clare's Life Celebrations offers warm, personal weddings, funerals and life ceremonies with a modern premium feel.");
 		return "home";
 	}
 
 	@GetMapping("/about")
 	public String about(Model model) {
-		model.addAttribute("logoPath", LOGO_MAIN_SAGE);
+		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Meet Clare");
-		model.addAttribute("pageDescription", "Meet Clare and discover the calm, caring approach behind Clare’s Life Celebrations.");
+		model.addAttribute("pageDescription", "Meet Clare and discover the calm, caring approach behind Clare's Life Celebrations.");
 		return "about";
 	}
 
 	@GetMapping("/services")
 	public String services(Model model) {
-		model.addAttribute("logoPath", LOGO_MAIN_SAGE);
+		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Services");
 		model.addAttribute("pageDescription", "An overview of Clare’s wedding, funeral and life ceremony services.");
 		return "ceremonies";
@@ -82,7 +78,7 @@ public class SiteController {
 
 	@GetMapping("/weddings")
 	public String weddings(Model model) {
-		model.addAttribute("logoPath", LOGO_WEDDING_LIGHT);
+		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Wedding ceremonies");
 		model.addAttribute("pageDescription", "Modern wedding ceremonies shaped with warmth, style and personal detail.");
 		return "weddings";
@@ -90,7 +86,7 @@ public class SiteController {
 
 	@GetMapping("/funerals")
 	public String funerals(Model model) {
-		model.addAttribute("logoPath", LOGO_FUNERAL_DARK);
+		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Funerals");
 		model.addAttribute("pageDescription", "Thoughtful funeral and memorial ceremonies created with warmth, clarity and care.");
 		return "funerals";
@@ -98,7 +94,7 @@ public class SiteController {
 
 	@GetMapping("/reviews")
 	public String reviews(Model model) {
-		model.addAttribute("logoPath", LOGO_MAIN_DARK);
+		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Reviews");
 		model.addAttribute("pageDescription", "A dedicated page for kind words, feedback and the experience Clare is building around her celebrant services.");
 		return "reviews";
@@ -111,7 +107,7 @@ public class SiteController {
 
 	@GetMapping("/blog")
 	public String blog(Model model) {
-		model.addAttribute("logoPath", LOGO_MAIN_DARK);
+		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Journal");
 		model.addAttribute("pageDescription", "Placeholder journal posts for wedding, funeral and celebrant planning.");
 		model.addAttribute("posts", blogService.findAll());
@@ -125,7 +121,7 @@ public class SiteController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 
-		model.addAttribute("logoPath", LOGO_MAIN_DARK);
+		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", post.title());
 		model.addAttribute("pageDescription", post.excerpt());
 		model.addAttribute("post", post);
@@ -135,12 +131,12 @@ public class SiteController {
 
 	@GetMapping("/contact")
 	public String contact(Model model) {
-		model.addAttribute("logoPath", LOGO_MAIN_DARK);
+		model.addAttribute("logoPath", LOGO_CLARE);
 		if (!model.containsAttribute("inquiryForm")) {
 			model.addAttribute("inquiryForm", new InquiryForm());
 		}
 		model.addAttribute("pageTitle", "Contact");
-		model.addAttribute("pageDescription", "Get in touch with Clare’s Life Celebrations to start planning a wedding, funeral or milestone ceremony.");
+		model.addAttribute("pageDescription", "Get in touch with Clare's Life Celebrations to start planning a wedding, funeral or milestone ceremony.");
 		return "contact";
 	}
 
@@ -154,9 +150,9 @@ public class SiteController {
 		String attachmentError = validateAttachments(uploadedAttachments);
 
 		if (bindingResult.hasErrors() || attachmentError != null) {
-			model.addAttribute("logoPath", LOGO_MAIN_DARK);
+			model.addAttribute("logoPath", LOGO_CLARE);
 			model.addAttribute("pageTitle", "Contact");
-			model.addAttribute("pageDescription", "Get in touch with Clare’s Life Celebrations to start planning a wedding, funeral or milestone ceremony.");
+			model.addAttribute("pageDescription", "Get in touch with Clare's Life Celebrations to start planning a wedding, funeral or milestone ceremony.");
 			if (attachmentError != null) {
 				model.addAttribute("attachmentError", attachmentError);
 			}
@@ -182,17 +178,17 @@ public class SiteController {
 
 	@GetMapping("/thank-you")
 	public String thankYou(Model model) {
-		model.addAttribute("logoPath", LOGO_MAIN_DARK);
+		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Thank you for getting in touch");
-		model.addAttribute("pageDescription", "Confirmation page after submitting an enquiry to Clare’s Life Celebrations.");
+		model.addAttribute("pageDescription", "Confirmation page after submitting an enquiry to Clare's Life Celebrations.");
 		return "thank-you";
 	}
 
 	@GetMapping("/privacy")
 	public String privacy(Model model) {
-		model.addAttribute("logoPath", LOGO_MAIN_DARK);
+		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Privacy Policy");
-		model.addAttribute("pageDescription", "How Clare’s Life Celebrations collects, stores and uses personal information.");
+		model.addAttribute("pageDescription", "How Clare's Life Celebrations collects, stores and uses personal information.");
 		return "privacy";
 	}
 

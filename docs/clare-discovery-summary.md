@@ -4,7 +4,7 @@ Date: 2026-04-15
 
 ## Clare's direction
 
-- Business name: Clare’s Life Celebrations
+- Business name: Clare's Life Celebrations
 - Main launch focus: weddings and funerals first
 - Long-term scope: all ceremonies
 - Desired tone: boho, modern, warm, personal, fun, bubbly

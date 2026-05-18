@@ -1,7 +1,12 @@
 package co.uk.clarebrunton.ceremonies.service;
 
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -33,6 +38,9 @@ public class InquiryNotificationService {
 	@Value("${inquiry.notification-email:}")
 	private String notificationEmail;
 
+	@Value("${inquiry.fallback-directory:data/inquiries}")
+	private String fallbackDirectory;
+
 	public InquiryNotificationService(ObjectProvider<JavaMailSender> mailSenderProvider, SiteProperties siteProperties) {
 		this.mailSenderProvider = mailSenderProvider;
 		this.siteProperties = siteProperties;
@@ -49,6 +57,7 @@ public class InquiryNotificationService {
 					inquiryForm.getServiceType(),
 					inquiryForm.getEmail(),
 					safeAttachments.size());
+			writeFallbackRecord(inquiryForm, safeAttachments, "outbound-email-not-configured");
 			return;
 		}
 
@@ -59,6 +68,7 @@ public class InquiryNotificationService {
 		catch (MailException | MessagingException exception) {
 			logger.error("Admin notification could not be sent for inquiry from {}. Check SMTP settings.",
 					inquiryForm.getEmail(), exception);
+			writeFallbackRecord(inquiryForm, safeAttachments, "admin-email-send-failed");
 		}
 
 		try {
@@ -165,6 +175,90 @@ public class InquiryNotificationService {
 
 		String[] parts = fullName.trim().split("\\s+");
 		return parts.length > 0 ? parts[0] : fullName.trim();
+	}
+
+	private void writeFallbackRecord(InquiryForm inquiryForm, List<MultipartFile> attachments, String reason) {
+		if (!StringUtils.hasText(fallbackDirectory)) {
+			logger.warn("Inquiry fallback record skipped because inquiry.fallback-directory is empty.");
+			return;
+		}
+
+		try {
+			Path directory = Paths.get(fallbackDirectory).toAbsolutePath().normalize();
+			Files.createDirectories(directory);
+
+			OffsetDateTime receivedAt = OffsetDateTime.now();
+			String timestamp = receivedAt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME).replaceAll("[^0-9A-Za-z-]", "-");
+			String filename = "%s-%s.txt".formatted(timestamp, sanitiseFilenameSegment(inquiryForm.getFullName()));
+			Path recordPath = directory.resolve(filename);
+
+			Files.writeString(recordPath, buildFallbackRecord(inquiryForm, attachments, reason, receivedAt),
+					StandardCharsets.UTF_8,
+					StandardOpenOption.CREATE_NEW,
+					StandardOpenOption.WRITE);
+			logger.warn("Inquiry fallback record saved to {}", recordPath);
+		}
+		catch (Exception exception) {
+			logger.error("Inquiry fallback record could not be saved. Manual follow-up may be required for {}.",
+					inquiryForm.getEmail(), exception);
+		}
+	}
+
+	private String buildFallbackRecord(InquiryForm inquiryForm,
+			List<MultipartFile> attachments,
+			String reason,
+			OffsetDateTime receivedAt) {
+		String attachmentSummary = attachments.isEmpty()
+				? "None"
+				: attachments.stream()
+						.map(this::formatAttachmentSummary)
+						.reduce((left, right) -> left + System.lineSeparator() + right)
+						.orElse("None");
+
+		return """
+				Inquiry fallback record
+				Reason:       %s
+				Received at:  %s
+				Site:         %s
+
+				Name:         %s
+				Email:        %s
+				Phone:        %s
+				Service:      %s
+				Event date:   %s
+				Venue:        %s
+				Attachments:  %s
+
+				Message:
+				%s
+				""".formatted(
+				reason,
+				receivedAt,
+				siteProperties.getName(),
+				inquiryForm.getFullName(),
+				inquiryForm.getEmail(),
+				inquiryForm.getPhone(),
+				inquiryForm.getServiceType(),
+				inquiryForm.getEventDate() != null ? inquiryForm.getEventDate() : "Not supplied",
+				inquiryForm.getVenue(),
+				attachmentSummary,
+				inquiryForm.getMessage()
+		);
+	}
+
+	private String formatAttachmentSummary(MultipartFile attachment) {
+		String originalName = StringUtils.hasText(attachment.getOriginalFilename())
+				? Paths.get(attachment.getOriginalFilename()).getFileName().toString()
+				: "attachment";
+		return "- %s (%s bytes)".formatted(originalName, attachment.getSize());
+	}
+
+	private String sanitiseFilenameSegment(String value) {
+		if (!StringUtils.hasText(value)) {
+			return "unknown";
+		}
+		String sanitised = value.trim().toLowerCase().replaceAll("[^a-z0-9]+", "-").replaceAll("(^-|-$)", "");
+		return StringUtils.hasText(sanitised) ? sanitised : "unknown";
 	}
 
 }

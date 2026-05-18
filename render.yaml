@@ -9,9 +9,9 @@ services:
     healthCheckPath: /
     envVars:
       - key: SITE_NAME
-        value: Clare’s Life Celebrations
+        value: Clare's Life Celebrations
       - key: SITE_TAGLINE
-        value: for every chapter
+        value: For Moments That Matter
       - key: SITE_CONTACT_EMAIL
         value: clarebruntoncelebrant@gmail.com
       - key: SITE_PHONE_NUMBER

@@ -25,8 +25,8 @@ spring:
             enable: ${SPRING_MAIL_SMTP_STARTTLS_ENABLE:true}
 
 site:
-  name: ${SITE_NAME:Clare’s Life Celebrations}
-  tagline: ${SITE_TAGLINE:for every chapter}
+  name: ${SITE_NAME:Clare's Life Celebrations}
+  tagline: ${SITE_TAGLINE:For Moments That Matter}
   contact-email: ${SITE_CONTACT_EMAIL:clarebruntoncelebrant@gmail.com}
   phone-number: ${SITE_PHONE_NUMBER:07885 428304}
   instagram-url: ${SITE_INSTAGRAM_URL:}
@@ -35,3 +35,4 @@ site:
 
 inquiry:
   notification-email: ${INQUIRY_NOTIFICATION_EMAIL:${SITE_CONTACT_EMAIL:hello@clarebrunton.co.uk}}
+  fallback-directory: ${INQUIRY_FALLBACK_DIRECTORY:data/inquiries}

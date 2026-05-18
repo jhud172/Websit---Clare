@@ -74,19 +74,31 @@ if (themeToggle) {
 
 if (siteHeader) {
     let lastScrollY = window.scrollY;
+    let lastDirection = "up";
 
     const syncHeader = () => {
         const currentScrollY = window.scrollY;
+        const scrollDelta = currentScrollY - lastScrollY;
+        const scrollingDown = scrollDelta > 4;
+        const scrollingUp = scrollDelta < -4;
+
         siteHeader.classList.toggle("is-scrolled", currentScrollY > 16);
 
-        if (window.innerWidth > 1040) {
-            const scrollingDown = currentScrollY > lastScrollY;
-            const scrollingUp = currentScrollY < lastScrollY;
+        if (scrollingDown) {
+            lastDirection = "down";
+        }
+        else if (scrollingUp) {
+            lastDirection = "up";
+        }
 
-            if (currentScrollY > 180 && scrollingDown) {
+        siteHeader.classList.toggle("is-scroll-up", currentScrollY > 96 && lastDirection === "up");
+        siteHeader.classList.toggle("is-scroll-down", currentScrollY > 180 && lastDirection === "down");
+
+        if (window.innerWidth > 1040) {
+            if (currentScrollY > 180 && lastDirection === "down") {
                 siteHeader.classList.add("is-condensed");
             }
-            else if (currentScrollY < 96 || scrollingUp) {
+            else if (currentScrollY < 96 || lastDirection === "up") {
                 siteHeader.classList.remove("is-condensed");
             }
         }
@@ -241,10 +253,33 @@ const formatMonthLabel = (date) => new Intl.DateTimeFormat("en-GB", {
 
 const customFieldRoots = Array.from(document.querySelectorAll("[data-choice-select], [data-date-picker], [data-phone-field]"));
 
+const positionCustomField = (root) => {
+    const popup = root.querySelector(".field-popup");
+
+    if (!popup) {
+        return;
+    }
+
+    popup.classList.remove("is-above");
+    popup.style.removeProperty("--field-popup-max-height");
+
+    const rootRect = root.getBoundingClientRect();
+    const popupRect = popup.getBoundingClientRect();
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const spaceBelow = viewportHeight - rootRect.bottom - 18;
+    const spaceAbove = rootRect.top - 18;
+    const openAbove = spaceBelow < Math.min(popupRect.height, 300) && spaceAbove > spaceBelow;
+    const availableSpace = Math.max(180, Math.floor(openAbove ? spaceAbove : spaceBelow));
+
+    popup.classList.toggle("is-above", openAbove);
+    popup.style.setProperty("--field-popup-max-height", `${availableSpace}px`);
+};
+
 const closeCustomField = (root) => {
     const trigger = root.querySelector("[data-choice-trigger], [data-date-trigger], [data-phone-code-trigger]");
 
     root.classList.remove("is-open");
+    root.querySelector(".field-popup")?.classList.remove("is-above");
 
     if (trigger) {
         trigger.setAttribute("aria-expanded", "false");
@@ -265,6 +300,8 @@ const openCustomField = (root) => {
     if (trigger) {
         trigger.setAttribute("aria-expanded", "true");
     }
+
+    window.requestAnimationFrame(() => positionCustomField(root));
 };
 
 document.addEventListener("click", (event) => {
@@ -286,6 +323,22 @@ document.addEventListener("keydown", (event) => {
         }
     });
 });
+
+window.addEventListener("resize", () => {
+    customFieldRoots.forEach((root) => {
+        if (root.classList.contains("is-open")) {
+            positionCustomField(root);
+        }
+    });
+});
+
+window.addEventListener("scroll", () => {
+    customFieldRoots.forEach((root) => {
+        if (root.classList.contains("is-open")) {
+            positionCustomField(root);
+        }
+    });
+}, { passive: true });
 
 document.querySelectorAll("[data-choice-select]").forEach((root) => {
     const input = root.querySelector("[data-choice-input]");
@@ -462,7 +515,68 @@ document.querySelectorAll("[data-phone-field]").forEach((phoneRoot) => {
     const combinedInput = phoneRoot.querySelector("[data-phone-combined]");
     const options = Array.from(phoneRoot.querySelectorAll("[data-phone-option]"));
 
+    const getSelectedOption = () => {
+        const selectedCode = codeEl ? codeEl.textContent.trim() : "+44";
+        return options.find((option) => option.dataset.code === selectedCode) || options[0] || null;
+    };
+
+    const getNationalDigits = () => numberInput ? numberInput.value.replace(/\D/g, "") : "";
+
+    const formatNationalDigits = (digits, pattern) => {
+        const groups = (pattern || "").split(/\s+/).map(Number).filter(Boolean);
+
+        if (groups.length === 0) {
+            return digits;
+        }
+
+        const parts = [];
+        let cursor = 0;
+
+        groups.forEach((groupSize) => {
+            if (cursor >= digits.length) {
+                return;
+            }
+
+            parts.push(digits.slice(cursor, cursor + groupSize));
+            cursor += groupSize;
+        });
+
+        if (cursor < digits.length) {
+            parts.push(digits.slice(cursor));
+        }
+
+        return parts.filter(Boolean).join(" ");
+    };
+
+    const syncPhoneRules = () => {
+        if (!numberInput) {
+            return;
+        }
+
+        const selectedOption = getSelectedOption();
+        const maxDigits = Number(selectedOption?.dataset.nationalMax || 15);
+        const placeholder = selectedOption?.dataset.placeholder || "7700 900123";
+        const pattern = selectedOption?.dataset.nationalFormat || "";
+        const digits = getNationalDigits().slice(0, maxDigits);
+        const formattedValue = formatNationalDigits(digits, pattern);
+
+        numberInput.placeholder = placeholder;
+        numberInput.maxLength = Math.max(placeholder.length, formattedValue.length, maxDigits);
+        numberInput.value = formattedValue;
+    };
+
+    const updateSelectedState = () => {
+        const selectedOption = getSelectedOption();
+
+        options.forEach((option) => {
+            const isSelected = option === selectedOption;
+            option.classList.toggle("is-selected", isSelected);
+            option.setAttribute("aria-selected", String(isSelected));
+        });
+    };
+
     const updateCombined = () => {
+        syncPhoneRules();
         const code = codeEl ? codeEl.textContent.trim() : "+44";
         const number = numberInput ? numberInput.value.trim() : "";
         if (combinedInput) {
@@ -475,9 +589,10 @@ document.querySelectorAll("[data-phone-field]").forEach((phoneRoot) => {
         option.addEventListener("click", () => {
             if (flagEl) flagEl.textContent = option.dataset.flag || "";
             if (codeEl) codeEl.textContent = option.dataset.code || "+44";
+            updateSelectedState();
+            updateCombined();
             closeCustomField(phoneRoot);
             if (numberInput) numberInput.focus();
-            updateCombined();
         });
     });
 
@@ -492,7 +607,9 @@ document.querySelectorAll("[data-phone-field]").forEach((phoneRoot) => {
     }
 
     if (numberInput) {
-        numberInput.addEventListener("input", updateCombined);
+        numberInput.addEventListener("input", () => {
+            updateCombined();
+        });
     }
 
     // Pre-populate from existing combined value (e.g. after validation error re-render)
@@ -505,6 +622,9 @@ document.querySelectorAll("[data-phone-field]").forEach((phoneRoot) => {
             if (numberInput) numberInput.value = existing.slice((matched.dataset.code || "").length).trim();
         }
     }
+
+    updateSelectedState();
+    updateCombined();
 });
 
 const contactForm = document.querySelector("[data-contact-form]");
@@ -645,8 +765,19 @@ if (contactForm) {
                 if (!trimmed) {
                     return "Please add a phone number.";
                 }
-                const digits = trimmed.replace(/\D/g, "");
-                return digits.length >= 7 ? "" : "Please add a valid phone number.";
+                const phoneRoot = contactForm.querySelector("[data-phone-field]");
+                const selectedCode = phoneRoot?.querySelector("[data-phone-code]")?.textContent.trim() || "";
+                const selectedOption = Array.from(phoneRoot?.querySelectorAll("[data-phone-option]") || [])
+                        .find((option) => option.dataset.code === selectedCode);
+                const nationalDigits = trimmed.replace(selectedCode, "").replace(/\D/g, "");
+                const minDigits = Number(selectedOption?.dataset.nationalMin || 7);
+                const maxDigits = Number(selectedOption?.dataset.nationalMax || 15);
+
+                if (nationalDigits.length < minDigits) {
+                    return `Please add at least ${minDigits} digits for this country code.`;
+                }
+
+                return nationalDigits.length <= maxDigits ? "" : `Please use no more than ${maxDigits} digits for this country code.`;
             }
         },
         serviceType: {
@@ -755,8 +886,12 @@ if (contactForm) {
     const privacyInput = fieldConfig.privacyAccepted.input;
 
     if (privacyRow && privacyInput) {
+        const syncPrivacyCheckedState = () => {
+            privacyRow.classList.toggle("is-checked", privacyInput.checked);
+        };
+
         privacyRow.addEventListener("click", (event) => {
-            if (event.target.closest("a") || event.target.closest("label") || event.target === privacyInput) {
+            if (event.target.closest("a") || event.target === privacyInput) {
                 return;
             }
 
@@ -764,6 +899,9 @@ if (contactForm) {
             privacyInput.checked = !privacyInput.checked;
             privacyInput.dispatchEvent(new Event("change", { bubbles: true }));
         });
+
+        privacyInput.addEventListener("change", syncPrivacyCheckedState);
+        syncPrivacyCheckedState();
     }
 
     contactForm.addEventListener("submit", (event) => {

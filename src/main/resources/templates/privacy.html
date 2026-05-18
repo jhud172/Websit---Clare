@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, '', ~{::main})}">
-<main>
+<main class="theme-privacy">
     <section class="page-hero page-hero-editorial section-reveal-zone">
         <div class="shell page-hero-grid">
             <div class="story-copy">
                 <p class="eyebrow">Privacy Policy</p>
                 <h1>Privacy Policy</h1>
-                <p class="lead">How Clare’s Life Celebrations handles your personal information.</p>
+                <p class="lead">How Clare's Life Celebrations handles your personal information.</p>
             </div>
             <div class="visual-stage brand-stage service-hero-stage">
-                <img class="brand-stage-logo" th:src="@{/images/brand/logo-main-dark.svg}" alt="Clare’s Life Celebrations logo">
+                <img class="brand-stage-logo" th:src="@{${logoPath}}" alt="Clare's Life Celebrations logo">
                 <p class="visual-note">This page gives a readable public-facing summary and should still receive final legal review against the supplied GDPR document.</p>
             </div>
         </div>
@@ -20,7 +20,7 @@
         <div class="shell contact-note-card">
             <p class="eyebrow">Important note</p>
             <h2>This page is structured for launch, but the final legal wording still needs to be checked against Clare’s supplied GDPR document.</h2>
-            <p>Business naming has been updated to Clare’s Life Celebrations, and the sections below are written to be client-readable rather than dense legal copy. Final legal review is still recommended before public release.</p>
+            <p>Business naming has been updated to Clare's Life Celebrations, and the sections below are written to be client-readable rather than dense legal copy. Final legal review is still recommended before public release.</p>
         </div>
     </section>
 
@@ -42,7 +42,7 @@
             <div class="policy-sections">
                 <article class="policy-card" id="information-collected">
                     <h2>Information collected</h2>
-                    <p>When you contact Clare’s Life Celebrations, the website may collect your name, email address, phone number, ceremony type, preferred date, venue or location, and any details you include in your message.</p>
+                    <p>When you contact Clare's Life Celebrations, the website may collect your name, email address, phone number, ceremony type, preferred date, venue or location, and any details you include in your message.</p>
                 </article>
                 <article class="policy-card" id="information-used">
                     <h2>How information is used</h2>
@@ -66,7 +66,7 @@
                 </article>
                 <article class="policy-card" id="privacy-contact-details">
                     <h2>Contact details</h2>
-                    <p>For privacy questions or data requests, contact Clare’s Life Celebrations by email at <a class="text-link" th:href="'mailto:' + ${site.contactEmail}" th:text="${site.contactEmail}">clarebruntoncelebrant@gmail.com</a>.</p>
+                    <p>For privacy questions or data requests, contact Clare's Life Celebrations by email at <a class="text-link" th:href="'mailto:' + ${site.contactEmail}" th:text="${site.contactEmail}">clarebruntoncelebrant@gmail.com</a>.</p>
                     <p th:if="${site.phoneNumber != null and !#strings.isEmpty(site.phoneNumber)}">Phone: <a class="text-link" th:href="'tel:' + ${site.phoneNumber}" th:text="${site.phoneNumber}">07885 428304</a></p>
                 </article>
             </div>

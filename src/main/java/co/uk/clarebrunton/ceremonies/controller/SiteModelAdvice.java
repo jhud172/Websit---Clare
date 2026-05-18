@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class SiteModelAdvice {
 
 	private static final Logger logger = LoggerFactory.getLogger(SiteModelAdvice.class);
-	private static final String DEFAULT_LOGO_PATH = "/images/brand/logo-main-dark.svg";
+	private static final String DEFAULT_LOGO_PATH = "/images/brand/logo-clare.png";
 
 	private final SiteProperties siteProperties;
 

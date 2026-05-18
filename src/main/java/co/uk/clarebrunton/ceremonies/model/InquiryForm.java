@@ -21,6 +21,7 @@ public class InquiryForm {
 	private String email;
 
 	@NotBlank(message = "Please add a phone number.")
+	@Size(min = 7, max = 24, message = "Please add a valid phone number.")
 	private String phone;
 
 	@NotBlank(message = "Please choose the type of ceremony.")
