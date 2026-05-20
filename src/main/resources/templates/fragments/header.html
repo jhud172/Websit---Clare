@@ -5,9 +5,15 @@
     <div class="shell header-inner">
         <a class="brand" th:href="@{/}" aria-label="Go to the home page">
             <span class="brand-lockup">
-                <img class="brand-logo"
-                     th:src="@{${logoPath}}"
-                     alt="Clare's Life Celebrations logo">
+                <span class="logo-composite brand-logo-composite" aria-hidden="true">
+                    <img class="logo-layer logo-clc"
+                         th:src="@{${clcLogoPath}}"
+                         alt="">
+                    <img class="logo-layer logo-wreath"
+                         th:src="@{${wreathLogoPath}}"
+                         alt="">
+                </span>
+                <span class="sr-only">Clare's Life Celebrations logo</span>
             </span>
             <span class="brand-wording">
                 <span class="brand-name" th:text="${site.name}">Clare's Life Celebrations</span>
@@ -34,7 +40,12 @@
         </nav>
 
         <div class="header-actions">
-            <button class="button header-cta" type="button" data-open-enquiry-modal>Make an enquiry</button>
+            <button class="button button-peacock header-cta" type="button" data-open-enquiry-modal>
+                <span class="header-cta-label">Make an enquiry</span>
+                <span class="header-cta-sub">Tell Clare about your ceremony</span>
+                <span class="feather left"></span>
+                <span class="feather right"></span>
+            </button>
         </div>
     </div>
 </header>

@@ -1,0 +1,262 @@
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--header-bg);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--header-border);
+    transform: translateY(0);
+    transition:
+        background 180ms ease,
+        box-shadow 180ms ease,
+        transform 260ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.site-header.is-scrolled {
+    background: var(--header-bg-strong);
+    box-shadow: 0 10px 24px rgba(36, 31, 27, 0.06);
+}
+
+.site-header.is-scroll-up {
+    transform: translateY(0);
+    background: var(--header-bg-strong);
+}
+
+.site-header.is-scroll-up .header-inner {
+    width: var(--shell);
+    justify-content: space-between;
+}
+
+.site-header.is-scroll-up .site-nav,
+.site-header.is-scroll-up .header-actions {
+    max-width: 48rem;
+    opacity: 1;
+    transform: none;
+    overflow: visible;
+    pointer-events: auto;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: var(--header-height);
+    gap: clamp(1rem, 2vw, 1.8rem);
+    padding-block: 0.55rem;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(0.95rem, 1.6vw, 1.1rem);
+    min-width: 0;
+    flex: 0 1 25rem;
+    max-width: min(25rem, 44vw);
+}
+
+.brand-lockup {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(4.55rem, 6.2vw, 5.7rem);
+    aspect-ratio: 1;
+    flex: 0 0 auto;
+    overflow: visible;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.brand-mark {
+    width: 4rem;
+    height: 4rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(231, 221, 208, 0.9)),
+        rgba(255, 250, 244, 0.85);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--sage-deep);
+}
+
+.brand-mark-image {
+    width: clamp(3.9rem, 5.5vw, 4.7rem);
+    height: clamp(3.9rem, 5.5vw, 4.7rem);
+    padding: 0.28rem;
+    overflow: hidden;
+    border-radius: 1.35rem;
+    box-shadow:
+        0 16px 36px rgba(36, 31, 27, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.62);
+}
+
+.brand-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 16px;
+}
+
+.logo-composite {
+    --logo-wreath-size: 120;
+    --logo-clc-size: 80;
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    aspect-ratio: 1;
+    filter:
+        drop-shadow(0 15px 30px rgba(0, 0, 0, 0.22))
+        drop-shadow(0 0 16px rgba(214, 199, 145, 0.08));
+}
+
+.logo-layer,
+.logo-composite img,
+.peacock-badge-logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.logo-layer {
+    grid-area: 1 / 1;
+}
+
+.logo-clc {
+    position: relative;
+    z-index: 3;
+    width: 66.666667%;
+    height: 66.666667%;
+    transform: translateY(1%) scale(1);
+    transform-origin: center;
+    filter:
+        drop-shadow(0 2px 8px rgba(0, 0, 0, 0.22))
+        drop-shadow(0 0 10px rgba(214, 199, 145, 0.08));
+    transition:
+        transform 520ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 520ms ease;
+}
+
+.clc-lettermark {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    justify-items: center;
+    width: 66.666667%;
+    height: 66.666667%;
+    margin: auto;
+    color: var(--ink);
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(1.15rem, 2.7vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+}
+
+.clc-letter {
+    display: inline-block;
+}
+
+.clc-letter-one {
+    transform: translate(0.16em, -0.12em);
+}
+
+.clc-letter-two {
+    transform: translate(0, 0.34em);
+}
+
+.clc-letter-three {
+    transform: translate(-0.16em, 0.08em) scaleX(-1);
+}
+
+.logo-wreath {
+    position: absolute;
+    inset: 0;
+    align-self: center;
+    justify-self: center;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    transform: rotate(0deg) scale(1);
+    transform-origin: center;
+    filter:
+        drop-shadow(0 0 10px rgba(214, 199, 145, 0.14))
+        drop-shadow(0 10px 20px rgba(0, 0, 0, 0.22));
+    transition:
+        transform 980ms cubic-bezier(0.18, 0.86, 0.24, 1),
+        filter 520ms ease;
+    will-change: transform;
+}
+
+.brand .logo-wreath {
+    transform: rotate(0deg) scale(1);
+}
+
+.brand-logo-composite {
+    width: 100%;
+    overflow: visible;
+}
+
+.brand:hover .logo-wreath,
+.brand:focus-visible .logo-wreath {
+    transform: rotate(360deg) scale(1.045);
+    filter:
+        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
+        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
+}
+
+.brand:hover .logo-clc,
+.brand:focus-visible .logo-clc {
+    transform: translateY(1%) scale(1.035);
+    filter:
+        drop-shadow(0 3px 10px rgba(0, 0, 0, 0.28))
+        drop-shadow(0 0 14px rgba(214, 199, 145, 0.14));
+}
+
+.footer-brand:hover .footer-logo-composite .logo-wreath,
+.brand-stage:hover .logo-wreath,
+.symbolism-mark:hover .logo-wreath,
+.service-path-card:hover .peacock-badge-logo .logo-wreath,
+.service-path-card:focus-within .peacock-badge-logo .logo-wreath {
+    transform: rotate(360deg);
+}
+
+.brand-wording {
+    display: grid;
+    gap: 0.18rem;
+    min-width: 0;
+}
+
+.brand-name {
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(1.28rem, 2vw, 1.62rem);
+    line-height: 1;
+    color: var(--ink);
+    white-space: nowrap;
+}
+
+.brand-tagline {
+    max-width: 28rem;
+    font-size: clamp(0.66rem, 0.9vw, 0.78rem);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    line-height: 1.45;
+    text-transform: uppercase;
+    color: var(--clay);
+    text-wrap: balance;
+}

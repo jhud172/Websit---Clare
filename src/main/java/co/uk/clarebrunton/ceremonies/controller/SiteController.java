@@ -35,7 +35,7 @@ import jakarta.validation.Valid;
 @Controller
 public class SiteController {
 
-	private static final String LOGO_CLARE = "/images/brand/logo-clare.png";
+	private static final String LOGO_CLARE = "/images/brand/logo-clare-background-white.png";
 
 	private static final List<String> SERVICE_OPTIONS = List.of(
 			"Wedding ceremony",
@@ -89,10 +89,7 @@ public class SiteController {
 
 	@GetMapping("/")
 	public String home(Model model) {
-		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Clare's Life Celebrations | Weddings and funerals in Durham");
-		model.addAttribute("pageDescription", "Clare Riley Brunton of Clare Life Celebrations creates modern wedding-led ceremonies and dignified funeral services across Durham.");
-		model.addAttribute("featuredReviews", reviewService.getApprovedFiveStarReviews());
+		prepareHomeModel(model);
 		return "home";
 	}
 
@@ -100,15 +97,15 @@ public class SiteController {
 	public String about(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Meet Clare Riley Brunton");
-		model.addAttribute("pageDescription", "Meet Clare Brunton, the celebrant behind Clare's Life Celebrations, offering warm and professional ceremonies in Durham.");
+		model.addAttribute("pageDescription", "Meet Clare Riley Brunton, a North of England celebrant creating modern, personal ceremonies with warmth, compassion and calm confidence.");
 		return "about";
 	}
 
 	@GetMapping("/services")
 	public String services(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Services");
-		model.addAttribute("pageDescription", "An overview of Clare’s wedding, funeral and life ceremony services.");
+		model.addAttribute("pageTitle", "Ceremony services");
+		model.addAttribute("pageDescription", "Wedding, funeral, naming, vow renewal and life ceremony services by Clare's Life Celebrations, created for moments that matter.");
 		return "ceremonies";
 	}
 
@@ -116,7 +113,7 @@ public class SiteController {
 	public String weddings(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Wedding ceremonies in Durham");
-		model.addAttribute("pageDescription", "Modern, bespoke wedding ceremonies by Clare Riley of Clare's Life Celebrations, designed with warmth and personality.");
+		model.addAttribute("pageDescription", "Bespoke celebrant-led wedding ceremonies by Clare Riley Brunton, designed with freedom, warmth, personality and meaningful ceremony choices.");
 		return "weddings";
 	}
 
@@ -124,7 +121,7 @@ public class SiteController {
 	public String funerals(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Funeral ceremonies in Durham");
-		model.addAttribute("pageDescription", "Thoughtful funeral and memorial ceremonies by Clare Brunton, created with dignity, warmth and professional care.");
+		model.addAttribute("pageDescription", "Funeral, memorial and celebration of life ceremonies by Clare Riley Brunton, created with compassion, dignity and heartfelt personal tribute.");
 		return "funerals";
 	}
 
@@ -276,7 +273,7 @@ public class SiteController {
 	public String blog(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Journal");
-		model.addAttribute("pageDescription", "Placeholder journal posts for wedding, funeral and celebrant planning.");
+		model.addAttribute("pageDescription", "Journal notes on celebrant-led weddings, funeral ceremonies and planning meaningful moments.");
 		model.addAttribute("posts", blogService.findAll());
 		return "blog";
 	}
@@ -298,13 +295,7 @@ public class SiteController {
 
 	@GetMapping("/contact")
 	public String contact(Model model) {
-		model.addAttribute("logoPath", LOGO_CLARE);
-		if (!model.containsAttribute("inquiryForm")) {
-			model.addAttribute("inquiryForm", new InquiryForm());
-		}
-		model.addAttribute("pageTitle", "Contact");
-		model.addAttribute("pageDescription", "Get in touch with Clare's Life Celebrations to start planning a wedding, funeral or milestone ceremony.");
-		return "contact";
+		return "redirect:/";
 	}
 
 	@PostMapping("/contact")
@@ -317,13 +308,12 @@ public class SiteController {
 		String attachmentError = validateAttachments(uploadedAttachments);
 
 		if (bindingResult.hasErrors() || attachmentError != null) {
-			model.addAttribute("logoPath", LOGO_CLARE);
-			model.addAttribute("pageTitle", "Contact");
-			model.addAttribute("pageDescription", "Get in touch with Clare's Life Celebrations to start planning a wedding, funeral or milestone ceremony.");
+			prepareHomeModel(model);
+			model.addAttribute("openEnquiryModal", true);
 			if (attachmentError != null) {
 				model.addAttribute("attachmentError", attachmentError);
 			}
-			return "contact";
+			return "home";
 		}
 
 		if (uploadedAttachments.isEmpty()) {
@@ -366,6 +356,13 @@ public class SiteController {
 		return attachments.stream()
 				.filter(file -> file != null && !file.isEmpty())
 				.toList();
+	}
+
+	private void prepareHomeModel(Model model) {
+		model.addAttribute("logoPath", LOGO_CLARE);
+		model.addAttribute("pageTitle", "Clare's Life Celebrations | Weddings and funerals in Durham");
+		model.addAttribute("pageDescription", "Clare Riley Brunton creates personal ceremonies for moments that matter, from joyful weddings to dignified celebrations of life across Durham and the North East.");
+		model.addAttribute("featuredReviews", reviewService.getApprovedFiveStarReviews());
 	}
 
 	private String validateAttachments(List<MultipartFile> attachments) {

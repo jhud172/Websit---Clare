@@ -24,12 +24,12 @@
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="shell">
             <div class="hero-copy hero-fullbleed-copy">
-                <p class="eyebrow">Clare's Life Celebrations · Durham</p>
-                <h1>Modern wedding-led ceremonies with warmth, sincerity and style</h1>
-                <p class="lead">Clare Riley Brunton creates personal ceremonies that feel polished, genuine and deeply connected to the people at their heart, from joyful weddings to dignified funeral tributes.</p>
+                <p class="eyebrow">Clare's Life Celebrations · For Moments That Matter</p>
+                <h1>Ceremonies filled with warmth, soul and genuine emotion</h1>
+                <p class="lead">Welcome to a place where life's most meaningful moments are honoured with beauty, compassion and individuality, from joyful weddings to heartfelt celebrations of life.</p>
                 <div class="hero-actions">
                     <a class="button" th:href="@{/weddings}">Explore wedding ceremonies</a>
-                    <button class="button-light button-light-accent" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Make an enquiry</button>
+                    <button class="button-light button-peacock button-light-accent" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Make an enquiry</button>
                 </div>
                 <div class="carousel-controls" aria-label="Hero images">
                     <button class="carousel-arrow" type="button" data-carousel-prev aria-label="Previous image">‹</button>
@@ -48,9 +48,9 @@
         <div class="shell split-layout split-layout-visual">
             <div class="story-copy">
                 <p class="eyebrow">A celebrant with heart</p>
-                <h2>Wedding couples choose Clare for ceremonies that feel personal, contemporary and unmistakably their own.</h2>
-                <p>From first enquiry to final delivery, every ceremony is shaped with calm structure, thoughtful writing and a warm tone that helps people feel genuinely looked after.</p>
-                <p>Funeral services are offered with the same level of professionalism and care, presented with dignity for families and funeral directors.</p>
+                <h2>Every ceremony should reflect the people at its heart.</h2>
+                <p>Whether celebrating a union, honouring a life, or marking a special milestone, Clare creates ceremonies that feel personal, relaxed and completely true to you.</p>
+                <p>Her approach blends calm structure, thoughtful writing and a warm presence, helping couples and families feel genuinely looked after from the first conversation.</p>
                 <a class="text-link" th:href="@{/about}">Meet Clare</a>
             </div>
             <figure class="visual-stage media-stage media-stage-detail">
@@ -59,7 +59,7 @@
                      alt="Clare smiling warmly as confetti fills the air around her — full of joy and personality.">
                 <figcaption class="media-stage-overlay">
                     <p class="media-stage-kicker">Clare's approach</p>
-                    <p class="visual-caption">Warm, approachable and personal in tone, with a professional structure behind every ceremony.</p>
+                    <p class="visual-caption">Modern, meaningful and personal in tone, with a professional structure behind every ceremony.</p>
                 </figcaption>
             </figure>
         </div>
@@ -69,12 +69,18 @@
         <div class="shell symbolism-layout peacock-divider-top">
             <div class="story-copy symbolism-copy">
                 <p class="eyebrow">For Moments That Matter</p>
-                <h2>A peacock-inspired identity that feels elegant, personal and memorable.</h2>
-                <p>Clare Life Celebrations blends sage tones, rich dark textures and feather-inspired details to reflect individuality, new beginnings and meaningful remembrance.</p>
-                <p>Weddings take the visual lead, while funeral ceremonies remain clearly available with calm, sensitive presentation.</p>
+                <h2>A peacock-inspired identity for love, joy, remembrance and dignity.</h2>
+                <p>For weddings, the peacock feather represents love, joy, prosperity and the beginning of a vibrant new chapter. For funerals and celebrations of life, it reflects remembrance, dignity, renewal and the enduring beauty of a life well lived.</p>
+                <p>Just as every peacock feather is unique, every ceremony should honour the story, people and emotion at its heart.</p>
             </div>
             <div class="symbolism-mark" aria-hidden="true">
-                <img th:src="@{/images/brand/logo-clare.png}" alt="">
+                <div class="symbolism-brand-panel">
+                    <img class="symbolism-feather" th:src="@{${verticalFeatherPath}}" alt="">
+                    <img class="symbolism-logo-composite" th:src="@{${logoPath}}" alt="">
+                </div>
+                <figure class="symbolism-couple-card">
+                    <img th:src="@{/images/weddings/amy-wedding-9.jpg}" alt="">
+                </figure>
                 <div class="symbolism-points">
                     <span>Love and joy</span>
                     <span>Remembrance and dignity</span>
@@ -87,30 +93,36 @@
     <section class="section section-soft section-atmosphere-sage section-divider section-reveal-zone">
         <div class="shell section-heading">
             <p class="eyebrow">Services at a glance</p>
-            <h2>Three clear ceremony paths with a polished, premium feel.</h2>
-            <p class="lead">Start with weddings, funerals, or other life celebrations and move straight to a personal enquiry when the tone feels right.</p>
+            <h2>Ceremonies for love, remembrance and life's special milestones.</h2>
+            <p class="lead">Start with weddings, funerals or other life celebrations, then share the story you want Clare to help shape.</p>
         </div>
 
         <div class="shell detail-grid">
             <article class="detail-card service-path-card">
-                <span class="peacock-badge" aria-hidden="true">CLC</span>
+                <span class="peacock-badge peacock-badge-logo" aria-hidden="true">
+                    <img class="logo-clc" th:src="@{${logoPath}}" alt="">
+                </span>
                 <p class="eyebrow">Weddings</p>
                 <h3>Wedding ceremonies</h3>
-                <p>Personal, heartfelt ceremonies for couples wanting a modern, flexible and beautifully written celebration.</p>
+                <p>Bespoke, celebrant-led ceremonies for couples who want freedom, warmth and words that feel unmistakably theirs.</p>
                 <a class="text-link" th:href="@{/weddings}">Explore weddings</a>
             </article>
             <article class="detail-card service-path-card">
-                <span class="peacock-badge" aria-hidden="true">CLC</span>
+                <span class="peacock-badge peacock-badge-logo" aria-hidden="true">
+                    <img class="logo-clc" th:src="@{${logoPath}}" alt="">
+                </span>
                 <p class="eyebrow">Funerals</p>
                 <h3>Funeral ceremonies</h3>
-                <p>Respectful, calm services that honour a life with dignity, care and thoughtful guidance.</p>
+                <p>Personal funeral ceremonies, memorials and celebrations of life created with dignity, compassion and care.</p>
                 <a class="text-link" th:href="@{/funerals}">Explore funerals</a>
             </article>
             <article class="detail-card service-path-card">
-                <span class="peacock-badge" aria-hidden="true">CLC</span>
+                <span class="peacock-badge peacock-badge-logo" aria-hidden="true">
+                    <img class="logo-clc" th:src="@{${logoPath}}" alt="">
+                </span>
                 <p class="eyebrow">Life ceremonies</p>
                 <h3>Other meaningful moments</h3>
-                <p>Naming ceremonies, vow renewals and milestone moments designed around your story and atmosphere.</p>
+                <p>Naming ceremonies, vow renewals and milestone moments shaped around your story, your people and your atmosphere.</p>
                 <a class="text-link" th:href="@{/services}">View all services</a>
             </article>
         </div>
@@ -119,14 +131,14 @@
     <section class="section section-atmosphere-clay section-divider section-reveal-zone">
         <div class="shell section-heading">
             <p class="eyebrow">Why choose Clare</p>
-            <h2>A premium celebrant experience built around trust, warmth and beautifully structured ceremonies.</h2>
+            <h2>A calm, confident and compassionate presence for moments that matter.</h2>
         </div>
 
         <div class="shell detail-grid">
             <article class="detail-card">
                 <p class="eyebrow">01</p>
                 <h3>Personal and bespoke</h3>
-                <p>Every ceremony is shaped around real people, not lifted from a generic template.</p>
+                <p>Every ceremony is shaped around real people, memories and hopes, with wording that feels personal from the first line to the final moment.</p>
             </article>
             <article class="detail-card">
                 <p class="eyebrow">02</p>
@@ -175,7 +187,7 @@
     <section class="section section-deep section-divider section-reveal-zone">
         <div class="shell quote-feature quote-feature-light">
             <p class="eyebrow">A ceremony philosophy</p>
-            <blockquote>Every ceremony should feel like it was written for the people at the heart of it.</blockquote>
+            <blockquote>Every story deserves to be celebrated in a way that is personal, elegant and unforgettable.</blockquote>
         </div>
     </section>
 
@@ -183,10 +195,10 @@
         <div class="shell cta-panel">
             <div>
                 <p class="eyebrow">Ready to enquire?</p>
-                <h2>If the tone feels right, the next step is a quick message.</h2>
+                <h2>If you are ready to create a moment that feels true to you, start with a message.</h2>
                 <p>Tell Clare what you are planning and she will guide you towards the right ceremony format and next steps.</p>
             </div>
-            <button class="button" type="button" data-open-enquiry-modal>Enquire now</button>
+            <button class="button button-peacock" type="button" data-open-enquiry-modal>Enquire now</button>
         </div>
     </section>
 </main>

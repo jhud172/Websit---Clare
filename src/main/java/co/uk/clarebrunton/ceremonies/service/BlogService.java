@@ -20,7 +20,7 @@ public class BlogService {
 					List.of(
 							"The most memorable ceremonies are often the least over-written. Start with the tone you want guests to feel when the ceremony begins, then build the words, music and transitions around that emotional direction.",
 							"Think about rhythm as much as wording. A strong ceremony moves naturally between welcome, story, promises and celebration without feeling rushed or over-explained.",
-							"Use this article as a placeholder for Clare's real planning advice, personal approach and examples from previous ceremonies."
+							"Clare's approach is to listen first, shape the ceremony around the people at its heart, and keep every detail feeling natural, personal and true to the couple."
 					)
 			),
 			new BlogPost(
@@ -34,7 +34,7 @@ public class BlogService {
 					List.of(
 							"A thoughtful tribute makes space for both grief and gratitude. The strongest scripts usually balance practical structure with a few details that bring the person fully into the room.",
 							"When planning a funeral or memorial service, it helps to gather stories early, decide who is speaking and agree where music, readings or moments of reflection should sit.",
-							"This placeholder article can later be replaced with Clare's own process, examples of family collaboration and any faith or non-faith approach she offers."
+							"Clare works gently with families and funeral directors, listening carefully so memories can be woven into a heartfelt tribute with dignity and care."
 					)
 			),
 			new BlogPost(
@@ -48,7 +48,7 @@ public class BlogService {
 					List.of(
 							"Ask how the ceremony is shaped, how revisions are handled and what level of support is included between the first conversation and the ceremony day itself.",
 							"For marriage-related services in particular, confirm exactly what is legally included. Some celebrant services are ceremonial only, while legal registration can require a separate registrar process depending on the area and licence held.",
-							"Use this piece as a placeholder until the client finalises her exact service boundaries, pricing model and legal position."
+							"The right celebrant should offer clear guidance, calm communication and a ceremony style that feels aligned with the people and moment being honoured."
 					)
 			)
 	);

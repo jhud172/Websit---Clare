@@ -2,6 +2,7 @@ const siteHeader = document.querySelector("[data-site-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
 const enquiryModal = document.querySelector("[data-enquiry-modal]");
+const featherField = document.querySelector("[data-feather-field]");
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const themeToggleLabel = document.querySelector("[data-theme-toggle-label]");
 const fileInputs = document.querySelectorAll("[data-file-input]");
@@ -58,6 +59,136 @@ const resolveTheme = () => {
 };
 
 applyTheme(resolveTheme());
+
+if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const featherContext = featherField.getContext("2d");
+    const featherImage = new Image();
+    const pointer = {
+        x: -1000,
+        y: -1000,
+        active: false
+    };
+    let featherParticles = [];
+    let featherWidth = 0;
+    let featherHeight = 0;
+    let featherDpr = 1;
+    let featherFrameId = null;
+
+    const randomBetween = (min, max) => min + Math.random() * (max - min);
+
+    const createFeatherParticle = () => {
+        const size = randomBetween(10, 24);
+
+        return {
+            x: randomBetween(0, featherWidth),
+            y: randomBetween(0, featherHeight),
+            size,
+            driftX: randomBetween(-0.08, 0.12),
+            driftY: randomBetween(0.08, 0.24),
+            pushX: 0,
+            pushY: 0,
+            rotation: randomBetween(-0.8, 0.8),
+            rotationSpeed: randomBetween(-0.0022, 0.0022),
+            sway: randomBetween(0, Math.PI * 2),
+            opacity: randomBetween(0.12, 0.34)
+        };
+    };
+
+    const resizeFeatherField = () => {
+        featherDpr = Math.min(window.devicePixelRatio || 1, 2);
+        featherWidth = window.innerWidth || document.documentElement.clientWidth;
+        featherHeight = window.innerHeight || document.documentElement.clientHeight;
+        featherField.width = Math.round(featherWidth * featherDpr);
+        featherField.height = Math.round(featherHeight * featherDpr);
+        featherField.style.width = `${featherWidth}px`;
+        featherField.style.height = `${featherHeight}px`;
+        featherContext.setTransform(featherDpr, 0, 0, featherDpr, 0, 0);
+
+        const particleCount = Math.max(27, Math.min(69, Math.round((featherWidth * featherHeight) / 28000)));
+        featherParticles = Array.from({ length: particleCount }, createFeatherParticle);
+    };
+
+    const drawFallbackFeather = (particle) => {
+        featherContext.beginPath();
+        featherContext.ellipse(0, 0, particle.size * 0.24, particle.size, 0.18, 0, Math.PI * 2);
+        featherContext.fill();
+        featherContext.beginPath();
+        featherContext.moveTo(0, -particle.size * 0.92);
+        featherContext.lineTo(0, particle.size * 0.95);
+        featherContext.stroke();
+    };
+
+    const renderFeathers = () => {
+        featherContext.clearRect(0, 0, featherWidth, featherHeight);
+
+        featherParticles.forEach((particle) => {
+            const radius = Math.min(170, Math.max(96, featherWidth * 0.09));
+            const dx = particle.x - pointer.x;
+            const dy = particle.y - pointer.y;
+            const distance = Math.hypot(dx, dy);
+
+            if (pointer.active && distance < radius && distance > 0.1) {
+                const force = (1 - distance / radius) * 0.72;
+                particle.pushX += (dx / distance) * force;
+                particle.pushY += (dy / distance) * force;
+            }
+
+            particle.sway += 0.008;
+            particle.rotation += particle.rotationSpeed + particle.pushX * 0.002;
+            particle.x += particle.driftX + Math.sin(particle.sway) * 0.11 + particle.pushX;
+            particle.y += particle.driftY + Math.cos(particle.sway * 0.7) * 0.05 + particle.pushY;
+            particle.pushX *= 0.91;
+            particle.pushY *= 0.91;
+
+            if (particle.x > featherWidth + 40) particle.x = -40;
+            if (particle.x < -40) particle.x = featherWidth + 40;
+            if (particle.y > featherHeight + 48) particle.y = -48;
+            if (particle.y < -48) particle.y = featherHeight + 48;
+
+            featherContext.save();
+            featherContext.translate(particle.x, particle.y);
+            featherContext.rotate(particle.rotation);
+            featherContext.globalAlpha = particle.opacity;
+            featherContext.fillStyle = "rgba(214, 199, 145, 0.62)";
+            featherContext.strokeStyle = "rgba(243, 244, 246, 0.34)";
+            featherContext.lineWidth = 0.8;
+
+            if (featherImage.complete && featherImage.naturalWidth > 0) {
+                featherContext.drawImage(featherImage, -particle.size * 0.28, -particle.size, particle.size * 0.56, particle.size * 2.2);
+            }
+            else {
+                drawFallbackFeather(particle);
+            }
+
+            featherContext.restore();
+        });
+
+        featherFrameId = window.requestAnimationFrame(renderFeathers);
+    };
+
+    featherImage.src = "/images/objects/feather-vertical.png";
+    resizeFeatherField();
+    renderFeathers();
+
+    window.addEventListener("resize", resizeFeatherField);
+    window.addEventListener("pointermove", (event) => {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+        pointer.active = true;
+    }, { passive: true });
+    window.addEventListener("pointerleave", () => {
+        pointer.active = false;
+    });
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden && featherFrameId) {
+            window.cancelAnimationFrame(featherFrameId);
+            featherFrameId = null;
+        }
+        else if (!document.hidden && !featherFrameId) {
+            renderFeathers();
+        }
+    });
+}
 
 if (themeToggle) {
     themeToggle.addEventListener("click", () => {
@@ -205,6 +336,10 @@ if (enquiryModal) {
         button.addEventListener("click", closeModal);
     });
 
+    if (enquiryModal.dataset.openOnLoad === "true") {
+        window.setTimeout(() => openModal(null), 60);
+    }
+
     enquiryModal.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
             event.preventDefault();
@@ -242,20 +377,23 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     const prevButton = carouselRoot.querySelector("[data-carousel-prev]");
     const nextButton = carouselRoot.querySelector("[data-carousel-next]");
     const intervalMs = Number(carouselRoot.dataset.carouselInterval || 6000);
-    let currentIndex = 0;
+    const transitionMs = Number(carouselRoot.dataset.carouselTransition || 980);
+    let currentIndex = slides.findIndex((slide) => slide.classList.contains("is-active"));
     let timerId = null;
+    let transitionTimerId = null;
 
     if (slides.length === 0) {
         return;
     }
 
-    const render = () => {
-        slides.forEach((slide, index) => {
-            const active = index === currentIndex;
-            slide.classList.toggle("is-active", active);
-            slide.setAttribute("aria-hidden", String(!active));
-        });
+    if (currentIndex < 0) {
+        currentIndex = 0;
+    }
 
+    const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const normaliseIndex = (index) => (index + slides.length) % slides.length;
+
+    const setDots = () => {
         dots.forEach((dot, index) => {
             const active = index === currentIndex;
             dot.classList.toggle("is-active", active);
@@ -263,13 +401,63 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         });
     };
 
-    const moveTo = (nextIndex) => {
-        currentIndex = (nextIndex + slides.length) % slides.length;
-        render();
+    const finishTransition = () => {
+        slides.forEach((slide, index) => {
+            const active = index === currentIndex;
+            slide.classList.toggle("is-active", active);
+            slide.classList.remove("is-entering", "is-leaving");
+            slide.setAttribute("aria-hidden", String(!active));
+        });
+
+        carouselRoot.classList.remove("is-transitioning");
+        setDots();
+    };
+
+    const directionFromIndexes = (nextIndex) => {
+        const normalisedNext = normaliseIndex(nextIndex);
+        const forwardDistance = (normalisedNext - currentIndex + slides.length) % slides.length;
+        const backwardDistance = (currentIndex - normalisedNext + slides.length) % slides.length;
+        return forwardDistance <= backwardDistance ? "next" : "previous";
+    };
+
+    const moveTo = (nextIndex, requestedDirection) => {
+        const normalisedNext = normaliseIndex(nextIndex);
+
+        if (normalisedNext === currentIndex) {
+            return;
+        }
+
+        const previousIndex = currentIndex;
+        const direction = requestedDirection || directionFromIndexes(normalisedNext);
+        currentIndex = normalisedNext;
+        carouselRoot.dataset.carouselDirection = direction;
+
+        if (transitionTimerId) {
+            window.clearTimeout(transitionTimerId);
+        }
+
+        setDots();
+
+        if (prefersReducedMotion()) {
+            finishTransition();
+            return;
+        }
+
+        slides.forEach((slide, index) => {
+            const entering = index === currentIndex;
+            const leaving = index === previousIndex;
+            slide.classList.toggle("is-active", entering || leaving);
+            slide.classList.toggle("is-entering", entering);
+            slide.classList.toggle("is-leaving", leaving);
+            slide.setAttribute("aria-hidden", String(!entering));
+        });
+
+        carouselRoot.classList.add("is-transitioning");
+        transitionTimerId = window.setTimeout(finishTransition, transitionMs);
     };
 
     const restartTimer = () => {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        if (prefersReducedMotion()) {
             return;
         }
 
@@ -278,23 +466,23 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         }
 
         timerId = window.setInterval(() => {
-            moveTo(currentIndex + 1);
+            moveTo(currentIndex + 1, "next");
         }, intervalMs);
     };
 
     prevButton?.addEventListener("click", () => {
-        moveTo(currentIndex - 1);
+        moveTo(currentIndex - 1, "previous");
         restartTimer();
     });
 
     nextButton?.addEventListener("click", () => {
-        moveTo(currentIndex + 1);
+        moveTo(currentIndex + 1, "next");
         restartTimer();
     });
 
     dots.forEach((dot, index) => {
         dot.addEventListener("click", () => {
-            moveTo(index);
+            moveTo(index, directionFromIndexes(index));
             restartTimer();
         });
     });
@@ -307,11 +495,12 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
 
     carouselRoot.addEventListener("mouseleave", restartTimer);
 
-    render();
+    carouselRoot.dataset.carouselDirection = "next";
+    finishTransition();
     restartTimer();
 });
 
-document.querySelectorAll(".protected-image, .hero-media img, .showcase-slide img").forEach((image) => {
+document.querySelectorAll(".protected-image, .hero-media img, .showcase-slide img, .media-stage img, .gallery-card img, .review-photo-grid img, .logo-composite img, .peacock-badge-logo img").forEach((image) => {
     image.setAttribute("draggable", "false");
 
     image.addEventListener("dragstart", (event) => {
@@ -348,8 +537,8 @@ else if (revealTargets.length > 0) {
             observer.unobserve(entry.target);
         });
     }, {
-        threshold: 0.18,
-        rootMargin: "0px 0px -8% 0px"
+        threshold: 0.08,
+        rootMargin: "0px 0px 10% 0px"
     });
 
     revealTargets.forEach((element) => {

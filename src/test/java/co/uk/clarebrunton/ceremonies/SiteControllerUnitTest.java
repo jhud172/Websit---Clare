@@ -41,7 +41,7 @@ class SiteControllerUnitTest {
 		assertThat(controller.weddings(new ExtendedModelMap())).isEqualTo("weddings");
 		assertThat(controller.funerals(new ExtendedModelMap())).isEqualTo("funerals");
 		assertThat(controller.reviews(new ExtendedModelMap())).isEqualTo("reviews");
-		assertThat(controller.contact(new ExtendedModelMap())).isEqualTo("contact");
+		assertThat(controller.contact(new ExtendedModelMap())).isEqualTo("redirect:/");
 		assertThat(controller.privacy(new ExtendedModelMap())).isEqualTo("privacy");
 		assertThat(controller.thankYou(new ExtendedModelMap())).isEqualTo("thank-you");
 		assertThat(controller.ceremoniesRedirect()).isEqualTo("redirect:/services");
@@ -50,29 +50,33 @@ class SiteControllerUnitTest {
 	}
 
 	@Test
-	void contactAddsInquiryFormWhenMissing() {
+	void contactRedirectsToHomeBecauseEnquiryUsesModal() {
 		Model model = new ExtendedModelMap();
 
-		controller.contact(model);
+		String view = controller.contact(model);
 
-		assertThat(model.getAttribute("inquiryForm")).isInstanceOf(InquiryForm.class);
+		assertThat(view).isEqualTo("redirect:/");
 	}
 
 	@Test
-	void submitContactReturnsContactViewWhenBindingHasErrors() {
+	void submitContactReturnsHomeWithOpenModalWhenBindingHasErrors() {
 		InquiryForm inquiryForm = new InquiryForm();
 		BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(inquiryForm, "inquiryForm");
 		bindingResult.rejectValue("fullName", "required", "Please add your full name.");
+		when(reviewService.getApprovedFiveStarReviews()).thenReturn(List.of());
+		Model model = new ExtendedModelMap();
 
 		String view = controller.submitContact(
 				inquiryForm,
 				bindingResult,
-				new ExtendedModelMap(),
+				model,
 				new RedirectAttributesModelMap()
 		);
 
-		assertThat(view).isEqualTo("contact");
+		assertThat(view).isEqualTo("home");
+		assertThat(model.getAttribute("openEnquiryModal")).isEqualTo(true);
 		verifyNoInteractions(inquiryNotificationService);
+		verify(reviewService).getApprovedFiveStarReviews();
 	}
 
 	@Test
