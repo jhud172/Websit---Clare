@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,10 +47,13 @@ public class ReviewService {
 	}
 
 	public synchronized List<ReviewEntry> getApprovedReviews() {
-		return loadAll().stream()
+		boolean hasReviewDataFile = Files.exists(getDataFilePath());
+		List<ReviewEntry> approvedReviews = loadAll().stream()
 				.filter(entry -> entry.getStatus() == ReviewStatus.APPROVED)
 				.sorted(Comparator.comparing(ReviewEntry::getSubmittedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
 				.toList();
+
+		return approvedReviews.isEmpty() && !hasReviewDataFile ? demoApprovedReviews() : approvedReviews;
 	}
 
 	public synchronized List<ReviewEntry> getApprovedFiveStarReviews() {
@@ -236,6 +240,74 @@ public class ReviewService {
 			return null;
 		}
 		return value.trim();
+	}
+
+	private List<ReviewEntry> demoApprovedReviews() {
+		return List.of(
+				demoReview(
+						"demo-review-wedding-emily-tom",
+						"Emily and Tom",
+						"Wedding couple",
+						"Wedding ceremony",
+						"A ceremony that felt completely like us",
+						"Clare brought such warmth, calm and personality to our wedding ceremony. The script felt beautifully written, relaxed and full of the little details that mattered to us. So many guests said it was the most personal ceremony they had been part of.",
+						LocalDate.of(2026, 5, 2),
+						OffsetDateTime.parse("2026-05-12T10:30:00+01:00"),
+						List.of("/images/weddings/amy-wedding-1.jpg", "/images/weddings/amy-wedding-4.jpg", "/images/weddings/wedding-couple-moment.jpg")
+				),
+				demoReview(
+						"demo-review-wedding-laura-ben",
+						"Laura and Ben",
+						"Wedding couple",
+						"Wedding ceremony",
+						"Warm, polished and so thoughtful",
+						"From the first conversation Clare made everything feel easy. She listened carefully, helped us shape the tone, and delivered a ceremony that was modern, sincere and full of joy.",
+						LocalDate.of(2026, 4, 18),
+						OffsetDateTime.parse("2026-05-08T14:15:00+01:00"),
+						List.of("/images/weddings/wedding-ceremony-outdoor.jpg", "/images/weddings/detail-rings.jpg")
+				),
+				demoReview(
+						"demo-review-funeral-henderson-family",
+						"The Henderson family",
+						"Family member",
+						"Funeral or memorial",
+						"A tribute full of care and dignity",
+						"Clare handled a difficult day with real compassion. She took time to understand Dad's life, his humour and what mattered to us, then created a tribute that felt gentle, dignified and deeply personal.",
+						LocalDate.of(2026, 3, 27),
+						OffsetDateTime.parse("2026-04-20T09:40:00+01:00"),
+						List.of("/images/funerals/memorial-flowers-soft.jpg", "/images/funerals/memorial-flowers-detail.jpg")
+				),
+				demoReview(
+						"demo-review-venue-rachel",
+						"Rachel",
+						"Venue coordinator",
+						"Wedding ceremony",
+						"Professional from start to finish",
+						"Clare was calm, organised and a pleasure to work with on the day. She gave the couple space to enjoy the moment while making sure the ceremony flowed beautifully.",
+						LocalDate.of(2026, 2, 14),
+						OffsetDateTime.parse("2026-04-04T16:20:00+01:00"),
+						List.of("/images/clare/wedding-symbolism-ribbons.jpg")
+				)
+		);
+	}
+
+	private ReviewEntry demoReview(String id, String reviewerName, String reviewerRole, String ceremonyType,
+			String headline, String message, LocalDate eventDate, OffsetDateTime submittedAt, List<String> photoFileNames) {
+		ReviewEntry entry = new ReviewEntry();
+		entry.setId(id);
+		entry.setReviewerName(reviewerName);
+		entry.setReviewerRole(reviewerRole);
+		entry.setCeremonyType(ceremonyType);
+		entry.setRating(5);
+		entry.setHeadline(headline);
+		entry.setMessage(message);
+		entry.setEventDate(eventDate);
+		entry.setStatus(ReviewStatus.APPROVED);
+		entry.setModerationNote("Demo review shown until real approved reviews are available.");
+		entry.setSubmittedAt(submittedAt);
+		entry.setModeratedAt(submittedAt);
+		entry.setPhotoFileNames(photoFileNames);
+		return entry;
 	}
 
 }

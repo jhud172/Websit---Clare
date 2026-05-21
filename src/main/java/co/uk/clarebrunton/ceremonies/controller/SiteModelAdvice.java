@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class SiteModelAdvice {
 
 	private static final Logger logger = LoggerFactory.getLogger(SiteModelAdvice.class);
-	private static final String DEFAULT_LOGO_PATH = "/images/brand/logo-clare-background-white.png";
+	private static final String DEFAULT_LOGO_PATH = "/images/brand/logo-clare-no-background+no-wreath-CLC.png";
 	private static final String CLC_LOGO_PATH = "/images/brand/logo-clare-no-background+no-wreath-CLC.png";
 	private static final String WREATH_LOGO_PATH = "/images/brand/logo-clare-no-background-wreath-only.png";
 	private static final String HORIZONTAL_FEATHER_PATH = "/images/objects/feather-horizontal.png";

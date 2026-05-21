@@ -372,18 +372,44 @@ if (enquiryModal) {
 }
 
 document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
+    const track = carouselRoot.querySelector(".review-carousel-track");
     const slides = Array.from(carouselRoot.querySelectorAll("[data-carousel-slide]"));
     const dots = Array.from(carouselRoot.querySelectorAll("[data-carousel-dot]"));
     const prevButton = carouselRoot.querySelector("[data-carousel-prev]");
     const nextButton = carouselRoot.querySelector("[data-carousel-next]");
+    const isReviewCarousel = carouselRoot.classList.contains("review-carousel");
+    const supportsSwipe = isReviewCarousel
+        || carouselRoot.classList.contains("about-image-carousel")
+        || carouselRoot.classList.contains("about-story-carousel")
+        || carouselRoot.classList.contains("services-showcase")
+        || carouselRoot.classList.contains("wedding-hero-media")
+        || carouselRoot.classList.contains("wedding-editorial-carousel")
+        || carouselRoot.classList.contains("funeral-memory-carousel");
     const intervalMs = Number(carouselRoot.dataset.carouselInterval || 6000);
     const transitionMs = Number(carouselRoot.dataset.carouselTransition || 980);
     let currentIndex = slides.findIndex((slide) => slide.classList.contains("is-active"));
     let timerId = null;
     let transitionTimerId = null;
+    let pointerStartX = null;
+    let pointerStartY = null;
 
     if (slides.length === 0) {
         return;
+    }
+
+    if (isReviewCarousel && track && slides.length > 1) {
+        const firstClone = slides[0].cloneNode(true);
+        const lastClone = slides[slides.length - 1].cloneNode(true);
+
+        [firstClone, lastClone].forEach((clone) => {
+            clone.removeAttribute("data-carousel-slide");
+            clone.classList.remove("is-active", "is-entering", "is-leaving");
+            clone.classList.add("is-clone");
+            clone.setAttribute("aria-hidden", "true");
+        });
+
+        track.prepend(lastClone);
+        track.append(firstClone);
     }
 
     if (currentIndex < 0) {
@@ -401,6 +427,21 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         });
     };
 
+    const setReviewSlideStates = () => {
+        if (!isReviewCarousel) {
+            return;
+        }
+
+        carouselRoot.style.setProperty("--carousel-index", String(slides.length > 1 ? currentIndex + 1 : currentIndex));
+        slides.forEach((slide, index) => {
+            const previous = normaliseIndex(currentIndex - 1) === index;
+            const next = normaliseIndex(currentIndex + 1) === index;
+            slide.classList.toggle("is-adjacent", previous || next);
+            slide.classList.toggle("is-previous", previous);
+            slide.classList.toggle("is-next", next);
+        });
+    };
+
     const finishTransition = () => {
         slides.forEach((slide, index) => {
             const active = index === currentIndex;
@@ -410,6 +451,7 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         });
 
         carouselRoot.classList.remove("is-transitioning");
+        setReviewSlideStates();
         setDots();
     };
 
@@ -446,13 +488,14 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         slides.forEach((slide, index) => {
             const entering = index === currentIndex;
             const leaving = index === previousIndex;
-            slide.classList.toggle("is-active", entering || leaving);
+            slide.classList.toggle("is-active", isReviewCarousel ? entering : entering || leaving);
             slide.classList.toggle("is-entering", entering);
             slide.classList.toggle("is-leaving", leaving);
             slide.setAttribute("aria-hidden", String(!entering));
         });
 
         carouselRoot.classList.add("is-transitioning");
+        setReviewSlideStates();
         transitionTimerId = window.setTimeout(finishTransition, transitionMs);
     };
 
@@ -494,6 +537,39 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     });
 
     carouselRoot.addEventListener("mouseleave", restartTimer);
+
+    if (supportsSwipe) {
+        carouselRoot.addEventListener("pointerdown", (event) => {
+            pointerStartX = event.clientX;
+            pointerStartY = event.clientY;
+            carouselRoot.classList.add("is-dragging");
+        });
+
+        carouselRoot.addEventListener("pointerup", (event) => {
+            if (pointerStartX === null || pointerStartY === null) {
+                return;
+            }
+
+            const deltaX = event.clientX - pointerStartX;
+            const deltaY = event.clientY - pointerStartY;
+            pointerStartX = null;
+            pointerStartY = null;
+            carouselRoot.classList.remove("is-dragging");
+
+            if (Math.abs(deltaX) < 42 || Math.abs(deltaX) < Math.abs(deltaY)) {
+                return;
+            }
+
+            moveTo(currentIndex + (deltaX < 0 ? 1 : -1), deltaX < 0 ? "next" : "previous");
+            restartTimer();
+        });
+
+        carouselRoot.addEventListener("pointercancel", () => {
+            pointerStartX = null;
+            pointerStartY = null;
+            carouselRoot.classList.remove("is-dragging");
+        });
+    }
 
     carouselRoot.dataset.carouselDirection = "next";
     finishTransition();

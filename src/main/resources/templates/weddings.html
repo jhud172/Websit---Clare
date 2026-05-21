@@ -1,80 +1,130 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'weddings', ~{::main})}">
-<main class="theme-wedding">
-    <section class="page-hero page-hero-editorial section-reveal-zone">
-        <div class="shell page-hero-grid">
-            <div class="story-copy">
+<main class="theme-wedding wedding-page">
+    <section class="wedding-hero section-reveal-zone">
+        <div class="wedding-hero-media" data-carousel data-carousel-interval="5400" data-carousel-transition="920">
+            <figure class="wedding-hero-slide is-active" data-carousel-slide>
+                <img th:src="@{/images/weddings/amy-wedding-2.jpg}" alt="A newly married couple walking through confetti with smiling guests around them.">
+            </figure>
+            <figure class="wedding-hero-slide" data-carousel-slide>
+                <img th:src="@{/images/weddings/home-hero.jpg}" alt="A bride smiling during a joyful wedding ceremony.">
+            </figure>
+            <figure class="wedding-hero-slide" data-carousel-slide>
+                <img th:src="@{/images/weddings/amy-wedding-1.jpg}" alt="A wedding couple celebrating as they walk back down the aisle.">
+            </figure>
+        </div>
+        <div class="wedding-hero-overlay"></div>
+        <div class="shell wedding-hero-inner">
+            <div class="wedding-hero-copy">
                 <p class="eyebrow">Wedding ceremonies</p>
-                <h1>Wedding ceremonies with freedom, warmth and personality</h1>
-                <p class="lead">Your ceremony should reflect who you are as a couple, not a script, tradition or expectation.</p>
+                <h1>Joyful ceremonies written around the two of you.</h1>
+                <p class="lead">A modern celebrant-led wedding gives you the freedom to create a ceremony that feels warm, personal, relaxed and completely yours.</p>
                 <div class="hero-actions">
-                    <button class="button button-peacock" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Enquire about your wedding</button>
-                    <button class="button button-secondary" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Start your wedding enquiry</button>
+                    <button class="button button-peacock" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Start your wedding enquiry</button>
+                    <a class="button button-secondary" href="#wedding-packages">View packages</a>
                 </div>
             </div>
-            <figure class="visual-stage media-stage media-stage-weddings">
-                <img th:src="@{/images/weddings/amy-wedding-2.jpg}"
-                     alt="A newly married couple walking through confetti outside their wedding venue.">
-                <figcaption class="media-stage-overlay">
-                    <p class="media-stage-kicker">Wedding ceremonies</p>
-                    <p class="visual-caption">Joyful, polished and personal from the ceremony itself through to the first moments afterwards.</p>
-                </figcaption>
-            </figure>
-        </div>
-    </section>
-
-    <section class="section section-atmosphere-clay section-divider section-reveal-zone">
-        <div class="shell split-layout split-layout-visual">
-            <div class="story-copy">
-                <p class="eyebrow">Why celebrant-led weddings</p>
-                <h2>No two couples are the same, and your ceremony should not be either.</h2>
-                <p>Whether you want something relaxed and intimate, bold and unconventional, or somewhere completely in between, Clare will help create a ceremony that feels authentic to you.</p>
-                <p>Working closely with every couple, Clare creates something personal, modern and completely bespoke, with freedom to include the moments, words and ideas that matter most to you.</p>
+            <div class="wedding-hero-note" aria-label="Wedding ceremony qualities">
+                <span>Personal vows</span>
+                <span>Family moments</span>
+                <span>Meaningful rituals</span>
+                <span>Your venue, your timing</span>
             </div>
-            <figure class="visual-stage media-stage media-stage-detail">
-                <img th:src="@{/images/weddings/amy-wedding-8.jpg}"
-                     loading="lazy"
-                     alt="A bride smiling at her partner during a wedding ceremony.">
-                <figcaption class="media-stage-overlay">
-                    <p class="media-stage-kicker">Personal and polished</p>
-                    <p class="visual-caption">From heartfelt and emotional to fun, relaxed and unconventional, your ceremony can be anything you want it to be.</p>
-                </figcaption>
+        </div>
+    </section>
+
+    <section class="section wedding-intro-section section-divider section-reveal-zone">
+        <div class="shell wedding-intro-grid">
+            <div class="wedding-intro-copy">
+                <p class="eyebrow">What makes it different</p>
+                <h2>No template. No awkward script. Just a ceremony that sounds like you.</h2>
+                <p>Clare works closely with you to understand your story, your humour, your families and the atmosphere you want to create. The result is a ceremony with warmth, personality and polish, without losing the joy of the day.</p>
+            </div>
+            <div class="wedding-intro-points">
+                <article>
+                    <span>01</span>
+                    <h3>Freedom</h3>
+                    <p>Choose the words, moments, music and setting that feel right for you.</p>
+                </article>
+                <article>
+                    <span>02</span>
+                    <h3>Connection</h3>
+                    <p>Your ceremony is written around your relationship and the people at its heart.</p>
+                </article>
+                <article>
+                    <span>03</span>
+                    <h3>Confidence</h3>
+                    <p>Clare brings calm structure so the day feels natural, polished and unhurried.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section wedding-story-section section-divider section-reveal-zone">
+        <div class="shell wedding-story-grid">
+            <figure class="wedding-story-image wedding-story-image-main">
+                <img th:src="@{/images/weddings/amy-wedding-8.jpg}" loading="lazy" alt="A bride smiling warmly during her wedding ceremony.">
+            </figure>
+            <div class="wedding-story-copy">
+                <p class="eyebrow">What can we include?</p>
+                <h2>Make the ceremony feel like the first real celebration of married life.</h2>
+                <p>You might walk in together, write personal vows, include children, remember someone important, involve your pets, share a symbolic ritual or keep things beautifully simple.</p>
+                <p>The options are wide open. Clare will help shape the ideas so every moment has purpose and the ceremony flows naturally.</p>
+            </div>
+            <figure class="wedding-story-image wedding-story-image-small">
+                <img th:src="@{/images/weddings/detail-rings.jpg}" loading="lazy" alt="Wedding rings and ceremony details arranged elegantly.">
             </figure>
         </div>
     </section>
 
-    <section class="section section-soft section-atmosphere-portrait section-divider section-reveal-zone">
-        <div class="shell section-heading">
-            <p class="eyebrow">Wedding gallery</p>
-            <h2>Elegant moving visuals that reflect joy, personality and atmosphere.</h2>
+    <section class="section wedding-gallery-section section-divider section-reveal-zone">
+        <div class="shell wedding-gallery-heading">
+            <p class="eyebrow">The feeling of the day</p>
+            <h2>Bright, emotional and full of movement.</h2>
         </div>
-        <div class="shell wedding-showcase" data-carousel data-carousel-interval="5600">
-            <figure class="showcase-slide is-active" data-carousel-slide>
-                <img th:src="@{/images/weddings/amy-wedding-9.jpg}" alt="Bride and groom smiling during an outdoor wedding ceremony." loading="lazy">
+        <div class="shell wedding-editorial-carousel" data-carousel data-carousel-interval="5200" data-carousel-transition="920">
+            <figure class="wedding-editorial-slide is-active" data-carousel-slide>
+                <img th:src="@{/images/weddings/amy-wedding-9.jpg}" loading="lazy" alt="A bride and groom smiling during their outdoor ceremony.">
+                <figcaption>
+                    <span>Ceremony warmth</span>
+                    <strong>Words that bring everyone into the moment.</strong>
+                </figcaption>
             </figure>
-            <figure class="showcase-slide" data-carousel-slide>
-                <img th:src="@{/images/weddings/amy-wedding-6.jpg}" alt="Couple in a romantic portrait after their ceremony." loading="lazy">
+            <figure class="wedding-editorial-slide" data-carousel-slide>
+                <img th:src="@{/images/weddings/amy-wedding-6.jpg}" loading="lazy" alt="A couple sharing a romantic portrait after their wedding ceremony.">
+                <figcaption>
+                    <span>After the vows</span>
+                    <strong>A ceremony that carries into the rest of the day.</strong>
+                </figcaption>
             </figure>
-            <figure class="showcase-slide" data-carousel-slide>
-                <img th:src="@{/images/weddings/amy-wedding-7.jpg}" alt="Wedding couple sharing a kiss beneath flowers." loading="lazy">
+            <figure class="wedding-editorial-slide" data-carousel-slide>
+                <img th:src="@{/images/weddings/amy-wedding-4.jpg}" loading="lazy" alt="A groom carrying the bride across a lawn after the ceremony.">
+                <figcaption>
+                    <span>Personality</span>
+                    <strong>Relaxed, joyful and unmistakably yours.</strong>
+                </figcaption>
             </figure>
-            <div class="carousel-controls">
+            <div class="carousel-controls wedding-carousel-controls">
                 <button class="carousel-arrow" type="button" data-carousel-prev aria-label="Previous wedding image">‹</button>
+                <div class="carousel-dots" aria-label="Wedding image selector">
+                    <button class="carousel-dot is-active" type="button" data-carousel-dot aria-label="Show wedding image 1"></button>
+                    <button class="carousel-dot" type="button" data-carousel-dot aria-label="Show wedding image 2"></button>
+                    <button class="carousel-dot" type="button" data-carousel-dot aria-label="Show wedding image 3"></button>
+                </div>
                 <button class="carousel-arrow" type="button" data-carousel-next aria-label="Next wedding image">›</button>
             </div>
         </div>
     </section>
 
-    <section class="section section-soft section-atmosphere-sage section-divider section-reveal-zone">
-        <div class="shell section-heading">
-            <p class="eyebrow">Packages</p>
-            <h2>Three wedding ceremony packages with clear structure and personal support.</h2>
-            <p class="lead">Investment starts from £600 for 2026, with dates available for 2027 and 2028. Clare will provide an all-in quotation based on the package and travel required.</p>
+    <section class="section wedding-packages-section section-divider section-reveal-zone" id="wedding-packages">
+        <div class="shell wedding-packages-heading">
+            <p class="eyebrow">Wedding investment</p>
+            <h2>Three clear levels of support, all written with care.</h2>
+            <p>Investment starts from £600 for 2026, with dates available for 2027 and 2028. Clare will provide a clear quotation based on the package, ceremony plans and travel required.</p>
         </div>
-
-        <div class="shell package-grid">
-            <article class="package-card">
+        <div class="shell wedding-package-lane">
+            <article class="wedding-package">
                 <p class="package-tag">Essential</p>
                 <h3>Essential Ceremony</h3>
                 <p class="package-price">From £600</p>
@@ -85,7 +135,7 @@
                     <li>Ceremony delivery on the day</li>
                 </ul>
             </article>
-            <article class="package-card featured">
+            <article class="wedding-package wedding-package-featured">
                 <p class="package-tag">Signature</p>
                 <h3>Signature Ceremony</h3>
                 <p class="package-price">Quoted individually</p>
@@ -96,7 +146,7 @@
                     <li>Additional planning contact</li>
                 </ul>
             </article>
-            <article class="package-card">
+            <article class="wedding-package">
                 <p class="package-tag">Complete</p>
                 <h3>Complete Ceremony Experience</h3>
                 <p class="package-price">Quoted individually</p>
@@ -108,136 +158,46 @@
                 </ul>
             </article>
         </div>
-        <div class="shell section-heading">
-            <p class="field-hint">Clare predominantly covers the North East and can travel wider. Extra travel is discussed in your quote, with 50p per mile charged outside a 50-mile local radius.</p>
+        <div class="shell wedding-smallprint">
+            <p>Clare predominantly covers the North East and can travel wider. Extra travel is discussed in your quote, with 50p per mile charged outside a 50-mile local radius.</p>
         </div>
     </section>
 
-    <section class="section section-atmosphere-portrait section-divider section-reveal-zone">
-        <div class="shell split-layout split-layout-visual">
-            <figure class="visual-stage media-stage media-stage-detail">
-                <img th:src="@{/images/weddings/amy-wedding-9.jpg}"
-                     loading="lazy"
-                     alt="A bride and groom sharing a quiet smile during their wedding ceremony.">
-                <figcaption class="media-stage-overlay">
-                    <p class="media-stage-kicker">Ceremony details</p>
-                    <p class="visual-caption">Personal touches work best when they feel naturally part of the emotional flow of the ceremony.</p>
-                </figcaption>
-            </figure>
-            <div class="story-copy">
-                <p class="eyebrow">What can we include?</p>
-                <h2>Your ceremony should be whatever feels right for you both.</h2>
-                <p>The options are endless, and Clare will explore them with you. You might make your entrance together, write deeply personal vows and commitments, involve your children or include your much-loved pets.</p>
-                <p>Together, you can host your ceremony almost anywhere and at any time, creating a moment that feels natural, remarkable and unmistakably yours.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="section section-soft section-atmosphere-clay section-divider section-reveal-zone">
-        <div class="shell section-heading">
-            <p class="eyebrow">A glimpse of the day</p>
-            <h2>Moments that matter, captured with warmth and intention.</h2>
-        </div>
-        <div class="shell wedding-gallery">
-            <figure class="gallery-card gallery-card-wide">
-                <img th:src="@{/images/weddings/amy-wedding-1.jpg}"
-                     loading="lazy"
-                     alt="A newly married couple celebrating as they walk back down the aisle.">
-            </figure>
-            <figure class="gallery-card gallery-card-tall">
-                <img th:src="@{/images/weddings/amy-wedding-7.jpg}"
-                     loading="lazy"
-                     alt="A bride and groom kissing beneath hanging flowers at a wedding venue entrance.">
-            </figure>
-            <figure class="gallery-card">
-                <img th:src="@{/images/weddings/amy-wedding-6.jpg}"
-                     loading="lazy"
-                     alt="A groom kissing the bride on the forehead in a garden portrait.">
-            </figure>
-            <figure class="gallery-card">
-                <img th:src="@{/images/weddings/amy-wedding-4.jpg}"
-                     loading="lazy"
-                     alt="A groom carrying the bride across the lawn after their wedding ceremony.">
-            </figure>
-            <figure class="gallery-card gallery-card-wide">
-                <img th:src="@{/images/weddings/amy-wedding-5.jpg}"
-                     loading="lazy"
-                     alt="A bride laughing warmly during a wedding ceremony.">
-            </figure>
-        </div>
-    </section>
-
-    <section class="section section-soft section-atmosphere-mist section-divider section-reveal-zone">
-        <div class="shell section-heading">
-            <p class="eyebrow">How it works</p>
-            <h2>A clear wedding process that moves from first enquiry to final ceremony with calm structure.</h2>
-        </div>
-        <div class="shell service-steps-grid">
-            <article class="detail-card">
-                <p class="eyebrow">01</p>
-                <h3>Enquiry</h3>
-                <p>Start with the key details of your date, venue and ceremony style.</p>
-            </article>
-            <article class="detail-card">
-                <p class="eyebrow">02</p>
-                <h3>Consultation</h3>
-                <p>Clare gets to know your story, your personalities and the atmosphere you want to create.</p>
-            </article>
-            <article class="detail-card">
-                <p class="eyebrow">03</p>
-                <h3>Questionnaire</h3>
-                <p>A more detailed questionnaire helps gather the stories, details and choices that shape the final script.</p>
-            </article>
-            <article class="detail-card">
-                <p class="eyebrow">04</p>
-                <h3>Script writing</h3>
-                <p>The ceremony is drafted, refined and prepared with room for personal details and ceremony flow.</p>
-            </article>
-            <article class="detail-card">
-                <p class="eyebrow">05</p>
-                <h3>Final ceremony</h3>
-                <p>Clare delivers the ceremony with warmth, confidence and a calm finish on the day itself.</p>
-            </article>
-        </div>
-    </section>
-
-    <section class="section section-atmosphere-clay section-divider section-reveal-zone" id="wedding-legal-destination">
-        <div class="shell split-layout">
-            <div class="story-copy">
-                <p class="eyebrow">Destination weddings and the legal part</p>
-                <h2>Celebrant-led ceremonies give you freedom, while the legal paperwork stays simple.</h2>
-                <p>Clare can support destination wedding ceremonies across the UK and beyond. Whether you are planning East, West or anywhere in between, she can create a ceremony you will never forget, with travel logistics discussed clearly in your quote.</p>
-                <p>In England and Wales, the legal marriage service is completed separately with a registrar. Think of this as the paperwork: the rings, vows and meaningful words can be saved for your celebrant ceremony.</p>
-                <button class="button button-peacock" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Start your wedding enquiry</button>
-            </div>
-            <div class="resource-grid">
-                <article class="resource-card">
-                    <p class="resource-label">Ceremony freedom</p>
-                    <h3>Your venue, your time</h3>
-                    <p>A celebrant ceremony can take place in a setting and at a time that feels right for you, subject to venue permissions and practical arrangements.</p>
-                </article>
-                <article class="resource-card">
-                    <p class="resource-label">Legal paperwork</p>
-                    <h3>Registrar service</h3>
-                    <p>The basic statutory registrar option is often around £60 for the simple 2+2 mid-week service, but you should confirm current fees locally.</p>
-                </article>
-                <article class="resource-card">
-                    <p class="resource-label">Destination ceremonies</p>
-                    <h3>Travel discussed clearly</h3>
-                    <p>Share your plans and Clare will talk through the logistics so your quote reflects the ceremony location and support needed.</p>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <section class="section section-atmosphere-sage section-reveal-zone">
-        <div class="shell cta-panel">
+    <section class="section wedding-process-section section-divider section-reveal-zone">
+        <div class="shell wedding-process">
             <div>
-                <p class="eyebrow">Planning your wedding?</p>
-                <h2>Tell Clare about your date, your venue and the kind of ceremony you want to create.</h2>
-                <p>Your ceremony should feel effortless, personal and unforgettable. Together, you can create exactly that.</p>
+                <p class="eyebrow">From enquiry to aisle</p>
+                <h2>A calm process behind a joyful ceremony.</h2>
+                <p>Everything is structured so you can enjoy the creative part without wondering what happens next.</p>
             </div>
-            <button class="button button-peacock" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Contact Clare</button>
+            <ol class="wedding-process-list">
+                <li><span>01</span><strong>Enquiry</strong><p>Share your date, venue and the style of ceremony you imagine.</p></li>
+                <li><span>02</span><strong>Conversation</strong><p>Clare gets to know your story, personalities and priorities.</p></li>
+                <li><span>03</span><strong>Writing</strong><p>Your ceremony is shaped, drafted and refined with your input.</p></li>
+                <li><span>04</span><strong>The day</strong><p>Clare delivers the ceremony with warmth, confidence and care.</p></li>
+            </ol>
+        </div>
+    </section>
+
+    <section class="section wedding-legal-section section-divider section-reveal-zone">
+        <div class="shell wedding-legal-grid">
+            <div class="wedding-legal-copy">
+                <p class="eyebrow">Legal and destination ceremonies</p>
+                <h2>The paperwork stays simple. The ceremony gets to be meaningful.</h2>
+                <p>In England and Wales, the legal marriage service is completed separately with a registrar. Your celebrant ceremony is where the rings, vows, promises and personal words can take centre stage.</p>
+                <p>Clare can support destination wedding ceremonies across the UK and beyond, with travel logistics discussed clearly as part of your quote.</p>
+            </div>
+            <figure class="wedding-legal-image">
+                <img th:src="@{/images/weddings/wedding-couple-moment.jpg}" loading="lazy" alt="A wedding couple sharing a quiet moment together after their ceremony.">
+            </figure>
+        </div>
+    </section>
+
+    <section class="section wedding-final-section section-reveal-zone">
+        <div class="shell wedding-final-panel">
+            <p class="eyebrow">Planning your wedding?</p>
+            <h2>Tell Clare about your date, your venue and the feeling you want guests to remember.</h2>
+            <button class="button button-peacock" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Tell Clare about your ceremony</button>
         </div>
     </section>
 </main>

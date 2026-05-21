@@ -163,7 +163,7 @@
             <p class="eyebrow">Five-star experiences</p>
             <h2>Approved client feedback</h2>
         </div>
-        <div class="shell review-carousel" data-carousel data-carousel-interval="6500">
+        <div class="shell review-carousel" data-carousel data-carousel-interval="5200" data-carousel-transition="720">
             <div class="review-carousel-track">
                 <article class="review-card is-active" data-carousel-slide th:each="review, stat : ${featuredReviews}" th:classappend="${stat.index == 0} ? ' is-active'">
                     <p class="review-stars">★★★★★</p>
@@ -179,6 +179,14 @@
             </div>
             <div class="carousel-controls">
                 <button class="carousel-arrow" type="button" data-carousel-prev aria-label="Previous review">‹</button>
+                <div class="carousel-dots" th:if="${!#lists.isEmpty(featuredReviews)}">
+                    <button class="carousel-dot"
+                            th:each="review, stat : ${featuredReviews}"
+                            th:classappend="${stat.index == 0} ? ' is-active'"
+                            type="button"
+                            data-carousel-dot
+                            th:attr="aria-label=${'Show review ' + (stat.index + 1)}"></button>
+                </div>
                 <button class="carousel-arrow" type="button" data-carousel-next aria-label="Next review">›</button>
             </div>
         </div>

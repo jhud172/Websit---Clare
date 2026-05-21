@@ -10,8 +10,6 @@
     mix-blend-mode: screen;
 }
 
-body > .site-header,
-body > header,
 body > main,
 body > footer,
 body > .site-footer,
@@ -34,26 +32,53 @@ body > .enquiry-modal {
 }
 
 .section-divider > .shell::after {
-    left: clamp(1rem, 6vw, 4rem);
-    right: clamp(1rem, 6vw, 4rem);
-    bottom: -2.95rem;
-    width: auto;
-    height: 1px;
+    left: 50%;
+    right: auto;
+    bottom: -5.15rem;
+    width: min(14rem, 40vw);
+    height: clamp(1.35rem, 3vw, 2.05rem);
     background:
-        linear-gradient(90deg,
-            transparent 0%,
-            rgba(183, 192, 204, 0.08) 18%,
-            rgba(214, 199, 145, 0.26) 48%,
-            rgba(183, 192, 204, 0.08) 82%,
-            transparent 100%);
-    opacity: 0.75;
-    filter: none;
-    transform: none;
+        url("/images/objects/feather-horizontal-mirrored.png") left center / 50% 100% no-repeat,
+        url("/images/objects/feather-horizontal.png") right center / 50% 100% no-repeat;
+    opacity: 0.64;
+    filter:
+        drop-shadow(0 8px 16px rgba(0, 0, 0, 0.28))
+        drop-shadow(0 0 12px rgba(214, 199, 145, 0.1));
+    transform: translateX(-50%);
 }
 
 .section-divider > .shell::before {
-    bottom: -3.4rem;
-    opacity: 0.72;
+    bottom: -3.25rem;
+    width: min(18rem, 46vw);
+    height: 1.05rem;
+    border: 0;
+    border-radius: 0;
+    background:
+        radial-gradient(circle at 50% 50%,
+            rgba(214, 199, 145, 0.9) 0 0.18rem,
+            rgba(0, 137, 123, 0.78) 0.19rem 0.33rem,
+            rgba(183, 192, 204, 0.18) 0.34rem 0.55rem,
+            transparent 0.56rem),
+        linear-gradient(90deg,
+            transparent 0%,
+            rgba(183, 192, 204, 0.08) 18%,
+            rgba(214, 199, 145, 0.24) 46%,
+            rgba(214, 199, 145, 0.24) 54%,
+            rgba(183, 192, 204, 0.08) 82%,
+            transparent 100%);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size:
+        1.05rem 1.05rem,
+        100% 1px;
+    box-shadow: none;
+    opacity: 0.82;
+    transform: translateX(-50%);
+}
+
+.section-divider > .shell:not(:last-child)::before,
+.section-divider > .shell:not(:last-child)::after {
+    content: none;
 }
 
 .section-symbolism {
@@ -110,6 +135,11 @@ body > .enquiry-modal {
         top: 2rem;
         width: 15rem;
         opacity: 0.12;
+    }
+
+    .section-divider > .shell::after {
+        bottom: -4.85rem;
+        width: min(12.5rem, 58vw);
     }
 }
 

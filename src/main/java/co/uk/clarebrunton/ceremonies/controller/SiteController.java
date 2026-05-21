@@ -35,7 +35,7 @@ import jakarta.validation.Valid;
 @Controller
 public class SiteController {
 
-	private static final String LOGO_CLARE = "/images/brand/logo-clare-background-white.png";
+	private static final String LOGO_CLARE = "/images/brand/logo-clare-no-background+no-wreath-CLC.png";
 
 	private static final List<String> SERVICE_OPTIONS = List.of(
 			"Wedding ceremony",

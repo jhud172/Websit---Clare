@@ -260,28 +260,103 @@
 
 .review-carousel {
     position: relative;
+    --review-card-width: clamp(19rem, 44vw, 38rem);
+    --review-card-gap: clamp(1rem, 2vw, 1.45rem);
+    overflow: hidden;
+    padding-block: 0.25rem 0.4rem;
+    cursor: grab;
 }
 
 .review-carousel-track {
     position: relative;
-    min-height: 220px;
+    display: flex;
+    align-items: stretch;
+    gap: var(--review-card-gap);
+    min-height: clamp(16rem, 24vw, 18.5rem);
+    transform:
+        translateX(calc((100% - var(--review-card-width)) / 2 - (var(--carousel-index, 0) * (var(--review-card-width) + var(--review-card-gap)))));
+    transition: transform 720ms cubic-bezier(0.18, 0.86, 0.24, 1);
+    will-change: transform;
 }
 
 .review-card {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    pointer-events: none;
-    padding: 1.4rem;
+    position: relative;
+    flex: 0 0 var(--review-card-width);
+    min-height: clamp(14rem, 20vw, 16.5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 0.42;
+    pointer-events: auto;
+    padding: clamp(1.35rem, 2vw, 1.85rem);
     border-radius: 18px;
     border: 1px solid color-mix(in srgb, var(--peacock-sage) 30%, transparent);
-    background: color-mix(in srgb, var(--surface) 88%, white);
-    transition: opacity 620ms ease;
+    background:
+        radial-gradient(circle at 88% 8%, rgba(214, 199, 145, 0.09), transparent 13rem),
+        linear-gradient(145deg, rgba(38, 43, 52, 0.94), rgba(15, 17, 22, 0.9));
+    box-shadow:
+        0 22px 54px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transform: scale(0.9);
+    filter: blur(0.4px) saturate(0.86);
+    transition:
+        opacity 520ms ease,
+        transform 720ms cubic-bezier(0.18, 0.86, 0.24, 1),
+        filter 520ms ease,
+        border-color 420ms ease,
+        box-shadow 420ms ease;
+}
+
+.review-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+        linear-gradient(110deg,
+            transparent 0 36%,
+            rgba(255, 255, 255, 0.08) 46%,
+            transparent 58% 100%);
+    opacity: 0;
+    transform: translateX(-38%);
+    pointer-events: none;
+}
+
+.review-card.is-entering::before {
+    animation: review-card-sheen 700ms cubic-bezier(0.18, 0.86, 0.24, 1) both;
 }
 
 .review-card.is-active {
     opacity: 1;
-    pointer-events: auto;
+    z-index: 2;
+    border-color: rgba(214, 199, 145, 0.36);
+    box-shadow:
+        0 28px 72px rgba(0, 0, 0, 0.44),
+        0 0 0 1px rgba(214, 199, 145, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transform: scale(1);
+    filter: none;
+}
+
+.review-card.is-adjacent {
+    opacity: 0.64;
+    transform: scale(0.94);
+    filter: saturate(0.92);
+}
+
+.review-card.is-clone {
+    opacity: 0.64;
+    transform: scale(0.94);
+    filter: saturate(0.92);
+}
+
+.review-carousel.is-dragging {
+    cursor: grabbing;
+}
+
+.review-carousel.is-dragging .review-carousel-track {
+    transition-duration: 220ms;
 }
 
 .review-stars {
@@ -290,7 +365,52 @@
     margin-bottom: 0.6rem;
 }
 
+.review-card h3 {
+    max-width: 18ch;
+    margin-bottom: 0.45rem;
+}
+
+.review-card > p:not(.review-stars):not(.review-meta) {
+    color: rgba(243, 244, 246, 0.78);
+}
+
 .review-meta {
-    margin-top: 0.8rem;
+    margin-top: auto;
+    padding-top: 1rem;
     font-size: 0.9rem;
+}
+
+.review-carousel .carousel-controls {
+    justify-content: center;
+    width: max-content;
+    max-width: 100%;
+    margin-inline: auto;
+    padding: 0.42rem;
+    border: 1px solid rgba(243, 244, 246, 0.12);
+    border-radius: 999px;
+    background:
+        linear-gradient(145deg, rgba(29, 33, 40, 0.82), rgba(7, 8, 11, 0.72));
+    box-shadow:
+        0 18px 42px rgba(0, 0, 0, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.09);
+    backdrop-filter: blur(16px);
+}
+
+.review-carousel .carousel-dots {
+    min-inline-size: 4rem;
+    justify-content: center;
+}
+
+@keyframes review-card-sheen {
+    from {
+        opacity: 0;
+        transform: translateX(-46%);
+    }
+    45% {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        transform: translateX(46%);
+    }
 }

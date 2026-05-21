@@ -19,6 +19,14 @@
                 <p class="review-meta"><strong th:text="${review.reviewerName}">Reviewer</strong> · <span th:text="${review.ceremonyType}">Wedding ceremony</span></p>
                 <div class="review-photo-grid" th:if="${!#lists.isEmpty(review.photoFileNames)}">
                     <img th:each="photo : ${review.photoFileNames}"
+                         th:if="${#strings.startsWith(photo, '/')}"
+                         th:src="@{${photo}}"
+                         alt="Client review photo"
+                         loading="lazy"
+                         draggable="false"
+                         class="protected-image">
+                    <img th:each="photo : ${review.photoFileNames}"
+                         th:unless="${#strings.startsWith(photo, '/')}"
                          th:src="@{'/review-photos/' + ${photo}}"
                          alt="Client review photo"
                          loading="lazy"

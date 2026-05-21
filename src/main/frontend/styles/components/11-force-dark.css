@@ -340,6 +340,31 @@ li,
     opacity: 0.32;
 }
 
+.theme-about,
+.theme-about .about-hero {
+    background:
+        radial-gradient(circle at 82% 16%, rgba(72, 82, 86, 0.34), transparent 28rem),
+        radial-gradient(circle at 18% 84%, rgba(4, 5, 7, 0.86), transparent 30rem),
+        linear-gradient(132deg, #151719 0%, #202326 48%, #0d0e10 100%);
+}
+
+.theme-about .about-more-section {
+    background:
+        radial-gradient(circle at 16% 18%, rgba(70, 86, 87, 0.28), transparent 28rem),
+        radial-gradient(circle at 92% 74%, rgba(3, 4, 6, 0.82), transparent 30rem),
+        linear-gradient(156deg, #1f2225 0%, #151719 50%, #090a0c 100%);
+}
+
+.theme-about .about-hero .story-copy p:not(.eyebrow),
+.theme-about .about-more-section .story-copy p:not(.eyebrow),
+.theme-about .about-note-grid p {
+    color: rgba(238, 240, 238, 0.76);
+}
+
+.theme-about .about-hero .story-copy .lead {
+    color: rgba(247, 247, 244, 0.88);
+}
+
 .visual-stage,
 .brand-stage,
 .path-panel,
@@ -373,6 +398,122 @@ li,
         0 24px 70px rgba(0, 0, 0, 0.42),
         inset 0 1px 0 rgba(243, 244, 246, 0.08);
     color: var(--ink);
+}
+
+.theme-about .about-image-carousel,
+.theme-about .about-story-carousel {
+    border-color: rgba(213, 201, 154, 0.2);
+    background:
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.08), transparent 20rem),
+        linear-gradient(155deg, rgba(44, 48, 52, 0.96), rgba(12, 13, 15, 0.98));
+    box-shadow:
+        0 34px 78px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.theme-about .about-story-carousel {
+    background:
+        linear-gradient(145deg, rgba(43, 46, 50, 0.92), rgba(10, 11, 13, 0.96));
+}
+
+.theme-about .about-image-carousel::before {
+    content: none;
+}
+
+.theme-services,
+.theme-services .services-hero {
+    background:
+        radial-gradient(circle at 84% 12%, rgba(69, 80, 86, 0.3), transparent 30rem),
+        radial-gradient(circle at 14% 42%, rgba(9, 11, 13, 0.72), transparent 31rem),
+        linear-gradient(145deg, #101214 0%, #1b1e21 48%, #090a0c 100%);
+}
+
+.theme-services .services-signature-section {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(214, 199, 145, 0.08), transparent 26rem),
+        linear-gradient(180deg, #171a1d 0%, #101214 100%);
+}
+
+.theme-services .services-experience-section {
+    background:
+        radial-gradient(circle at 12% 18%, rgba(66, 86, 90, 0.24), transparent 26rem),
+        radial-gradient(circle at 86% 82%, rgba(2, 3, 5, 0.82), transparent 31rem),
+        linear-gradient(150deg, #202326 0%, #111315 52%, #090a0c 100%);
+}
+
+.theme-services .services-process-section {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(214, 199, 145, 0.08), transparent 24rem),
+        linear-gradient(180deg, #121417 0%, #0a0b0d 100%);
+}
+
+.theme-services .services-final-section {
+    background:
+        radial-gradient(circle at 82% 20%, rgba(66, 86, 90, 0.24), transparent 25rem),
+        linear-gradient(145deg, #1b1e21 0%, #090a0c 100%);
+}
+
+.review-carousel .review-card {
+    border-color: rgba(243, 244, 246, 0.12);
+    border-top-color: rgba(183, 192, 204, 0.26);
+    background:
+        radial-gradient(circle at 88% 8%, rgba(214, 199, 145, 0.09), transparent 13rem),
+        linear-gradient(145deg, rgba(38, 43, 52, 0.94), rgba(15, 17, 22, 0.9));
+    box-shadow:
+        0 22px 54px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.review-carousel .review-card.is-active {
+    border-color: rgba(214, 199, 145, 0.36);
+    box-shadow:
+        0 28px 72px rgba(0, 0, 0, 0.44),
+        0 0 0 1px rgba(214, 199, 145, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.theme-wedding .package-card,
+.theme-wedding .package-card.featured {
+    border-color: rgba(243, 244, 246, 0.12);
+    border-top-color: rgba(214, 199, 145, 0.28);
+    background:
+        radial-gradient(circle at 88% 10%, rgba(214, 199, 145, 0.08), transparent 13rem),
+        linear-gradient(145deg, rgba(40, 44, 50, 0.96), rgba(18, 20, 25, 0.94));
+    color: rgba(247, 247, 244, 0.92);
+    box-shadow:
+        0 28px 72px rgba(0, 0, 0, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.theme-wedding .package-card.featured {
+    transform: translateY(-0.65rem);
+    border-color: rgba(214, 199, 145, 0.38);
+    background:
+        radial-gradient(circle at 78% 8%, rgba(214, 199, 145, 0.16), transparent 14rem),
+        radial-gradient(circle at 8% 92%, rgba(0, 137, 123, 0.08), transparent 12rem),
+        linear-gradient(145deg, rgba(48, 52, 58, 0.98), rgba(18, 20, 25, 0.96));
+    box-shadow:
+        0 34px 84px rgba(0, 0, 0, 0.48),
+        0 0 0 1px rgba(214, 199, 145, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.theme-wedding .package-card h3,
+.theme-wedding .package-card.featured h3,
+.theme-wedding .package-card .package-price,
+.theme-wedding .package-card.featured .package-price {
+    color: rgba(247, 247, 244, 0.94);
+    text-shadow: 0 12px 26px rgba(0, 0, 0, 0.36);
+}
+
+.theme-wedding .package-card .package-tag,
+.theme-wedding .package-card.featured .package-tag {
+    color: rgba(183, 192, 204, 0.78);
+}
+
+.theme-wedding .package-card li,
+.theme-wedding .package-card.featured li {
+    color: rgba(238, 240, 238, 0.72);
 }
 
 .detail-card:hover,
