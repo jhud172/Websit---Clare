@@ -7,6 +7,7 @@ RUN npm ci
 COPY src/main/frontend ./src/main/frontend
 COPY src/main/resources/templates ./src/main/resources/templates
 COPY src/main/java ./src/main/java
+COPY scripts ./scripts
 RUN npm run build:css
 
 FROM eclipse-temurin:17-jdk-jammy AS build
