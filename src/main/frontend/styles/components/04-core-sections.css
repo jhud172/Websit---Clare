@@ -1040,7 +1040,8 @@
 
 .field-control-phone {
     align-items: center;
-    overflow: visible;
+    overflow: hidden;
+    padding: 0;
 }
 
 .phone-code-btn {
@@ -1055,7 +1056,9 @@
     padding: 0 0.8rem;
     border: 0;
     border-right: 1px solid var(--control-border);
-    background: color-mix(in srgb, var(--control-bg-strong) 72%, transparent);
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+        color-mix(in srgb, var(--control-bg-strong) 72%, transparent);
     color: var(--ink);
     font-size: 0.88rem;
     font-weight: 700;
@@ -1063,20 +1066,30 @@
     transition: background 180ms ease, color 180ms ease;
 }
 
+.field-control-phone .phone-code-btn {
+    border-radius: inherit;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+    overflow: hidden;
+}
+
 .phone-region,
 .phone-option-region {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.75rem;
-    height: 1.35rem;
-    border-radius: 0.45rem;
+    width: 1.82rem;
+    height: 1.42rem;
+    border: 1px solid rgba(83, 97, 88, 0.28);
+    border-radius: 0.42rem 0.62rem 0.62rem 0.42rem;
+    clip-path: polygon(0.3rem 0, 100% 0, 100% 100%, 0.3rem 100%, 0 50%);
     background: color-mix(in srgb, var(--theme-accent, var(--sage)) 12%, var(--control-bg-strong));
     color: var(--theme-accent-strong, var(--sage-deep));
     font-size: 0.68rem;
     font-weight: 900;
     letter-spacing: 0.04em;
     line-height: 1;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .phone-code-btn:hover,
@@ -1086,14 +1099,31 @@
 }
 
 .phone-chevron {
-    display: inline-block;
-    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 0.92rem;
+    height: 0.92rem;
+    margin-left: 0.16rem;
+    border-radius: 999px;
+    border: 1px solid rgba(83, 97, 88, 0.34);
+    background: color-mix(in srgb, var(--theme-accent, var(--sage)) 12%, transparent);
     color: var(--theme-accent-strong, var(--sage-deep));
+    transition: border-color 180ms ease, background 180ms ease;
+}
+
+.phone-chevron::before {
+    content: "";
+    width: 0.36rem;
+    height: 0.36rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translateY(-0.02rem);
     transition: transform 180ms ease;
 }
 
-.phone-field.is-open .phone-chevron {
-    transform: rotate(180deg);
+.phone-field.is-open .phone-chevron::before {
+    transform: rotate(225deg) translate(-0.03rem, 0.03rem);
 }
 
 .phone-divider {
@@ -1103,6 +1133,9 @@
 .phone-number-input {
     flex: 1 1 auto;
     min-width: 0;
+    padding: 1rem 1.1rem;
+    border: 0;
+    background: transparent;
     letter-spacing: 0;
 }
 
@@ -1112,6 +1145,27 @@
 
 .phone-option-list {
     gap: 0.42rem;
+    padding-right: 0.38rem;
+}
+
+.phone-option-list::-webkit-scrollbar {
+    width: 0.72rem;
+}
+
+.phone-option-list::-webkit-scrollbar-track {
+    margin-block: 0.2rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--control-bg) 72%, transparent);
+}
+
+.phone-option-list::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background:
+        linear-gradient(180deg,
+            color-mix(in srgb, var(--theme-accent, var(--sage)) 72%, white),
+            color-mix(in srgb, var(--theme-accent-strong, var(--sage-deep)) 58%, transparent))
+        padding-box;
 }
 
 .phone-option {

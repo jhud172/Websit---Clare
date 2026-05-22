@@ -6,7 +6,7 @@
 .enquiry-modal {
     position: fixed;
     inset: 0;
-    z-index: 999;
+    z-index: 13000;
     display: grid;
     place-items: center;
     padding: 1rem;

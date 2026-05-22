@@ -1,7 +1,9 @@
 package co.uk.clarebrunton.ceremonies.controller;
 
 import java.nio.file.Path;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.core.io.FileSystemResource;
@@ -162,6 +164,37 @@ public class SiteController {
 
 		redirectAttributes.addFlashAttribute("reviewSubmissionSuccess", "Thank you. Your review has been received and is now pending approval.");
 		return "redirect:/reviews";
+	}
+
+	@PostMapping(value = "/reviews/submit", headers = "X-Requested-With=XMLHttpRequest")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> submitReviewAjax(@Valid @ModelAttribute("reviewForm") ReviewForm reviewForm,
+			BindingResult bindingResult,
+			@RequestParam(name = "reviewPhotos", required = false) List<MultipartFile> reviewPhotos) {
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errors = new LinkedHashMap<>();
+			bindingResult.getFieldErrors().forEach((error) -> errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
+			Map<String, Object> body = new LinkedHashMap<>();
+			body.put("success", false);
+			body.put("message", "Please check the highlighted fields.");
+			body.put("errors", errors);
+			return ResponseEntity.badRequest().body(body);
+		}
+
+		try {
+			reviewService.submitReview(reviewForm, reviewPhotos);
+		}
+		catch (IllegalArgumentException exception) {
+			Map<String, Object> body = new LinkedHashMap<>();
+			body.put("success", false);
+			body.put("message", exception.getMessage());
+			return ResponseEntity.badRequest().body(body);
+		}
+
+		Map<String, Object> body = new LinkedHashMap<>();
+		body.put("success", true);
+		body.put("message", "Thank you. Your review has been received and is now pending approval.");
+		return ResponseEntity.ok(body);
 	}
 
 	@GetMapping("/reviews/admin/login")

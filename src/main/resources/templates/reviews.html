@@ -1,39 +1,56 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'reviews', ~{::main})}">
-<main class="theme-trust">
-    <section class="page-hero page-hero-editorial section-reveal-zone">
-        <div class="shell section-heading">
-            <p class="eyebrow">Reviews</p>
-            <h1>Approved client reviews</h1>
-            <p class="lead">Every review is checked before publication so this page stays trustworthy, genuine and relevant.</p>
+<main class="theme-trust reviews-page">
+    <section class="reviews-hero section-reveal-zone">
+        <div class="shell reviews-hero-inner">
+            <div class="reviews-hero-copy">
+                <p class="eyebrow">Approved client reviews</p>
+                <h1>Real words from moments Clare has helped hold.</h1>
+                <p class="lead">Every review is checked before publication, keeping this page genuine, trusted and focused on the ceremony experience.</p>
+                <a class="button button-peacock" href="#leave-review">Leave a review</a>
+            </div>
+            <div class="reviews-hero-proof" aria-label="Review highlights">
+                <span>Five-star feedback</span>
+                <span>Approved before publication</span>
+                <span>Weddings, funerals and life moments</span>
+            </div>
         </div>
     </section>
 
-    <section class="section section-atmosphere-clay section-divider section-reveal-zone">
-        <div class="shell review-grid" th:if="${!#lists.isEmpty(approvedReviews)}">
-            <article class="review-gallery-card" th:each="review : ${approvedReviews}">
-                <p class="review-stars"><span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span></p>
-                <h3 th:text="${review.headline != null ? review.headline : 'A heartfelt experience'}">A heartfelt experience</h3>
-                <p th:text="${review.message}">Review text</p>
-                <p class="review-meta"><strong th:text="${review.reviewerName}">Reviewer</strong> · <span th:text="${review.ceremonyType}">Wedding ceremony</span></p>
-                <div class="review-photo-grid" th:if="${!#lists.isEmpty(review.photoFileNames)}">
-                    <img th:each="photo : ${review.photoFileNames}"
-                         th:if="${#strings.startsWith(photo, '/')}"
-                         th:src="@{${photo}}"
-                         alt="Client review photo"
-                         loading="lazy"
-                         draggable="false"
-                         class="protected-image">
-                    <img th:each="photo : ${review.photoFileNames}"
-                         th:unless="${#strings.startsWith(photo, '/')}"
-                         th:src="@{'/review-photos/' + ${photo}}"
-                         alt="Client review photo"
-                         loading="lazy"
-                         draggable="false"
-                         class="protected-image">
+    <section class="section reviews-feature-section section-divider section-reveal-zone">
+        <div class="shell reviews-section-heading">
+            <p class="eyebrow">Featured feedback</p>
+            <h2>Swipe through the experiences people remember.</h2>
+        </div>
+        <div class="shell review-carousel reviews-feature-carousel"
+             data-carousel
+             data-carousel-interval="4800"
+             data-carousel-transition="760"
+             th:if="${!#lists.isEmpty(approvedReviews)}">
+            <div class="review-carousel-track">
+                <article class="review-card reviews-feature-card"
+                         data-carousel-slide
+                         th:each="review, stat : ${approvedReviews}"
+                         th:classappend="${stat.index == 0} ? ' is-active'">
+                    <p class="review-stars"><span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span></p>
+                    <h3 th:text="${review.headline != null ? review.headline : 'A heartfelt experience'}">A heartfelt experience</h3>
+                    <p th:text="${review.message}">Review text</p>
+                    <p class="review-meta"><strong th:text="${review.reviewerName}">Reviewer</strong> · <span th:text="${review.ceremonyType}">Wedding ceremony</span></p>
+                </article>
+            </div>
+            <div class="carousel-controls">
+                <button class="carousel-arrow" type="button" data-carousel-prev aria-label="Previous review">‹</button>
+                <div class="carousel-dots">
+                    <button class="carousel-dot"
+                            th:each="review, stat : ${approvedReviews}"
+                            th:classappend="${stat.index == 0} ? ' is-active'"
+                            type="button"
+                            data-carousel-dot
+                            th:attr="aria-label=${'Show review ' + (stat.index + 1)}"></button>
                 </div>
-            </article>
+                <button class="carousel-arrow" type="button" data-carousel-next aria-label="Next review">›</button>
+            </div>
         </div>
         <div class="shell testimonial-placeholder-grid" th:if="${#lists.isEmpty(approvedReviews)}">
             <article class="testimonial-placeholder-card">
@@ -44,118 +61,232 @@
         </div>
     </section>
 
-    <section class="section section-soft section-atmosphere-sage section-divider section-reveal-zone">
-        <div class="shell section-heading">
-            <p class="eyebrow">Leave a review</p>
-            <h2>Share your experience for moderation and approval.</h2>
-            <p class="lead">Reviews are never published automatically. Submissions are reviewed before going live.</p>
+    <section class="section reviews-wall-section section-divider section-reveal-zone" th:if="${!#lists.isEmpty(approvedReviews)}">
+        <div class="shell reviews-wall-heading">
+            <p class="eyebrow">Client stories</p>
+            <h2>Warm, personal and carefully moderated.</h2>
         </div>
-        <div class="shell">
-            <p class="field-error" th:if="${reviewUploadError != null}" th:text="${reviewUploadError}">Upload error</p>
-            <p class="callout" th:if="${reviewSubmissionSuccess != null}" th:text="${reviewSubmissionSuccess}">Success message</p>
-            <form class="contact-form review-submission-form"
-                  th:action="@{/reviews/submit}"
-                  th:object="${reviewForm}"
-                  method="post"
-                  enctype="multipart/form-data"
-                  novalidate>
-                <div class="field-row">
-                    <div class="field-group">
-                        <label for="reviewerName">Your name</label>
-                        <div class="field-control" th:classappend="${#fields.hasErrors('reviewerName')} ? ' is-invalid'">
-                            <input id="reviewerName" type="text" th:field="*{reviewerName}" autocomplete="name">
+        <div class="shell reviews-marquee" aria-label="Approved review gallery" data-review-marquee>
+            <div class="reviews-marquee-track" data-review-marquee-track>
+                <article class="review-story-card"
+                         th:each="review : ${approvedReviews}"
+                         th:classappend="${#lists.isEmpty(review.photoFileNames)} ? ' review-story-card-text-only'">
+                    <div class="review-story-media"
+                         th:if="${!#lists.isEmpty(review.photoFileNames)}"
+                         th:with="firstPhoto=${review.photoFileNames[0]}">
+                        <button class="review-photo-button review-photo-button-feature"
+                                type="button"
+                                th:if="${#strings.startsWith(firstPhoto, '/')}"
+                                th:attr="data-lightbox-src=@{${firstPhoto}}">
+                            <img th:src="@{${firstPhoto}}"
+                                 alt="Client review photo"
+                                 loading="lazy"
+                                 draggable="false"
+                                 class="protected-image">
+                        </button>
+                        <button class="review-photo-button review-photo-button-feature"
+                                type="button"
+                                th:unless="${#strings.startsWith(firstPhoto, '/')}"
+                                th:attr="data-lightbox-src=@{'/review-photos/' + ${firstPhoto}}">
+                            <img th:src="@{'/review-photos/' + ${firstPhoto}}"
+                                 alt="Client review photo"
+                                 loading="lazy"
+                                 draggable="false"
+                                 class="protected-image">
+                        </button>
+                    </div>
+                    <div class="review-story-content">
+                        <div class="review-story-top">
+                            <p class="review-stars"><span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span></p>
+                            <span th:text="${review.ceremonyType}">Wedding ceremony</span>
                         </div>
-                        <p class="field-error" th:if="${#fields.hasErrors('reviewerName')}" th:errors="*{reviewerName}">Name error</p>
+                        <h3 th:text="${review.headline != null ? review.headline : 'A heartfelt experience'}">A heartfelt experience</h3>
+                        <p th:text="${review.message}">Review text</p>
+                        <p class="review-meta"><strong th:text="${review.reviewerName}">Reviewer</strong><span th:if="${review.reviewerRole != null and !#strings.isEmpty(review.reviewerRole)}"> · </span><span th:if="${review.reviewerRole != null and !#strings.isEmpty(review.reviewerRole)}" th:text="${review.reviewerRole}">Role</span></p>
                     </div>
-                    <div class="field-group">
-                        <label for="reviewerRole">How do you know Clare?</label>
-                        <div class="field-control" th:classappend="${#fields.hasErrors('reviewerRole')} ? ' is-invalid'">
-                            <input id="reviewerRole" type="text" th:field="*{reviewerRole}" placeholder="Couple, family member, venue, funeral director...">
-                        </div>
-                        <p class="field-error" th:if="${#fields.hasErrors('reviewerRole')}" th:errors="*{reviewerRole}">Role error</p>
+                    <div class="review-photo-grid" th:if="${!#lists.isEmpty(review.photoFileNames)}">
+                        <button class="review-photo-button"
+                                type="button"
+                                th:each="photo : ${review.photoFileNames}"
+                                th:if="${#strings.startsWith(photo, '/')}"
+                                th:attr="data-lightbox-src=@{${photo}}">
+                            <img th:src="@{${photo}}"
+                                 alt="Client review photo"
+                                 loading="lazy"
+                                 draggable="false"
+                                 class="protected-image">
+                        </button>
+                        <button class="review-photo-button"
+                                type="button"
+                                th:each="photo : ${review.photoFileNames}"
+                                th:unless="${#strings.startsWith(photo, '/')}"
+                                th:attr="data-lightbox-src=@{'/review-photos/' + ${photo}}">
+                            <img th:src="@{'/review-photos/' + ${photo}}"
+                                 alt="Client review photo"
+                                 loading="lazy"
+                                 draggable="false"
+                                 class="protected-image">
+                        </button>
                     </div>
-                </div>
-
-                <div class="field-row">
-                    <div class="field-group">
-                        <label for="ceremonyType">Ceremony type</label>
-                        <div class="field-control" th:classappend="${#fields.hasErrors('ceremonyType')} ? ' is-invalid'">
-                            <select id="ceremonyType" th:field="*{ceremonyType}">
-                                <option value="">Choose a ceremony type</option>
-                                <option th:each="option : ${reviewCeremonyOptions}" th:value="${option}" th:text="${option}">Wedding ceremony</option>
-                            </select>
-                        </div>
-                        <p class="field-error" th:if="${#fields.hasErrors('ceremonyType')}" th:errors="*{ceremonyType}">Ceremony type error</p>
-                    </div>
-                    <div class="field-group">
-                        <label for="rating">Rating</label>
-                        <div class="field-control" th:classappend="${#fields.hasErrors('rating')} ? ' is-invalid'">
-                            <select id="rating" th:field="*{rating}">
-                                <option value="">Choose rating</option>
-                                <option value="5">5 stars</option>
-                                <option value="4">4 stars</option>
-                                <option value="3">3 stars</option>
-                                <option value="2">2 stars</option>
-                                <option value="1">1 star</option>
-                            </select>
-                        </div>
-                        <p class="field-error" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}">Rating error</p>
-                    </div>
-                </div>
-
-                <div class="field-group">
-                    <label for="headline">Short heading</label>
-                    <div class="field-control" th:classappend="${#fields.hasErrors('headline')} ? ' is-invalid'">
-                        <input id="headline" type="text" th:field="*{headline}" placeholder="Optional heading for your review">
-                    </div>
-                    <p class="field-error" th:if="${#fields.hasErrors('headline')}" th:errors="*{headline}">Headline error</p>
-                </div>
-
-                <div class="field-group">
-                    <label for="reviewMessage">Your review</label>
-                    <div class="field-control field-control-textarea" th:classappend="${#fields.hasErrors('message')} ? ' is-invalid'">
-                        <textarea id="reviewMessage" th:field="*{message}" rows="6" placeholder="Please share your experience."></textarea>
-                    </div>
-                    <p class="field-error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}">Message error</p>
-                </div>
-
-                <div class="field-row">
-                    <div class="field-group">
-                        <label for="reviewEventDate">Event date (optional)</label>
-                        <div class="field-control" th:classappend="${#fields.hasErrors('eventDate')} ? ' is-invalid'">
-                            <input id="reviewEventDate" type="date" th:field="*{eventDate}">
-                        </div>
-                    </div>
-                    <div class="field-group">
-                        <label for="reviewPhotos">Photos (up to 10)</label>
-                        <div class="field-control">
-                            <input id="reviewPhotos" name="reviewPhotos" type="file" accept=".jpg,.jpeg,.png,.webp" multiple>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="checkbox-row" th:classappend="${#fields.hasErrors('consentAccepted')} ? ' is-invalid'">
-                    <input class="checkbox-input" id="consentAccepted" type="checkbox" th:field="*{consentAccepted}">
-                    <label class="checkbox-label" for="consentAccepted">
-                        <span class="checkbox-box" aria-hidden="true"></span>
-                        <span>I understand my review will be checked before publication.</span>
-                    </label>
-                </div>
-                <p class="field-error" th:if="${#fields.hasErrors('consentAccepted')}" th:errors="*{consentAccepted}">Consent error</p>
-
-                <button class="button button-peacock" type="submit">Submit review for approval</button>
-            </form>
+                </article>
+            </div>
         </div>
     </section>
 
-    <section class="section section-atmosphere-sage section-reveal-zone">
-        <div class="shell cta-panel">
-            <div>
-                <p class="eyebrow">Ready to get in touch?</p>
-                <h2>You do not need to wait for a review page to know whether the tone feels right.</h2>
-                <p>If Clare's approach feels like the kind of support you want, the next step is simply an enquiry.</p>
+    <section class="section reviews-submit-section section-divider section-reveal-zone" id="leave-review">
+        <div class="shell reviews-submit-grid">
+            <div class="reviews-submit-copy">
+                <p class="eyebrow">Leave a review</p>
+                <h2>Share your experience for moderation and approval.</h2>
+                <p>Reviews are never published automatically. Clare will check each submission before it appears on the site.</p>
             </div>
-            <button class="button button-peacock" type="button" data-open-enquiry-modal>Contact Clare</button>
+            <div class="reviews-submit-panel">
+                <p class="field-error review-form-banner" data-review-form-error th:if="${reviewUploadError != null}" th:text="${reviewUploadError}">Upload error</p>
+                <p class="callout review-form-banner" data-review-form-success th:if="${reviewSubmissionSuccess != null}" th:text="${reviewSubmissionSuccess}">Success message</p>
+                <p class="field-error review-form-banner" data-review-form-error th:unless="${reviewUploadError != null}" hidden></p>
+                <p class="callout review-form-banner" data-review-form-success th:unless="${reviewSubmissionSuccess != null}" hidden></p>
+
+                <form class="contact-form review-submission-form enquiry-modal-form"
+                      data-review-form
+                      th:action="@{/reviews/submit}"
+                      th:object="${reviewForm}"
+                      method="post"
+                      enctype="multipart/form-data"
+                      novalidate>
+                    <div class="field-row">
+                        <div class="field-group" data-review-field="reviewerName">
+                            <label for="reviewerName">Your name</label>
+                            <div class="field-control" th:classappend="${#fields.hasErrors('reviewerName')} ? ' is-invalid'">
+                                <input id="reviewerName" type="text" th:field="*{reviewerName}" autocomplete="name" required>
+                            </div>
+                            <p class="field-error" th:if="${#fields.hasErrors('reviewerName')}" th:errors="*{reviewerName}">Name error</p>
+                        </div>
+                        <div class="field-group" data-review-field="reviewerRole">
+                            <label for="reviewerRole">How do you know Clare?</label>
+                            <div class="field-control" th:classappend="${#fields.hasErrors('reviewerRole')} ? ' is-invalid'">
+                                <input id="reviewerRole" type="text" th:field="*{reviewerRole}" placeholder="Couple, family member, venue, funeral director...">
+                            </div>
+                            <p class="field-error" th:if="${#fields.hasErrors('reviewerRole')}" th:errors="*{reviewerRole}">Role error</p>
+                        </div>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field-group form-choice" data-review-field="ceremonyType" data-choice-select>
+                            <label for="reviewCeremonyType">Ceremony type</label>
+                            <input id="reviewCeremonyType" type="hidden" th:field="*{ceremonyType}" data-choice-input>
+                            <button class="field-control field-control-button is-placeholder" type="button" aria-haspopup="listbox" aria-expanded="false" data-choice-trigger data-choice-placeholder="Choose ceremony type" th:classappend="${#fields.hasErrors('ceremonyType')} ? ' is-invalid'">
+                                <span class="field-control-text" data-choice-label>Choose ceremony type</span>
+                                <span class="field-icon" aria-hidden="true">⌄</span>
+                            </button>
+                            <div class="field-popup">
+                                <div class="field-popup-select" role="listbox" aria-label="Ceremony type">
+                                    <p class="field-option-placeholder">Choose the closest fit</p>
+                                    <ul class="field-option-list">
+                                        <li th:each="option : ${reviewCeremonyOptions}">
+                                            <button class="field-option" type="button" role="option" data-choice-option th:attr="data-value=${option}" th:text="${option}">Wedding ceremony</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <p class="field-error" th:if="${#fields.hasErrors('ceremonyType')}" th:errors="*{ceremonyType}">Ceremony type error</p>
+                        </div>
+                        <div class="field-group form-choice" data-review-field="rating" data-choice-select>
+                            <label for="reviewRating">Rating</label>
+                            <input id="reviewRating" type="hidden" th:field="*{rating}" data-choice-input>
+                            <button class="field-control field-control-button is-placeholder" type="button" aria-haspopup="listbox" aria-expanded="false" data-choice-trigger data-choice-placeholder="Choose rating" th:classappend="${#fields.hasErrors('rating')} ? ' is-invalid'">
+                                <span class="field-control-text" data-choice-label>Choose rating</span>
+                                <span class="field-icon" aria-hidden="true">⌄</span>
+                            </button>
+                            <div class="field-popup">
+                                <div class="field-popup-select" role="listbox" aria-label="Rating">
+                                    <p class="field-option-placeholder">How did the ceremony feel?</p>
+                                    <ul class="field-option-list">
+                                        <li><button class="field-option" type="button" role="option" data-choice-option data-value="5">★★★★★ · 5 stars</button></li>
+                                        <li><button class="field-option" type="button" role="option" data-choice-option data-value="4">★★★★ · 4 stars</button></li>
+                                        <li><button class="field-option" type="button" role="option" data-choice-option data-value="3">★★★ · 3 stars</button></li>
+                                        <li><button class="field-option" type="button" role="option" data-choice-option data-value="2">★★ · 2 stars</button></li>
+                                        <li><button class="field-option" type="button" role="option" data-choice-option data-value="1">★ · 1 star</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <p class="field-error" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}">Rating error</p>
+                        </div>
+                    </div>
+
+                    <div class="field-group" data-review-field="headline">
+                        <label for="headline">Short heading</label>
+                        <div class="field-control" th:classappend="${#fields.hasErrors('headline')} ? ' is-invalid'">
+                            <input id="headline" type="text" th:field="*{headline}" placeholder="Optional heading for your review">
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('headline')}" th:errors="*{headline}">Headline error</p>
+                    </div>
+
+                    <div class="field-group" data-review-field="message">
+                        <label for="reviewMessage">Your review</label>
+                        <div class="field-control field-control-textarea" th:classappend="${#fields.hasErrors('message')} ? ' is-invalid'">
+                            <textarea id="reviewMessage" th:field="*{message}" rows="6" minlength="30" maxlength="2000" placeholder="Please share what the ceremony felt like, and what Clare helped make easier or more meaningful."></textarea>
+                        </div>
+                        <p class="field-error" th:if="${#fields.hasErrors('message')}" th:errors="*{message}">Message error</p>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field-group form-choice" data-review-field="eventDate" data-date-picker>
+                            <label for="reviewEventDate">Event date (optional)</label>
+                            <input id="reviewEventDate" type="hidden" th:field="*{eventDate}" data-date-input>
+                            <button class="field-control field-control-button is-placeholder" type="button" aria-haspopup="dialog" aria-expanded="false" data-date-trigger data-date-placeholder="dd/mm/yyyy" th:classappend="${#fields.hasErrors('eventDate')} ? ' is-invalid'">
+                                <span class="field-control-text" data-date-label>dd/mm/yyyy</span>
+                                <span class="field-icon" aria-hidden="true">⌄</span>
+                            </button>
+                            <div class="field-popup field-popup-date">
+                                <div class="date-picker-shell" role="dialog" aria-label="Choose event date">
+                                    <div class="date-picker-header">
+                                        <button class="date-picker-nav" type="button" aria-label="Previous month" data-date-nav="prev">‹</button>
+                                        <p class="date-picker-month" data-date-month>Month year</p>
+                                        <button class="date-picker-nav" type="button" aria-label="Next month" data-date-nav="next">›</button>
+                                    </div>
+                                    <div class="date-picker-weekdays" aria-hidden="true">
+                                        <span>Mon</span>
+                                        <span>Tue</span>
+                                        <span>Wed</span>
+                                        <span>Thu</span>
+                                        <span>Fri</span>
+                                        <span>Sat</span>
+                                        <span>Sun</span>
+                                    </div>
+                                    <div class="date-picker-grid" role="grid" data-date-grid></div>
+                                    <div class="date-picker-actions">
+                                        <button class="date-picker-action" type="button" data-date-action="clear">Clear</button>
+                                        <button class="date-picker-action" type="button" data-date-action="today">Today</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-group" data-review-field="reviewPhotos">
+                            <label for="reviewPhotos">Photos (up to 10)</label>
+                            <div class="file-dropzone" data-file-dropzone>
+                                <input class="file-input" id="reviewPhotos" name="reviewPhotos" type="file" accept=".jpg,.jpeg,.png,.webp" multiple data-file-input data-file-list-target="review-photo-list">
+                                <span class="file-dropzone-copy">
+                                    <span class="file-dropzone-title">Add photos from the day</span>
+                                    <span class="file-dropzone-note">JPG, PNG or WebP. Up to 10 images.</span>
+                                </span>
+                                <span class="file-dropzone-action">Choose photos</span>
+                            </div>
+                            <ul class="file-list" id="review-photo-list" hidden></ul>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-row" data-review-field="consentAccepted" th:classappend="${#fields.hasErrors('consentAccepted')} ? ' is-invalid'">
+                        <input class="checkbox-input" id="consentAccepted" type="checkbox" th:field="*{consentAccepted}">
+                        <label class="checkbox-label" for="consentAccepted">
+                            <span class="checkbox-box" aria-hidden="true"></span>
+                            <span>I understand my review will be checked before publication.</span>
+                        </label>
+                    </div>
+                    <p class="field-error" th:if="${#fields.hasErrors('consentAccepted')}" th:errors="*{consentAccepted}">Consent error</p>
+
+                    <button class="button button-peacock" type="submit" data-review-submit>Submit review for approval</button>
+                </form>
+            </div>
         </div>
     </section>
 </main>

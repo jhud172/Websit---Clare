@@ -18,12 +18,17 @@ body > .enquiry-modal {
     z-index: 1;
 }
 
+body > .enquiry-modal {
+    position: fixed;
+    z-index: 13000;
+}
+
 .site-header {
     z-index: 30;
 }
 
 .enquiry-modal {
-    z-index: 999;
+    z-index: 13000;
 }
 
 .section-atmosphere-sage::after,

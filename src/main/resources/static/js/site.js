@@ -25,7 +25,12 @@ const revealSelectors = [
     ".contact-form",
     ".cta-panel",
     ".policy-index",
-    ".policy-card"
+    ".policy-card",
+    ".review-story-card",
+    ".reviews-hero-copy",
+    ".reviews-hero-proof",
+    ".reviews-submit-copy",
+    ".reviews-submit-panel"
 ];
 
 const modalTriggerSelector = "[data-open-enquiry-modal]";
@@ -825,6 +830,7 @@ document.querySelectorAll("[data-choice-select]").forEach((root) => {
         });
     });
 
+    input.addEventListener("change", syncChoice);
     syncChoice();
 });
 
@@ -944,6 +950,7 @@ document.querySelectorAll("[data-date-picker]").forEach((root) => {
         trigger.focus();
     });
 
+    input.addEventListener("change", syncDateLabel);
     syncDateLabel();
     renderCalendar();
 });
@@ -1365,3 +1372,316 @@ if (contactForm) {
         focusAndScrollToField(invalidFields[0].fieldName);
     });
 }
+
+const reviewForm = document.querySelector("[data-review-form]");
+
+if (reviewForm) {
+    const successBanner = document.querySelector("[data-review-form-success]");
+    const errorBanner = document.querySelector("[data-review-form-error]");
+    const submitButton = reviewForm.querySelector('button[type="submit"]');
+    const reviewFieldOrder = [
+        "reviewerName",
+        "reviewerRole",
+        "ceremonyType",
+        "rating",
+        "headline",
+        "message",
+        "eventDate",
+        "reviewPhotos",
+        "consentAccepted"
+    ];
+
+    const getReviewFieldWrapper = (fieldName) => reviewForm.querySelector(`[data-review-field="${fieldName}"]`);
+
+    const getReviewFieldControl = (fieldName) => {
+        const wrapper = getReviewFieldWrapper(fieldName);
+
+        if (!wrapper) {
+            return null;
+        }
+
+        if (fieldName === "consentAccepted") {
+            return wrapper;
+        }
+
+        return wrapper.querySelector(".field-control, .field-control-button, .file-dropzone") || wrapper;
+    };
+
+    const getReviewFieldError = (fieldName) => {
+        const wrapper = getReviewFieldWrapper(fieldName);
+
+        if (!wrapper) {
+            return null;
+        }
+
+        if (fieldName === "consentAccepted") {
+            const existing = wrapper.nextElementSibling;
+
+            if (existing?.classList.contains("field-error")) {
+                return existing;
+            }
+
+            const created = document.createElement("p");
+            created.className = "field-error";
+            created.hidden = true;
+            wrapper.insertAdjacentElement("afterend", created);
+            return created;
+        }
+
+        const existing = wrapper.querySelector(".field-error");
+
+        if (existing) {
+            return existing;
+        }
+
+        const created = document.createElement("p");
+        created.className = "field-error";
+        created.hidden = true;
+        wrapper.appendChild(created);
+        return created;
+    };
+
+    const clearReviewFieldError = (fieldName) => {
+        const wrapper = getReviewFieldWrapper(fieldName);
+        const control = getReviewFieldControl(fieldName);
+        const errorNode = getReviewFieldError(fieldName);
+
+        wrapper?.classList.remove("is-invalid");
+        control?.classList.remove("is-invalid");
+
+        if (errorNode) {
+            errorNode.textContent = "";
+            errorNode.hidden = true;
+        }
+    };
+
+    const setReviewFieldError = (fieldName, message) => {
+        const wrapper = getReviewFieldWrapper(fieldName);
+        const control = getReviewFieldControl(fieldName);
+        const errorNode = getReviewFieldError(fieldName);
+
+        wrapper?.classList.add("is-invalid");
+        control?.classList.add("is-invalid");
+
+        if (errorNode) {
+            errorNode.textContent = message;
+            errorNode.hidden = false;
+        }
+    };
+
+    const showReviewBanner = (type, message) => {
+        const activeBanner = type === "success" ? successBanner : errorBanner;
+        const inactiveBanner = type === "success" ? errorBanner : successBanner;
+
+        if (inactiveBanner) {
+            inactiveBanner.textContent = "";
+            inactiveBanner.hidden = true;
+        }
+
+        if (activeBanner) {
+            activeBanner.textContent = message;
+            activeBanner.hidden = false;
+            activeBanner.setAttribute("tabindex", "-1");
+            activeBanner.focus({ preventScroll: true });
+        }
+    };
+
+    const clearReviewBanners = () => {
+        [successBanner, errorBanner].forEach((banner) => {
+            if (!banner) {
+                return;
+            }
+
+            banner.textContent = "";
+            banner.hidden = true;
+        });
+    };
+
+    const syncReviewCheckbox = () => {
+        const row = getReviewFieldWrapper("consentAccepted");
+        const checkbox = reviewForm.querySelector("#consentAccepted");
+        row?.classList.toggle("is-checked", Boolean(checkbox?.checked));
+    };
+
+    reviewForm.querySelector("#consentAccepted")?.addEventListener("change", syncReviewCheckbox);
+    syncReviewCheckbox();
+
+    reviewForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        clearReviewBanners();
+        reviewFieldOrder.forEach(clearReviewFieldError);
+
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.dataset.originalText = submitButton.dataset.originalText || submitButton.textContent;
+            submitButton.textContent = "Submitting...";
+        }
+
+        try {
+            const response = await fetch(reviewForm.action, {
+                method: "POST",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Accept": "application/json"
+                },
+                body: new FormData(reviewForm)
+            });
+            const payload = await response.json().catch(() => ({}));
+
+            if (!response.ok || payload.success === false) {
+                const errors = payload.errors || {};
+
+                Object.entries(errors).forEach(([fieldName, message]) => {
+                    setReviewFieldError(fieldName, message);
+                });
+
+                showReviewBanner("error", payload.message || "Please check the highlighted fields.");
+                return;
+            }
+
+            reviewForm.reset();
+            reviewForm.querySelectorAll("[data-choice-input], [data-date-input]").forEach((input) => {
+                input.value = "";
+                input.dispatchEvent(new Event("change", { bubbles: true }));
+            });
+            reviewForm.querySelectorAll("[data-file-input]").forEach((input) => {
+                input.value = "";
+                input.dispatchEvent(new Event("change", { bubbles: true }));
+            });
+            syncReviewCheckbox();
+            showReviewBanner("success", payload.message || "Thank you. Your review has been received and is now pending approval.");
+        }
+        catch (error) {
+            showReviewBanner("error", "Sorry, the review could not be submitted just now. Please try again.");
+        }
+        finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = submitButton.dataset.originalText || "Submit review for approval";
+            }
+        }
+    });
+}
+
+document.querySelectorAll("[data-review-marquee]").forEach((marquee) => {
+    const track = marquee.querySelector("[data-review-marquee-track]");
+
+    if (!track || track.children.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+    }
+
+    const originalCards = Array.from(track.children);
+    originalCards.forEach((card) => {
+        const clone = card.cloneNode(true);
+        clone.classList.add("is-marquee-clone");
+        clone.setAttribute("aria-hidden", "true");
+        clone.querySelectorAll("img").forEach((image) => {
+            image.setAttribute("draggable", "false");
+        });
+        track.appendChild(clone);
+    });
+
+    let paused = false;
+    let previousTime = null;
+    let offset = 0;
+    const speed = 24;
+
+    const getLoopPoint = () => track.scrollWidth / 2;
+
+    const tick = (time) => {
+        if (previousTime === null) {
+            previousTime = time;
+        }
+
+        const delta = time - previousTime;
+        previousTime = time;
+
+        if (!paused) {
+            offset += (speed * delta) / 1000;
+
+            if (offset >= getLoopPoint()) {
+                offset -= getLoopPoint();
+            }
+
+            track.style.transform = `translate3d(${-offset}px, 0, 0)`;
+        }
+
+        window.requestAnimationFrame(tick);
+    };
+
+    const setPaused = (value) => {
+        paused = value;
+    };
+
+    marquee.addEventListener("mouseenter", () => setPaused(true));
+    marquee.addEventListener("mouseleave", () => setPaused(false));
+    marquee.addEventListener("focusin", () => setPaused(true));
+    marquee.addEventListener("focusout", () => setPaused(false));
+    marquee.addEventListener("pointerdown", () => setPaused(true));
+    marquee.addEventListener("pointerup", () => setPaused(false));
+    marquee.addEventListener("pointercancel", () => setPaused(false));
+
+    window.requestAnimationFrame(tick);
+});
+
+const lightboxTriggers = Array.from(document.querySelectorAll("[data-lightbox-src]"));
+
+if (lightboxTriggers.length > 0) {
+    const lightbox = document.createElement("div");
+    lightbox.className = "image-lightbox";
+    lightbox.hidden = true;
+    lightbox.innerHTML = `
+        <button class="image-lightbox-backdrop" type="button" data-lightbox-close aria-label="Close image preview"></button>
+        <div class="image-lightbox-dialog" role="dialog" aria-modal="true" aria-label="Image preview" tabindex="-1">
+            <button class="image-lightbox-close" type="button" data-lightbox-close aria-label="Close image preview">×</button>
+            <img class="image-lightbox-image protected-image" alt="Expanded review photo" draggable="false">
+        </div>
+    `;
+    document.body.appendChild(lightbox);
+
+    const lightboxDialog = lightbox.querySelector(".image-lightbox-dialog");
+    const lightboxImage = lightbox.querySelector(".image-lightbox-image");
+    const closeLightbox = () => {
+        lightbox.classList.remove("is-open");
+        document.documentElement.classList.remove("is-modal-open");
+        window.setTimeout(() => {
+            lightbox.hidden = true;
+            if (lightboxImage) {
+                lightboxImage.removeAttribute("src");
+            }
+        }, 180);
+    };
+
+    lightboxTriggers.forEach((trigger) => {
+        trigger.addEventListener("click", () => {
+            if (!lightboxImage) {
+                return;
+            }
+
+            lightboxImage.src = trigger.dataset.lightboxSrc || "";
+            lightbox.hidden = false;
+            document.documentElement.classList.add("is-modal-open");
+            window.requestAnimationFrame(() => {
+                lightbox.classList.add("is-open");
+                lightboxDialog?.focus({ preventScroll: true });
+            });
+        });
+    });
+
+    lightbox.querySelectorAll("[data-lightbox-close]").forEach((button) => {
+        button.addEventListener("click", closeLightbox);
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !lightbox.hidden) {
+            closeLightbox();
+        }
+    });
+}
+
+document.querySelectorAll(".protected-image").forEach((image) => {
+    image.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+    });
+});

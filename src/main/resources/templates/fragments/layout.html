@@ -9,7 +9,7 @@
 <canvas class="atmospheric-feathers" data-feather-field aria-hidden="true"></canvas>
 <div th:replace="~{fragments/header :: site-header(${activePage})}"></div>
 <th:block th:replace="${mainContent}"></th:block>
-<th:block th:if="${activePage != 'contact'}" th:replace="~{fragments/enquiry-modal :: enquiry-modal}"></th:block>
+<th:block th:replace="~{fragments/enquiry-modal :: enquiry-modal}"></th:block>
 <div th:replace="~{fragments/footer :: site-footer}"></div>
 </body>
 </html>
