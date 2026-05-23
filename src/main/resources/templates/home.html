@@ -76,7 +76,10 @@
             <div class="symbolism-mark" aria-hidden="true">
                 <div class="symbolism-brand-panel">
                     <img class="symbolism-feather" th:src="@{${verticalFeatherPath}}" alt="">
-                    <img class="symbolism-logo-composite" th:src="@{${logoPath}}" alt="">
+                    <span class="logo-composite symbolism-logo-composite">
+                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    </span>
                 </div>
                 <figure class="symbolism-couple-card">
                     <img th:src="@{/images/weddings/amy-wedding-9.jpg}" alt="">
@@ -100,7 +103,8 @@
         <div class="shell detail-grid">
             <article class="detail-card service-path-card">
                 <span class="peacock-badge peacock-badge-logo" aria-hidden="true">
-                    <img class="logo-clc" th:src="@{${logoPath}}" alt="">
+                    <img class="logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                    <img class="logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
                 </span>
                 <p class="eyebrow">Weddings</p>
                 <h3>Wedding ceremonies</h3>
@@ -109,7 +113,8 @@
             </article>
             <article class="detail-card service-path-card">
                 <span class="peacock-badge peacock-badge-logo" aria-hidden="true">
-                    <img class="logo-clc" th:src="@{${logoPath}}" alt="">
+                    <img class="logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                    <img class="logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
                 </span>
                 <p class="eyebrow">Funerals</p>
                 <h3>Funeral ceremonies</h3>
@@ -118,7 +123,8 @@
             </article>
             <article class="detail-card service-path-card">
                 <span class="peacock-badge peacock-badge-logo" aria-hidden="true">
-                    <img class="logo-clc" th:src="@{${logoPath}}" alt="">
+                    <img class="logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                    <img class="logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
                 </span>
                 <p class="eyebrow">Life ceremonies</p>
                 <h3>Other meaningful moments</h3>

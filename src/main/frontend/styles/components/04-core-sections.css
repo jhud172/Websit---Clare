@@ -72,6 +72,8 @@
     color: var(--cream);
     font-weight: 700;
     font-size: 1rem;
+    line-height: 1.2;
+    text-align: center;
     white-space: nowrap;
     box-shadow: 0 10px 26px rgba(36, 31, 27, 0.1);
 }
@@ -1660,10 +1662,13 @@
         top: calc(100% + 0.75rem);
         left: 1rem;
         right: 1rem;
+        z-index: 60;
         display: none;
         flex-direction: column;
         align-items: stretch;
         gap: 1rem;
+        max-height: calc(100dvh - var(--header-height) - 1.5rem);
+        overflow: auto;
         padding: 1rem;
         border-radius: 24px;
         background: var(--mobile-nav-bg);
@@ -1757,6 +1762,15 @@
         align-items: stretch;
     }
 
+    .button,
+    .button-secondary,
+    .button-light {
+        max-width: 100%;
+        min-height: 3.15rem;
+        padding-inline: 1.15rem;
+        white-space: normal;
+    }
+
     .visual-stage {
         min-height: 24rem;
     }
@@ -1794,7 +1808,7 @@
     }
 
     .brand-lockup {
-        width: clamp(8.8rem, 52vw, 10.8rem);
+        width: clamp(3.35rem, 14vw, 3.9rem);
     }
 
     .brand-mark-image {

@@ -71,30 +71,6 @@
                 <article class="review-story-card"
                          th:each="review : ${approvedReviews}"
                          th:classappend="${#lists.isEmpty(review.photoFileNames)} ? ' review-story-card-text-only'">
-                    <div class="review-story-media"
-                         th:if="${!#lists.isEmpty(review.photoFileNames)}"
-                         th:with="firstPhoto=${review.photoFileNames[0]}">
-                        <button class="review-photo-button review-photo-button-feature"
-                                type="button"
-                                th:if="${#strings.startsWith(firstPhoto, '/')}"
-                                th:attr="data-lightbox-src=@{${firstPhoto}}">
-                            <img th:src="@{${firstPhoto}}"
-                                 alt="Client review photo"
-                                 loading="lazy"
-                                 draggable="false"
-                                 class="protected-image">
-                        </button>
-                        <button class="review-photo-button review-photo-button-feature"
-                                type="button"
-                                th:unless="${#strings.startsWith(firstPhoto, '/')}"
-                                th:attr="data-lightbox-src=@{'/review-photos/' + ${firstPhoto}}">
-                            <img th:src="@{'/review-photos/' + ${firstPhoto}}"
-                                 alt="Client review photo"
-                                 loading="lazy"
-                                 draggable="false"
-                                 class="protected-image">
-                        </button>
-                    </div>
                     <div class="review-story-content">
                         <div class="review-story-top">
                             <p class="review-stars"><span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span></p>
@@ -102,31 +78,31 @@
                         </div>
                         <h3 th:text="${review.headline != null ? review.headline : 'A heartfelt experience'}">A heartfelt experience</h3>
                         <p th:text="${review.message}">Review text</p>
+                        <div class="review-photo-grid" th:if="${!#lists.isEmpty(review.photoFileNames)}">
+                            <button class="review-photo-button"
+                                    type="button"
+                                    th:each="photo : ${review.photoFileNames}"
+                                    th:if="${#strings.startsWith(photo, '/')}"
+                                    th:attr="data-lightbox-src=@{${photo}}">
+                                <img th:src="@{${photo}}"
+                                     alt="Client review photo"
+                                     loading="lazy"
+                                     draggable="false"
+                                     class="protected-image">
+                            </button>
+                            <button class="review-photo-button"
+                                    type="button"
+                                    th:each="photo : ${review.photoFileNames}"
+                                    th:unless="${#strings.startsWith(photo, '/')}"
+                                    th:attr="data-lightbox-src=@{'/review-photos/' + ${photo}}">
+                                <img th:src="@{'/review-photos/' + ${photo}}"
+                                     alt="Client review photo"
+                                     loading="lazy"
+                                     draggable="false"
+                                     class="protected-image">
+                            </button>
+                        </div>
                         <p class="review-meta"><strong th:text="${review.reviewerName}">Reviewer</strong><span th:if="${review.reviewerRole != null and !#strings.isEmpty(review.reviewerRole)}"> · </span><span th:if="${review.reviewerRole != null and !#strings.isEmpty(review.reviewerRole)}" th:text="${review.reviewerRole}">Role</span></p>
-                    </div>
-                    <div class="review-photo-grid" th:if="${!#lists.isEmpty(review.photoFileNames)}">
-                        <button class="review-photo-button"
-                                type="button"
-                                th:each="photo : ${review.photoFileNames}"
-                                th:if="${#strings.startsWith(photo, '/')}"
-                                th:attr="data-lightbox-src=@{${photo}}">
-                            <img th:src="@{${photo}}"
-                                 alt="Client review photo"
-                                 loading="lazy"
-                                 draggable="false"
-                                 class="protected-image">
-                        </button>
-                        <button class="review-photo-button"
-                                type="button"
-                                th:each="photo : ${review.photoFileNames}"
-                                th:unless="${#strings.startsWith(photo, '/')}"
-                                th:attr="data-lightbox-src=@{'/review-photos/' + ${photo}}">
-                            <img th:src="@{'/review-photos/' + ${photo}}"
-                                 alt="Client review photo"
-                                 loading="lazy"
-                                 draggable="false"
-                                 class="protected-image">
-                        </button>
                     </div>
                 </article>
             </div>

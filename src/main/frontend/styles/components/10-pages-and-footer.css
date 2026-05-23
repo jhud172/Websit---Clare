@@ -108,8 +108,7 @@
 .showcase-slide img,
 .media-stage img,
 .gallery-card img,
-.review-photo-grid img,
-.review-story-media img {
+.review-photo-grid img {
     -webkit-user-select: none;
     user-select: none;
     -webkit-user-drag: none;
@@ -493,7 +492,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: saturate(0.82) contrast(1.05) brightness(0.58);
+    filter: saturate(1.08) contrast(1.08) brightness(0.74);
 }
 
 .services-hero-slide:nth-child(2) img {
@@ -505,9 +504,9 @@
     inset: 0;
     z-index: 1;
     background:
-        radial-gradient(circle at 82% 24%, rgba(14, 17, 20, 0.02), rgba(8, 9, 11, 0.55) 36%, rgba(8, 9, 11, 0.92) 78%),
-        linear-gradient(90deg, rgba(8, 9, 11, 0.96) 0%, rgba(10, 12, 15, 0.78) 44%, rgba(10, 12, 15, 0.36) 100%),
-        linear-gradient(180deg, rgba(8, 9, 11, 0.16), rgba(8, 9, 11, 0.88));
+        radial-gradient(circle at 82% 24%, rgba(14, 17, 20, 0), rgba(8, 9, 11, 0.38) 36%, rgba(8, 9, 11, 0.8) 78%),
+        linear-gradient(90deg, rgba(8, 9, 11, 0.88) 0%, rgba(10, 12, 15, 0.62) 44%, rgba(10, 12, 15, 0.18) 100%),
+        linear-gradient(180deg, rgba(8, 9, 11, 0.08), rgba(8, 9, 11, 0.68));
 }
 
 .services-hero-inner {
@@ -536,7 +535,7 @@
 
 .services-hero-copy h1 {
     font-size: clamp(3.5rem, 6.3vw, 6.95rem);
-    line-height: 0.91;
+    line-height: 1.02;
     max-width: 13.4ch;
 }
 
@@ -624,7 +623,7 @@
     max-width: 13ch;
     margin-inline: auto;
     font-size: clamp(3.2rem, 6vw, 6rem);
-    line-height: 0.94;
+    line-height: 1.04;
 }
 
 .services-centered-heading p:not(.eyebrow) {
@@ -684,7 +683,7 @@
 
 .service-path-image img {
     object-fit: cover;
-    filter: saturate(0.84) contrast(1.02) brightness(0.68);
+    filter: saturate(1.08) contrast(1.06) brightness(0.82);
     transform: scale(1.02);
     transition:
         transform 1100ms cubic-bezier(0.18, 0.86, 0.24, 1),
@@ -697,8 +696,8 @@
     inset: 0;
     z-index: 1;
     background:
-        linear-gradient(180deg, transparent 0%, rgba(8, 9, 11, 0.18) 36%, rgba(8, 9, 11, 0.88) 100%),
-        linear-gradient(90deg, rgba(8, 9, 11, 0.28), transparent 50%);
+        linear-gradient(180deg, transparent 0%, rgba(8, 9, 11, 0.1) 36%, rgba(8, 9, 11, 0.76) 100%),
+        linear-gradient(90deg, rgba(8, 9, 11, 0.16), transparent 50%);
     pointer-events: none;
 }
 
@@ -713,7 +712,7 @@
     max-width: 12ch;
     font-family: var(--font-display);
     font-size: clamp(2.25rem, 4vw, 4.15rem);
-    line-height: 0.94;
+    line-height: 1.04;
 }
 
 .service-path-content p:not(.eyebrow) {
@@ -728,7 +727,7 @@
 .service-path-panel:hover .service-path-image img,
 .service-path-panel:focus-within .service-path-image img {
     transform: scale(1.075);
-    filter: saturate(0.94) contrast(1.06) brightness(0.76);
+    filter: saturate(1.18) contrast(1.08) brightness(0.9);
 }
 
 .services-experience-section {
@@ -750,7 +749,7 @@
 .services-experience-copy h2 {
     max-width: 11ch;
     font-size: clamp(3rem, 6vw, 6.5rem);
-    line-height: 0.9;
+    line-height: 1.03;
 }
 
 .services-experience-copy p:not(.eyebrow) {
@@ -799,8 +798,9 @@
     opacity: 0;
     transform: translateX(5%) scale(1.02);
     transition:
-        opacity 720ms ease,
-        transform 860ms cubic-bezier(0.18, 0.86, 0.24, 1);
+        opacity 680ms ease,
+        transform 900ms cubic-bezier(0.18, 0.86, 0.24, 1);
+    will-change: opacity, transform;
 }
 
 .services-showcase-slide.is-active,
@@ -811,12 +811,12 @@
 
 .services-showcase-slide.is-entering {
     z-index: 3;
-    animation: services-image-wipe 860ms cubic-bezier(0.18, 0.86, 0.24, 1) both;
 }
 
 .services-showcase-slide.is-leaving {
-    opacity: 1;
+    opacity: 0;
     z-index: 2;
+    transform: translateX(-2%) scale(1.01);
 }
 
 .services-showcase-slide::before {
@@ -825,8 +825,8 @@
     inset: 0;
     z-index: 1;
     background:
-        linear-gradient(180deg, transparent 0%, rgba(8, 9, 11, 0.1) 42%, rgba(8, 9, 11, 0.78) 100%),
-        linear-gradient(90deg, rgba(8, 9, 11, 0.28), transparent 48%);
+        linear-gradient(180deg, transparent 0%, rgba(8, 9, 11, 0.06) 42%, rgba(8, 9, 11, 0.66) 100%),
+        linear-gradient(90deg, rgba(8, 9, 11, 0.16), transparent 48%);
 }
 
 .services-showcase-slide img {
@@ -835,7 +835,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: saturate(0.86) contrast(1.02) brightness(0.78);
+    filter: saturate(1.06) contrast(1.06) brightness(0.88);
     transform: scale(1.02);
     transition: transform 7s ease;
 }
@@ -845,10 +845,8 @@
 }
 
 .services-showcase-slide:first-child img {
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
-    padding: 1rem;
-    background: #0d0f11;
 }
 
 .services-showcase-slide figcaption {
@@ -860,7 +858,7 @@
     color: rgba(247, 247, 244, 0.84);
     font-family: var(--font-display);
     font-size: clamp(1.8rem, 3vw, 3.1rem);
-    line-height: 1;
+    line-height: 1.08;
 }
 
 .services-carousel-controls {
@@ -937,7 +935,7 @@
 .services-process h3 {
     font-family: var(--font-display);
     font-size: clamp(1.7rem, 2.6vw, 2.5rem);
-    line-height: 1;
+    line-height: 1.08;
 }
 
 .services-process p {
@@ -964,7 +962,16 @@
 .services-final-panel h2 {
     max-width: 15ch;
     font-size: clamp(3rem, 6vw, 6rem);
-    line-height: 0.92;
+    line-height: 1.04;
+}
+
+.services-final-panel .eyebrow {
+    margin-bottom: 1rem;
+}
+
+.services-final-panel .button {
+    align-self: center;
+    justify-self: end;
 }
 
 .services-final-panel p:not(.eyebrow) {
@@ -1155,7 +1162,7 @@
     max-width: 12ch;
     margin-bottom: 1rem;
     font-size: clamp(4.25rem, 8.8vw, 8.6rem);
-    line-height: 0.86;
+    line-height: 1.02;
 }
 
 .funeral-hero-copy h1 {
@@ -1282,7 +1289,7 @@
 .funeral-final-panel h2 {
     max-width: 13ch;
     font-size: clamp(3.1rem, 6vw, 6.1rem);
-    line-height: 0.92;
+    line-height: 1.04;
 }
 
 .wedding-intro-copy p:not(.eyebrow),
@@ -1725,7 +1732,10 @@
     .funeral-memory-copy h2,
     .funeral-process-heading h2,
     .funeral-final-panel h2 {
-        font-size: clamp(3rem, 15vw, 4.5rem);
+        max-width: 100%;
+        font-size: clamp(2.2rem, 8.8vw, 2.9rem);
+        line-height: 1.08;
+        overflow-wrap: anywhere;
     }
 
     .wedding-hero-note {
@@ -1809,7 +1819,7 @@
 .reviews-submit-copy h2 {
     max-width: 12.5ch;
     font-size: clamp(3.6rem, 7vw, 7.3rem);
-    line-height: 0.9;
+    line-height: 1.03;
     letter-spacing: 0;
 }
 
@@ -1872,7 +1882,7 @@
 
 .reviews-feature-card h3 {
     font-size: clamp(2.1rem, 3.5vw, 3.6rem);
-    line-height: 0.96;
+    line-height: 1.06;
 }
 
 .reviews-feature-card > p:not(.review-stars):not(.review-meta) {
@@ -1942,10 +1952,9 @@
 .review-story-card {
     position: relative;
     display: grid;
-    min-height: 36rem;
-    grid-template-rows: 13rem auto minmax(5.6rem, auto);
+    min-height: 30rem;
     overflow: hidden;
-    padding: 0;
+    padding: clamp(1rem, 1.7vw, 1.35rem);
     border-radius: 24px;
     border: 1px solid rgba(243, 244, 246, 0.13);
     background:
@@ -1962,12 +1971,11 @@
 }
 
 .review-story-card-text-only {
-    grid-template-rows: auto;
-    padding-top: 0.25rem;
+    min-height: 27rem;
 }
 
 .review-story-card-text-only .review-story-content {
-    min-height: 27rem;
+    min-height: 100%;
 }
 
 .review-story-card:hover,
@@ -1990,38 +1998,20 @@
     opacity: 0.68;
 }
 
-.review-story-media {
-    position: relative;
-    min-height: 0;
-    overflow: hidden;
-    background:
-        radial-gradient(circle at center, rgba(214, 199, 145, 0.12), transparent 14rem),
-        #0b0d11;
-}
-
-.review-story-media::after {
-    content: "";
-    position: absolute;
-    inset: auto 0 0;
-    height: 46%;
-    background: linear-gradient(180deg, transparent, rgba(15, 17, 22, 0.94));
-    pointer-events: none;
-}
-
-.review-photo-button-feature {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    border-radius: 0;
-}
-
 .review-story-content {
     position: relative;
     z-index: 1;
     display: flex;
-    min-height: 0;
+    min-height: 100%;
     flex-direction: column;
-    padding: clamp(1.1rem, 1.7vw, 1.45rem);
+    padding: clamp(1rem, 1.8vw, 1.55rem);
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 88% 6%, rgba(214, 199, 145, 0.08), transparent 10rem),
+        linear-gradient(145deg, rgba(8, 10, 14, 0.36), rgba(8, 10, 14, 0.14));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 0 0 1px rgba(243, 244, 246, 0.06);
 }
 
 .review-story-top {
@@ -2044,7 +2034,7 @@
     margin-bottom: 0.65rem;
     color: rgba(247, 247, 244, 0.94);
     font-size: clamp(1.8rem, 2.1vw, 2.35rem);
-    line-height: 0.98;
+    line-height: 1.08;
 }
 
 .review-story-card > p:not(.review-stars):not(.review-meta) {
@@ -2058,7 +2048,7 @@
     color: rgba(238, 240, 238, 0.74);
     line-height: 1.62;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 6;
+    -webkit-line-clamp: 7;
 }
 
 .review-story-card .review-meta {
@@ -2073,19 +2063,23 @@
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.55rem;
-    align-self: end;
-    padding: 0 clamp(1.1rem, 1.7vw, 1.45rem) clamp(1.1rem, 1.7vw, 1.45rem);
+    margin: 1rem 0 0.15rem;
+    padding: 0.55rem;
+    border-radius: 16px;
+    border: 1px solid rgba(243, 244, 246, 0.08);
+    background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
 }
 
 .review-photo-button {
     position: relative;
     display: block;
     overflow: hidden;
-    aspect-ratio: 1 / 0.78;
-    min-height: 4.8rem;
+    aspect-ratio: 1 / 0.82;
+    min-height: 4.4rem;
     padding: 0;
     border: 1px solid rgba(243, 244, 246, 0.1);
-    border-radius: 14px;
+    border-radius: 12px;
     background: #0c0e12;
     cursor: zoom-in;
     user-select: none;
@@ -2293,7 +2287,10 @@
     .reviews-section-heading h2,
     .reviews-wall-heading h2,
     .reviews-submit-copy h2 {
-        font-size: clamp(3rem, 15vw, 4.6rem);
+        max-width: 100%;
+        font-size: clamp(2.2rem, 8.8vw, 2.9rem);
+        line-height: 1.08;
+        overflow-wrap: anywhere;
     }
 
     .reviews-feature-carousel {
@@ -2305,7 +2302,12 @@
     }
 
     .review-story-card {
-        min-height: 31rem;
+        min-height: 29rem;
+        padding: 0.85rem;
+    }
+
+    .review-photo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
@@ -2334,7 +2336,7 @@
 @media (max-width: 1040px) {
     .enquiry-modal-dialog {
         padding: 1rem;
-        max-block-size: 94vh;
+        max-block-size: min(94vh, calc(100dvh - 1.5rem));
     }
 
     .services-hero-inner,
@@ -2798,7 +2800,10 @@ li,
     .services-centered-heading h2,
     .services-experience-copy h2,
     .services-final-panel h2 {
-        font-size: clamp(3.1rem, 16vw, 4.8rem);
+        max-width: 100%;
+        font-size: clamp(2.2rem, 8.8vw, 2.9rem);
+        line-height: 1.08;
+        overflow-wrap: anywhere;
     }
 
     .services-hero-rail {
@@ -2856,6 +2861,13 @@ li,
 
     .services-final-panel {
         align-items: start;
+        gap: 1.5rem;
+    }
+
+    .services-final-panel .button {
+        justify-self: start;
+        max-width: 100%;
+        white-space: normal;
     }
 
     .theme-about .about-hero {
@@ -2875,8 +2887,9 @@ li,
     }
 
     .about-carousel-controls .carousel-arrow {
-        inline-size: 2.05rem;
-        block-size: 2.05rem;
+        inline-size: 2.65rem;
+        block-size: 2.65rem;
+        font-size: 1.28rem;
     }
 
     .about-note-grid p {

@@ -6,7 +6,7 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    opacity: 0.42;
+    opacity: 0.62;
     mix-blend-mode: screen;
 }
 
@@ -20,7 +20,7 @@ body > .enquiry-modal {
 
 body > .enquiry-modal {
     position: fixed;
-    z-index: 13000;
+    z-index: 20000;
 }
 
 .site-header {
@@ -28,7 +28,7 @@ body > .enquiry-modal {
 }
 
 .enquiry-modal {
-    z-index: 13000;
+    z-index: 20000;
 }
 
 .section-atmosphere-sage::after,
@@ -49,7 +49,7 @@ body > .enquiry-modal {
     filter:
         drop-shadow(0 8px 16px rgba(0, 0, 0, 0.28))
         drop-shadow(0 0 12px rgba(214, 199, 145, 0.1));
-    transform: translateX(-50%);
+    transform: translateX(-50%) rotate(-7deg);
 }
 
 .section-divider > .shell::before {
@@ -132,14 +132,14 @@ body > .enquiry-modal {
 
 @media (max-width: 720px) {
     .atmospheric-feathers {
-        opacity: 0.46;
+        opacity: 0.58;
     }
 
     .section-symbolism::before {
         right: -8rem;
         top: 2rem;
-        width: 15rem;
-        opacity: 0.12;
+        width: 18rem;
+        opacity: 0.2;
     }
 
     .section-divider > .shell::after {

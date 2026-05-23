@@ -54,7 +54,7 @@
 .peacock-badge-logo .logo-clc,
 .peacock-badge-logo .clc-lettermark {
     position: relative;
-    z-index: 1;
+    z-index: 3;
 }
 
 .peacock-badge-logo .clc-lettermark {

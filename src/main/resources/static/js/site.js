@@ -82,7 +82,7 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
     const randomBetween = (min, max) => min + Math.random() * (max - min);
 
     const createFeatherParticle = () => {
-        const size = randomBetween(10, 24);
+        const size = randomBetween(24, 52);
 
         return {
             x: randomBetween(0, featherWidth),
@@ -95,7 +95,7 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
             rotation: randomBetween(-0.8, 0.8),
             rotationSpeed: randomBetween(-0.0022, 0.0022),
             sway: randomBetween(0, Math.PI * 2),
-            opacity: randomBetween(0.12, 0.34)
+            opacity: randomBetween(0.22, 0.48)
         };
     };
 
@@ -159,7 +159,7 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
             featherContext.lineWidth = 0.8;
 
             if (featherImage.complete && featherImage.naturalWidth > 0) {
-                featherContext.drawImage(featherImage, -particle.size * 0.28, -particle.size, particle.size * 0.56, particle.size * 2.2);
+                featherContext.drawImage(featherImage, -particle.size * 0.38, -particle.size * 1.22, particle.size * 0.76, particle.size * 2.68);
             }
             else {
                 drawFallbackFeather(particle);

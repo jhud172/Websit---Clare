@@ -10,7 +10,11 @@
                 <p class="lead">How Clare's Life Celebrations handles your personal information.</p>
             </div>
             <div class="visual-stage brand-stage service-hero-stage">
-                <img class="brand-stage-logo" th:src="@{${logoPath}}" alt="Clare's Life Celebrations logo">
+                <span class="logo-composite brand-stage-logo" aria-hidden="true">
+                    <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                    <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                </span>
+                <span class="sr-only">Clare's Life Celebrations logo</span>
                 <p class="visual-note">This page gives a readable public-facing summary and should still receive final legal review against the supplied GDPR document.</p>
             </div>
         </div>

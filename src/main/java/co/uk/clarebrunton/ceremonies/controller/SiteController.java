@@ -98,8 +98,8 @@ public class SiteController {
 	@GetMapping("/about")
 	public String about(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Meet Clare Riley Brunton");
-		model.addAttribute("pageDescription", "Meet Clare Riley Brunton, a North of England celebrant creating modern, personal ceremonies with warmth, compassion and calm confidence.");
+		model.addAttribute("pageTitle", "Meet Clare Brunton");
+		model.addAttribute("pageDescription", "Meet Clare Brunton, a North of England celebrant creating modern, personal ceremonies with warmth, compassion and calm confidence.");
 		return "about";
 	}
 
