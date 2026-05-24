@@ -1,20 +1,8 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-- key words - northoliton, north yorkshire, sunderland , newcastle (how to implement)
-
-
-
-
-- now verify that the ui on iphone devices are optimised and better and are usable and visible to the design we hgave if not redesign for all devices view either reformating to tailwind or custom css for all but either way on all devices everything should look clean and work correctly 
+- feather angle change
+- services page the first image shows needs to be seen more slightly brighter 
+- "The experience" 3rd phgto the one of clare needs resizing so it shows her face 
+- "How it works" the divider and the feathers are nto together they need to be 
+- "Featured feedback" full section needs to be removed
+- "Client stories" feedback needs to be changed to be visible and redesifgned 
+- in the reviews admin page when a uswer submitts a review make sure a email is sent to clare to letclare know theres a new review to be decided.
+- redesign how all emails are outputted make it proffessional

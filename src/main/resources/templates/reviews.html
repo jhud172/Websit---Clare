@@ -11,55 +11,28 @@
                 <a class="button button-peacock" href="#leave-review">Leave a review</a>
             </div>
             <div class="reviews-hero-proof" aria-label="Review highlights">
-                <span>Five-star feedback</span>
-                <span>Approved before publication</span>
-                <span>Weddings, funerals and life moments</span>
+                <span class="reviews-proof-item">
+                    <span class="logo-composite reviews-proof-logo" aria-hidden="true">
+                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    </span>
+                    <span class="reviews-proof-text">Five-star feedback</span>
+                </span>
+                <span class="reviews-proof-item">
+                    <span class="logo-composite reviews-proof-logo" aria-hidden="true">
+                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    </span>
+                    <span class="reviews-proof-text">Approved before publication</span>
+                </span>
+                <span class="reviews-proof-item">
+                    <span class="logo-composite reviews-proof-logo" aria-hidden="true">
+                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    </span>
+                    <span class="reviews-proof-text">Weddings, funerals and life moments</span>
+                </span>
             </div>
-        </div>
-    </section>
-
-    <section class="section reviews-feature-section section-divider section-reveal-zone">
-        <div class="shell reviews-section-heading">
-            <p class="eyebrow">Featured feedback</p>
-            <h2>Swipe through the experiences people remember.</h2>
-        </div>
-        <div class="shell review-carousel reviews-feature-carousel"
-             data-carousel
-             data-carousel-interval="4800"
-             data-carousel-transition="760"
-             th:if="${!#lists.isEmpty(approvedReviews)}">
-            <div class="review-carousel-track">
-                <article class="review-card reviews-feature-card"
-                         data-carousel-slide
-                         th:each="review, stat : ${approvedReviews}"
-                         th:classappend="${stat.index == 0} ? ' is-active'">
-                    <p class="review-stars"><span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span></p>
-                    <h3 th:text="${review.headline != null ? review.headline : 'A heartfelt experience'}">A heartfelt experience</h3>
-                    <p th:text="${review.message}">Review text</p>
-                    <p class="review-meta"><strong th:text="${review.reviewerName}">Reviewer</strong> · <span th:text="${review.ceremonyType}">Wedding ceremony</span></p>
-                </article>
-            </div>
-            <span class="review-carousel-fade review-carousel-fade-left" aria-hidden="true"></span>
-            <span class="review-carousel-fade review-carousel-fade-right" aria-hidden="true"></span>
-            <div class="carousel-controls">
-                <button class="carousel-arrow" type="button" data-carousel-prev aria-label="Previous review">‹</button>
-                <div class="carousel-dots">
-                    <button class="carousel-dot"
-                            th:each="review, stat : ${approvedReviews}"
-                            th:classappend="${stat.index == 0} ? ' is-active'"
-                            type="button"
-                            data-carousel-dot
-                            th:attr="aria-label=${'Show review ' + (stat.index + 1)}"></button>
-                </div>
-                <button class="carousel-arrow" type="button" data-carousel-next aria-label="Next review">›</button>
-            </div>
-        </div>
-        <div class="shell testimonial-placeholder-grid" th:if="${#lists.isEmpty(approvedReviews)}">
-            <article class="testimonial-placeholder-card">
-                <p class="testimonial-placeholder-label">Reviews coming soon</p>
-                <h3>Approved client feedback will appear here</h3>
-                <p>Clare is now collecting verified feedback from couples, families and professional partners.</p>
-            </article>
         </div>
     </section>
 
@@ -68,8 +41,8 @@
             <p class="eyebrow">Client stories</p>
             <h2>Warm, personal and carefully moderated.</h2>
         </div>
-        <div class="shell reviews-marquee" aria-label="Approved review gallery" data-review-marquee>
-            <div class="reviews-marquee-track" data-review-marquee-track>
+        <div class="shell reviews-marquee" aria-label="Approved review gallery">
+            <div class="reviews-marquee-track">
                 <article class="review-story-card"
                          th:each="review : ${approvedReviews}"
                          th:classappend="${#lists.isEmpty(review.photoFileNames)} ? ' review-story-card-text-only'">
@@ -108,6 +81,16 @@
                     </div>
                 </article>
             </div>
+        </div>
+    </section>
+
+    <section class="section reviews-wall-section section-divider section-reveal-zone" th:if="${#lists.isEmpty(approvedReviews)}">
+        <div class="shell testimonial-placeholder-grid">
+            <article class="testimonial-placeholder-card">
+                <p class="testimonial-placeholder-label">Reviews coming soon</p>
+                <h3>Approved client feedback will appear here</h3>
+                <p>Clare is now collecting verified feedback from couples, families and professional partners.</p>
+            </article>
         </div>
     </section>
 

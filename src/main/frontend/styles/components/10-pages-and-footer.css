@@ -169,6 +169,15 @@
     max-width: 46rem;
 }
 
+.about-hero-name {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.no-wrap {
+    white-space: nowrap;
+}
+
 .theme-about .about-hero .story-copy p:not(.eyebrow),
 .theme-about .about-more-section .story-copy p:not(.eyebrow),
 .about-note-grid p {
@@ -1339,21 +1348,51 @@
 
 .wedding-intro-points article {
     display: grid;
-    grid-template-columns: 4rem minmax(0, 0.45fr) minmax(0, 1fr);
-    gap: 1rem;
-    align-items: center;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    column-gap: 1rem;
+    row-gap: 0.45rem;
+    align-items: start;
     min-height: 8.4rem;
     padding: 1.25rem;
     border-radius: 22px;
 }
 
-.wedding-intro-points span,
-.funeral-support-grid span,
+.wedding-intro-points article > span {
+    grid-row: 1 / span 2;
+}
+
+.wedding-intro-points article > h3,
+.wedding-intro-points article > p {
+    min-width: 0;
+}
+
+.wedding-intro-points span:not(.logo-composite),
+.funeral-support-grid span:not(.logo-composite),
 .wedding-process-list span,
 .funeral-process-list span {
     color: rgba(214, 199, 145, 0.82);
     font-weight: 800;
     letter-spacing: 0.12em;
+}
+
+.wedding-intro-logo {
+    --logo-wreath-scale: 1.2;
+    align-self: start;
+    width: clamp(3.4rem, 4.6vw, 4rem);
+    overflow: visible;
+}
+
+.wedding-intro-points article:hover .wedding-intro-logo .logo-wreath,
+.wedding-intro-points article:focus-within .wedding-intro-logo .logo-wreath {
+    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
+    filter:
+        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
+        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
+}
+
+.wedding-intro-points article:hover .wedding-intro-logo .logo-clc,
+.wedding-intro-points article:focus-within .wedding-intro-logo .logo-clc {
+    transform: translateY(1%) scale(1.035);
 }
 
 .wedding-intro-points h3,
@@ -1368,6 +1407,11 @@
 .wedding-package li,
 .funeral-option li {
     color: rgba(238, 240, 238, 0.72);
+}
+
+.wedding-intro-points p {
+    margin: 0;
+    line-height: 1.55;
 }
 
 .wedding-story-grid {
@@ -1387,17 +1431,18 @@
 }
 
 .wedding-story-image-main {
-    min-height: clamp(32rem, 50vw, 48rem);
+    height: clamp(32rem, 50vw, 48rem);
 }
 
 .wedding-story-image-small {
     align-self: end;
-    min-height: clamp(16rem, 28vw, 24rem);
+    height: clamp(16rem, 28vw, 24rem);
 }
 
 .wedding-story-image img,
 .wedding-legal-image img,
 .funeral-intro-image img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -1614,7 +1659,7 @@
 }
 
 .wedding-legal-image {
-    min-height: clamp(28rem, 42vw, 42rem);
+    height: clamp(28rem, 42vw, 42rem);
 }
 
 .wedding-final-panel,
@@ -1658,6 +1703,26 @@
     background:
         radial-gradient(circle at 80% 10%, rgba(183, 192, 204, 0.08), transparent 13rem),
         linear-gradient(145deg, rgba(32, 37, 46, 0.92), rgba(13, 15, 19, 0.96));
+}
+
+.funeral-support-logo {
+    --logo-wreath-scale: 1.2;
+    width: clamp(3.7rem, 5vw, 4.7rem);
+    margin-bottom: clamp(1.15rem, 2vw, 1.6rem);
+    overflow: visible;
+}
+
+.funeral-support-grid article:hover .funeral-support-logo .logo-wreath,
+.funeral-support-grid article:focus-within .funeral-support-logo .logo-wreath {
+    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
+    filter:
+        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
+        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
+}
+
+.funeral-support-grid article:hover .funeral-support-logo .logo-clc,
+.funeral-support-grid article:focus-within .funeral-support-logo .logo-clc {
+    transform: translateY(1%) scale(1.035);
 }
 
 .funeral-intro-image {
@@ -1759,6 +1824,10 @@
         grid-template-columns: 1fr;
     }
 
+    .wedding-intro-points article > span {
+        grid-row: auto;
+    }
+
     .wedding-editorial-carousel,
     .funeral-memory-carousel {
         min-height: 30rem;
@@ -1846,10 +1915,12 @@
     gap: 0.75rem;
 }
 
-.reviews-hero-proof span {
+.reviews-proof-item {
     min-height: 5.4rem;
-    display: flex;
-    align-items: end;
+    display: grid;
+    grid-template-columns: clamp(3.1rem, 5vw, 3.75rem) minmax(0, 1fr);
+    gap: 0.95rem;
+    align-items: center;
     padding: 1rem;
     border-radius: 18px;
     border: 1px solid rgba(243, 244, 246, 0.13);
@@ -1860,6 +1931,30 @@
     font-weight: 800;
     box-shadow: 0 20px 52px rgba(0, 0, 0, 0.28);
     backdrop-filter: blur(16px);
+}
+
+.reviews-proof-logo {
+    --logo-wreath-scale: 1.2;
+    width: clamp(3.1rem, 5vw, 3.75rem);
+    overflow: visible;
+}
+
+.reviews-proof-text {
+    min-width: 0;
+    line-height: 1.18;
+}
+
+.reviews-proof-item:hover .reviews-proof-logo .logo-wreath,
+.reviews-proof-item:focus-within .reviews-proof-logo .logo-wreath {
+    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
+    filter:
+        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
+        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
+}
+
+.reviews-proof-item:hover .reviews-proof-logo .logo-clc,
+.reviews-proof-item:focus-within .reviews-proof-logo .logo-clc {
+    transform: translateY(1%) scale(1.035);
 }
 
 .reviews-feature-section,
@@ -1903,67 +1998,46 @@
 
 .reviews-marquee {
     position: relative;
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    overflow: visible;
 }
 
 .reviews-marquee::before,
 .reviews-marquee::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    z-index: 2;
-    width: clamp(2rem, 8vw, 7rem);
-    pointer-events: none;
+    content: none;
 }
 
 .reviews-marquee::before {
-    left: 0;
-    background: linear-gradient(90deg, rgba(12, 14, 18, 0.98), transparent);
+    background: none;
 }
 
 .reviews-marquee::after {
-    right: 0;
-    background: linear-gradient(270deg, rgba(12, 14, 18, 0.98), transparent);
+    background: none;
 }
 
 .reviews-marquee-track {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(23rem, 28rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
     gap: clamp(1rem, 2vw, 1.5rem);
-    overflow-x: auto;
-    padding: 0.6rem max(7vw, 2rem) 1.25rem;
-    scroll-snap-type: x proximity;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(214, 199, 145, 0.56) rgba(255, 255, 255, 0.05);
-    scroll-behavior: smooth;
-    will-change: scroll-position;
+    overflow: visible;
+    padding: 0;
 }
 
 .reviews-marquee-track::-webkit-scrollbar {
-    height: 0.72rem;
+    display: none;
 }
 
 .reviews-marquee-track::-webkit-scrollbar-track {
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.05);
+    background: transparent;
 }
 
 .reviews-marquee-track::-webkit-scrollbar-thumb {
-    border: 0.18rem solid transparent;
-    border-radius: 999px;
-    background:
-        linear-gradient(90deg, rgba(214, 199, 145, 0.82), rgba(127, 138, 150, 0.72))
-        padding-box;
+    background: transparent;
 }
 
 .review-story-card {
     position: relative;
     display: grid;
-    min-height: 30rem;
+    min-height: 100%;
     overflow: hidden;
     padding: clamp(1rem, 1.7vw, 1.35rem);
     border-radius: 24px;
@@ -1982,7 +2056,7 @@
 }
 
 .review-story-card-text-only {
-    min-height: 27rem;
+    min-height: 100%;
 }
 
 .review-story-card-text-only .review-story-content {
@@ -2054,12 +2128,10 @@
 }
 
 .review-story-content > p:not(.review-stars):not(.review-meta) {
-    display: -webkit-box;
-    overflow: hidden;
+    display: block;
+    overflow: visible;
     color: rgba(238, 240, 238, 0.74);
     line-height: 1.62;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 7;
 }
 
 .review-story-card .review-meta {
@@ -2158,10 +2230,53 @@
 
 .review-submission-form .field-row {
     align-items: start;
+    overflow: visible;
+}
+
+.review-submission-form .field-group {
+    min-width: 0;
 }
 
 .review-submission-form .field-control-button {
     min-height: 3.8rem;
+}
+
+.review-submission-form .form-choice.is-open,
+.review-submission-form .phone-field.is-open {
+    z-index: 8;
+}
+
+.review-submission-form .field-popup {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    max-height: none;
+    margin-top: 0.65rem;
+    overflow: visible;
+    opacity: 0;
+    transform: none;
+}
+
+.review-submission-form .field-popup.is-above {
+    bottom: auto;
+    transform: none;
+}
+
+.review-submission-form .form-choice.is-open .field-popup,
+.review-submission-form .phone-field.is-open .field-popup {
+    opacity: 1;
+    transform: none;
+}
+
+.review-submission-form .field-popup-date {
+    width: min(100%, 22rem);
+}
+
+.review-submission-form .date-picker-shell {
+    max-height: none;
 }
 
 .review-form-banner {
@@ -2308,12 +2423,7 @@
         --review-card-width: min(86vw, 24rem);
     }
 
-    .reviews-marquee-track {
-        grid-auto-columns: minmax(18rem, 86vw);
-    }
-
     .review-story-card {
-        min-height: 29rem;
         padding: 0.85rem;
     }
 
@@ -2884,6 +2994,10 @@ li,
     .theme-about .about-hero {
         padding-top: 3.4rem;
         padding-bottom: 4.25rem;
+    }
+
+    .theme-about .about-hero .story-copy h1 {
+        font-size: clamp(2.55rem, 12.5vw, 3rem);
     }
 
     .about-image-carousel,

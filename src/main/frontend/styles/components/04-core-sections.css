@@ -458,6 +458,26 @@
     margin-bottom: 0.75rem;
 }
 
+.detail-card-logo {
+    --logo-wreath-scale: 1.2;
+    width: clamp(3.5rem, 5vw, 4.35rem);
+    margin-bottom: 1rem;
+    overflow: visible;
+}
+
+.detail-card:hover .detail-card-logo .logo-wreath,
+.detail-card:focus-within .detail-card-logo .logo-wreath {
+    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
+    filter:
+        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
+        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
+}
+
+.detail-card:hover .detail-card-logo .logo-clc,
+.detail-card:focus-within .detail-card-logo .logo-clc {
+    transform: translateY(1%) scale(1.035);
+}
+
 .path-index,
 .package-tag,
 .quote-label {

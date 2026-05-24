@@ -283,7 +283,7 @@ public class ReviewService {
 						"Venue coordinator",
 						"Wedding ceremony",
 						"Professional from start to finish",
-						"Clare was calm, organised and a pleasure to work with on the day. She gave the couple space to enjoy the moment while making sure the ceremony flowed beautifully.",
+						"Clare was calm, organised and a pleasure to work with on the day. She gave us the space to enjoy the moment while making sure the ceremony flowed beautifully.",
 						LocalDate.of(2026, 2, 14),
 						OffsetDateTime.parse("2026-04-04T16:20:00+01:00"),
 						List.of("/images/clare/wedding-symbolism-ribbons.jpg")
