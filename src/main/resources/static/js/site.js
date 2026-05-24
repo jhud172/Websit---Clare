@@ -1288,15 +1288,28 @@ if (contactForm) {
     const focusAndScrollToField = (fieldName) => {
         const wrapper = getFieldWrapper(fieldName);
         const focusTarget = fieldConfig[fieldName]?.focusTarget;
+        const modalDialog = contactForm.closest("[data-enquiry-modal-dialog]");
         const headerOffset = siteHeader ? siteHeader.offsetHeight : 92;
 
         if (wrapper) {
-            const top = wrapper.getBoundingClientRect().top + window.scrollY - headerOffset - 24;
+            if (modalDialog) {
+                const wrapperTop = wrapper.getBoundingClientRect().top;
+                const dialogTop = modalDialog.getBoundingClientRect().top;
+                const top = modalDialog.scrollTop + wrapperTop - dialogTop - 24;
 
-            window.scrollTo({
-                top: Math.max(0, top),
-                behavior: "smooth"
-            });
+                modalDialog.scrollTo({
+                    top: Math.max(0, top),
+                    behavior: "smooth"
+                });
+            }
+            else {
+                const top = wrapper.getBoundingClientRect().top + window.scrollY - headerOffset - 24;
+
+                window.scrollTo({
+                    top: Math.max(0, top),
+                    behavior: "smooth"
+                });
+            }
         }
 
         if (focusTarget && typeof focusTarget.focus === "function") {

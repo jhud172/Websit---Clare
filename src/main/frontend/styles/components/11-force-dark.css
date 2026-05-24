@@ -464,6 +464,20 @@ li,
         inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
+.theme-home .review-carousel-fade-left {
+    background: linear-gradient(90deg,
+        rgba(18, 21, 26, 0.98) 0%,
+        rgba(18, 21, 26, 0.68) 48%,
+        transparent 100%);
+}
+
+.theme-home .review-carousel-fade-right {
+    background: linear-gradient(270deg,
+        rgba(18, 21, 26, 0.98) 0%,
+        rgba(18, 21, 26, 0.68) 48%,
+        transparent 100%);
+}
+
 .review-carousel .review-card.is-active {
     border-color: rgba(214, 199, 145, 0.36);
     box-shadow:
@@ -637,16 +651,16 @@ textarea::placeholder {
 
 .carousel-arrow {
     color: #f7f8fa;
-    border-color: rgba(214, 199, 145, 0.22);
+    border-color: rgba(214, 199, 145, 0.32);
     background:
-        radial-gradient(circle at 50% 48%, rgba(214, 199, 145, 0.22), transparent 48%),
-        linear-gradient(145deg, rgba(42, 47, 56, 0.78), rgba(13, 15, 20, 0.9));
+        radial-gradient(circle at 50% 50%, rgba(214, 199, 145, 0.24), transparent 42%),
+        linear-gradient(145deg, rgba(47, 52, 61, 0.88), rgba(10, 12, 16, 0.94));
 }
 
 .carousel-arrow:hover,
 .carousel-arrow:focus-visible {
     color: #ffffff;
-    border-color: rgba(214, 199, 145, 0.58);
+    border-color: rgba(214, 199, 145, 0.68);
 }
 
 .carousel-dot {

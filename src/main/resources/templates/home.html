@@ -11,12 +11,12 @@
                      fetchpriority="high">
             </figure>
             <figure class="hero-media" data-carousel-slide>
-                <img th:src="@{/images/weddings/amy-wedding-8.jpg}"
+                <img th:src="@{/images/weddings/amy-wedding-1.jpg}"
                      alt=""
                      loading="lazy">
             </figure>
             <figure class="hero-media" data-carousel-slide>
-                <img th:src="@{/images/weddings/amy-wedding-1.jpg}"
+                <img th:src="@{/images/weddings/amy-wedding-2.jpg}"
                      alt=""
                      loading="lazy">
             </figure>
@@ -183,6 +183,8 @@
                     <p>Every review is checked before publication to keep this space trustworthy and genuine.</p>
                 </article>
             </div>
+            <span class="review-carousel-fade review-carousel-fade-left" aria-hidden="true"></span>
+            <span class="review-carousel-fade review-carousel-fade-right" aria-hidden="true"></span>
             <div class="carousel-controls">
                 <button class="carousel-arrow" type="button" data-carousel-prev aria-label="Previous review">‹</button>
                 <div class="carousel-dots" th:if="${!#lists.isEmpty(featuredReviews)}">

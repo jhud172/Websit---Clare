@@ -253,7 +253,7 @@ public class ReviewService {
 						"Clare brought such warmth, calm and personality to our wedding ceremony. The script felt beautifully written, relaxed and full of the little details that mattered to us. So many guests said it was the most personal ceremony they had been part of.",
 						LocalDate.of(2026, 5, 2),
 						OffsetDateTime.parse("2026-05-12T10:30:00+01:00"),
-						List.of("/images/weddings/amy-wedding-1.jpg", "/images/weddings/amy-wedding-4.jpg", "/images/weddings/wedding-couple-moment.jpg")
+						List.of("/images/weddings/amy-back-off-head-2.jpg", "/images/weddings/amy-back-off-head-1.jpg")
 				),
 				demoReview(
 						"demo-review-wedding-laura-ben",

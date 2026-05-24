@@ -3,8 +3,20 @@
 <th:block th:fragment="page-metadata(pageTitle, pageDescription)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle != null ? pageTitle + ' | ' + site.name : site.name}">Clare's Life Celebrations</title>
+    <title th:text="${pageTitle != null ? (#strings.contains(pageTitle, site.name) ? pageTitle : pageTitle + ' | ' + site.name) : site.name}">Clare's Life Celebrations</title>
     <meta name="description" th:content="${pageDescription != null ? pageDescription : site.tagline}">
+    <meta name="robots" th:if="${robotsContent != null}" th:content="${robotsContent}">
+    <link rel="canonical" th:href="${canonicalUrl}">
+    <meta property="og:title" th:content="${pageTitle != null ? (#strings.contains(pageTitle, site.name) ? pageTitle : pageTitle + ' | ' + site.name) : site.name}">
+    <meta property="og:description" th:content="${pageDescription != null ? pageDescription : site.tagline}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" th:content="${canonicalUrl}">
+    <meta property="og:image" th:content="${openGraphImageUrl}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" th:content="${pageTitle != null ? (#strings.contains(pageTitle, site.name) ? pageTitle : pageTitle + ' | ' + site.name) : site.name}">
+    <meta name="twitter:description" th:content="${pageDescription != null ? pageDescription : site.tagline}">
+    <meta name="twitter:image" th:content="${openGraphImageUrl}">
     <meta name="theme-color" content="#1f2724">
+    <script th:if="${structuredDataJson != null}" type="application/ld+json" th:utext="${structuredDataJson}"></script>
 </th:block>
 </html>

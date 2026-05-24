@@ -80,13 +80,13 @@
     position: relative;
     display: inline-grid;
     place-items: center;
-    inline-size: 3rem;
-    block-size: 3rem;
+    inline-size: 3.15rem;
+    block-size: 3.15rem;
     border-radius: 999px;
-    border: 1px solid rgba(214, 199, 145, 0.22);
+    border: 1px solid rgba(214, 199, 145, 0.32);
     background:
-        radial-gradient(circle at 50% 48%, rgba(214, 199, 145, 0.2), transparent 48%),
-        linear-gradient(145deg, rgba(38, 43, 52, 0.72), rgba(10, 12, 16, 0.84));
+        radial-gradient(circle at 50% 50%, rgba(214, 199, 145, 0.24), transparent 42%),
+        linear-gradient(145deg, rgba(47, 52, 61, 0.88), rgba(10, 12, 16, 0.94));
     color: rgba(247, 248, 250, 0.94);
     cursor: pointer;
     font-family: var(--font-display);
@@ -94,12 +94,15 @@
     font-weight: 700;
     line-height: 1;
     box-shadow:
-        0 14px 32px rgba(0, 0, 0, 0.3),
-        0 0 0 0.35rem rgba(214, 199, 145, 0.04),
-        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        0 16px 36px rgba(0, 0, 0, 0.34),
+        0 0 0 0.42rem rgba(214, 199, 145, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        inset 0 -1.25rem 1.6rem rgba(0, 0, 0, 0.18);
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+    isolation: isolate;
     transition:
-        transform 240ms ease,
+        color 240ms ease,
+        transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
         border-color 240ms ease,
         background 240ms ease,
         box-shadow 240ms ease;
@@ -108,52 +111,95 @@
 .carousel-arrow::before {
     content: "";
     position: absolute;
-    inset: -0.42rem;
+    inset: -0.5rem;
     border-radius: inherit;
     background: url("/images/brand/logo-clare-no-background-wreath-only.png") center / contain no-repeat;
-    opacity: 0.72;
+    opacity: 0.82;
     filter:
-        drop-shadow(0 0 10px rgba(214, 199, 145, 0.12))
-        drop-shadow(0 8px 14px rgba(0, 0, 0, 0.22));
+        saturate(1.08)
+        drop-shadow(0 0 12px rgba(214, 199, 145, 0.14))
+        drop-shadow(0 9px 16px rgba(0, 0, 0, 0.26));
     transform: rotate(0deg) scale(1.02);
     transform-origin: center;
     transition:
         opacity 240ms ease,
-        transform 520ms cubic-bezier(0.18, 0.86, 0.24, 1),
+        transform 580ms cubic-bezier(0.18, 0.86, 0.24, 1),
         filter 240ms ease;
     pointer-events: none;
+    z-index: -1;
 }
 
 .carousel-arrow::after {
     content: "";
     position: absolute;
-    inset: 0.5rem;
+    inset: 0.48rem;
     border-radius: inherit;
-    border: 1px solid rgba(247, 248, 250, 0.1);
-    background: radial-gradient(circle, rgba(8, 10, 14, 0.24), transparent 62%);
+    border: 1px solid rgba(247, 248, 250, 0.16);
+    background:
+        radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.12), transparent 34%),
+        radial-gradient(circle, rgba(8, 10, 14, 0.28), transparent 62%);
     pointer-events: none;
+    z-index: -1;
 }
 
 .carousel-arrow:hover,
 .carousel-arrow:focus-visible {
-    transform: translateY(-2px);
-    border-color: rgba(214, 199, 145, 0.52);
+    color: #ffffff;
+    border-color: rgba(214, 199, 145, 0.68);
     background:
-        radial-gradient(circle at 50% 48%, rgba(214, 199, 145, 0.32), transparent 50%),
-        linear-gradient(145deg, rgba(52, 58, 68, 0.86), rgba(15, 17, 22, 0.92));
+        radial-gradient(circle at 50% 50%, rgba(214, 199, 145, 0.34), transparent 44%),
+        linear-gradient(145deg, rgba(61, 68, 78, 0.92), rgba(14, 17, 22, 0.96));
     box-shadow:
-        0 20px 44px rgba(0, 0, 0, 0.4),
-        0 0 0 0.42rem rgba(214, 199, 145, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        0 22px 48px rgba(0, 0, 0, 0.44),
+        0 0 0 0.5rem rgba(214, 199, 145, 0.1),
+        0 0 28px rgba(0, 137, 123, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1.35rem 1.7rem rgba(0, 0, 0, 0.16);
 }
 
 .carousel-arrow:hover::before,
 .carousel-arrow:focus-visible::before {
-    opacity: 0.96;
-    transform: rotate(18deg) scale(1.08);
+    opacity: 1;
     filter:
-        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
-        drop-shadow(0 10px 18px rgba(0, 0, 0, 0.28));
+        saturate(1.18)
+        drop-shadow(0 0 18px rgba(214, 199, 145, 0.24))
+        drop-shadow(0 11px 20px rgba(0, 0, 0, 0.34));
+}
+
+.carousel-arrow[data-carousel-prev]:hover,
+.carousel-arrow[data-carousel-prev]:focus-visible {
+    transform: translateX(-2px) translateY(-2px);
+}
+
+.carousel-arrow[data-carousel-next]:hover,
+.carousel-arrow[data-carousel-next]:focus-visible {
+    transform: translateX(2px) translateY(-2px);
+}
+
+.carousel-arrow[data-carousel-prev]:hover::before,
+.carousel-arrow[data-carousel-prev]:focus-visible::before {
+    transform: rotate(-22deg) scale(1.1);
+}
+
+.carousel-arrow[data-carousel-next]:hover::before,
+.carousel-arrow[data-carousel-next]:focus-visible::before {
+    transform: rotate(22deg) scale(1.1);
+}
+
+.carousel-arrow[data-carousel-prev]:active {
+    transform: translateX(-3px) translateY(0) scale(0.96);
+}
+
+.carousel-arrow[data-carousel-next]:active {
+    transform: translateX(3px) translateY(0) scale(0.96);
+}
+
+.carousel-arrow[data-carousel-prev]:active::before {
+    transform: rotate(-54deg) scale(1.02);
+}
+
+.carousel-arrow[data-carousel-next]:active::before {
+    transform: rotate(54deg) scale(1.02);
 }
 
 .carousel-dots {
@@ -311,16 +357,42 @@
     --review-card-width: clamp(19rem, 44vw, 38rem);
     --review-card-gap: clamp(1rem, 2vw, 1.45rem);
     overflow: hidden;
-    padding-block: 0.25rem 0.4rem;
+    padding-block: clamp(0.8rem, 2vw, 1.35rem) 0.4rem;
     cursor: grab;
+}
+
+.review-carousel-fade {
+    position: absolute;
+    top: 0;
+    bottom: 4.8rem;
+    width: clamp(4rem, 13vw, 11rem);
+    pointer-events: none;
+    z-index: 3;
+}
+
+.review-carousel-fade-left {
+    left: 0;
+    background: linear-gradient(90deg,
+        color-mix(in srgb, var(--theme-bg-mid, var(--page-bg-mid)) 88%, transparent) 0%,
+        color-mix(in srgb, var(--theme-bg-mid, var(--page-bg-mid)) 54%, transparent) 46%,
+        transparent 100%);
+}
+
+.review-carousel-fade-right {
+    right: 0;
+    background: linear-gradient(270deg,
+        color-mix(in srgb, var(--theme-bg-mid, var(--page-bg-mid)) 88%, transparent) 0%,
+        color-mix(in srgb, var(--theme-bg-mid, var(--page-bg-mid)) 54%, transparent) 46%,
+        transparent 100%);
 }
 
 .review-carousel-track {
     position: relative;
+    z-index: 1;
     display: flex;
     align-items: stretch;
     gap: var(--review-card-gap);
-    min-height: clamp(16rem, 24vw, 18.5rem);
+    min-height: clamp(17rem, 25vw, 19.5rem);
     transform:
         translateX(calc((100% - var(--review-card-width)) / 2 - (var(--carousel-index, 0) * (var(--review-card-width) + var(--review-card-gap)))));
     transition: transform 720ms cubic-bezier(0.18, 0.86, 0.24, 1);
@@ -429,6 +501,8 @@
 }
 
 .review-carousel .carousel-controls {
+    position: relative;
+    z-index: 4;
     justify-content: center;
     width: max-content;
     max-width: 100%;
@@ -447,6 +521,13 @@
 .review-carousel .carousel-dots {
     min-inline-size: 4rem;
     justify-content: center;
+}
+
+@media (max-width: 720px) {
+    .review-carousel-fade {
+        width: clamp(1.8rem, 11vw, 4rem);
+        bottom: 4.4rem;
+    }
 }
 
 @keyframes review-card-sheen {

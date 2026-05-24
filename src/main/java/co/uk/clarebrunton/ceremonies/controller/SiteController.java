@@ -206,6 +206,7 @@ public class SiteController {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Review admin login");
 		model.addAttribute("pageDescription", "Admin login for review moderation.");
+		model.addAttribute("robotsContent", "noindex, nofollow");
 		return "reviews-admin-login";
 	}
 
@@ -238,6 +239,7 @@ public class SiteController {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Review moderation");
 		model.addAttribute("pageDescription", "Approve or reject submitted reviews.");
+		model.addAttribute("robotsContent", "noindex, nofollow");
 		model.addAttribute("pendingReviews", reviewService.getPendingReviews());
 		model.addAttribute("approvedReviews", reviewService.getApprovedReviews());
 		return "reviews-admin";
@@ -371,6 +373,7 @@ public class SiteController {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Thank you for getting in touch");
 		model.addAttribute("pageDescription", "Confirmation page after submitting an enquiry to Clare's Life Celebrations.");
+		model.addAttribute("robotsContent", "noindex, nofollow");
 		return "thank-you";
 	}
 

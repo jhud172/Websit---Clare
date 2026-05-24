@@ -5,17 +5,25 @@
 
 .enquiry-modal {
     position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     inset: 0;
     z-index: 20000;
     display: grid;
-    place-items: center;
+    align-items: center;
+    justify-items: center;
     width: 100vw;
+    height: 100vh;
+    height: 100dvh;
     min-height: 100vh;
     min-height: 100dvh;
     padding: clamp(0.75rem, 2vw, 1.5rem);
     overflow: auto;
     overscroll-behavior: contain;
     isolation: isolate;
+    box-sizing: border-box;
 }
 
 .enquiry-modal[hidden] {
