@@ -460,9 +460,27 @@
 
 .detail-card-logo {
     --logo-wreath-scale: 1.2;
-    width: clamp(3.5rem, 5vw, 4.35rem);
+    justify-self: center;
+    width: clamp(2.6rem, 3.2vw, 3.2rem);
+    height: clamp(2.6rem, 3.2vw, 3.2rem);
     margin-bottom: 1rem;
     overflow: visible;
+}
+
+.detail-card .detail-card-logo .logo-clc {
+    width: 73%;
+    height: 73%;
+}
+
+.detail-card .detail-card-logo .logo-wreath {
+    width: 100%;
+    height: 100%;
+}
+
+.detail-card:has(.detail-card-logo) {
+    display: grid;
+    justify-items: center;
+    text-align: center;
 }
 
 .detail-card:hover .detail-card-logo .logo-wreath,
@@ -1372,17 +1390,48 @@
     pointer-events: none;
 }
 
+.file-dropzone::after {
+    content: "Drop files to upload";
+    position: absolute;
+    inset: 0.55rem;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    border-radius: 20px;
+    border: 1px solid rgba(214, 199, 145, 0.42);
+    background:
+        radial-gradient(circle at 50% 0%, rgba(214, 199, 145, 0.18), transparent 8rem),
+        rgba(10, 12, 15, 0.82);
+    color: rgba(247, 247, 244, 0.92);
+    font-weight: 800;
+    opacity: 0;
+    transform: scale(0.985);
+    pointer-events: none;
+    transition:
+        opacity 180ms ease,
+        transform 180ms ease;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
 .file-dropzone:hover,
 .file-dropzone:focus-within,
-.file-dropzone.has-files {
+.file-dropzone.has-files,
+.file-dropzone.is-drag-over {
     border-color: var(--sage);
     box-shadow: 0 0 0 4px var(--focus-ring), var(--control-shadow);
     transform: translateY(-1px);
 }
 
+.file-dropzone.is-drag-over::after {
+    opacity: 1;
+    transform: scale(1);
+}
+
 .file-input {
     position: absolute;
     inset: 0;
+    z-index: 3;
     opacity: 0;
     cursor: pointer;
 }
@@ -1391,6 +1440,7 @@
 .file-dropzone-action {
     position: relative;
     z-index: 1;
+    pointer-events: none;
 }
 
 .file-dropzone-copy {
@@ -1430,11 +1480,61 @@
 }
 
 .file-list li {
-    padding: 0.85rem 1rem;
+    min-width: 0;
+    padding: 0.65rem;
     border-radius: 18px;
     border: 1px solid var(--line);
     background: var(--surface-strong);
     color: var(--ink-soft);
+}
+
+.file-list-item {
+    display: grid;
+    grid-template-columns: 3.35rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.file-preview-image,
+.file-preview-icon {
+    width: 3.35rem;
+    height: 3.35rem;
+    border-radius: 13px;
+    border: 1px solid rgba(243, 244, 246, 0.12);
+    background: rgba(15, 17, 22, 0.72);
+}
+
+.file-preview-image {
+    display: block;
+    object-fit: cover;
+}
+
+.file-preview-icon {
+    display: grid;
+    place-items: center;
+    color: var(--peacock-gold);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+}
+
+.file-preview-meta {
+    display: grid;
+    gap: 0.18rem;
+    min-width: 0;
+}
+
+.file-preview-name {
+    overflow: hidden;
+    color: var(--ink);
+    font-weight: 750;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-preview-size {
+    color: var(--ink-muted);
+    font-size: 0.88rem;
 }
 
 .field-error {

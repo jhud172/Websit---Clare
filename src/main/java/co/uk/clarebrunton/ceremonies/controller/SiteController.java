@@ -241,8 +241,21 @@ public class SiteController {
 		model.addAttribute("pageDescription", "Approve or reject submitted reviews.");
 		model.addAttribute("robotsContent", "noindex, nofollow");
 		model.addAttribute("pendingReviews", reviewService.getPendingReviews());
-		model.addAttribute("approvedReviews", reviewService.getApprovedReviews());
 		return "reviews-admin";
+	}
+
+	@GetMapping("/reviews/admin/manage")
+	public String manageReviews(Model model, HttpSession session) {
+		if (!isReviewAdminAuthenticated(session)) {
+			return "redirect:/reviews/admin/login";
+		}
+
+		model.addAttribute("logoPath", LOGO_CLARE);
+		model.addAttribute("pageTitle", "Manage reviews");
+		model.addAttribute("pageDescription", "Enable or disable approved reviews.");
+		model.addAttribute("robotsContent", "noindex, nofollow");
+		model.addAttribute("managedReviews", reviewService.getManageableReviews());
+		return "reviews-admin-manage";
 	}
 
 	@PostMapping("/reviews/admin/{reviewId}/approve")
@@ -269,8 +282,34 @@ public class SiteController {
 		}
 
 		reviewService.rejectReview(reviewId, note);
-		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review rejected.");
+		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review rejected and deleted.");
 		return "redirect:/reviews/admin";
+	}
+
+	@PostMapping("/reviews/admin/{reviewId}/enable")
+	public String enableReview(@PathVariable String reviewId,
+			RedirectAttributes redirectAttributes,
+			HttpSession session) {
+		if (!isReviewAdminAuthenticated(session)) {
+			return "redirect:/reviews/admin/login";
+		}
+
+		reviewService.enableReview(reviewId);
+		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review enabled.");
+		return "redirect:/reviews/admin/manage";
+	}
+
+	@PostMapping("/reviews/admin/{reviewId}/disable")
+	public String disableReview(@PathVariable String reviewId,
+			RedirectAttributes redirectAttributes,
+			HttpSession session) {
+		if (!isReviewAdminAuthenticated(session)) {
+			return "redirect:/reviews/admin/login";
+		}
+
+		reviewService.disableReview(reviewId);
+		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review disabled.");
+		return "redirect:/reviews/admin/manage";
 	}
 
 	@GetMapping("/review-photos/{filename}")

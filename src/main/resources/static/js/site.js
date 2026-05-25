@@ -393,6 +393,7 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     const intervalMs = Number(carouselRoot.dataset.carouselInterval || 6000);
     const transitionMs = Number(carouselRoot.dataset.carouselTransition || 980);
     let currentIndex = slides.findIndex((slide) => slide.classList.contains("is-active"));
+    let reviewTrackIndex = currentIndex;
     let timerId = null;
     let transitionTimerId = null;
     let pointerStartX = null;
@@ -421,8 +422,29 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         currentIndex = 0;
     }
 
+    reviewTrackIndex = isReviewCarousel && slides.length > 1 ? currentIndex + 1 : currentIndex;
+
     const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const normaliseIndex = (index) => (index + slides.length) % slides.length;
+
+    const setReviewTrackPosition = (instant = false) => {
+        if (!isReviewCarousel) {
+            return;
+        }
+
+        if (instant && track) {
+            track.style.transitionDuration = "0ms";
+        }
+
+        carouselRoot.style.setProperty("--carousel-index", String(reviewTrackIndex));
+
+        if (instant && track) {
+            track.getBoundingClientRect();
+            window.requestAnimationFrame(() => {
+                track.style.removeProperty("transition-duration");
+            });
+        }
+    };
 
     const setDots = () => {
         dots.forEach((dot, index) => {
@@ -437,7 +459,7 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
             return;
         }
 
-        carouselRoot.style.setProperty("--carousel-index", String(slides.length > 1 ? currentIndex + 1 : currentIndex));
+        setReviewTrackPosition();
         slides.forEach((slide, index) => {
             const previous = normaliseIndex(currentIndex - 1) === index;
             const next = normaliseIndex(currentIndex + 1) === index;
@@ -448,6 +470,8 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     };
 
     const finishTransition = () => {
+        const shouldSnapReviewTrack = isReviewCarousel && slides.length > 1 && reviewTrackIndex !== currentIndex + 1;
+
         slides.forEach((slide, index) => {
             const active = index === currentIndex;
             slide.classList.toggle("is-active", active);
@@ -456,6 +480,10 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         });
 
         carouselRoot.classList.remove("is-transitioning");
+        if (shouldSnapReviewTrack) {
+            reviewTrackIndex = currentIndex + 1;
+            setReviewTrackPosition(true);
+        }
         setReviewSlideStates();
         setDots();
     };
@@ -468,6 +496,10 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     };
 
     const moveTo = (nextIndex, requestedDirection) => {
+        if (carouselRoot.classList.contains("is-transitioning")) {
+            return;
+        }
+
         const normalisedNext = normaliseIndex(nextIndex);
 
         if (normalisedNext === currentIndex) {
@@ -478,6 +510,18 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         const direction = requestedDirection || directionFromIndexes(normalisedNext);
         currentIndex = normalisedNext;
         carouselRoot.dataset.carouselDirection = direction;
+
+        if (isReviewCarousel && slides.length > 1) {
+            if (direction === "next" && previousIndex === slides.length - 1 && normalisedNext === 0) {
+                reviewTrackIndex = slides.length + 1;
+            }
+            else if (direction === "previous" && previousIndex === 0 && normalisedNext === slides.length - 1) {
+                reviewTrackIndex = 0;
+            }
+            else {
+                reviewTrackIndex = normalisedNext + 1;
+            }
+        }
 
         if (transitionTimerId) {
             window.clearTimeout(transitionTimerId);
@@ -635,10 +679,44 @@ const formatFileSize = (size) => {
     return `${(size / (1024 * 1024)).toFixed(1)} MB`;
 };
 
+const getAcceptedFileMatchers = (input) => (input.accept || "")
+    .split(",")
+    .map((value) => value.trim().toLowerCase())
+    .filter(Boolean);
+
+const acceptsFile = (input, file) => {
+    const matchers = getAcceptedFileMatchers(input);
+
+    if (matchers.length === 0) {
+        return true;
+    }
+
+    const fileName = file.name.toLowerCase();
+    const fileType = file.type.toLowerCase();
+
+    return matchers.some((matcher) => {
+        if (matcher.startsWith(".")) {
+            return fileName.endsWith(matcher);
+        }
+
+        if (matcher.endsWith("/*")) {
+            return fileType.startsWith(matcher.slice(0, -1));
+        }
+
+        return fileType === matcher;
+    });
+};
+
 fileInputs.forEach((input) => {
     const targetId = input.getAttribute("data-file-list-target");
     const fileList = targetId ? document.getElementById(targetId) : null;
     const dropzone = input.closest("[data-file-dropzone]");
+    let previewUrls = [];
+
+    const clearPreviewUrls = () => {
+        previewUrls.forEach((url) => URL.revokeObjectURL(url));
+        previewUrls = [];
+    };
 
     const syncFiles = () => {
         if (!dropzone || !fileList) {
@@ -646,19 +724,95 @@ fileInputs.forEach((input) => {
         }
 
         const files = Array.from(input.files || []);
+        clearPreviewUrls();
         dropzone.classList.toggle("has-files", files.length > 0);
         fileList.innerHTML = "";
         fileList.hidden = files.length === 0;
 
         files.forEach((file) => {
             const item = document.createElement("li");
-            item.textContent = `${file.name} · ${formatFileSize(file.size)}`;
+            item.className = "file-list-item";
+
+            if (file.type.startsWith("image/")) {
+                const image = document.createElement("img");
+                const previewUrl = URL.createObjectURL(file);
+                previewUrls.push(previewUrl);
+                image.className = "file-preview-image";
+                image.src = previewUrl;
+                image.alt = "";
+                image.loading = "lazy";
+                item.appendChild(image);
+            }
+            else {
+                const icon = document.createElement("span");
+                const extension = file.name.includes(".") ? file.name.split(".").pop().slice(0, 4).toUpperCase() : "FILE";
+                icon.className = "file-preview-icon";
+                icon.textContent = extension;
+                item.appendChild(icon);
+            }
+
+            const meta = document.createElement("span");
+            meta.className = "file-preview-meta";
+
+            const name = document.createElement("span");
+            name.className = "file-preview-name";
+            name.textContent = file.name;
+
+            const size = document.createElement("span");
+            size.className = "file-preview-size";
+            size.textContent = formatFileSize(file.size);
+
+            meta.append(name, size);
+            item.appendChild(meta);
             fileList.appendChild(item);
         });
     };
 
+    const setDroppedFiles = (files) => {
+        const acceptedFiles = Array.from(files || [])
+            .filter((file) => acceptsFile(input, file))
+            .slice(0, input.multiple ? undefined : 1);
+
+        if (acceptedFiles.length === 0) {
+            dropzone?.classList.remove("is-drag-over");
+            return;
+        }
+
+        const dataTransfer = new DataTransfer();
+        acceptedFiles.forEach((file) => dataTransfer.items.add(file));
+        input.files = dataTransfer.files;
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+
     syncFiles();
     input.addEventListener("change", syncFiles);
+
+    if (dropzone) {
+        ["dragenter", "dragover"].forEach((eventName) => {
+            dropzone.addEventListener(eventName, (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                dropzone.classList.add("is-drag-over");
+            });
+        });
+
+        ["dragleave", "dragend"].forEach((eventName) => {
+            dropzone.addEventListener(eventName, (event) => {
+                if (eventName === "dragleave" && dropzone.contains(event.relatedTarget)) {
+                    return;
+                }
+
+                dropzone.classList.remove("is-drag-over");
+            });
+        });
+
+        dropzone.addEventListener("drop", (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            dropzone.classList.remove("is-drag-over");
+            setDroppedFiles(event.dataTransfer?.files);
+        });
+    }
 });
 
 const formatPaddedNumber = (value) => String(value).padStart(2, "0");
@@ -691,6 +845,39 @@ const isSameDay = (left, right) => left && right
     && left.getFullYear() === right.getFullYear()
     && left.getMonth() === right.getMonth()
     && left.getDate() === right.getDate();
+
+const formatNamePart = (part) => part
+    .split("-")
+    .map((segment) => segment
+        .split("'")
+        .map((piece) => piece ? piece.charAt(0).toUpperCase() + piece.slice(1).toLowerCase() : piece)
+        .join("'"))
+    .join("-");
+
+const formatPersonName = (value) => value
+    .trim()
+    .replace(/\s+/g, " ")
+    .split(" ")
+    .map(formatNamePart)
+    .join(" ");
+
+const attachNameAutoFormat = (input) => {
+    if (!input) {
+        return;
+    }
+
+    const apply = () => {
+        const formatted = formatPersonName(input.value || "");
+
+        if (formatted && formatted !== input.value) {
+            input.value = formatted;
+            input.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+    };
+
+    input.addEventListener("blur", apply);
+    input.addEventListener("change", apply);
+};
 
 const formatMonthLabel = (date) => new Intl.DateTimeFormat("en-GB", {
     month: "long",
@@ -1275,6 +1462,8 @@ if (contactForm) {
         }
     };
 
+    attachNameAutoFormat(fieldConfig.fullName.input);
+
     const validateField = (fieldName) => {
         const config = fieldConfig[fieldName];
 
@@ -1517,6 +1706,7 @@ if (reviewForm) {
     };
 
     reviewForm.querySelector("#consentAccepted")?.addEventListener("change", syncReviewCheckbox);
+    attachNameAutoFormat(reviewForm.querySelector("#reviewerName"));
     syncReviewCheckbox();
 
     reviewForm.addEventListener("submit", async (event) => {
@@ -1524,6 +1714,16 @@ if (reviewForm) {
 
         clearReviewBanners();
         reviewFieldOrder.forEach(clearReviewFieldError);
+
+        const headlineInput = reviewForm.querySelector("#headline");
+        const headline = headlineInput?.value.trim() || "";
+
+        if (headline.length > 50) {
+            setReviewFieldError("headline", "Please keep the heading under 50 characters.");
+            showReviewBanner("error", "Please check the highlighted fields.");
+            headlineInput?.focus({ preventScroll: false });
+            return;
+        }
 
         if (submitButton) {
             submitButton.disabled = true;

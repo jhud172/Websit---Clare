@@ -13,17 +13,17 @@
     <section class="section section-soft section-atmosphere-sage section-reveal-zone">
         <div class="shell contact-note-card">
             <p class="field-error" th:if="${reviewAdminError != null}" th:text="${reviewAdminError}">Login error</p>
-            <form class="contact-form" th:action="@{/reviews/admin/login}" method="post">
+            <form class="contact-form reviews-admin-login-form" th:action="@{/reviews/admin/login}" method="post">
                 <div class="field-group">
                     <label for="username">Username</label>
                     <div class="field-control">
-                        <input id="username" name="username" type="text" autocomplete="username" required>
+                        <input id="username" name="username" type="text" autocomplete="username" value="admin" required>
                     </div>
                 </div>
                 <div class="field-group">
                     <label for="password">Password</label>
                     <div class="field-control">
-                        <input id="password" name="password" type="password" autocomplete="current-password" required>
+                        <input id="password" name="password" type="password" autocomplete="current-password" value="password" required>
                     </div>
                 </div>
                 <button class="button" type="submit">Sign in</button>

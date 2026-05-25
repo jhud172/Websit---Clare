@@ -159,13 +159,31 @@ class SiteControllerUnitTest {
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("reviewAdminAuthenticated", true);
 		when(reviewService.getPendingReviews()).thenReturn(List.of());
-		when(reviewService.getApprovedReviews()).thenReturn(List.of());
 
 		String view = controller.reviewAdmin(new ExtendedModelMap(), session);
 
 		assertThat(view).isEqualTo("reviews-admin");
 		verify(reviewService).getPendingReviews();
-		verify(reviewService).getApprovedReviews();
+	}
+
+	@Test
+	void manageReviewsRedirectsToLoginWhenNotAuthenticated() {
+		String view = controller.manageReviews(new ExtendedModelMap(), new MockHttpSession());
+
+		assertThat(view).isEqualTo("redirect:/reviews/admin/login");
+		verifyNoInteractions(reviewService);
+	}
+
+	@Test
+	void manageReviewsLoadsManageableReviewsWhenAuthenticated() {
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("reviewAdminAuthenticated", true);
+		when(reviewService.getManageableReviews()).thenReturn(List.of());
+
+		String view = controller.manageReviews(new ExtendedModelMap(), session);
+
+		assertThat(view).isEqualTo("reviews-admin-manage");
+		verify(reviewService).getManageableReviews();
 	}
 
 	@Test
@@ -198,8 +216,34 @@ class SiteControllerUnitTest {
 		String view = controller.rejectReview("review-123", "Not suitable", redirectAttributes, session);
 
 		assertThat(view).isEqualTo("redirect:/reviews/admin");
-		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review rejected.");
+		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review rejected and deleted.");
 		verify(reviewService).rejectReview("review-123", "Not suitable");
+	}
+
+	@Test
+	void enableReviewCallsServiceWhenAuthenticated() {
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("reviewAdminAuthenticated", true);
+		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
+
+		String view = controller.enableReview("review-123", redirectAttributes, session);
+
+		assertThat(view).isEqualTo("redirect:/reviews/admin/manage");
+		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review enabled.");
+		verify(reviewService).enableReview("review-123");
+	}
+
+	@Test
+	void disableReviewCallsServiceWhenAuthenticated() {
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("reviewAdminAuthenticated", true);
+		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
+
+		String view = controller.disableReview("review-123", redirectAttributes, session);
+
+		assertThat(view).isEqualTo("redirect:/reviews/admin/manage");
+		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review disabled.");
+		verify(reviewService).disableReview("review-123");
 	}
 
 	@Test

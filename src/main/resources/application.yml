@@ -29,7 +29,7 @@ site:
   tagline: ${SITE_TAGLINE:For Moments That Matter}
   contact-email: ${SITE_CONTACT_EMAIL:clarebruntoncelebrant@gmail.com}
   phone-number: ${SITE_PHONE_NUMBER:07885 428304}
-  instagram-url: ${SITE_INSTAGRAM_URL:}
+  instagram-url: ${SITE_INSTAGRAM_URL:https://www.instagram.com/clareslifecelebrations/}
   base-url: ${SITE_BASE_URL:http://localhost:8080}
   from-email: ${SITE_FROM_EMAIL:}
 
@@ -41,6 +41,6 @@ reviews:
   storage-directory: ${REVIEWS_STORAGE_DIRECTORY:data/reviews}
   photo-directory: ${REVIEWS_PHOTO_DIRECTORY:uploads}
   admin-username: ${REVIEWS_ADMIN_USERNAME:admin}
-  admin-password: ${REVIEWS_ADMIN_PASSWORD:change-me}
+  admin-password: ${REVIEWS_ADMIN_PASSWORD:password}
   max-photo-count: ${REVIEWS_MAX_PHOTO_COUNT:10}
   max-photo-size-bytes: ${REVIEWS_MAX_PHOTO_SIZE_BYTES:5242880}

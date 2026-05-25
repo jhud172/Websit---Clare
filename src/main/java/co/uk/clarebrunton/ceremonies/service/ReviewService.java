@@ -69,6 +69,13 @@ public class ReviewService {
 				.toList();
 	}
 
+	public synchronized List<ReviewEntry> getManageableReviews() {
+		return loadAll().stream()
+				.filter(entry -> entry.getStatus() == ReviewStatus.APPROVED || entry.getStatus() == ReviewStatus.DISABLED)
+				.sorted(Comparator.comparing(ReviewEntry::getSubmittedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
+				.toList();
+	}
+
 	public synchronized void submitReview(ReviewForm form, List<MultipartFile> photos) {
 		List<MultipartFile> safePhotos = normalisePhotos(photos);
 		String validationError = validatePhotos(safePhotos);
@@ -100,7 +107,19 @@ public class ReviewService {
 	}
 
 	public synchronized void rejectReview(String reviewId, String note) {
-		moderate(reviewId, ReviewStatus.REJECTED, note);
+		List<ReviewEntry> entries = loadAll();
+		ReviewEntry matched = findReview(entries, reviewId);
+		entries.remove(matched);
+		deletePhotos(matched.getPhotoFileNames());
+		saveAll(entries);
+	}
+
+	public synchronized void enableReview(String reviewId) {
+		moderate(reviewId, ReviewStatus.APPROVED, "Enabled for public display.");
+	}
+
+	public synchronized void disableReview(String reviewId) {
+		moderate(reviewId, ReviewStatus.DISABLED, "Disabled from public display.");
 	}
 
 	public Path resolvePhotoPath(String filename) {
@@ -116,15 +135,38 @@ public class ReviewService {
 
 	private void moderate(String reviewId, ReviewStatus status, String note) {
 		List<ReviewEntry> entries = loadAll();
-		ReviewEntry matched = entries.stream()
-				.filter(entry -> entry.getId().equals(reviewId))
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("Review not found."));
+		ReviewEntry matched = findReview(entries, reviewId);
 
 		matched.setStatus(status);
 		matched.setModerationNote(cleanNullable(note));
 		matched.setModeratedAt(OffsetDateTime.now());
 		saveAll(entries);
+	}
+
+	private ReviewEntry findReview(List<ReviewEntry> entries, String reviewId) {
+		return entries.stream()
+				.filter(entry -> entry.getId().equals(reviewId))
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("Review not found."));
+	}
+
+	private void deletePhotos(List<String> photoFileNames) {
+		if (photoFileNames == null || photoFileNames.isEmpty()) {
+			return;
+		}
+
+		for (String photoFileName : photoFileNames) {
+			if (!StringUtils.hasText(photoFileName) || photoFileName.startsWith("/")) {
+				continue;
+			}
+
+			try {
+				Files.deleteIfExists(resolvePhotoPath(photoFileName));
+			}
+			catch (IOException exception) {
+				throw new IllegalStateException("Unable to delete rejected review image.", exception);
+			}
+		}
 	}
 
 	private List<ReviewEntry> loadAll() {

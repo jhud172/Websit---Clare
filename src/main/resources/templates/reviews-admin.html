@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'reviews', ~{::main})}">
-<main class="theme-trust">
+<main class="theme-trust reviews-admin-page">
     <section class="page-hero page-hero-editorial section-reveal-zone">
         <div class="shell section-heading">
             <p class="eyebrow">Review moderation</p>
@@ -13,13 +13,16 @@
     <section class="section section-atmosphere-clay section-divider section-reveal-zone">
         <div class="shell">
             <p class="callout" th:if="${reviewAdminMessage != null}" th:text="${reviewAdminMessage}">Action completed.</p>
-            <div class="detail-grid" th:if="${!#lists.isEmpty(pendingReviews)}">
-                <article class="detail-card" th:each="review : ${pendingReviews}">
+            <div class="reviews-admin-toolbar">
+                <a class="button button-secondary" th:href="@{/reviews/admin/manage}">Manage accepted reviews</a>
+            </div>
+            <div class="detail-grid reviews-admin-grid" th:if="${!#lists.isEmpty(pendingReviews)}">
+                <article class="detail-card reviews-admin-card" th:each="review : ${pendingReviews}">
                     <p class="eyebrow" th:text="${review.ceremonyType}">Wedding ceremony</p>
                     <h3 th:text="${review.headline != null ? review.headline : 'Review submission'}">Review</h3>
-                    <p><strong th:text="${review.reviewerName}">Reviewer</strong> · <span th:text="${review.rating + ' stars'}">5 stars</span></p>
-                    <p th:text="${review.message}">Review message</p>
-                    <div class="hero-actions">
+                    <p class="reviews-admin-meta"><strong th:text="${review.reviewerName}">Reviewer</strong> · <span th:text="${review.rating + ' stars'}">5 stars</span></p>
+                    <p class="reviews-admin-message" th:text="${review.message}">Review message</p>
+                    <div class="hero-actions reviews-admin-actions">
                         <form th:action="@{'/reviews/admin/' + ${review.id} + '/approve'}" method="post">
                             <button class="button" type="submit">Approve</button>
                         </form>

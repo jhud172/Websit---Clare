@@ -11,7 +11,7 @@ public class ReviewProperties {
 
 	private String adminUsername = "admin";
 
-	private String adminPassword = "change-me";
+	private String adminPassword = "password";
 
 	private int maxPhotoCount = 10;
 

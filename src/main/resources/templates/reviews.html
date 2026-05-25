@@ -52,8 +52,10 @@
                             <span th:text="${review.ceremonyType}">Wedding ceremony</span>
                         </div>
                         <h3 th:text="${review.headline != null ? review.headline : 'A heartfelt experience'}">A heartfelt experience</h3>
-                        <p th:text="${review.message}">Review text</p>
-                        <div class="review-photo-grid" th:if="${!#lists.isEmpty(review.photoFileNames)}">
+                        <p class="review-story-message" th:text="${review.message}">Review text</p>
+                        <div class="review-photo-grid"
+                             th:if="${!#lists.isEmpty(review.photoFileNames)}"
+                             th:classappend="${#lists.size(review.photoFileNames) == 1} ? ' review-photo-grid-single' : (${#lists.size(review.photoFileNames) == 2} ? ' review-photo-grid-pair' : '')">
                             <button class="review-photo-button"
                                     type="button"
                                     th:each="photo : ${review.photoFileNames}"
@@ -102,11 +104,6 @@
                 <p>Reviews are never published automatically. Clare will check each submission before it appears on the site.</p>
             </div>
             <div class="reviews-submit-panel">
-                <p class="field-error review-form-banner" data-review-form-error th:if="${reviewUploadError != null}" th:text="${reviewUploadError}">Upload error</p>
-                <p class="callout review-form-banner" data-review-form-success th:if="${reviewSubmissionSuccess != null}" th:text="${reviewSubmissionSuccess}">Success message</p>
-                <p class="field-error review-form-banner" data-review-form-error th:unless="${reviewUploadError != null}" hidden></p>
-                <p class="callout review-form-banner" data-review-form-success th:unless="${reviewSubmissionSuccess != null}" hidden></p>
-
                 <form class="contact-form review-submission-form enquiry-modal-form"
                       data-review-form
                       th:action="@{/reviews/submit}"
@@ -177,7 +174,7 @@
                     <div class="field-group" data-review-field="headline">
                         <label for="headline">Short heading</label>
                         <div class="field-control" th:classappend="${#fields.hasErrors('headline')} ? ' is-invalid'">
-                            <input id="headline" type="text" th:field="*{headline}" placeholder="Optional heading for your review">
+                            <input id="headline" type="text" th:field="*{headline}" maxlength="50" placeholder="Optional heading for your review">
                         </div>
                         <p class="field-error" th:if="${#fields.hasErrors('headline')}" th:errors="*{headline}">Headline error</p>
                     </div>
@@ -247,6 +244,10 @@
 
                     <button class="button button-peacock" type="submit" data-review-submit>Submit review for approval</button>
                 </form>
+                <p class="field-error review-form-banner" data-review-form-error th:if="${reviewUploadError != null}" th:text="${reviewUploadError}">Upload error</p>
+                <p class="callout review-form-banner" data-review-form-success th:if="${reviewSubmissionSuccess != null}" th:text="${reviewSubmissionSuccess}">Success message</p>
+                <p class="field-error review-form-banner" data-review-form-error th:unless="${reviewUploadError != null}" hidden></p>
+                <p class="callout review-form-banner" data-review-form-success th:unless="${reviewSubmissionSuccess != null}" hidden></p>
             </div>
         </div>
     </section>

@@ -63,7 +63,7 @@ class ReviewServiceTest {
 	}
 
 	@Test
-	void rejectReviewMovesReviewOutOfPendingList(@TempDir Path tempDir) {
+	void rejectReviewDeletesReview(@TempDir Path tempDir) {
 		ReviewService service = createService(tempDir);
 		service.submitReview(validForm(), List.of());
 		ReviewEntry pendingEntry = service.getPendingReviews().get(0);
@@ -72,6 +72,30 @@ class ReviewServiceTest {
 
 		assertThat(service.getPendingReviews()).isEmpty();
 		assertThat(service.getApprovedReviews()).isEmpty();
+		assertThat(service.getManageableReviews()).isEmpty();
+	}
+
+	@Test
+	void approvedReviewCanBeDisabledAndEnabled(@TempDir Path tempDir) {
+		ReviewService service = createService(tempDir);
+		service.submitReview(validForm(), List.of());
+		ReviewEntry pendingEntry = service.getPendingReviews().get(0);
+		service.approveReview(pendingEntry.getId(), "Verified genuine");
+
+		service.disableReview(pendingEntry.getId());
+
+		assertThat(service.getApprovedReviews()).isEmpty();
+		assertThat(service.getApprovedFiveStarReviews()).isEmpty();
+		assertThat(service.getManageableReviews()).singleElement()
+				.extracting(ReviewEntry::getStatus)
+				.isEqualTo(ReviewStatus.DISABLED);
+
+		service.enableReview(pendingEntry.getId());
+
+		assertThat(service.getApprovedReviews()).hasSize(1);
+		assertThat(service.getManageableReviews()).singleElement()
+				.extracting(ReviewEntry::getStatus)
+				.isEqualTo(ReviewStatus.APPROVED);
 	}
 
 	@Test
