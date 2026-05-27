@@ -29,6 +29,7 @@ public class SiteModelAdvice {
 	private static final String HORIZONTAL_FEATHER_PATH = "/images/objects/feather-horizontal.png";
 	private static final String VERTICAL_FEATHER_PATH = "/images/objects/feather-vertical.png";
 	private static final String OPEN_GRAPH_IMAGE_PATH = "/images/clare/weddings-confetti.jpg";
+	private static final String DEFAULT_INSTAGRAM_URL = "https://www.instagram.com/clareslifecelebrations/";
 
 	private final SiteProperties siteProperties;
 
@@ -48,6 +49,9 @@ public class SiteModelAdvice {
 		model.addAttribute("wreathLogoPath", WREATH_LOGO_PATH);
 		model.addAttribute("horizontalFeatherPath", HORIZONTAL_FEATHER_PATH);
 		model.addAttribute("verticalFeatherPath", VERTICAL_FEATHER_PATH);
+		if (!StringUtils.hasText(siteProperties.getInstagramUrl())) {
+			siteProperties.setInstagramUrl(DEFAULT_INSTAGRAM_URL);
+		}
 		model.addAttribute("canonicalUrl", canonicalUrl);
 		model.addAttribute("openGraphImageUrl", baseUrl + OPEN_GRAPH_IMAGE_PATH);
 		model.addAttribute("structuredDataJson", buildStructuredDataJson(baseUrl));

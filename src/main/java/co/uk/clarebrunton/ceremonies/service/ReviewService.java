@@ -306,7 +306,7 @@ public class ReviewService {
 						"From the first conversation Clare made everything feel easy. She listened carefully, helped us shape the tone, and delivered a ceremony that was modern, sincere and full of joy.",
 						LocalDate.of(2026, 4, 18),
 						OffsetDateTime.parse("2026-05-08T14:15:00+01:00"),
-						List.of("/images/weddings/wedding-ceremony-outdoor.jpg", "/images/weddings/detail-rings.jpg")
+						List.of("/images/weddings/detail-rings.jpg")
 				),
 				demoReview(
 						"demo-review-funeral-henderson-family",
