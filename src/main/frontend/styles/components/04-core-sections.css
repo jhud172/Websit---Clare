@@ -530,6 +530,10 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.detail-grid > .detail-card:last-child:nth-child(3n + 1) {
+    grid-column: 2;
+}
+
 .process-layout {
     grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
     align-items: start;
