@@ -5,10 +5,10 @@
 @import "./components/05-visual-system.css";
 @import "./components/06-hero-fullbleed.css";
 @import "./components/07-peacock-theme.css";
-@import "./components/08-modal.css";
 @import "./components/09-carousel.css";
 @import "./components/10-pages-and-footer.css";
 @import "./components/11-force-dark.css";
+@import "./components/08-modal.css";
 @import "./components/12-atmospheric-feathers.css";
 
 @tailwind base;

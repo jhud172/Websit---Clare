@@ -2,7 +2,7 @@
 .atmospheric-feathers {
     position: fixed;
     inset: 0;
-    z-index: 0;
+    z-index: 2;
     width: 100%;
     height: 100%;
     pointer-events: none;
@@ -28,6 +28,107 @@ body > .enquiry-modal {
 
 .enquiry-modal {
     z-index: 20000;
+}
+
+body {
+    background:
+        radial-gradient(circle at 10% 4%, rgba(0, 137, 123, 0.16), transparent 26rem),
+        radial-gradient(circle at 88% 12%, rgba(214, 199, 145, 0.16), transparent 24rem),
+        radial-gradient(circle at 50% 0%, rgba(7, 90, 118, 0.16), transparent 34rem),
+        linear-gradient(180deg, #090a0d 0%, #121820 44%, #20242c 100%);
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        url("/images/objects/feather-horizontal-mirrored.png") left 7vw top 9rem / min(19rem, 32vw) auto no-repeat,
+        url("/images/objects/feather-horizontal.png") right 6vw top 13rem / min(20rem, 34vw) auto no-repeat,
+        radial-gradient(circle at 16% 14%, rgba(39, 149, 111, 0.16), transparent 18rem),
+        radial-gradient(circle at 82% 22%, rgba(201, 154, 51, 0.14), transparent 18rem);
+    opacity: 0.78;
+    mix-blend-mode: screen;
+}
+
+.site-header,
+.site-header.is-scrolled,
+.site-header.is-scroll-up {
+    background:
+        linear-gradient(180deg, rgba(12, 14, 18, 0.94), rgba(12, 14, 18, 0.88));
+    border-bottom-color: rgba(214, 199, 145, 0.2);
+    box-shadow:
+        0 12px 34px rgba(0, 0, 0, 0.34),
+        inset 0 -1px 0 rgba(0, 137, 123, 0.18);
+}
+
+@media (min-width: 1041px) {
+    .header-inner {
+        display: grid;
+        grid-template-columns: minmax(22rem, 1fr) auto minmax(13rem, 20rem);
+        align-items: center;
+        gap: clamp(1.15rem, 2vw, 2rem);
+    }
+
+    .brand {
+        max-width: none;
+    }
+
+    .site-nav {
+        justify-self: center;
+        align-self: center;
+        gap: clamp(1rem, 1.45vw, 1.45rem);
+        margin-left: 0;
+    }
+
+    .site-nav a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.5rem;
+        padding: 0 0 0.22rem;
+        line-height: 1;
+    }
+
+    .header-actions {
+        justify-self: end;
+    }
+
+    .site-header.is-condensed .header-inner {
+        width: var(--shell);
+        min-height: var(--header-height);
+        gap: clamp(1.15rem, 2vw, 2rem);
+        justify-content: normal;
+    }
+
+    .site-header.is-condensed .brand {
+        flex: 0 1 auto;
+    }
+
+    .site-header.is-condensed .brand-lockup {
+        width: clamp(4rem, 5.4vw, 5rem);
+    }
+
+    .site-header.is-condensed .brand-name {
+        font-size: clamp(1.28rem, 2vw, 1.62rem);
+    }
+
+    .site-header.is-condensed .brand-tagline {
+        font-size: 0.78rem;
+    }
+
+    .site-header.is-condensed .site-nav,
+    .site-header.is-condensed .header-actions {
+        max-width: none;
+        opacity: 1;
+        transform: none;
+        overflow: visible;
+        pointer-events: auto;
+        gap: clamp(1rem, 1.45vw, 1.45rem);
+        margin: 0;
+        padding: 0;
+    }
 }
 
 .section-atmosphere-sage::after,
@@ -157,7 +258,7 @@ main > .section-divider:first-child > .shell:first-child::after {
 
 @media (max-width: 720px) {
     .atmospheric-feathers {
-        opacity: 0.58;
+        opacity: 0.48;
     }
 
     .section-symbolism::before {

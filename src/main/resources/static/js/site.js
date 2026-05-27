@@ -82,7 +82,7 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
     const randomBetween = (min, max) => min + Math.random() * (max - min);
 
     const createFeatherParticle = () => {
-        const size = randomBetween(24, 52);
+        const size = randomBetween(32, 68);
 
         return {
             x: randomBetween(0, featherWidth),
@@ -95,7 +95,7 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
             rotation: randomBetween(-0.8, 0.8),
             rotationSpeed: randomBetween(-0.0022, 0.0022),
             sway: randomBetween(0, Math.PI * 2),
-            opacity: randomBetween(0.22, 0.48)
+            opacity: randomBetween(0.3, 0.58)
         };
     };
 
@@ -109,7 +109,7 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
         featherField.style.height = `${featherHeight}px`;
         featherContext.setTransform(featherDpr, 0, 0, featherDpr, 0, 0);
 
-        const particleCount = Math.max(27, Math.min(69, Math.round((featherWidth * featherHeight) / 28000)));
+        const particleCount = Math.max(32, Math.min(74, Math.round((featherWidth * featherHeight) / 25000)));
         featherParticles = Array.from({ length: particleCount }, createFeatherParticle);
     };
 
