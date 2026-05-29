@@ -51,12 +51,14 @@
     --modal-peacock-sage: #27956f;
     --modal-peacock-gold: #c99a33;
     --modal-peacock-orange: #d77923;
+    --modal-scroll-progress: 0;
     position: relative;
     z-index: 1;
     inline-size: min(900px, calc(100vw - 2rem));
     max-block-size: min(88vh, calc(100dvh - 2rem));
     margin: auto;
     overflow: auto;
+    scroll-behavior: smooth;
     border-radius: 24px;
     border: 1px solid rgba(0, 118, 168, 0.42);
     border-top-color: rgba(201, 154, 51, 0.62);
@@ -76,10 +78,26 @@
     color: var(--ink);
     transform: translateY(20px) scale(0.98);
     opacity: 0;
-    transition: opacity 260ms ease, transform 260ms ease;
+    transition:
+        opacity 260ms ease,
+        transform 260ms ease,
+        border-color 260ms ease,
+        box-shadow 260ms ease,
+        background 320ms ease;
     scrollbar-gutter: stable;
     scrollbar-width: thin;
-    scrollbar-color: rgba(183, 192, 204, 0.62) rgba(255, 255, 255, 0.05);
+    scrollbar-color: rgba(201, 154, 51, 0.86) rgba(7, 11, 15, 0.86);
+    color-scheme: dark;
+}
+
+.enquiry-modal-dialog.is-scrolled {
+    border-color: rgba(39, 149, 111, 0.48);
+    border-top-color: rgba(201, 154, 51, 0.74);
+    box-shadow:
+        0 36px 100px rgba(0, 0, 0, 0.62),
+        0 0 0 1px rgba(0, 118, 168, 0.12),
+        0 0 66px rgba(39, 149, 111, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .enquiry-modal-dialog::before {
@@ -123,26 +141,88 @@
 }
 
 .enquiry-modal-dialog::-webkit-scrollbar {
-    width: 0.72rem;
+    width: 0.82rem;
+    height: 0.82rem;
+}
+
+.enquiry-modal-dialog::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+    display: none;
 }
 
 .enquiry-modal-dialog::-webkit-scrollbar-track {
-    margin-block: 1.25rem;
+    margin-block: 1.15rem;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.05);
+    border: 3px solid transparent;
+    background:
+        linear-gradient(180deg, rgba(9, 13, 18, 0.98), rgba(4, 7, 10, 0.98)) padding-box,
+        linear-gradient(180deg, rgba(0, 118, 168, 0.28), rgba(201, 154, 51, 0.28), rgba(39, 149, 111, 0.26)) border-box;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        inset 0 0 14px rgba(0, 118, 168, 0.12);
 }
 
 .enquiry-modal-dialog::-webkit-scrollbar-thumb {
-    border: 0.18rem solid transparent;
+    min-height: 4rem;
+    border: 3px solid rgba(7, 11, 15, 0.96);
     border-radius: 999px;
     background:
-        linear-gradient(180deg, rgba(214, 199, 145, 0.86), rgba(127, 138, 150, 0.78))
+        radial-gradient(circle at 50% 18%, rgba(255, 246, 185, 0.95), transparent 1.25rem),
+        linear-gradient(180deg,
+            rgba(201, 154, 51, 0.96) 0%,
+            rgba(0, 118, 168, 0.9) 42%,
+            rgba(39, 149, 111, 0.88) 100%)
         padding-box;
+    box-shadow:
+        0 0 0 1px rgba(201, 154, 51, 0.24),
+        0 0 16px rgba(0, 118, 168, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.enquiry-modal-dialog::-webkit-scrollbar-thumb:hover {
+    background:
+        radial-gradient(circle at 50% 18%, rgba(255, 248, 203, 1), transparent 1.35rem),
+        linear-gradient(180deg,
+            rgba(215, 121, 35, 0.96) 0%,
+            rgba(0, 143, 172, 0.94) 44%,
+            rgba(60, 171, 126, 0.92) 100%)
+        padding-box;
+}
+
+.enquiry-modal-dialog::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 .enquiry-modal.is-open .enquiry-modal-dialog {
     transform: translateY(0) scale(1);
     opacity: 1;
+}
+
+.enquiry-modal-scroll-meter {
+    position: sticky;
+    top: 0;
+    z-index: 8;
+    display: block;
+    height: 3px;
+    margin: calc(clamp(1.25rem, 2.6vw, 2.15rem) * -1) clamp(1.25rem, 2.6vw, 2.15rem) 1rem;
+    border-radius: 999px;
+    background:
+        linear-gradient(90deg,
+            var(--modal-peacock-sage),
+            var(--modal-peacock-blue),
+            var(--modal-peacock-gold),
+            var(--modal-peacock-orange));
+    opacity: 0;
+    transform: scaleX(var(--modal-scroll-progress));
+    transform-origin: left center;
+    transition: opacity 220ms ease, transform 120ms linear;
+    box-shadow: 0 0 22px rgba(0, 118, 168, 0.32);
+    pointer-events: none;
+}
+
+.enquiry-modal-dialog.is-scrolled .enquiry-modal-scroll-meter {
+    opacity: 0.92;
 }
 
 .enquiry-modal-header {
@@ -151,6 +231,11 @@
     margin-block-end: 1.35rem;
     padding-right: 3rem;
     user-select: none;
+    transition: opacity 240ms ease, transform 240ms ease;
+}
+
+.enquiry-modal-dialog.is-scrolled .enquiry-modal-header {
+    opacity: 0.92;
 }
 
 .enquiry-modal-header::after {
@@ -222,6 +307,9 @@
 }
 
 .enquiry-modal-form {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     margin-block-start: 0;
     padding: clamp(1rem, 2.2vw, 1.75rem);
     border-radius: 24px;
@@ -236,6 +324,59 @@
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.06),
         0 22px 56px rgba(0, 0, 0, 0.26);
+    transition:
+        border-color 260ms ease,
+        background 320ms ease,
+        box-shadow 320ms ease,
+        transform 260ms ease;
+}
+
+.enquiry-modal-form::before,
+.enquiry-modal-form::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    transition: opacity 360ms ease, transform 480ms ease;
+}
+
+.enquiry-modal-form::before {
+    background:
+        url("/images/objects/feather-horizontal.png") right -3.4rem top -1rem / min(17rem, 30vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-mirrored.png") left -5rem bottom -3rem / min(16rem, 30vw) auto no-repeat,
+        radial-gradient(circle at 92% 10%, rgba(0, 118, 168, 0.16), transparent 15rem),
+        radial-gradient(circle at 6% 92%, rgba(201, 154, 51, 0.12), transparent 14rem);
+    opacity: 0.5;
+}
+
+.enquiry-modal-form::after {
+    background:
+        linear-gradient(180deg, rgba(0, 118, 168, 0.12), transparent 18rem),
+        linear-gradient(135deg, rgba(201, 154, 51, 0.1), transparent 42%, rgba(39, 149, 111, 0.12));
+    opacity: 0;
+}
+
+.enquiry-modal-dialog.is-scrolled .enquiry-modal-form {
+    border-color: rgba(39, 149, 111, 0.36);
+    border-top-color: rgba(201, 154, 51, 0.5);
+    background:
+        radial-gradient(circle at 86% 10%, rgba(0, 118, 168, 0.13), transparent 16rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.022)),
+        rgba(11, 14, 19, 0.72);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.075),
+        0 24px 64px rgba(0, 0, 0, 0.31),
+        0 0 34px rgba(0, 118, 168, 0.09);
+}
+
+.enquiry-modal-dialog.is-scrolled .enquiry-modal-form::before {
+    opacity: 0.66;
+    transform: translateY(calc(var(--modal-scroll-progress) * -14px));
+}
+
+.enquiry-modal-dialog.is-scrolled .enquiry-modal-form::after {
+    opacity: 1;
 }
 
 .enquiry-modal-form .field-group {
@@ -267,11 +408,17 @@
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.055),
         0 16px 34px rgba(0, 0, 0, 0.2);
+    transition:
+        border-color 190ms ease,
+        background 220ms ease,
+        box-shadow 220ms ease,
+        transform 190ms ease;
 }
 
 .enquiry-modal-form .field-control:hover,
 .enquiry-modal-form .field-control-button:hover,
 .enquiry-modal-form .file-dropzone:hover {
+    transform: translateY(-1px);
     border-color: rgba(39, 149, 111, 0.5);
     box-shadow:
         0 0 0 4px rgba(39, 149, 111, 0.08),
@@ -283,6 +430,7 @@
 .enquiry-modal-form .field-control-button:focus-visible,
 .enquiry-modal-form .form-choice.is-open .field-control-button,
 .enquiry-modal-form .phone-field.is-open .field-control-phone {
+    transform: translateY(-1px);
     border-color: rgba(201, 154, 51, 0.68);
     box-shadow:
         0 0 0 4px rgba(201, 154, 51, 0.11),
@@ -446,6 +594,27 @@
         inline-size: min(100%, calc(100vw - 1.3rem));
         max-block-size: calc(100dvh - 1.5rem);
         border-radius: 20px;
+        scrollbar-width: thin;
+    }
+
+    .enquiry-modal-dialog::-webkit-scrollbar {
+        width: 0.62rem;
+    }
+
+    .enquiry-modal-dialog::-webkit-scrollbar-track,
+    .enquiry-modal-dialog::-webkit-scrollbar-thumb {
+        border-width: 2px;
+    }
+
+    .enquiry-modal-scroll-meter {
+        margin-inline: 1rem;
+    }
+
+    .enquiry-modal-form::before {
+        background:
+            url("/images/objects/feather-horizontal.png") right -4.8rem top -0.5rem / 13rem auto no-repeat,
+            radial-gradient(circle at 92% 10%, rgba(0, 118, 168, 0.16), transparent 13rem),
+            radial-gradient(circle at 4% 92%, rgba(201, 154, 51, 0.12), transparent 12rem);
     }
 
     .enquiry-modal-header h2 {
@@ -458,5 +627,174 @@
 
     .enquiry-modal-form .file-dropzone-action {
         justify-self: start;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .enquiry-modal-dialog,
+    .enquiry-modal-scroll-meter,
+    .enquiry-modal-header,
+    .enquiry-modal-form,
+    .enquiry-modal-form::before,
+    .enquiry-modal-form::after,
+    .enquiry-modal-form .field-control,
+    .enquiry-modal-form .field-control-button,
+    .enquiry-modal-form .checkbox-label,
+    .enquiry-modal-form .file-dropzone {
+        transition: none;
+    }
+}
+
+/* Review submission form: match the enquiry form's peacock glass treatment. */
+.reviews-submit-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.reviews-submit-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        url("/images/objects/feather-horizontal.png") right 6vw top 8rem / min(18rem, 30vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-mirrored.png") left 7vw bottom 5rem / min(17rem, 34vw) auto no-repeat,
+        radial-gradient(circle at 78% 14%, rgba(0, 118, 168, 0.15), transparent 24rem),
+        radial-gradient(circle at 18% 88%, rgba(201, 154, 51, 0.12), transparent 22rem);
+    opacity: 0.72;
+    mix-blend-mode: screen;
+}
+
+.reviews-submit-grid {
+    position: relative;
+}
+
+.reviews-submit-copy {
+    padding-top: 0.6rem;
+}
+
+.reviews-submit-copy .eyebrow {
+    color: var(--peacock-gold);
+}
+
+.reviews-submit-copy h2 {
+    color: #fff7cf;
+    background:
+        linear-gradient(180deg, #fff7cf 0%, #d5aa42 34%, #60c5b0 72%, #78c7ee 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.reviews-submit-panel {
+    position: relative;
+    padding: clamp(1rem, 2.4vw, 1.55rem);
+    border-radius: 26px;
+    border: 1px solid rgba(0, 118, 168, 0.42);
+    border-top-color: rgba(201, 154, 51, 0.62);
+    border-right-color: rgba(215, 121, 35, 0.42);
+    border-bottom-color: rgba(39, 149, 111, 0.42);
+    background:
+        url("/images/objects/feather-vertical.png") right -2.6rem top 1rem / min(12rem, 22vw) auto no-repeat,
+        radial-gradient(circle at 94% 0%, rgba(0, 118, 168, 0.18), transparent 18rem),
+        radial-gradient(circle at 0% 100%, rgba(201, 154, 51, 0.12), transparent 17rem),
+        linear-gradient(155deg, rgba(31, 36, 43, 0.985), rgba(14, 18, 24, 0.985) 50%, rgba(7, 9, 12, 0.995));
+    box-shadow:
+        0 34px 95px rgba(0, 0, 0, 0.42),
+        0 0 0 1px rgba(201, 154, 51, 0.08),
+        0 0 54px rgba(0, 118, 168, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.reviews-submit-panel::before {
+    content: "";
+    position: absolute;
+    left: clamp(1rem, 2.4vw, 1.55rem);
+    right: clamp(1rem, 2.4vw, 1.55rem);
+    top: 0;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg,
+        transparent,
+        var(--peacock-sage),
+        var(--peacock-blue),
+        var(--peacock-gold),
+        var(--peacock-orange),
+        transparent);
+    opacity: 0.86;
+}
+
+.review-submission-form.enquiry-modal-form {
+    position: relative;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 94% 3%, rgba(39, 149, 111, 0.12), transparent 15rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.018)),
+        rgba(11, 14, 19, 0.68);
+}
+
+.review-submission-form.enquiry-modal-form::before {
+    content: "Share a few details";
+    display: block;
+    width: fit-content;
+    margin-bottom: 1.65rem;
+    color: var(--peacock-gold);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.review-submission-form.enquiry-modal-form::after {
+    content: "";
+    position: absolute;
+    left: clamp(1rem, 2.2vw, 1.75rem);
+    top: clamp(3.1rem, 4.8vw, 3.85rem);
+    width: min(24rem, 54%);
+    height: 1px;
+    background: linear-gradient(90deg,
+        var(--peacock-gold),
+        var(--peacock-sage),
+        var(--peacock-blue),
+        transparent);
+    opacity: 0.82;
+    pointer-events: none;
+}
+
+.review-submission-form.enquiry-modal-form .field-control,
+.review-submission-form.enquiry-modal-form .field-control-button,
+.review-submission-form.enquiry-modal-form .checkbox-label,
+.review-submission-form.enquiry-modal-form .file-dropzone {
+    border-color: rgba(0, 118, 168, 0.28);
+}
+
+.review-submission-form.enquiry-modal-form .field-popup-select,
+.review-submission-form.enquiry-modal-form .date-picker-shell {
+    border-top-color: rgba(201, 154, 51, 0.46);
+}
+
+.review-submission-form.enquiry-modal-form > .button {
+    width: 100%;
+    margin-top: 0.35rem;
+    border-color: rgba(201, 154, 51, 0.58);
+    background:
+        radial-gradient(circle at 14% 16%, rgba(201, 154, 51, 0.28), transparent 42%),
+        linear-gradient(135deg, rgba(7, 90, 118, 0.98), rgba(10, 14, 18, 0.98) 52%, rgba(39, 149, 111, 0.88));
+    box-shadow:
+        0 18px 42px rgba(0, 0, 0, 0.36),
+        0 0 0 1px rgba(201, 154, 51, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+@media (max-width: 1040px) {
+    .reviews-submit-copy {
+        position: relative;
+        top: auto;
+    }
+}
+
+@media (max-width: 720px) {
+    .reviews-submit-panel {
+        padding: 0.75rem;
+        border-radius: 22px;
     }
 }

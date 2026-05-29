@@ -317,7 +317,7 @@ public class ReviewService {
 						"Clare handled a difficult day with real compassion. She took time to understand Dad's life, his humour and what mattered to us, then created a tribute that felt gentle, dignified and deeply personal.",
 						LocalDate.of(2026, 3, 27),
 						OffsetDateTime.parse("2026-04-20T09:40:00+01:00"),
-						List.of("/images/funerals/memorial-flowers-soft.jpg", "/images/funerals/memorial-flowers-detail.jpg")
+						List.of("/images/funerals/memorial-flowers-detail.jpg")
 				),
 				demoReview(
 						"demo-review-venue-rachel",

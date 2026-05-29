@@ -1,0 +1,1190 @@
+:root {
+    --ink: #171a1f;
+    --charcoal: #101317;
+    --charcoal-soft: #1b2024;
+    --cream: #fff8ec;
+    --paper: #fbf6ed;
+    --gold: #d6c791;
+    --gold-deep: #a8893d;
+    --sage: #4f6f66;
+    --teal: #007f7d;
+    --blue: #0a6f90;
+    --muted: #65706f;
+    --line: rgba(38, 42, 46, 0.16);
+    --shadow: 0 18px 45px rgba(12, 14, 16, 0.18);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    background: #e8e2d8;
+    color: var(--ink);
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+h1,
+h2,
+h3,
+.display,
+.brand-script {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+p {
+    margin: 0;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+.print-page {
+    position: relative;
+    overflow: hidden;
+    background: var(--paper);
+}
+
+.logo {
+    object-fit: contain;
+}
+
+.feather {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    object-fit: contain;
+    opacity: 0.24;
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.12));
+}
+
+.eyebrow {
+    color: var(--gold-deep);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.17em;
+    line-height: 1.25;
+    text-transform: uppercase;
+}
+
+.contact-list {
+    display: grid;
+    gap: 7px;
+}
+
+.contact-row {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: 7px;
+    align-items: start;
+    color: inherit;
+    font-size: 10.5px;
+    line-height: 1.35;
+}
+
+.contact-icon {
+    display: grid;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: rgba(214, 199, 145, 0.22);
+    color: var(--gold-deep);
+    font-size: 9px;
+    font-weight: 900;
+}
+
+.contact-icon svg {
+    width: 10px;
+    height: 10px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.contact-icon img {
+    width: 10px;
+    height: 10px;
+    object-fit: contain;
+}
+
+.contact-icon-clc img {
+    width: 14px;
+    height: 14px;
+}
+
+.pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pill {
+    padding: 5px 8px;
+    border: 1px solid rgba(214, 199, 145, 0.34);
+    border-radius: 999px;
+    color: rgba(255, 248, 236, 0.9);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(214, 199, 145, 0.82), transparent);
+}
+
+.note-lines {
+    display: grid;
+    gap: 9px;
+}
+
+.note-lines span {
+    display: block;
+    height: 1px;
+    background: rgba(24, 26, 31, 0.18);
+}
+
+.safe-label {
+    position: absolute;
+    right: 10mm;
+    bottom: 8mm;
+    color: rgba(24, 26, 31, 0.45);
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.business-card {
+    background: #d9d4ca;
+}
+
+.card-page {
+    width: 85mm;
+    height: 55mm;
+    margin: 0 auto 12mm;
+    box-shadow: var(--shadow);
+}
+
+.card-page::before {
+    content: "";
+    position: absolute;
+    inset: 2.4mm;
+    z-index: 1;
+    border: 0.35mm solid rgba(214, 199, 145, 0.34);
+    border-radius: 1.8mm;
+    pointer-events: none;
+}
+
+.card-page::after {
+    content: "";
+    position: absolute;
+    inset: 4.2mm;
+    z-index: 1;
+    border: 0.2mm solid rgba(0, 137, 123, 0.24);
+    border-radius: 1.2mm;
+    pointer-events: none;
+}
+
+.card-front {
+    display: grid;
+    place-items: center;
+    padding: 6mm;
+    background:
+        radial-gradient(circle at 82% 12%, rgba(214, 199, 145, 0.32), transparent 23mm),
+        radial-gradient(circle at 19% 84%, rgba(0, 137, 123, 0.28), transparent 23mm),
+        radial-gradient(circle at 14% 16%, rgba(9, 111, 144, 0.2), transparent 20mm),
+        linear-gradient(145deg, #171c21 0%, #080a0d 62%, #030405 100%);
+    color: var(--cream);
+}
+
+.card-front .feather-left {
+    left: -10mm;
+    bottom: -8mm;
+    width: 56mm;
+    opacity: 0.36;
+    transform: rotate(8deg);
+}
+
+.card-front .feather-right {
+    top: -15mm;
+    right: -9mm;
+    width: 54mm;
+    opacity: 0.32;
+    transform: rotate(188deg);
+}
+
+.card-orbit {
+    position: absolute;
+    z-index: 0;
+    border-radius: 999px;
+    pointer-events: none;
+}
+
+.card-orbit-one {
+    right: 11mm;
+    top: 8mm;
+    width: 24mm;
+    height: 24mm;
+    border: 0.4mm solid rgba(214, 199, 145, 0.16);
+    box-shadow:
+        0 0 22mm rgba(214, 199, 145, 0.12),
+        inset 0 0 12mm rgba(0, 137, 123, 0.12);
+}
+
+.card-orbit-two {
+    left: 9mm;
+    bottom: 7mm;
+    width: 18mm;
+    height: 18mm;
+    border: 0.25mm solid rgba(0, 137, 123, 0.18);
+    box-shadow: 0 0 18mm rgba(9, 111, 144, 0.18);
+}
+
+.card-front-inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    justify-items: center;
+    gap: 2.8mm;
+    text-align: center;
+}
+
+.card-front .logo {
+    width: 38mm;
+    height: 27mm;
+    filter:
+        drop-shadow(0 10px 18px rgba(0, 0, 0, 0.34))
+        drop-shadow(0 0 8mm rgba(214, 199, 145, 0.18));
+}
+
+.card-front h1 {
+    color: var(--cream);
+    font-size: 14px;
+    line-height: 1;
+}
+
+.card-front p {
+    color: rgba(255, 248, 236, 0.72);
+    font-size: 7.4px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.card-back {
+    display: grid;
+    grid-template-columns: 25mm 1fr;
+    gap: 4.2mm;
+    padding: 5.4mm;
+    background:
+        radial-gradient(circle at 93% 12%, rgba(214, 199, 145, 0.28), transparent 22mm),
+        radial-gradient(circle at 10% 84%, rgba(0, 137, 123, 0.28), transparent 24mm),
+        radial-gradient(circle at 76% 88%, rgba(9, 111, 144, 0.18), transparent 24mm),
+        linear-gradient(145deg, #171c21 0%, #090c10 58%, #030405 100%);
+    color: var(--cream);
+}
+
+.card-back .feather-back-main {
+    right: -10mm;
+    bottom: -19mm;
+    width: 50mm;
+    opacity: 0.3;
+    transform: rotate(-23deg);
+}
+
+.card-back .feather-back-sweep {
+    left: -19mm;
+    top: -17mm;
+    width: 60mm;
+    opacity: 0.2;
+    transform: rotate(14deg);
+}
+
+.card-back-orbit {
+    right: 6mm;
+    top: 7mm;
+    width: 30mm;
+    height: 30mm;
+    border: 0.35mm solid rgba(214, 199, 145, 0.13);
+    box-shadow:
+        0 0 22mm rgba(214, 199, 145, 0.14),
+        inset 0 0 15mm rgba(0, 137, 123, 0.1);
+}
+
+.card-back-logo {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 1.6mm;
+    border-right: 1px solid rgba(214, 199, 145, 0.28);
+    padding-right: 2.6mm;
+}
+
+.card-back-logo .logo {
+    width: 23mm;
+    filter:
+        drop-shadow(0 7px 14px rgba(0, 0, 0, 0.34))
+        drop-shadow(0 0 6mm rgba(214, 199, 145, 0.18));
+}
+
+.card-back-logo p {
+    margin-top: 0;
+    color: rgba(255, 248, 236, 0.72);
+    font-size: 5.9px;
+    font-weight: 900;
+    letter-spacing: 0.11em;
+    line-height: 1.3;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.card-back-details {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    align-content: center;
+    gap: 3mm;
+}
+
+.card-back .eyebrow {
+    color: var(--gold);
+}
+
+.card-back-details h2 {
+    color: var(--cream);
+    font-size: 12.6px;
+    line-height: 1.04;
+}
+
+.card-back .contact-row {
+    grid-template-columns: 14px minmax(0, 1fr);
+    gap: 6px;
+    align-items: center;
+    min-height: 13px;
+    color: rgba(255, 248, 236, 0.86);
+    font-size: 7.2px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.card-back .contact-row > span:last-child {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-back .contact-icon {
+    width: 14px;
+    height: 13px;
+    background: transparent;
+    color: inherit;
+    box-shadow: none;
+}
+
+.card-back .contact-icon img {
+    width: 11px;
+    height: 11px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.38));
+}
+
+.card-back .contact-icon-clc img {
+    width: 13px;
+    height: 13px;
+}
+
+.flyer-page {
+    margin: 0 auto 14mm;
+    box-shadow: var(--shadow);
+}
+
+.wedding-a4 {
+    width: 210mm;
+    height: 297mm;
+    background:
+        radial-gradient(circle at 87% 8%, rgba(214, 199, 145, 0.25), transparent 52mm),
+        radial-gradient(circle at 4% 88%, rgba(0, 127, 125, 0.14), transparent 50mm),
+        linear-gradient(180deg, #fffaf3 0%, #f5eadc 100%);
+}
+
+.wedding-hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 72mm;
+    height: 112mm;
+    padding: 10mm 12mm 8mm;
+    background: linear-gradient(135deg, #15191d 0%, #20262a 100%);
+    color: var(--cream);
+}
+
+.wedding-hero .feather {
+    left: -22mm;
+    bottom: -20mm;
+    width: 92mm;
+    opacity: 0.2;
+    transform: rotate(8deg);
+}
+
+.wedding-hero-copy {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    align-content: center;
+    gap: 5mm;
+    padding-right: 8mm;
+}
+
+.wedding-hero-copy .logo {
+    width: 42mm;
+    margin-bottom: 2mm;
+}
+
+.wedding-hero h1 {
+    max-width: 104mm;
+    color: var(--cream);
+    font-size: 31px;
+    line-height: 0.98;
+}
+
+.wedding-hero p {
+    max-width: 98mm;
+    color: rgba(255, 248, 236, 0.78);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.wedding-hero-image {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    border: 1px solid rgba(214, 199, 145, 0.38);
+    border-radius: 24px;
+    height: 78mm;
+    box-shadow: 0 22px 45px rgba(0, 0, 0, 0.34);
+}
+
+.wedding-hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 42%;
+}
+
+.flyer-body {
+    padding: 9mm 12mm 9mm;
+}
+
+.flyer-grid {
+    display: grid;
+    grid-template-columns: 1.04fr 0.72fr;
+    gap: 10mm;
+}
+
+.section-block {
+    display: grid;
+    gap: 4mm;
+}
+
+.section-block h2 {
+    color: var(--charcoal);
+    font-size: 23px;
+    line-height: 1.05;
+}
+
+.section-block p,
+.feature-list li {
+    color: #384140;
+    font-size: 10.8px;
+    line-height: 1.5;
+}
+
+.feature-list {
+    display: grid;
+    gap: 3mm;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.feature-list li {
+    position: relative;
+    padding-left: 8mm;
+}
+
+.feature-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 4.2mm;
+    height: 4.2mm;
+    border-radius: 999px;
+    background: radial-gradient(circle, var(--gold) 0 36%, var(--teal) 38% 72%, transparent 74%);
+}
+
+.quote-panel,
+.contact-panel,
+.notes-panel {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(168, 137, 61, 0.24);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.58);
+    box-shadow: 0 12px 24px rgba(23, 26, 31, 0.08);
+}
+
+.quote-panel {
+    padding: 6mm;
+    background:
+        radial-gradient(circle at 90% 0%, rgba(214, 199, 145, 0.2), transparent 28mm),
+        #fffaf2;
+}
+
+.quote-panel p {
+    color: var(--sage);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.18;
+}
+
+.contact-panel {
+    display: grid;
+    gap: 3mm;
+    padding: 6mm;
+    background:
+        radial-gradient(circle at 100% 0%, rgba(0, 127, 125, 0.12), transparent 22mm),
+        #ffffff;
+}
+
+.contact-panel h3 {
+    color: var(--charcoal);
+    font-size: 16px;
+    line-height: 1.1;
+}
+
+.contact-panel .contact-row {
+    color: #313638;
+    font-size: 9.4px;
+}
+
+.notes-panel {
+    display: grid;
+    gap: 4mm;
+    min-height: 37mm;
+    padding: 6mm;
+}
+
+.notes-panel h3 {
+    color: var(--sage);
+    font-size: 17px;
+}
+
+.footer-strip {
+    position: absolute;
+    left: 13mm;
+    right: 13mm;
+    bottom: 6mm;
+    display: flex;
+    justify-content: space-between;
+    gap: 10mm;
+    padding-top: 4mm;
+    border-top: 1px solid rgba(168, 137, 61, 0.22);
+    color: rgba(24, 26, 31, 0.58);
+    font-size: 8.8px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.wedding-a4-premium {
+    display: grid;
+    grid-template-rows: 124mm 1fr 16mm;
+    background:
+        radial-gradient(circle at 92% 58%, rgba(0, 137, 123, 0.22), transparent 48mm),
+        radial-gradient(circle at 6% 92%, rgba(214, 199, 145, 0.16), transparent 46mm),
+        linear-gradient(180deg, #171a1d 0%, #0f1214 48%, #090b0d 100%);
+}
+
+.wedding-premium-hero {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    align-content: end;
+    padding: 10mm 13mm 11mm;
+    color: var(--cream);
+    isolation: isolate;
+}
+
+.wedding-premium-bg,
+.wedding-premium-overlay {
+    position: absolute;
+    inset: 0;
+}
+
+.wedding-premium-bg {
+    z-index: -3;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 46%;
+    filter: none;
+}
+
+.wedding-premium-overlay {
+    z-index: -2;
+    background:
+        linear-gradient(90deg, rgba(5, 10, 12, 0.24) 0%, transparent 42%),
+        linear-gradient(180deg, transparent 0%, rgba(5, 7, 9, 0.08) 54%, rgba(5, 7, 9, 0.72) 100%);
+    mix-blend-mode: normal;
+}
+
+.peacock-frame::before {
+    content: "";
+    position: absolute;
+    inset: 7mm;
+    z-index: -1;
+    border: 0.35mm solid rgba(214, 199, 145, 0.42);
+    box-shadow:
+        inset 0 0 0 0.25mm rgba(0, 137, 123, 0.26),
+        0 0 24mm rgba(0, 137, 123, 0.12);
+    pointer-events: none;
+}
+
+.peacock-frame::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -3.2mm;
+    z-index: 3;
+    width: 49mm;
+    height: 8mm;
+    background:
+        url("../../src/main/resources/static/images/objects/feather-horizontal-mirrored.png") 0 50% / 48% 100% no-repeat,
+        url("../../src/main/resources/static/images/objects/feather-horizontal.png") 100% 50% / 48% 100% no-repeat;
+    opacity: 0.92;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.46));
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.wedding-premium-feather {
+    position: absolute;
+    z-index: -1;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.28));
+}
+
+.wedding-premium-feather-left {
+    left: -20mm;
+    bottom: -19mm;
+    width: 96mm;
+    opacity: 0.24;
+    transform: rotate(6deg);
+}
+
+.wedding-premium-feather-right {
+    right: -17mm;
+    top: -22mm;
+    width: 88mm;
+    opacity: 0.2;
+    transform: rotate(190deg);
+}
+
+.wedding-premium-brand {
+    position: absolute;
+    left: 13mm;
+    top: 10mm;
+    display: grid;
+    gap: 2mm;
+    justify-items: start;
+}
+
+.wedding-premium-brand .logo {
+    width: 38mm;
+    filter:
+        drop-shadow(0 10px 18px rgba(0, 0, 0, 0.32))
+        drop-shadow(0 0 7mm rgba(214, 199, 145, 0.16));
+}
+
+.wedding-premium-brand p {
+    color: rgba(255, 248, 236, 0.68);
+    font-size: 7.6px;
+    font-weight: 900;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+}
+
+.wedding-premium-copy {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 5mm;
+    max-width: 118mm;
+}
+
+.wedding-premium-copy .eyebrow {
+    color: var(--gold);
+}
+
+.wedding-premium-copy h1 {
+    color: var(--cream);
+    font-size: 39px;
+    line-height: 0.93;
+}
+
+.wedding-premium-copy p:not(.eyebrow) {
+    max-width: 95mm;
+    color: rgba(255, 248, 236, 0.84);
+    font-size: 12.6px;
+    line-height: 1.5;
+}
+
+.wedding-premium-body {
+    position: relative;
+    padding: 12mm 13mm 5mm;
+    color: var(--cream);
+}
+
+.peacock-section-flow::before {
+    content: "";
+    position: absolute;
+    left: 13mm;
+    right: 13mm;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(214, 199, 145, 0.52), rgba(0, 137, 123, 0.46), transparent);
+    box-shadow: 0 -8mm 22mm rgba(0, 137, 123, 0.12);
+}
+
+.peacock-section-flow::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -4.2mm;
+    width: 15mm;
+    height: 1.2mm;
+    border-radius: 999px;
+    background:
+        radial-gradient(circle at 50% 50%, rgba(214, 199, 145, 0.95) 0 1.2mm, transparent 1.25mm),
+        linear-gradient(90deg, transparent, rgba(214, 199, 145, 0.68), transparent);
+    transform: translateX(-50%);
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.36));
+}
+
+.wedding-premium-body::before {
+    content: "";
+    position: absolute;
+    right: 1mm;
+    top: -13mm;
+    width: 70mm;
+    height: 70mm;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(0, 137, 123, 0.18), transparent 64%);
+    pointer-events: none;
+}
+
+.wedding-premium-intro {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.82fr);
+    gap: 10mm;
+    align-items: end;
+    margin-bottom: 6mm;
+    padding-bottom: 5.5mm;
+    border-bottom: 1px solid rgba(214, 199, 145, 0.16);
+}
+
+.wedding-premium-intro h2 {
+    max-width: 108mm;
+    color: var(--cream);
+    font-size: 24px;
+    line-height: 1.02;
+}
+
+.wedding-premium-intro > p {
+    color: rgba(238, 240, 238, 0.74);
+    font-size: 10.9px;
+    line-height: 1.55;
+}
+
+.wedding-peacock-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4.5mm;
+    margin: 0 0 6mm;
+    padding: 0;
+    list-style: none;
+}
+
+.wedding-peacock-list li {
+    position: relative;
+    min-height: 35mm;
+    padding: 6mm 5mm 5mm 13mm;
+    border: 1px solid rgba(214, 199, 145, 0.22);
+    border-radius: 14px;
+    background:
+        radial-gradient(circle at 92% 0%, rgba(214, 199, 145, 0.14), transparent 22mm),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.024));
+    box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.wedding-peacock-list li::before {
+    content: "";
+    position: absolute;
+    left: 4mm;
+    top: 5.3mm;
+    width: 7mm;
+    height: 7mm;
+    background: url("../../src/main/resources/static/images/objects/feather-vertical.png") center / contain no-repeat;
+    filter:
+        saturate(1.15)
+        drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+    transform: rotate(-18deg);
+}
+
+.wedding-peacock-list strong {
+    display: block;
+    color: var(--cream);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1.05;
+}
+
+.wedding-peacock-list span {
+    display: block;
+    margin-top: 2.5mm;
+    color: rgba(238, 240, 238, 0.7);
+    font-size: 9.4px;
+    line-height: 1.45;
+}
+
+/* Retained for legacy flyer variants. */
+.wedding-premium-panels {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4.5mm;
+    margin-bottom: 5.5mm;
+}
+
+.wedding-premium-panels article {
+    position: relative;
+    overflow: hidden;
+    min-height: 34mm;
+    padding: 5mm;
+    border: 1px solid rgba(168, 137, 61, 0.22);
+    border-radius: 14px;
+    background:
+        radial-gradient(circle at 92% 0%, rgba(214, 199, 145, 0.18), transparent 22mm),
+        rgba(255, 253, 247, 0.74);
+    box-shadow: 0 12px 25px rgba(23, 26, 31, 0.08);
+}
+
+.wedding-premium-panels article::after {
+    content: "";
+    position: absolute;
+    inset: auto 5mm 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 127, 125, 0.5), transparent);
+}
+
+.wedding-premium-panels span {
+    color: var(--gold-deep);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.wedding-premium-panels h3 {
+    margin-top: 4mm;
+    color: var(--charcoal);
+    font-size: 18px;
+    line-height: 1.04;
+}
+
+.wedding-premium-panels p {
+    margin-top: 2.5mm;
+    color: #434b4b;
+    font-size: 9.5px;
+    line-height: 1.45;
+}
+
+.wedding-premium-lower {
+    display: grid;
+    grid-template-columns: 45mm minmax(0, 1fr) 48mm;
+    gap: 5mm;
+    align-items: stretch;
+}
+
+.wedding-premium-portrait {
+    overflow: hidden;
+    margin: 0;
+    border: 1px solid rgba(214, 199, 145, 0.42);
+    border-radius: 17px;
+    background: var(--charcoal);
+    box-shadow: 0 16px 32px rgba(23, 26, 31, 0.14);
+}
+
+.wedding-premium-portrait img {
+    width: 100%;
+    height: 100%;
+    min-height: 40mm;
+    object-fit: cover;
+    object-position: center 25%;
+    filter: saturate(1.08) contrast(1.04);
+}
+
+.wedding-premium-contact,
+.wedding-premium-notes {
+    position: relative;
+    overflow: hidden;
+    border-radius: 17px;
+    border: 1px solid rgba(214, 199, 145, 0.22);
+}
+
+.wedding-premium-contact {
+    display: grid;
+    align-content: center;
+    gap: 2.8mm;
+    padding: 4.8mm 5mm;
+    background:
+        radial-gradient(circle at 94% 4%, rgba(214, 199, 145, 0.18), transparent 24mm),
+        radial-gradient(circle at 12% 100%, rgba(0, 137, 123, 0.2), transparent 24mm),
+        linear-gradient(145deg, #1a1e21, #07090b);
+    color: var(--cream);
+}
+
+.wedding-premium-contact .eyebrow {
+    color: var(--gold);
+}
+
+.wedding-premium-contact h3 {
+    color: var(--cream);
+    font-size: 16px;
+    line-height: 1.08;
+}
+
+.wedding-premium-contact .contact-list {
+    gap: 6px;
+}
+
+.wedding-premium-contact .contact-row {
+    grid-template-columns: 17px minmax(0, 1fr);
+    gap: 7px;
+    align-items: center;
+    min-height: 16px;
+    color: rgba(255, 248, 236, 0.86);
+    font-size: 8.7px;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.wedding-premium-contact .contact-icon {
+    width: 17px;
+    height: 16px;
+    background: transparent;
+    color: inherit;
+    box-shadow: none;
+}
+
+.wedding-premium-contact .contact-row > span:last-child {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.wedding-premium-contact .contact-icon img {
+    width: 13px;
+    height: 13px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.42));
+}
+
+.wedding-premium-contact .contact-icon-clc img {
+    width: 15px;
+    height: 15px;
+}
+
+.wedding-premium-notes {
+    display: grid;
+    align-content: start;
+    gap: 5mm;
+    padding: 5mm;
+    background:
+        radial-gradient(circle at 94% 0%, rgba(214, 199, 145, 0.12), transparent 20mm),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025));
+}
+
+.wedding-premium-notes h3 {
+    color: var(--gold);
+    font-size: 17px;
+}
+
+.wedding-premium-notes .note-lines span {
+    background: rgba(214, 199, 145, 0.28);
+}
+
+.wedding-premium-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-inline: 13mm;
+    border-top: 1px solid rgba(214, 199, 145, 0.24);
+    color: rgba(238, 240, 238, 0.58);
+    font-size: 8.6px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.funeral-a5 {
+    width: 148mm;
+    height: 210mm;
+    background:
+        radial-gradient(circle at 94% 9%, rgba(214, 199, 145, 0.14), transparent 35mm),
+        radial-gradient(circle at 4% 94%, rgba(79, 111, 102, 0.16), transparent 40mm),
+        linear-gradient(180deg, #f7f1e8 0%, #ede5d8 100%);
+}
+
+.funeral-header {
+    position: relative;
+    height: 76mm;
+    padding: 8mm 9mm;
+    background:
+        linear-gradient(90deg, rgba(11, 14, 17, 0.9), rgba(17, 23, 24, 0.64)),
+        url("../../src/main/resources/static/images/funerals/memorial-flowers-soft.jpg") center / cover no-repeat;
+    color: var(--cream);
+}
+
+.funeral-header .logo {
+    width: 28mm;
+    margin-bottom: 7mm;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
+}
+
+.funeral-header h1 {
+    max-width: 88mm;
+    color: var(--cream);
+    font-size: 23px;
+    line-height: 1.02;
+}
+
+.funeral-header p {
+    max-width: 88mm;
+    margin-top: 4mm;
+    color: rgba(255, 248, 236, 0.8);
+    font-size: 9.8px;
+    line-height: 1.42;
+}
+
+.funeral-header .feather {
+    right: -14mm;
+    top: -18mm;
+    width: 68mm;
+    opacity: 0.22;
+    transform: rotate(193deg);
+}
+
+.funeral-body {
+    display: grid;
+    gap: 4mm;
+    padding: 6mm 8mm 7mm;
+}
+
+.funeral-card {
+    display: grid;
+    gap: 2.2mm;
+    padding: 4.5mm;
+    border: 1px solid rgba(79, 111, 102, 0.2);
+    border-radius: 17px;
+    background: rgba(255, 255, 255, 0.62);
+}
+
+.funeral-card h2,
+.funeral-card h3 {
+    color: var(--charcoal);
+    font-size: 16px;
+    line-height: 1.1;
+}
+
+.funeral-card p,
+.funeral-card li {
+    color: #394140;
+    font-size: 9px;
+    line-height: 1.42;
+}
+
+.funeral-card ul {
+    display: grid;
+    gap: 1.4mm;
+    margin: 0;
+    padding-left: 4.5mm;
+}
+
+.funeral-note-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4mm;
+}
+
+.funeral-contact {
+    background:
+        radial-gradient(circle at 100% 0%, rgba(214, 199, 145, 0.2), transparent 22mm),
+        #11171a;
+    color: var(--cream);
+}
+
+.funeral-contact h3,
+.funeral-contact p,
+.funeral-contact .contact-row {
+    color: var(--cream);
+}
+
+.funeral-contact .contact-row {
+    font-size: 8.8px;
+}
+
+@media print {
+    body {
+        background: #ffffff;
+    }
+
+    .card-page,
+    .flyer-page {
+        margin: 0;
+        box-shadow: none;
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .card-page:last-child,
+    .flyer-page:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+}

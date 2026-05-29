@@ -555,6 +555,10 @@
     filter: saturate(1.08) contrast(1.08) brightness(0.74);
 }
 
+.services-hero-slide:first-child img {
+    filter: saturate(1.1) contrast(1.06) brightness(0.86);
+}
+
 .services-hero-slide:nth-child(2) img {
     object-position: center 24%;
 }
@@ -917,7 +921,7 @@
 
 .services-showcase-slide:first-child img {
     object-fit: cover;
-    object-position: center;
+    object-position: center 18%;
 }
 
 .services-showcase-slide figcaption {
@@ -1972,13 +1976,14 @@
 
 .reviews-hero {
     position: relative;
-    min-height: calc(82svh - var(--header-height));
+    min-height: calc(88svh - var(--header-height));
     display: grid;
-    align-items: end;
+    align-items: center;
     overflow: hidden;
     background:
-        radial-gradient(circle at 80% 18%, rgba(214, 199, 145, 0.12), transparent 24rem),
-        radial-gradient(circle at 18% 78%, rgba(58, 70, 76, 0.24), transparent 27rem),
+        radial-gradient(circle at 74% 14%, rgba(0, 157, 171, 0.2), transparent 22rem),
+        radial-gradient(circle at 88% 68%, rgba(214, 199, 145, 0.16), transparent 24rem),
+        radial-gradient(circle at 18% 78%, rgba(58, 70, 76, 0.28), transparent 27rem),
         linear-gradient(145deg, #15181d 0%, #0d0f13 100%);
 }
 
@@ -1986,10 +1991,20 @@
     content: "";
     position: absolute;
     inset: 0;
-    opacity: 0.42;
+    opacity: 0.72;
     background:
-        linear-gradient(115deg, transparent 0 48%, rgba(183, 192, 204, 0.08) 48% 48.12%, transparent 48.12% 100%),
-        radial-gradient(circle at 82% 44%, rgba(214, 199, 145, 0.1), transparent 18rem);
+        linear-gradient(115deg, transparent 0 46%, rgba(20, 173, 170, 0.11) 46% 46.12%, transparent 46.12% 100%),
+        linear-gradient(145deg, rgba(8, 10, 14, 0.22), transparent 42%),
+        radial-gradient(circle at 82% 44%, rgba(214, 199, 145, 0.12), transparent 18rem);
+    pointer-events: none;
+}
+
+.reviews-hero::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 12rem;
+    background: linear-gradient(180deg, transparent, rgba(9, 11, 15, 0.92));
     pointer-events: none;
 }
 
@@ -1997,14 +2012,14 @@
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 0.95fr) minmax(18rem, 0.55fr);
-    gap: clamp(2rem, 6vw, 6rem);
-    align-items: end;
-    padding-block: clamp(5rem, 9vw, 8rem);
+    grid-template-columns: minmax(0, 0.88fr) minmax(22rem, 0.76fr);
+    gap: clamp(2.2rem, 5vw, 5.5rem);
+    align-items: center;
+    padding-block: clamp(4rem, 7vw, 7rem);
 }
 
 .reviews-hero-copy {
-    max-width: 54rem;
+    max-width: 48rem;
 }
 
 .reviews-hero-copy h1,
@@ -2024,38 +2039,133 @@
     color: rgba(238, 240, 238, 0.76);
 }
 
-.reviews-hero-proof {
+.reviews-hero-copy .lead {
+    max-width: 38rem;
+    margin-bottom: 1.45rem;
+}
+
+.reviews-hero-visual {
+    position: relative;
     display: grid;
-    gap: 0.75rem;
+    gap: clamp(0.9rem, 1.4vw, 1.25rem);
+    align-self: stretch;
+    min-height: clamp(31rem, 50vw, 43rem);
+}
+
+.reviews-hero-visual::before {
+    content: "";
+    position: absolute;
+    inset: -1.2rem -1rem -1rem;
+    border-radius: 36px;
+    border: 1px solid rgba(20, 173, 170, 0.2);
+    background:
+        linear-gradient(135deg, rgba(2, 182, 190, 0.16), transparent 34%),
+        radial-gradient(circle at 78% 8%, rgba(214, 199, 145, 0.18), transparent 14rem),
+        linear-gradient(145deg, rgba(31, 36, 44, 0.7), rgba(7, 9, 13, 0.74));
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.34);
+    pointer-events: none;
+}
+
+.reviews-hero-photo-stack {
+    position: relative;
+    z-index: 1;
+    min-height: 24rem;
+}
+
+.reviews-hero-photo {
+    position: absolute;
+    overflow: hidden;
+    margin: 0;
+    border: 1px solid rgba(244, 236, 188, 0.2);
+    background: rgba(12, 15, 20, 0.76);
+    box-shadow: 0 24px 58px rgba(0, 0, 0, 0.38);
+}
+
+.reviews-hero-photo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    filter: saturate(1.08) contrast(1.02) brightness(0.86);
+}
+
+.reviews-hero-photo-main {
+    inset: 0 0 3.4rem 3.2rem;
+    border-radius: 30px 30px 12px 30px;
+}
+
+.reviews-hero-photo-secondary {
+    left: 0;
+    bottom: 0;
+    width: min(48%, 17rem);
+    aspect-ratio: 1.08;
+    border-radius: 20px;
+}
+
+.reviews-hero-photo-mark {
+    position: absolute;
+    right: clamp(1rem, 2.4vw, 1.8rem);
+    bottom: 1.2rem;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: clamp(5.6rem, 8vw, 7.2rem);
+    aspect-ratio: 1;
+    border-radius: 999px;
+    border: 1px solid rgba(244, 236, 188, 0.28);
+    background:
+        radial-gradient(circle at 42% 32%, rgba(0, 179, 184, 0.18), transparent 42%),
+        rgba(8, 11, 15, 0.62);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34);
+}
+
+.reviews-hero-proof {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    border-top: 1px solid rgba(20, 173, 170, 0.32);
+    background: linear-gradient(90deg, rgba(8, 113, 121, 0.12), rgba(214, 199, 145, 0.1), rgba(15, 17, 22, 0.04));
 }
 
 .reviews-proof-item {
-    min-height: 5.4rem;
+    min-height: 6rem;
     display: grid;
-    grid-template-columns: clamp(3.1rem, 5vw, 3.75rem) minmax(0, 1fr);
-    gap: 0.95rem;
-    align-items: center;
-    padding: 1rem;
-    border-radius: 18px;
-    border: 1px solid rgba(243, 244, 246, 0.13);
-    background:
-        radial-gradient(circle at 86% 0%, rgba(214, 199, 145, 0.12), transparent 10rem),
-        linear-gradient(145deg, rgba(38, 43, 52, 0.76), rgba(12, 14, 18, 0.68));
+    align-content: center;
+    gap: 0.35rem;
+    padding: 1rem 1.15rem;
+    border-right: 1px solid rgba(244, 236, 188, 0.14);
+    background: transparent;
     color: rgba(247, 247, 244, 0.86);
     font-weight: 800;
-    box-shadow: 0 20px 52px rgba(0, 0, 0, 0.28);
-    backdrop-filter: blur(16px);
+    box-shadow: none;
+    backdrop-filter: none;
+}
+
+.reviews-proof-item:last-child {
+    border-right: 0;
+}
+
+.reviews-proof-kicker {
+    color: var(--color-gold);
+    font-family: var(--font-serif);
+    font-size: 0.92rem;
+    line-height: 1;
+    letter-spacing: 0;
+}
+
+.reviews-proof-text {
+    min-width: 0;
+    font-size: clamp(0.88rem, 1.2vw, 1rem);
+    line-height: 1.2;
 }
 
 .reviews-proof-logo {
     --logo-wreath-scale: 1.2;
     width: clamp(3.1rem, 5vw, 3.75rem);
     overflow: visible;
-}
-
-.reviews-proof-text {
-    min-width: 0;
-    line-height: 1.18;
 }
 
 .reviews-proof-item:hover .reviews-proof-logo .logo-wreath,
@@ -2405,6 +2515,7 @@
     right: auto;
     bottom: auto;
     left: auto;
+    display: none;
     width: 100%;
     max-height: none;
     margin-top: 0.65rem;
@@ -2420,6 +2531,7 @@
 
 .review-submission-form .form-choice.is-open .field-popup,
 .review-submission-form .phone-field.is-open .field-popup {
+    display: block;
     opacity: 1;
     transform: none;
 }
@@ -2693,6 +2805,25 @@
         grid-template-columns: 1fr;
     }
 
+    .reviews-hero-inner {
+        align-items: start;
+    }
+
+    .reviews-hero-copy {
+        max-width: 42rem;
+    }
+
+    .reviews-hero-visual {
+        min-height: auto;
+        max-width: 46rem;
+        width: 100%;
+        justify-self: center;
+    }
+
+    .reviews-hero-photo-stack {
+        min-height: clamp(22rem, 58vw, 34rem);
+    }
+
     .reviews-submit-copy {
         position: static;
     }
@@ -2704,7 +2835,8 @@
     }
 
     .reviews-hero-inner {
-        padding-block: 4rem;
+        gap: 2rem;
+        padding-block: 3.5rem 4rem;
     }
 
     .reviews-hero-copy h1,
@@ -2715,6 +2847,56 @@
         font-size: clamp(2.2rem, 8.8vw, 2.9rem);
         line-height: 1.08;
         overflow-wrap: anywhere;
+    }
+
+    .reviews-hero-copy .lead {
+        max-width: 100%;
+        margin-bottom: 1.2rem;
+    }
+
+    .reviews-hero-visual::before {
+        inset: -0.75rem;
+        border-radius: 24px;
+    }
+
+    .reviews-hero-photo-stack {
+        min-height: clamp(18rem, 88vw, 25rem);
+    }
+
+    .reviews-hero-photo-main {
+        inset: 0 0 3.1rem 1.3rem;
+        border-radius: 22px 22px 10px 22px;
+    }
+
+    .reviews-hero-photo-secondary {
+        width: min(46%, 10.5rem);
+        border-radius: 16px;
+    }
+
+    .reviews-hero-photo-mark {
+        right: 0.8rem;
+        bottom: 0.95rem;
+        width: 4.8rem;
+    }
+
+    .reviews-hero-proof {
+        grid-template-columns: 1fr;
+        border-top-color: rgba(20, 173, 170, 0.26);
+        border-radius: 0 0 18px 18px;
+    }
+
+    .reviews-proof-item {
+        min-height: 4.35rem;
+        grid-template-columns: 2.35rem minmax(0, 1fr);
+        align-items: center;
+        align-content: center;
+        border-right: 0;
+        border-bottom: 1px solid rgba(244, 236, 188, 0.13);
+        padding: 0.75rem 0.95rem;
+    }
+
+    .reviews-proof-item:last-child {
+        border-bottom: 0;
     }
 
     .reviews-feature-carousel {

@@ -10,28 +10,35 @@
                 <p class="lead">Every review is checked before publication, keeping this page genuine, trusted and focused on the ceremony experience.</p>
                 <a class="button button-peacock" href="#leave-review">Leave a review</a>
             </div>
-            <div class="reviews-hero-proof" aria-label="Review highlights">
-                <span class="reviews-proof-item">
-                    <span class="logo-composite reviews-proof-logo" aria-hidden="true">
-                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
-                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+            <div class="reviews-hero-visual">
+                <div class="reviews-hero-photo-stack" aria-hidden="true">
+                    <figure class="reviews-hero-photo reviews-hero-photo-main">
+                        <img th:src="@{/images/clare/weddings-confetti.jpg}" alt="">
+                    </figure>
+                    <figure class="reviews-hero-photo reviews-hero-photo-secondary">
+                        <img th:src="@{/images/funerals/memorial-flowers-detail.jpg}" alt="">
+                    </figure>
+                    <span class="reviews-hero-photo-mark">
+                        <span class="logo-composite reviews-proof-logo" aria-hidden="true">
+                            <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                            <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                        </span>
                     </span>
-                    <span class="reviews-proof-text">Five-star feedback</span>
-                </span>
-                <span class="reviews-proof-item">
-                    <span class="logo-composite reviews-proof-logo" aria-hidden="true">
-                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
-                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                </div>
+                <div class="reviews-hero-proof" aria-label="Review highlights">
+                    <span class="reviews-proof-item">
+                        <span class="reviews-proof-kicker">01</span>
+                        <span class="reviews-proof-text">Five-star feedback</span>
                     </span>
-                    <span class="reviews-proof-text">Approved before publication</span>
-                </span>
-                <span class="reviews-proof-item">
-                    <span class="logo-composite reviews-proof-logo" aria-hidden="true">
-                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
-                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    <span class="reviews-proof-item">
+                        <span class="reviews-proof-kicker">02</span>
+                        <span class="reviews-proof-text">Approved before publication</span>
                     </span>
-                    <span class="reviews-proof-text">Weddings, funerals and life moments</span>
-                </span>
+                    <span class="reviews-proof-item">
+                        <span class="reviews-proof-kicker">03</span>
+                        <span class="reviews-proof-text">Weddings, funerals and life moments</span>
+                    </span>
+                </div>
             </div>
         </div>
     </section>

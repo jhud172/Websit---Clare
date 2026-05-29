@@ -291,6 +291,7 @@ if (enquiryModal) {
     const modalCloseButtons = enquiryModal.querySelectorAll("[data-enquiry-modal-close]");
     const modalTriggers = document.querySelectorAll(modalTriggerSelector);
     let previousFocus = null;
+    let modalScrollFrame = null;
 
     const getFocusableElements = () => Array.from(modalDialog.querySelectorAll(
         "a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex='-1'])"
@@ -300,9 +301,34 @@ if (enquiryModal) {
         document.body.classList.toggle("is-modal-open", locked);
     };
 
+    const updateModalScrollState = () => {
+        if (!modalDialog) {
+            return;
+        }
+
+        const maxScroll = Math.max(1, modalDialog.scrollHeight - modalDialog.clientHeight);
+        const progress = Math.min(1, Math.max(0, modalDialog.scrollTop / maxScroll));
+        modalDialog.style.setProperty("--modal-scroll-progress", progress.toFixed(3));
+        modalDialog.classList.toggle("is-scrolled", modalDialog.scrollTop > 12);
+        modalDialog.classList.toggle("is-at-bottom", progress > 0.96);
+    };
+
+    const requestModalScrollState = () => {
+        if (modalScrollFrame) {
+            return;
+        }
+
+        modalScrollFrame = window.requestAnimationFrame(() => {
+            modalScrollFrame = null;
+            updateModalScrollState();
+        });
+    };
+
     const closeModal = () => {
         enquiryModal.hidden = true;
         enquiryModal.classList.remove("is-open");
+        modalDialog?.classList.remove("is-scrolled", "is-at-bottom");
+        modalDialog?.style.setProperty("--modal-scroll-progress", "0");
         lockScroll(false);
         if (previousFocus && typeof previousFocus.focus === "function") {
             previousFocus.focus({ preventScroll: true });
@@ -314,6 +340,10 @@ if (enquiryModal) {
         enquiryModal.hidden = false;
         enquiryModal.classList.add("is-open");
         lockScroll(true);
+        if (modalDialog) {
+            modalDialog.scrollTop = 0;
+        }
+        updateModalScrollState();
 
         const serviceType = trigger?.dataset.enquiryService;
         const serviceField = modalDialog.querySelector("#serviceType");
@@ -340,6 +370,8 @@ if (enquiryModal) {
     modalCloseButtons.forEach((button) => {
         button.addEventListener("click", closeModal);
     });
+
+    modalDialog?.addEventListener("scroll", requestModalScrollState, { passive: true });
 
     if (enquiryModal.dataset.openOnLoad === "true") {
         window.setTimeout(() => openModal(null), 60);
