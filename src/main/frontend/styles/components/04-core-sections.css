@@ -1691,7 +1691,8 @@
 .footer-grid {
     display: grid;
     gap: 2rem;
-    grid-template-columns: 1.2fr 0.8fr 0.8fr;
+    grid-template-columns: minmax(0, 1.12fr) minmax(9rem, 0.58fr) minmax(13rem, 0.76fr) minmax(9rem, 0.54fr);
+    align-items: start;
     padding: 2rem 0 0;
     border-top: 1px solid var(--line);
 }
@@ -1724,6 +1725,23 @@
 .footer-list {
     display: grid;
     gap: 0.85rem;
+}
+
+.footer-accreditation {
+    display: grid;
+    justify-items: center;
+    align-self: start;
+    padding: 0.25rem 0 0;
+}
+
+.footer-accreditation img {
+    width: clamp(7.5rem, 12vw, 10.25rem);
+    aspect-ratio: 1;
+    object-fit: contain;
+    border-radius: 999px;
+    filter:
+        drop-shadow(0 18px 34px rgba(0, 0, 0, 0.22))
+        drop-shadow(0 0 18px rgba(201, 154, 51, 0.08));
 }
 
 .sr-only {
@@ -1768,6 +1786,10 @@
     .faq-grid,
     .footer-grid {
         grid-template-columns: 1fr;
+    }
+
+    .footer-accreditation {
+        justify-items: start;
     }
 
     .path-grid,

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<footer class="site-footer" th:fragment="site-footer">
+<footer id="site-footer" class="site-footer" th:fragment="site-footer">
     <div class="shell footer-grid">
         <div class="footer-brand">
             <span class="logo-composite footer-logo-composite" aria-hidden="true">
@@ -47,6 +47,13 @@
                 <li><button type="button" data-open-enquiry-modal>Start an enquiry</button></li>
             </ul>
         </div>
+
+        <div class="footer-accreditation" aria-label="Academy of Modern Celebrancy certification">
+            <img th:src="@{/images/brand/avmc-certified-wedding-celebrant-2026.png}"
+                 src="/images/brand/avmc-certified-wedding-celebrant-2026.png"
+                 alt="Certified Wedding Celebrant, The Academy of Modern Celebrancy, 2026">
+        </div>
+
         <div class="footer-copyright">
             <p>© 2026 Clare's Life Celebrations. All rights reserved.</p>
             <a th:href="@{/privacy}">Privacy Policy</a>
