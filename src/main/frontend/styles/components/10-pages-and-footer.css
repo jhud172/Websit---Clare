@@ -2120,6 +2120,28 @@
     box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34);
 }
 
+.reviews-hero-logo {
+    --logo-clc-size: 80;
+    --logo-wreath-scale: 1.22;
+    width: 82%;
+    overflow: visible;
+}
+
+.reviews-hero-photo-mark:hover .reviews-hero-logo .logo-wreath,
+.reviews-hero-photo-mark:focus-within .reviews-hero-logo .logo-wreath,
+.reviews-hero-photo-stack:hover .reviews-hero-logo .logo-wreath {
+    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
+    filter:
+        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
+        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
+}
+
+.reviews-hero-photo-mark:hover .reviews-hero-logo .logo-clc,
+.reviews-hero-photo-mark:focus-within .reviews-hero-logo .logo-clc,
+.reviews-hero-photo-stack:hover .reviews-hero-logo .logo-clc {
+    transform: translateY(1%) scale(1.035);
+}
+
 .reviews-hero-proof {
     position: relative;
     z-index: 1;
@@ -2239,9 +2261,10 @@
 }
 
 .reviews-marquee-track {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 24rem));
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    align-items: stretch;
     gap: clamp(1rem, 2vw, 1.5rem);
     overflow: visible;
     padding: 0;
@@ -2262,7 +2285,9 @@
 .review-story-card {
     position: relative;
     display: grid;
-    width: min(100%, 24rem);
+    flex: 1 1 min(100%, 21rem);
+    width: 100%;
+    max-width: 24rem;
     min-height: 100%;
     min-width: 0;
     overflow: hidden;
@@ -2876,7 +2901,7 @@
     .reviews-hero-photo-mark {
         right: 0.8rem;
         bottom: 0.95rem;
-        width: 4.8rem;
+        width: 5rem;
     }
 
     .reviews-hero-proof {
@@ -3163,6 +3188,7 @@ li,
 
 .button:hover,
 .button:focus-visible {
+    transform: translateY(-2px) scale(1.018);
     box-shadow:
         0 18px 42px rgba(24, 23, 21, 0.16),
         0 0 0 4px rgba(0, 137, 123, 0.1);
@@ -3373,6 +3399,19 @@ li,
 
 .footer-grid {
     border-top-color: rgba(24, 23, 21, 0.1);
+}
+
+.footer-heading {
+    color: rgba(24, 23, 21, 0.76);
+}
+
+.footer-heading::after {
+    background: linear-gradient(
+        90deg,
+        rgba(201, 154, 51, 0.74),
+        rgba(0, 137, 123, 0.42),
+        rgba(24, 23, 21, 0.08)
+    );
 }
 
 .footer-list a,

@@ -383,7 +383,11 @@ main::before {
 
 .hero-actions .button:hover,
 .hero-actions .button-secondary:hover,
-.cta-panel .button:hover,
+.cta-panel .button:hover {
+    transform: translateY(-2px) scale(1.015);
+    box-shadow: 0 18px 36px rgba(36, 31, 27, 0.16);
+}
+
 .header-cta:hover {
     transform: translateY(-2px);
     box-shadow: 0 18px 36px rgba(36, 31, 27, 0.16);
@@ -654,9 +658,20 @@ main::before {
     border: 1px solid rgba(244, 239, 232, 0.12);
     border-radius: 24px;
     background:
-        radial-gradient(circle at 54% 44%, rgba(200, 167, 109, 0.13), transparent 28%),
+        radial-gradient(circle at 54% 44%, rgba(200, 167, 109, 0.16), transparent 30%),
         linear-gradient(145deg, rgba(22, 25, 31, 0.98), rgba(6, 8, 10, 0.96));
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.26);
+}
+
+.symbolism-brand-art {
+    position: relative;
+    z-index: 1;
+    width: min(92%, 22rem);
+    max-height: clamp(19rem, 31vw, 27rem);
+    object-fit: contain;
+    filter:
+        drop-shadow(0 24px 42px rgba(0, 0, 0, 0.44))
+        drop-shadow(0 0 24px rgba(200, 167, 109, 0.14));
 }
 
 .symbolism-feather {

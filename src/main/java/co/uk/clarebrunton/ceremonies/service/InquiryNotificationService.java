@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -13,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -29,6 +32,16 @@ import jakarta.mail.internet.MimeMessage;
 public class InquiryNotificationService {
 
 	private static final Logger logger = LoggerFactory.getLogger(InquiryNotificationService.class);
+
+	private static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+
+	private static final String BANNER_CONTENT_ID = "clareBrandBanner";
+
+	private static final String CLC_CONTENT_ID = "clareClcLogo";
+
+	private static final String BANNER_IMAGE_RESOURCE = "static/images/brand/logo-clare-main-banner-web.png";
+
+	private static final String CLC_IMAGE_RESOURCE = "static/images/brand/clc-wreath-logo.png";
 
 	private final ObjectProvider<JavaMailSender> mailSenderProvider;
 
@@ -98,6 +111,7 @@ public class InquiryNotificationService {
 		helper.setReplyTo(inquiryForm.getEmail());
 		helper.setSubject("New enquiry from " + inquiryForm.getFullName() + " - " + inquiryForm.getServiceType());
 		helper.setText(buildAdminPlainText(inquiryForm, attachments), buildAdminHtml(inquiryForm, attachments));
+		addInlineBrandImages(helper);
 
 		for (MultipartFile attachment : attachments) {
 			String originalName = attachment.getOriginalFilename();
@@ -125,13 +139,17 @@ public class InquiryNotificationService {
 		helper.setReplyTo(siteProperties.getContactEmail());
 		helper.setSubject("Your enquiry has been received - " + siteProperties.getName());
 		helper.setText(buildConfirmationPlainText(inquiryForm), buildConfirmationHtml(inquiryForm));
+		addInlineBrandImages(helper);
 		return message;
 	}
 
 	private String buildAdminPlainText(InquiryForm inquiryForm, List<MultipartFile> attachments) {
 		return """
-				New website enquiry
 				%s
+				%s
+				------------------------------------------------------------
+
+				New enquiry received from %s
 
 				Client
 				Name: %s
@@ -150,11 +168,13 @@ public class InquiryNotificationService {
 				Reply directly to this email to respond to %s.
 				""".formatted(
 				siteProperties.getName(),
+				resolveTagline(),
+				orNotSupplied(inquiryForm.getFullName()),
 				orNotSupplied(inquiryForm.getFullName()),
 				orNotSupplied(inquiryForm.getEmail()),
 				orNotSupplied(inquiryForm.getPhone()),
 				orNotSupplied(inquiryForm.getServiceType()),
-				inquiryForm.getEventDate() != null ? inquiryForm.getEventDate() : "Not supplied",
+				formatDate(inquiryForm.getEventDate()),
 				orNotSupplied(inquiryForm.getVenue()),
 				attachments.isEmpty() ? "None" : attachments.size() + " file(s) attached",
 				orNotSupplied(inquiryForm.getMessage()),
@@ -165,40 +185,36 @@ public class InquiryNotificationService {
 	private String buildAdminHtml(InquiryForm inquiryForm, List<MultipartFile> attachments) {
 		String attachmentSummary = attachments.isEmpty() ? "None" : attachments.size() + " file(s) attached";
 		return emailShell(
-				"New website enquiry",
+				"New enquiry from " + orNotSupplied(inquiryForm.getFullName()),
 				"New enquiry received",
-				"Someone has submitted the enquiry form on " + escapeHtml(siteProperties.getName()) + ".",
+				"Someone has submitted the enquiry form on " + escapeHtml(siteProperties.getName()) + ". Reply directly to this email to respond.",
 				"""
 						%s
 						%s
 						%s
-						<div style="height:18px;line-height:18px;">&nbsp;</div>
 						%s
-						<div style="height:18px;line-height:18px;">&nbsp;</div>
-						<div style="padding:18px;border-radius:16px;background:#f7f4ed;border:1px solid #e3d7bc;">
-							<div style="margin:0 0 8px;color:#5f6f69;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;">Client message</div>
-							<div style="margin:0;color:#25272a;font-size:16px;line-height:1.65;white-space:pre-wrap;">%s</div>
-						</div>
-						<div style="height:18px;line-height:18px;">&nbsp;</div>
-						<div style="padding:14px 16px;border-radius:14px;background:#101317;color:#f4f0e8;font-size:14px;line-height:1.55;">
-							Reply directly to this email to respond to %s.
-						</div>
+						%s
 						""".formatted(
-						detailTable(
-								detailRow("Name", inquiryForm.getFullName())
-										+ detailRow("Email", inquiryForm.getEmail())
-										+ detailRow("Phone", inquiryForm.getPhone())
+						highlightCard("Client", orNotSupplied(inquiryForm.getFullName()),
+								"""
+										%s
+										%s
+										""".formatted(
+										contactLink("mailto:" + orNotSupplied(inquiryForm.getEmail()), orNotSupplied(inquiryForm.getEmail())),
+										escapeHtml(orNotSupplied(inquiryForm.getPhone()))
+								)
 						),
-						sectionTitle("Ceremony details"),
-						detailTable(
+						emailSpacer(18),
+						emailSection("Ceremony details",
 								detailRow("Service", inquiryForm.getServiceType())
-										+ detailRow("Event date", inquiryForm.getEventDate() != null ? inquiryForm.getEventDate().toString() : "Not supplied")
+										+ detailRow("Event date", formatDate(inquiryForm.getEventDate()))
 										+ detailRow("Venue", inquiryForm.getVenue())
 										+ detailRow("Attachments", attachmentSummary)
 						),
-						sectionTitle("Message"),
-						escapeHtml(orNotSupplied(inquiryForm.getMessage())),
-						escapeHtml(orNotSupplied(inquiryForm.getFullName()))
+						emailSpacer(18),
+						messageCard("Client message", orNotSupplied(inquiryForm.getMessage())),
+						emailSpacer(18),
+						darkNotice("Reply directly to this email to respond to " + orNotSupplied(inquiryForm.getFullName()) + ".")
 				)
 		);
 	}
@@ -224,7 +240,7 @@ public class InquiryNotificationService {
 				resolveGreetingName(inquiryForm),
 				orNotSupplied(inquiryForm.getServiceType()).toLowerCase(),
 				orNotSupplied(inquiryForm.getServiceType()),
-				inquiryForm.getEventDate() != null ? inquiryForm.getEventDate() : "Not supplied",
+				formatDate(inquiryForm.getEventDate()),
 				orNotSupplied(inquiryForm.getVenue()),
 				siteProperties.getContactEmail(),
 				siteProperties.getName()
@@ -239,25 +255,27 @@ public class InquiryNotificationService {
 				"""
 						%s
 						%s
-						<div style="height:18px;line-height:18px;">&nbsp;</div>
-						<div style="padding:16px;border-radius:16px;background:#f7f4ed;border:1px solid #e3d7bc;color:#25272a;font-size:15px;line-height:1.6;">
-							If your plans are time-sensitive, you can follow up at
-							<a href="mailto:%s" style="color:#546b63;font-weight:700;text-decoration:none;">%s</a>.
-						</div>
+						%s
+						%s
 						""".formatted(
-						sectionTitle("Your enquiry summary"),
-						detailTable(
+						emailSection("Your enquiry summary",
 								detailRow("Service", inquiryForm.getServiceType())
-										+ detailRow("Event date", inquiryForm.getEventDate() != null ? inquiryForm.getEventDate().toString() : "Not supplied")
+										+ detailRow("Event date", formatDate(inquiryForm.getEventDate()))
 										+ detailRow("Venue", inquiryForm.getVenue())
 						),
-						escapeHtml(siteProperties.getContactEmail()),
-						escapeHtml(siteProperties.getContactEmail())
+						emailSpacer(18),
+						messageCard("What happens next",
+								"Clare will read your enquiry personally and come back to you with the next steps."),
+						emailSpacer(18),
+						darkNotice("If your plans are time-sensitive, you can follow up at " + siteProperties.getContactEmail() + ".")
 				)
 		);
 	}
 
 	private String emailShell(String preheader, String heading, String intro, String bodyHtml) {
+		String bannerUrl = inlineImageSource(BANNER_CONTENT_ID, "/images/brand/logo-clare-main-banner-web.png");
+		String clcUrl = inlineImageSource(CLC_CONTENT_ID, "/images/brand/clc-wreath-logo.png");
+		String siteUrl = StringUtils.hasText(siteProperties.getBaseUrl()) ? siteProperties.getBaseUrl() : "";
 		return """
 				<!doctype html>
 				<html lang="en">
@@ -266,30 +284,52 @@ public class InquiryNotificationService {
 					<meta name="viewport" content="width=device-width, initial-scale=1.0">
 					<title>%s</title>
 				</head>
-				<body style="margin:0;padding:0;background:#121417;color:#25272a;font-family:Arial,Helvetica,sans-serif;">
+				<body style="margin:0;padding:0;background:#070a0d;color:#25272a;font-family:Arial,Helvetica,sans-serif;">
 					<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">%s</div>
-					<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#121417;">
+					<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#070a0d;">
 						<tr>
-							<td align="center" style="padding:32px 16px;">
-								<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="max-width:680px;border-collapse:collapse;background:#fffaf2;border:1px solid #2e3338;border-radius:24px;overflow:hidden;">
+							<td align="center" style="padding:34px 12px;">
+								<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="max-width:700px;border-collapse:collapse;background:#fbf6f0;border:1px solid #2f3f3d;border-radius:26px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,0.45);">
 									<tr>
-										<td style="padding:28px 30px;background:#171a1f;border-bottom:1px solid #343a41;">
-											<div style="color:#d6c791;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.1;">CLC</div>
-											<div style="margin-top:6px;color:#f6f1e7;font-size:15px;font-weight:700;">%s</div>
-											<div style="margin-top:3px;color:#aeb7bd;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;">For Moments That Matter</div>
+										<td style="padding:0;background:#090d11;">
+											<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#090d11;">
+												<tr>
+													<td style="padding:24px 28px 22px;background:linear-gradient(135deg,#070a0d 0%%,#0b1f24 52%%,#101317 100%%);border-bottom:1px solid rgba(214,199,145,0.28);">
+														<img src="%s" width="420" alt="%s" style="display:block;width:100%%;max-width:420px;height:auto;border:0;outline:none;text-decoration:none;">
+													</td>
+												</tr>
+												<tr>
+													<td style="height:4px;line-height:4px;background:linear-gradient(90deg,#c99a33 0%%,#27956f 34%%,#0076a8 68%%,#c99a33 100%%);">&nbsp;</td>
+												</tr>
+											</table>
 										</td>
 									</tr>
 									<tr>
-										<td style="padding:30px;">
-											<h1 style="margin:0;color:#25272a;font-family:Georgia,'Times New Roman',serif;font-size:34px;line-height:1.1;font-weight:400;">%s</h1>
-											<p style="margin:12px 0 24px;color:#5d6268;font-size:16px;line-height:1.65;">%s</p>
+										<td style="padding:30px 28px 28px;background:#fbf6f0;">
+											<p style="margin:0 0 10px;color:#96722a;font-size:11px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;">Website notification</p>
+											<h1 style="margin:0;color:#171a1f;font-family:Georgia,'Times New Roman',serif;font-size:36px;line-height:1.08;font-weight:400;">%s</h1>
+											<p style="margin:14px 0 24px;color:#535a5f;font-size:16px;line-height:1.65;">%s</p>
 											%s
 										</td>
 									</tr>
 									<tr>
-										<td style="padding:20px 30px;background:#f2eee6;border-top:1px solid #e1d8c8;color:#6a6f73;font-size:13px;line-height:1.5;">
-											%s<br>
-											<a href="mailto:%s" style="color:#546b63;text-decoration:none;font-weight:700;">%s</a>
+										<td style="padding:0;background:#101317;">
+											<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+												<tr>
+													<td width="88" valign="middle" style="padding:20px 0 20px 24px;">
+														<img src="%s" width="64" alt="CLC" style="display:block;width:64px;height:64px;border:0;border-radius:999px;">
+													</td>
+													<td valign="middle" style="padding:20px 24px 20px 12px;color:#bfc7cb;font-size:13px;line-height:1.55;">
+														<div style="color:#f6f1e7;font-family:Georgia,'Times New Roman',serif;font-size:20px;line-height:1.1;">%s</div>
+														<div style="margin-top:4px;color:#c99a33;font-size:10px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;">%s</div>
+														<div style="margin-top:10px;">
+															<a href="mailto:%s" style="color:#f6f1e7;text-decoration:none;font-weight:700;">%s</a>
+															&nbsp;&bull;&nbsp;
+															<a href="%s" style="color:#f6f1e7;text-decoration:none;font-weight:700;">Website</a>
+														</div>
+													</td>
+												</tr>
+											</table>
 										</td>
 									</tr>
 								</table>
@@ -301,37 +341,121 @@ public class InquiryNotificationService {
 				""".formatted(
 				escapeHtml(preheader),
 				escapeHtml(preheader),
-				escapeHtml(siteProperties.getName()),
+				escapeHtml(bannerUrl),
+				escapeHtml(siteProperties.getName() + " - " + resolveTagline()),
 				heading,
 				escapeHtml(intro),
 				bodyHtml,
+				escapeHtml(clcUrl),
 				escapeHtml(siteProperties.getName()),
+				escapeHtml(resolveTagline()),
 				escapeHtml(siteProperties.getContactEmail()),
-				escapeHtml(siteProperties.getContactEmail())
+				escapeHtml(siteProperties.getContactEmail()),
+				escapeHtml(siteUrl)
 		);
 	}
 
-	private String sectionTitle(String label) {
+	private String emailSection(String label, String rows) {
 		return """
-				<div style="margin:0 0 10px;color:#5f6f69;font-size:12px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;">%s</div>
-				""".formatted(escapeHtml(label));
-	}
-
-	private String detailTable(String rows) {
-		return """
-				<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:separate;border-spacing:0;border:1px solid #e3d7bc;border-radius:16px;overflow:hidden;background:#fffdf8;">
+				<div style="margin:0 0 10px;color:#6a521f;font-size:12px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;">%s</div>
+				<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:separate;border-spacing:0;border:1px solid #ddd0b7;border-radius:18px;overflow:hidden;background:#fffdf8;">
 					%s
 				</table>
-				""".formatted(rows);
+				""".formatted(escapeHtml(label), rows);
+	}
+
+	private String highlightCard(String eyebrow, String heading, String copy) {
+		return """
+				<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-radius:20px;overflow:hidden;background:#111820;border:1px solid #24595b;">
+					<tr>
+						<td style="padding:20px 22px;background:linear-gradient(135deg,#111820 0%%,#092a2e 56%%,#15181e 100%%);">
+							<div style="margin:0 0 8px;color:#c99a33;font-size:11px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;">%s</div>
+							<div style="margin:0;color:#fff7cf;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.12;">%s</div>
+							<div style="margin-top:10px;color:#d8dee2;font-size:15px;line-height:1.65;">%s</div>
+						</td>
+					</tr>
+				</table>
+				""".formatted(escapeHtml(eyebrow), escapeHtml(heading), copy);
 	}
 
 	private String detailRow(String label, String value) {
 		return """
 				<tr>
-					<td style="width:34%%;padding:12px 14px;border-bottom:1px solid #eee4d2;color:#70757a;font-size:13px;font-weight:700;">%s</td>
-					<td style="padding:12px 14px;border-bottom:1px solid #eee4d2;color:#25272a;font-size:15px;line-height:1.45;">%s</td>
+					<td style="width:34%%;padding:13px 15px;border-bottom:1px solid #eee4d2;color:#6f767a;font-size:12px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;">%s</td>
+					<td style="padding:13px 15px;border-bottom:1px solid #eee4d2;color:#1d2226;font-size:15px;line-height:1.45;font-weight:600;">%s</td>
 				</tr>
 				""".formatted(escapeHtml(label), escapeHtml(orNotSupplied(value)));
+	}
+
+	private String messageCard(String label, String message) {
+		return """
+				<div style="padding:20px;border-radius:18px;background:#fffdf8;border:1px solid #ddd0b7;">
+					<div style="margin:0 0 8px;color:#6a521f;font-size:12px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;">%s</div>
+					<div style="margin:0;color:#25272a;font-size:16px;line-height:1.68;">%s</div>
+				</div>
+				""".formatted(escapeHtml(label), withLineBreaks(message));
+	}
+
+	private String darkNotice(String message) {
+		return """
+				<div style="padding:16px 18px;border-radius:16px;background:#101317;color:#f4f0e8;border:1px solid #24595b;font-size:14px;line-height:1.55;">
+					%s
+				</div>
+				""".formatted(escapeHtml(message));
+	}
+
+	private String contactLink(String href, String label) {
+		return """
+				<a href="%s" style="color:#f6f1e7;text-decoration:none;font-weight:800;">%s</a>
+				""".formatted(escapeHtml(href), escapeHtml(label));
+	}
+
+	private String emailSpacer(int height) {
+		return "<div style=\"height:%spx;line-height:%spx;\">&nbsp;</div>".formatted(height, height);
+	}
+
+	private void addInlineBrandImages(MimeMessageHelper helper) throws MessagingException {
+		addInlineImageIfPresent(helper, BANNER_CONTENT_ID, BANNER_IMAGE_RESOURCE);
+		addInlineImageIfPresent(helper, CLC_CONTENT_ID, CLC_IMAGE_RESOURCE);
+	}
+
+	private void addInlineImageIfPresent(MimeMessageHelper helper, String contentId, String resourcePath) throws MessagingException {
+		Resource resource = new ClassPathResource(resourcePath);
+		if (resource.exists()) {
+			helper.addInline(contentId, resource);
+		}
+		else {
+			logger.warn("Email inline image not found on classpath: {}", resourcePath);
+		}
+	}
+
+	private String inlineImageSource(String contentId, String fallbackPath) {
+		String resourcePath = BANNER_CONTENT_ID.equals(contentId) ? BANNER_IMAGE_RESOURCE : CLC_IMAGE_RESOURCE;
+		return new ClassPathResource(resourcePath).exists() ? "cid:" + contentId : absoluteAssetUrl(fallbackPath);
+	}
+
+	private String absoluteAssetUrl(String path) {
+		String baseUrl = StringUtils.hasText(siteProperties.getBaseUrl())
+				? siteProperties.getBaseUrl().replaceAll("/+$", "")
+				: "";
+		if (!StringUtils.hasText(baseUrl)) {
+			return path;
+		}
+		return baseUrl + path;
+	}
+
+	private String resolveTagline() {
+		return StringUtils.hasText(siteProperties.getTagline())
+				? siteProperties.getTagline()
+				: "For Moments That Matter";
+	}
+
+	private String formatDate(LocalDate date) {
+		return date != null ? date.format(DISPLAY_DATE_FORMAT) : "Not supplied";
+	}
+
+	private String withLineBreaks(String value) {
+		return escapeHtml(orNotSupplied(value)).replace("\r\n", "\n").replace("\n", "<br>");
 	}
 
 	private String resolveGreetingName(InquiryForm inquiryForm) {

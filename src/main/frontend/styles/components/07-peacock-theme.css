@@ -80,7 +80,23 @@
 
 .service-path-card {
     position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
     overflow: hidden;
+}
+
+.service-path-card .peacock-badge-logo {
+    margin-inline: auto;
+}
+
+.service-path-card .eyebrow {
+    justify-content: center;
+    margin-inline: auto;
+}
+
+.service-path-card .eyebrow::before {
+    content: none;
 }
 
 .service-path-card::after {

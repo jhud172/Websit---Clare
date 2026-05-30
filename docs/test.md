@@ -12,3 +12,5 @@
 - buisness card - all contact details on, logo and feathers involved. mock up design to be printed off
 - a a4 - a5 panflit - for funeral directors and a4 for weddings just a booklet/panflit to drop notes in design with the correct theme. mock up design to be printed off
 - 3 new logos - incoming...
+
+##### flyer + buisness card

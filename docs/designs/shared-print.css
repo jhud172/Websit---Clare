@@ -414,6 +414,308 @@ img {
     height: 13px;
 }
 
+.a5-card-design {
+    background: #d9d4ca;
+}
+
+.a5-card-page {
+    width: 210mm;
+    height: 148mm;
+    margin: 0 auto 14mm;
+    box-shadow: var(--shadow);
+}
+
+.a5-card-page::before {
+    content: "";
+    position: absolute;
+    inset: 6mm;
+    z-index: 1;
+    border: 0.35mm solid rgba(214, 199, 145, 0.34);
+    border-radius: 4mm;
+    pointer-events: none;
+}
+
+.a5-card-page::after {
+    content: "";
+    position: absolute;
+    inset: 10mm;
+    z-index: 1;
+    border: 0.22mm solid rgba(0, 137, 123, 0.25);
+    border-radius: 3mm;
+    pointer-events: none;
+}
+
+.a5-card-front {
+    display: grid;
+    place-items: center;
+    padding: 18mm;
+    background:
+        radial-gradient(circle at 83% 13%, rgba(214, 199, 145, 0.32), transparent 54mm),
+        radial-gradient(circle at 18% 84%, rgba(0, 137, 123, 0.28), transparent 58mm),
+        radial-gradient(circle at 12% 14%, rgba(9, 111, 144, 0.22), transparent 46mm),
+        linear-gradient(145deg, #171c21 0%, #080a0d 62%, #030405 100%);
+    color: var(--cream);
+}
+
+.a5-feather {
+    filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.18));
+}
+
+.a5-feather-front-left {
+    left: -24mm;
+    bottom: -19mm;
+    width: 136mm;
+    opacity: 0.34;
+    transform: rotate(8deg);
+}
+
+.a5-feather-front-right {
+    top: -38mm;
+    right: -24mm;
+    width: 132mm;
+    opacity: 0.3;
+    transform: rotate(188deg);
+}
+
+.a5-feather-front-top {
+    left: 16mm;
+    top: -42mm;
+    width: 86mm;
+    opacity: 0.16;
+    transform: rotate(78deg);
+}
+
+.a5-feather-front-bottom {
+    right: 22mm;
+    bottom: -40mm;
+    width: 116mm;
+    opacity: 0.22;
+    transform: rotate(-10deg);
+}
+
+.a5-orbit-one {
+    right: 30mm;
+    top: 20mm;
+    width: 58mm;
+    height: 58mm;
+    border: 0.45mm solid rgba(214, 199, 145, 0.15);
+    box-shadow:
+        0 0 38mm rgba(214, 199, 145, 0.12),
+        inset 0 0 22mm rgba(0, 137, 123, 0.12);
+}
+
+.a5-orbit-two {
+    left: 28mm;
+    bottom: 20mm;
+    width: 46mm;
+    height: 46mm;
+    border: 0.3mm solid rgba(0, 137, 123, 0.18);
+    box-shadow: 0 0 32mm rgba(9, 111, 144, 0.18);
+}
+
+.a5-orbit-three {
+    left: 50%;
+    top: 18mm;
+    width: 26mm;
+    height: 26mm;
+    border: 0.24mm solid rgba(214, 199, 145, 0.12);
+    transform: translateX(-50%);
+}
+
+.a5-card-front-inner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    justify-items: center;
+    gap: 7mm;
+    text-align: center;
+}
+
+.a5-card-front .logo {
+    width: 86mm;
+    height: 58mm;
+    filter:
+        drop-shadow(0 18px 30px rgba(0, 0, 0, 0.36))
+        drop-shadow(0 0 14mm rgba(214, 199, 145, 0.18));
+}
+
+.a5-card-front h1 {
+    color: var(--cream);
+    font-size: 33px;
+    line-height: 1;
+}
+
+.a5-card-front p {
+    color: rgba(255, 248, 236, 0.72);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.a5-card-back {
+    display: grid;
+    grid-template-columns: 66mm 1fr;
+    gap: 12mm;
+    padding: 16mm;
+    background:
+        radial-gradient(circle at 93% 12%, rgba(214, 199, 145, 0.28), transparent 54mm),
+        radial-gradient(circle at 9% 84%, rgba(0, 137, 123, 0.3), transparent 58mm),
+        radial-gradient(circle at 76% 88%, rgba(9, 111, 144, 0.19), transparent 56mm),
+        linear-gradient(145deg, #171c21 0%, #090c10 58%, #030405 100%);
+    color: var(--cream);
+}
+
+.a5-feather-back-main {
+    right: -22mm;
+    bottom: -44mm;
+    width: 122mm;
+    opacity: 0.3;
+    transform: rotate(-23deg);
+}
+
+.a5-feather-back-left {
+    left: -42mm;
+    top: -38mm;
+    width: 138mm;
+    opacity: 0.2;
+    transform: rotate(14deg);
+}
+
+.a5-feather-back-right {
+    right: -22mm;
+    top: -27mm;
+    width: 116mm;
+    opacity: 0.2;
+    transform: rotate(190deg);
+}
+
+.a5-feather-back-bottom {
+    left: 44mm;
+    bottom: -42mm;
+    width: 112mm;
+    opacity: 0.18;
+    transform: rotate(-5deg);
+}
+
+.a5-feather-back-top {
+    left: 112mm;
+    top: -44mm;
+    width: 82mm;
+    opacity: 0.16;
+    transform: rotate(82deg);
+}
+
+.a5-back-orbit-one {
+    right: 18mm;
+    top: 16mm;
+    width: 72mm;
+    height: 72mm;
+    border: 0.35mm solid rgba(214, 199, 145, 0.13);
+    box-shadow:
+        0 0 38mm rgba(214, 199, 145, 0.14),
+        inset 0 0 26mm rgba(0, 137, 123, 0.1);
+}
+
+.a5-back-orbit-two {
+    left: 15mm;
+    bottom: 13mm;
+    width: 56mm;
+    height: 56mm;
+    border: 0.28mm solid rgba(0, 137, 123, 0.16);
+    box-shadow: 0 0 34mm rgba(0, 137, 123, 0.16);
+}
+
+.a5-card-back-logo {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 5mm;
+    border-right: 1px solid rgba(214, 199, 145, 0.28);
+    padding-right: 9mm;
+}
+
+.a5-card-back-logo .logo {
+    width: 54mm;
+    filter:
+        drop-shadow(0 16px 28px rgba(0, 0, 0, 0.38))
+        drop-shadow(0 0 12mm rgba(214, 199, 145, 0.18));
+}
+
+.a5-card-back-logo p {
+    max-width: 48mm;
+    color: rgba(255, 248, 236, 0.72);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    line-height: 1.35;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.a5-card-back-details {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    align-content: center;
+    gap: 9mm;
+}
+
+.a5-card-back .eyebrow {
+    color: var(--gold);
+    font-size: 15px;
+}
+
+.a5-card-back-details h2 {
+    max-width: 88mm;
+    color: var(--cream);
+    font-size: 34px;
+    line-height: 1.02;
+}
+
+.a5-card-back .contact-list {
+    gap: 3.2mm;
+}
+
+.a5-card-back .contact-row {
+    grid-template-columns: 8mm minmax(0, 1fr);
+    gap: 4mm;
+    align-items: center;
+    min-height: 8mm;
+    color: rgba(255, 248, 236, 0.88);
+    font-size: 13px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.a5-card-back .contact-row > span:last-child {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.a5-card-back .contact-icon {
+    width: 8mm;
+    height: 8mm;
+    background: transparent;
+    color: inherit;
+    box-shadow: none;
+}
+
+.a5-card-back .contact-icon img {
+    width: 6mm;
+    height: 6mm;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+.a5-card-back .contact-icon-clc img {
+    width: 7mm;
+    height: 7mm;
+}
+
 .flyer-page {
     margin: 0 auto 14mm;
     box-shadow: var(--shadow);
@@ -934,9 +1236,10 @@ img {
 
 .wedding-premium-lower {
     display: grid;
-    grid-template-columns: 45mm minmax(0, 1fr) 48mm;
-    gap: 5mm;
+    grid-template-columns: 50mm minmax(0, 82mm);
+    gap: 6mm;
     align-items: stretch;
+    justify-content: center;
 }
 
 .wedding-premium-portrait {
@@ -953,12 +1256,11 @@ img {
     height: 100%;
     min-height: 40mm;
     object-fit: cover;
-    object-position: center 25%;
+    object-position: center 18%;
     filter: saturate(1.08) contrast(1.04);
 }
 
-.wedding-premium-contact,
-.wedding-premium-notes {
+.wedding-premium-contact {
     position: relative;
     overflow: hidden;
     border-radius: 17px;
@@ -1030,25 +1332,6 @@ img {
     height: 15px;
 }
 
-.wedding-premium-notes {
-    display: grid;
-    align-content: start;
-    gap: 5mm;
-    padding: 5mm;
-    background:
-        radial-gradient(circle at 94% 0%, rgba(214, 199, 145, 0.12), transparent 20mm),
-        linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025));
-}
-
-.wedding-premium-notes h3 {
-    color: var(--gold);
-    font-size: 17px;
-}
-
-.wedding-premium-notes .note-lines span {
-    background: rgba(214, 199, 145, 0.28);
-}
-
 .wedding-premium-footer {
     display: flex;
     justify-content: space-between;
@@ -1065,108 +1348,351 @@ img {
 .funeral-a5 {
     width: 148mm;
     height: 210mm;
-    background:
-        radial-gradient(circle at 94% 9%, rgba(214, 199, 145, 0.14), transparent 35mm),
-        radial-gradient(circle at 4% 94%, rgba(79, 111, 102, 0.16), transparent 40mm),
-        linear-gradient(180deg, #f7f1e8 0%, #ede5d8 100%);
 }
 
-.funeral-header {
+.funeral-a5-premium {
+    display: grid;
+    grid-template-rows: 64mm 1fr 12mm;
+    background:
+        radial-gradient(circle at 89% 52%, rgba(0, 137, 123, 0.18), transparent 36mm),
+        radial-gradient(circle at 8% 94%, rgba(214, 199, 145, 0.14), transparent 38mm),
+        linear-gradient(180deg, #15191c 0%, #0c0f11 52%, #08090b 100%);
+    color: var(--cream);
+}
+
+.funeral-premium-hero {
     position: relative;
-    height: 76mm;
-    padding: 8mm 9mm;
+    overflow: hidden;
+    display: grid;
+    align-content: end;
+    padding: 7mm 9mm 6mm;
+    isolation: isolate;
+}
+
+.funeral-premium-hero::before {
+    content: "";
+    position: absolute;
+    inset: 5mm;
+    z-index: -1;
+    border: 0.3mm solid rgba(214, 199, 145, 0.36);
+    box-shadow:
+        inset 0 0 0 0.2mm rgba(0, 137, 123, 0.2),
+        0 0 18mm rgba(0, 137, 123, 0.1);
+    pointer-events: none;
+}
+
+.funeral-hero-bg,
+.funeral-hero-overlay {
+    position: absolute;
+    inset: 0;
+}
+
+.funeral-hero-bg {
+    z-index: -3;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: saturate(0.82) contrast(1.04);
+}
+
+.funeral-hero-overlay {
+    z-index: -2;
     background:
-        linear-gradient(90deg, rgba(11, 14, 17, 0.9), rgba(17, 23, 24, 0.64)),
-        url("../../src/main/resources/static/images/funerals/memorial-flowers-soft.jpg") center / cover no-repeat;
-    color: var(--cream);
+        linear-gradient(90deg, rgba(5, 8, 10, 0.9) 0%, rgba(5, 8, 10, 0.76) 48%, rgba(5, 8, 10, 0.52) 100%),
+        linear-gradient(180deg, rgba(5, 8, 10, 0.14), rgba(5, 8, 10, 0.76));
 }
 
-.funeral-header .logo {
-    width: 28mm;
-    margin-bottom: 7mm;
-    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.28));
+.funeral-feather {
+    position: absolute;
+    z-index: -1;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.3));
 }
 
-.funeral-header h1 {
-    max-width: 88mm;
-    color: var(--cream);
-    font-size: 23px;
-    line-height: 1.02;
-}
-
-.funeral-header p {
-    max-width: 88mm;
-    margin-top: 4mm;
-    color: rgba(255, 248, 236, 0.8);
-    font-size: 9.8px;
-    line-height: 1.42;
-}
-
-.funeral-header .feather {
-    right: -14mm;
-    top: -18mm;
-    width: 68mm;
+.funeral-feather-top {
+    right: -16mm;
+    top: -20mm;
+    width: 76mm;
     opacity: 0.22;
-    transform: rotate(193deg);
+    transform: rotate(190deg);
 }
 
-.funeral-body {
+.funeral-feather-bottom {
+    left: -20mm;
+    bottom: -19mm;
+    width: 84mm;
+    opacity: 0.2;
+    transform: rotate(8deg);
+}
+
+.funeral-hero-brand {
+    position: absolute;
+    left: 9mm;
+    top: 7mm;
     display: grid;
-    gap: 4mm;
-    padding: 6mm 8mm 7mm;
+    gap: 1.5mm;
 }
 
-.funeral-card {
+.funeral-hero-brand .logo {
+    width: 28mm;
+    filter:
+        drop-shadow(0 9px 16px rgba(0, 0, 0, 0.34))
+        drop-shadow(0 0 6mm rgba(214, 199, 145, 0.14));
+}
+
+.funeral-hero-brand p {
+    display: none;
+    color: rgba(255, 248, 236, 0.64);
+    font-size: 6.5px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.funeral-hero-copy {
+    position: relative;
+    z-index: 1;
     display: grid;
-    gap: 2.2mm;
-    padding: 4.5mm;
-    border: 1px solid rgba(79, 111, 102, 0.2);
-    border-radius: 17px;
-    background: rgba(255, 255, 255, 0.62);
+    gap: 2.8mm;
+    max-width: 104mm;
 }
 
-.funeral-card h2,
-.funeral-card h3 {
-    color: var(--charcoal);
-    font-size: 16px;
-    line-height: 1.1;
+.funeral-hero-copy .eyebrow {
+    color: var(--gold);
 }
 
-.funeral-card p,
-.funeral-card li {
-    color: #394140;
-    font-size: 9px;
+.funeral-hero-copy h1 {
+    max-width: 108mm;
+    color: var(--cream);
+    font-size: 24px;
+    line-height: 0.98;
+}
+
+.funeral-hero-copy p:not(.eyebrow) {
+    max-width: 101mm;
+    color: rgba(255, 248, 236, 0.78);
+    font-size: 8.7px;
     line-height: 1.42;
 }
 
-.funeral-card ul {
+.funeral-premium-body {
+    position: relative;
     display: grid;
-    gap: 1.4mm;
-    margin: 0;
-    padding-left: 4.5mm;
+    gap: 3mm;
+    padding: 5mm 9mm 3mm;
 }
 
-.funeral-note-grid {
+.funeral-premium-body::before {
+    content: "";
+    position: absolute;
+    left: 9mm;
+    right: 9mm;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(214, 199, 145, 0.52), rgba(0, 137, 123, 0.42), transparent);
+}
+
+.funeral-intro {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4mm;
+    grid-template-columns: 36mm minmax(0, 1fr);
+    gap: 4.5mm;
+    align-items: stretch;
+}
+
+.funeral-portrait {
+    overflow: hidden;
+    margin: 0;
+    border: 1px solid rgba(214, 199, 145, 0.34);
+    border-radius: 14px;
+    background: var(--charcoal);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.26);
+}
+
+.funeral-portrait img {
+    width: 100%;
+    height: 100%;
+    min-height: 39mm;
+    object-fit: cover;
+    object-position: center 16%;
+    filter: saturate(0.92) contrast(1.03);
+}
+
+.funeral-intro > div {
+    display: grid;
+    align-content: center;
+    gap: 2.2mm;
+}
+
+.funeral-intro .eyebrow {
+    color: var(--gold);
+    font-size: 7.4px;
+}
+
+.funeral-intro h2 {
+    color: var(--cream);
+    font-size: 18px;
+    line-height: 1.03;
+}
+
+.funeral-intro p:not(.eyebrow) {
+    color: rgba(238, 240, 238, 0.72);
+    font-size: 7.8px;
+    line-height: 1.42;
+}
+
+.funeral-peacock-list {
+    display: grid;
+    gap: 2mm;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.funeral-peacock-list li {
+    position: relative;
+    min-height: 15mm;
+    padding: 3mm 4mm 2.8mm 11mm;
+    border: 1px solid rgba(214, 199, 145, 0.2);
+    border-radius: 12px;
+    background:
+        radial-gradient(circle at 96% 0%, rgba(214, 199, 145, 0.11), transparent 20mm),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.022));
+    box-shadow:
+        0 14px 26px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.funeral-peacock-list li::before {
+    content: "";
+    position: absolute;
+    left: 3.5mm;
+    top: 3.4mm;
+    width: 5.2mm;
+    height: 5.2mm;
+    background: url("../../src/main/resources/static/images/objects/feather-vertical.png") center / contain no-repeat;
+    filter:
+        saturate(0.96)
+        drop-shadow(0 2px 3px rgba(0, 0, 0, 0.36));
+    transform: rotate(-18deg);
+}
+
+.funeral-peacock-list strong {
+    display: block;
+    color: var(--cream);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 11.8px;
+    line-height: 1.05;
+}
+
+.funeral-peacock-list span {
+    display: block;
+    margin-top: 1mm;
+    color: rgba(238, 240, 238, 0.68);
+    font-size: 7.1px;
+    line-height: 1.28;
 }
 
 .funeral-contact {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 0.86fr) minmax(0, 1fr);
+    gap: 3mm;
+    align-items: center;
+    padding: 3.4mm 4mm;
+    border: 1px solid rgba(214, 199, 145, 0.24);
+    border-radius: 14px;
     background:
-        radial-gradient(circle at 100% 0%, rgba(214, 199, 145, 0.2), transparent 22mm),
-        #11171a;
+        radial-gradient(circle at 96% 8%, rgba(214, 199, 145, 0.16), transparent 24mm),
+        radial-gradient(circle at 12% 100%, rgba(0, 137, 123, 0.2), transparent 23mm),
+        linear-gradient(145deg, #1a1e21, #07090b);
     color: var(--cream);
 }
 
-.funeral-contact h3,
-.funeral-contact p,
-.funeral-contact .contact-row {
+.funeral-contact::after {
+    content: "";
+    position: absolute;
+    right: -14mm;
+    bottom: -19mm;
+    width: 54mm;
+    height: 54mm;
+    background: url("../../src/main/resources/static/images/objects/feather-vertical.png") center / contain no-repeat;
+    opacity: 0.12;
+    transform: rotate(-25deg);
+    pointer-events: none;
+}
+
+.funeral-contact .eyebrow {
+    color: var(--gold);
+    font-size: 7.8px;
+}
+
+.funeral-contact h3 {
+    margin-top: 1.4mm;
     color: var(--cream);
+    font-size: 13px;
+    line-height: 1.08;
+}
+
+.funeral-contact .contact-list {
+    position: relative;
+    z-index: 1;
+    gap: 4px;
 }
 
 .funeral-contact .contact-row {
-    font-size: 8.8px;
+    grid-template-columns: 14px minmax(0, 1fr);
+    gap: 5px;
+    align-items: center;
+    min-height: 14px;
+    color: rgba(255, 248, 236, 0.86);
+    font-size: 7.1px;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.funeral-contact .contact-row > span:last-child {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.funeral-contact .contact-icon {
+    width: 14px;
+    height: 14px;
+    background: transparent;
+    color: inherit;
+    box-shadow: none;
+}
+
+.funeral-contact .contact-icon img {
+    width: 11px;
+    height: 11px;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.42));
+}
+
+.funeral-contact .contact-icon-clc img {
+    width: 13px;
+    height: 13px;
+}
+
+.funeral-premium-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 7mm;
+    margin-inline: 9mm;
+    border-top: 1px solid rgba(214, 199, 145, 0.24);
+    color: rgba(238, 240, 238, 0.58);
+    font-size: 6.9px;
+    font-weight: 900;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
 }
 
 @media print {
@@ -1175,6 +1701,7 @@ img {
     }
 
     .card-page,
+    .a5-card-page,
     .flyer-page {
         margin: 0;
         box-shadow: none;
@@ -1183,6 +1710,7 @@ img {
     }
 
     .card-page:last-child,
+    .a5-card-page:last-child,
     .flyer-page:last-child {
         break-after: auto;
         page-break-after: auto;

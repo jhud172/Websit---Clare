@@ -513,6 +513,9 @@ video {
 .static {
   position: static;
 }
+.inline {
+  display: inline;
+}
 .table {
   display: table;
 }
@@ -1548,10 +1551,16 @@ blockquote {
 .button,
 .button-secondary,
 .text-link {
-    transition: transform 180ms ease, opacity 180ms ease, background 180ms ease, border-color 180ms ease;
+    transition:
+        transform 180ms ease,
+        opacity 180ms ease,
+        background 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease;
 }
 
 .button {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1566,7 +1575,28 @@ blockquote {
     line-height: 1.2;
     text-align: center;
     white-space: nowrap;
+    overflow: hidden;
     box-shadow: 0 10px 26px rgba(36, 31, 27, 0.1);
+}
+
+.button:not(.header-cta)::before,
+.button-secondary::before,
+.button-light::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: inherit;
+    background:
+        linear-gradient(115deg,
+            transparent 0 35%,
+            rgba(255, 255, 255, 0.18) 48%,
+            transparent 62% 100%);
+    opacity: 0;
+    transform: translateX(-42%);
+    transition:
+        opacity 260ms ease,
+        transform 420ms cubic-bezier(0.18, 0.86, 0.24, 1);
+    pointer-events: none;
 }
 
 .button:hover,
@@ -1578,7 +1608,24 @@ blockquote {
     transform: translateY(-1px);
 }
 
+.button:not(.header-cta):hover::before,
+.button:not(.header-cta):focus-visible::before,
+.button-secondary:hover::before,
+.button-secondary:focus-visible::before,
+.button-light:hover::before,
+.button-light:focus-visible::before {
+    opacity: 1;
+    transform: translateX(42%);
+}
+
+.button:not(.header-cta):active,
+.button-secondary:active,
+.button-light:active {
+    transform: translateY(1px) scale(0.985);
+}
+
 .button-secondary {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1590,6 +1637,7 @@ blockquote {
     color: var(--ink);
     font-weight: 700;
     font-size: 1rem;
+    overflow: hidden;
 }
 
 .text-link {
@@ -2127,6 +2175,31 @@ blockquote {
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--sage-deep);
+}
+
+.footer-heading {
+    display: grid;
+    grid-template-columns: auto minmax(2.5rem, 1fr);
+    align-items: center;
+    gap: 0.85rem;
+    width: 100%;
+    margin: 0 0 1rem;
+    padding-bottom: 0.7rem;
+    color: var(--peacock-gold);
+}
+
+.footer-heading::after {
+    content: "";
+    display: block;
+    height: 1px;
+    min-width: 0;
+    border-radius: 999px;
+    background: linear-gradient(
+        90deg,
+        rgba(214, 199, 145, 0.92),
+        rgba(0, 137, 123, 0.58),
+        transparent
+    );
 }
 
 .field-row {
@@ -3194,6 +3267,11 @@ blockquote {
     border-top: 1px solid var(--line);
 }
 
+.footer-grid > div:has(.footer-heading) {
+    min-width: 0;
+    padding-top: 0.15rem;
+}
+
 .footer-brand h2 {
     margin-bottom: 1rem;
     font-size: clamp(2rem, 4vw, 3rem);
@@ -3284,6 +3362,12 @@ blockquote {
     .faq-grid,
     .footer-grid {
         grid-template-columns: 1fr;
+        gap: 2.35rem;
+    }
+
+    .footer-grid > div:has(.footer-heading) {
+        padding-top: 1.15rem;
+        border-top: 1px solid color-mix(in srgb, var(--peacock-sage) 22%, transparent);
     }
 
     .footer-accreditation {
@@ -3862,7 +3946,11 @@ main::before {
 
 .hero-actions .button:hover,
 .hero-actions .button-secondary:hover,
-.cta-panel .button:hover,
+.cta-panel .button:hover {
+    transform: translateY(-2px) scale(1.015);
+    box-shadow: 0 18px 36px rgba(36, 31, 27, 0.16);
+}
+
 .header-cta:hover {
     transform: translateY(-2px);
     box-shadow: 0 18px 36px rgba(36, 31, 27, 0.16);
@@ -4134,9 +4222,21 @@ main::before {
     border: 1px solid rgba(244, 239, 232, 0.12);
     border-radius: 24px;
     background:
-        radial-gradient(circle at 54% 44%, rgba(200, 167, 109, 0.13), transparent 28%),
+        radial-gradient(circle at 54% 44%, rgba(200, 167, 109, 0.16), transparent 30%),
         linear-gradient(145deg, rgba(22, 25, 31, 0.98), rgba(6, 8, 10, 0.96));
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.26);
+}
+
+.symbolism-brand-art {
+    position: relative;
+    z-index: 1;
+    width: min(92%, 22rem);
+    max-height: clamp(19rem, 31vw, 27rem);
+    -o-object-fit: contain;
+       object-fit: contain;
+    filter:
+        drop-shadow(0 24px 42px rgba(0, 0, 0, 0.44))
+        drop-shadow(0 0 24px rgba(200, 167, 109, 0.14));
 }
 
 .symbolism-feather {
@@ -4517,6 +4617,7 @@ main::before {
 }
 
 .button-light {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -4529,13 +4630,14 @@ main::before {
     font-weight: 700;
     font-size: 1rem;
     white-space: nowrap;
+    overflow: hidden;
     backdrop-filter: blur(8px);
     transition: transform 220ms ease, background 220ms ease, border-color 220ms ease;
 }
 
 .button-light:hover,
 .button-light:focus-visible {
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.018);
     background: rgba(251, 246, 240, 0.2);
     border-color: rgba(251, 246, 240, 0.7);
     box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
@@ -4785,7 +4887,23 @@ main::before {
 
 .service-path-card {
     position: relative;
+    display: grid;
+    justify-items: center;
+    text-align: center;
     overflow: hidden;
+}
+
+.service-path-card .peacock-badge-logo {
+    margin-inline: auto;
+}
+
+.service-path-card .eyebrow {
+    justify-content: center;
+    margin-inline: auto;
+}
+
+.service-path-card .eyebrow::before {
+    content: none;
 }
 
 .service-path-card::after {
@@ -7521,6 +7639,28 @@ main::before {
     box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34);
 }
 
+.reviews-hero-logo {
+    --logo-clc-size: 80;
+    --logo-wreath-scale: 1.22;
+    width: 82%;
+    overflow: visible;
+}
+
+.reviews-hero-photo-mark:hover .reviews-hero-logo .logo-wreath,
+.reviews-hero-photo-mark:focus-within .reviews-hero-logo .logo-wreath,
+.reviews-hero-photo-stack:hover .reviews-hero-logo .logo-wreath {
+    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
+    filter:
+        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
+        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
+}
+
+.reviews-hero-photo-mark:hover .reviews-hero-logo .logo-clc,
+.reviews-hero-photo-mark:focus-within .reviews-hero-logo .logo-clc,
+.reviews-hero-photo-stack:hover .reviews-hero-logo .logo-clc {
+    transform: translateY(1%) scale(1.035);
+}
+
 .reviews-hero-proof {
     position: relative;
     z-index: 1;
@@ -7640,9 +7780,10 @@ main::before {
 }
 
 .reviews-marquee-track {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 24rem));
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    align-items: stretch;
     gap: clamp(1rem, 2vw, 1.5rem);
     overflow: visible;
     padding: 0;
@@ -7663,7 +7804,9 @@ main::before {
 .review-story-card {
     position: relative;
     display: grid;
-    width: min(100%, 24rem);
+    flex: 1 1 min(100%, 21rem);
+    width: 100%;
+    max-width: 24rem;
     min-height: 100%;
     min-width: 0;
     overflow: hidden;
@@ -8283,7 +8426,7 @@ main::before {
     .reviews-hero-photo-mark {
         right: 0.8rem;
         bottom: 0.95rem;
-        width: 4.8rem;
+        width: 5rem;
     }
 
     .reviews-hero-proof {
@@ -8571,6 +8714,7 @@ li,
 
 .button:hover,
 .button:focus-visible {
+    transform: translateY(-2px) scale(1.018);
     box-shadow:
         0 18px 42px rgba(24, 23, 21, 0.16),
         0 0 0 4px rgba(0, 137, 123, 0.1);
@@ -8781,6 +8925,19 @@ li,
 
 .footer-grid {
     border-top-color: rgba(24, 23, 21, 0.1);
+}
+
+.footer-heading {
+    color: rgba(24, 23, 21, 0.76);
+}
+
+.footer-heading::after {
+    background: linear-gradient(
+        90deg,
+        rgba(201, 154, 51, 0.74),
+        rgba(0, 137, 123, 0.42),
+        rgba(24, 23, 21, 0.08)
+    );
 }
 
 .footer-list a,
@@ -9087,13 +9244,15 @@ main[class*="theme-"] {
 .button-secondary:focus-visible,
 .button-light:hover,
 .button-light:focus-visible {
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.018);
     border-color: rgba(214, 199, 145, 0.54);
     background:
+        radial-gradient(circle at 50% 0%, rgba(214, 199, 145, 0.12), transparent 62%),
         linear-gradient(135deg, rgba(52, 58, 68, 0.98), rgba(21, 24, 31, 0.96));
     box-shadow:
-        0 20px 44px rgba(0, 0, 0, 0.38),
+        0 18px 40px rgba(0, 0, 0, 0.36),
         0 0 0 5px rgba(214, 199, 145, 0.07),
+        0 0 26px rgba(0, 137, 123, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
@@ -9607,6 +9766,19 @@ textarea::placeholder {
     border-top-color: rgba(243, 244, 246, 0.1);
 }
 
+.footer-heading {
+    color: rgba(243, 244, 246, 0.82);
+}
+
+.footer-heading::after {
+    background: linear-gradient(
+        90deg,
+        rgba(214, 199, 145, 0.88),
+        rgba(0, 137, 123, 0.48),
+        rgba(243, 244, 246, 0.1)
+    );
+}
+
 .footer-accreditation img {
     filter:
         drop-shadow(0 20px 38px rgba(0, 0, 0, 0.46))
@@ -9682,22 +9854,18 @@ textarea::placeholder {
     --modal-scroll-progress: 0;
     position: relative;
     z-index: 1;
-    inline-size: min(900px, calc(100vw - 2rem));
+    inline-size: min(940px, calc(100vw - 2rem));
     max-block-size: min(88vh, calc(100dvh - 2rem));
     margin: auto;
     overflow: auto;
     scroll-behavior: smooth;
-    border-radius: 24px;
-    border: 1px solid rgba(0, 118, 168, 0.42);
-    border-top-color: rgba(201, 154, 51, 0.62);
-    border-right-color: rgba(215, 121, 35, 0.42);
-    border-bottom-color: rgba(39, 149, 111, 0.42);
+    border-radius: 28px;
+    border: 1px solid rgba(201, 154, 51, 0.34);
     background:
-        url("/images/objects/feather-vertical.png") right -2.4rem top 1rem / min(13rem, 24vw) auto no-repeat,
-        radial-gradient(circle at 86% 0%, rgba(0, 118, 168, 0.22), transparent 18rem),
-        radial-gradient(circle at 0% 100%, rgba(201, 154, 51, 0.15), transparent 18rem),
-        linear-gradient(155deg, rgba(31, 36, 43, 0.985), rgba(14, 18, 24, 0.985) 50%, rgba(7, 9, 12, 0.995));
-    padding: clamp(1.25rem, 2.6vw, 2.15rem);
+        radial-gradient(circle at 84% 12%, rgba(0, 118, 168, 0.24), transparent 20rem),
+        radial-gradient(circle at 7% 100%, rgba(39, 149, 111, 0.16), transparent 20rem),
+        linear-gradient(150deg, rgba(28, 33, 40, 0.985), rgba(11, 15, 20, 0.99) 52%, rgba(6, 8, 11, 0.995));
+    padding: 0;
     box-shadow:
         0 34px 95px rgba(0, 0, 0, 0.58),
         0 0 0 1px rgba(201, 154, 51, 0.08),
@@ -9720,7 +9888,6 @@ textarea::placeholder {
 
 .enquiry-modal-dialog.is-scrolled {
     border-color: rgba(39, 149, 111, 0.48);
-    border-top-color: rgba(201, 154, 51, 0.74);
     box-shadow:
         0 36px 100px rgba(0, 0, 0, 0.62),
         0 0 0 1px rgba(0, 118, 168, 0.12),
@@ -9736,11 +9903,11 @@ textarea::placeholder {
     border-radius: inherit;
     padding: 1px;
     background:
-        linear-gradient(135deg,
-            rgba(201, 154, 51, 0.9),
-            rgba(0, 118, 168, 0.64) 34%,
-            rgba(39, 149, 111, 0.62) 62%,
-            rgba(215, 121, 35, 0.72));
+        linear-gradient(145deg,
+            rgba(201, 154, 51, 0.88),
+            rgba(39, 149, 111, 0.5) 28%,
+            rgba(0, 118, 168, 0.52) 62%,
+            rgba(201, 154, 51, 0.42));
     -webkit-mask:
         linear-gradient(#000 0 0) content-box,
         linear-gradient(#000 0 0);
@@ -9752,19 +9919,13 @@ textarea::placeholder {
 .enquiry-modal-dialog::after {
     content: "";
     position: absolute;
-    left: clamp(1.25rem, 2.6vw, 2.15rem);
-    right: clamp(1.25rem, 2.6vw, 2.15rem);
-    top: 0;
-    height: 3px;
-    border-radius: 999px;
-    background: linear-gradient(90deg,
-        transparent,
-        var(--modal-peacock-sage),
-        var(--modal-peacock-blue),
-        var(--modal-peacock-gold),
-        var(--modal-peacock-orange),
-        transparent);
-    opacity: 0.86;
+    inset: 0;
+    z-index: -2;
+    border-radius: inherit;
+    background:
+        radial-gradient(circle at 88% 10%, rgba(201, 154, 51, 0.16), transparent 18rem),
+        radial-gradient(circle at 14% 90%, rgba(0, 118, 168, 0.14), transparent 18rem);
+    opacity: 0.9;
     pointer-events: none;
 }
 
@@ -9833,7 +9994,7 @@ textarea::placeholder {
     z-index: 8;
     display: block;
     height: 3px;
-    margin: calc(clamp(1.25rem, 2.6vw, 2.15rem) * -1) clamp(1.25rem, 2.6vw, 2.15rem) 1rem;
+    margin: 0 clamp(1.25rem, 2.6vw, 2.15rem);
     border-radius: 999px;
     background:
         linear-gradient(90deg,
@@ -9855,13 +10016,26 @@ textarea::placeholder {
 
 .enquiry-modal-header {
     position: relative;
-    max-width: 48rem;
-    margin-block-end: 1.35rem;
-    padding-right: 3rem;
+    min-height: clamp(15rem, 28vw, 19rem);
+    margin-block-end: 0;
+    padding: clamp(1.6rem, 3.3vw, 3rem) clamp(1.35rem, 3vw, 2.75rem) clamp(1.35rem, 2.8vw, 2.3rem);
+    overflow: hidden;
+    border-radius: 28px 28px 0 0;
+    background:
+        linear-gradient(90deg, rgba(7, 10, 14, 0.94) 0%, rgba(9, 18, 25, 0.9) 55%, rgba(7, 10, 14, 0.72) 100%),
+        url("/images/objects/feather-vertical.png") right clamp(-3.2rem, -4vw, -1rem) center / min(18rem, 32vw) auto no-repeat,
+        radial-gradient(circle at 86% 48%, rgba(0, 118, 168, 0.2), transparent 17rem),
+        radial-gradient(circle at 12% 98%, rgba(201, 154, 51, 0.16), transparent 16rem);
     -webkit-user-select: none;
        -moz-user-select: none;
             user-select: none;
     transition: opacity 240ms ease, transform 240ms ease;
+}
+
+.enquiry-modal-header > * {
+    position: relative;
+    z-index: 1;
+    max-width: 44rem;
 }
 
 .enquiry-modal-dialog.is-scrolled .enquiry-modal-header {
@@ -9870,16 +10044,18 @@ textarea::placeholder {
 
 .enquiry-modal-header::after {
     content: "";
-    display: block;
-    width: min(24rem, 72%);
+    position: absolute;
+    left: clamp(1.35rem, 3vw, 2.75rem);
+    right: clamp(1.35rem, 3vw, 2.75rem);
+    bottom: 0;
     height: 1px;
-    margin-top: 1.05rem;
-    background: linear-gradient(90deg,
-        var(--modal-peacock-gold),
-        var(--modal-peacock-sage),
-        var(--modal-peacock-blue),
-        transparent);
-    opacity: 0.82;
+    background:
+        linear-gradient(90deg,
+            rgba(201, 154, 51, 0.8),
+            rgba(39, 149, 111, 0.58),
+            rgba(0, 118, 168, 0.58),
+            transparent);
+    opacity: 0.9;
 }
 
 .enquiry-modal-header .eyebrow {
@@ -9887,7 +10063,9 @@ textarea::placeholder {
 }
 
 .enquiry-modal-header h2 {
+    max-width: 38rem;
     margin-block-end: 0.6rem;
+    font-size: clamp(3rem, 7vw, 5.8rem);
     line-height: 1.08;
     color: #fff7cf;
     background:
@@ -9904,8 +10082,9 @@ textarea::placeholder {
 
 .enquiry-modal-close {
     position: absolute;
-    top: 0.85rem;
-    right: 0.85rem;
+    top: 1rem;
+    right: 1rem;
+    z-index: 12;
     display: inline-grid;
     place-items: center;
     inline-size: 2.35rem;
@@ -9940,17 +10119,16 @@ textarea::placeholder {
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    margin-block-start: 0;
-    padding: clamp(1rem, 2.2vw, 1.75rem);
+    margin: clamp(1rem, 2.4vw, 1.8rem);
+    margin-block-start: clamp(1rem, 2vw, 1.45rem);
+    padding: clamp(1.1rem, 2.4vw, 2rem);
     border-radius: 24px;
-    border: 1px solid rgba(0, 118, 168, 0.26);
-    border-top-color: rgba(201, 154, 51, 0.34);
-    border-right-color: rgba(215, 121, 35, 0.24);
-    border-bottom-color: rgba(39, 149, 111, 0.24);
+    border: 1px solid rgba(244, 239, 232, 0.11);
     background:
-        radial-gradient(circle at 94% 3%, rgba(39, 149, 111, 0.12), transparent 15rem),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.018)),
-        rgba(11, 14, 19, 0.62);
+        radial-gradient(circle at 92% 8%, rgba(0, 118, 168, 0.12), transparent 18rem),
+        radial-gradient(circle at 3% 96%, rgba(201, 154, 51, 0.09), transparent 17rem),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.022)),
+        rgba(10, 14, 19, 0.78);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.06),
         0 22px 56px rgba(0, 0, 0, 0.26);
@@ -9973,11 +10151,9 @@ textarea::placeholder {
 
 .enquiry-modal-form::before {
     background:
-        url("/images/objects/feather-horizontal.png") right -3.4rem top -1rem / min(17rem, 30vw) auto no-repeat,
-        url("/images/objects/feather-horizontal-mirrored.png") left -5rem bottom -3rem / min(16rem, 30vw) auto no-repeat,
-        radial-gradient(circle at 92% 10%, rgba(0, 118, 168, 0.16), transparent 15rem),
-        radial-gradient(circle at 6% 92%, rgba(201, 154, 51, 0.12), transparent 14rem);
-    opacity: 0.5;
+        url("/images/objects/feather-horizontal-mirrored.png") left -6rem bottom -3.2rem / min(15rem, 28vw) auto no-repeat,
+        radial-gradient(circle at 6% 92%, rgba(201, 154, 51, 0.1), transparent 14rem);
+    opacity: 0.34;
 }
 
 .enquiry-modal-form::after {
@@ -9988,8 +10164,7 @@ textarea::placeholder {
 }
 
 .enquiry-modal-dialog.is-scrolled .enquiry-modal-form {
-    border-color: rgba(39, 149, 111, 0.36);
-    border-top-color: rgba(201, 154, 51, 0.5);
+    border-color: rgba(39, 149, 111, 0.26);
     background:
         radial-gradient(circle at 86% 10%, rgba(0, 118, 168, 0.13), transparent 16rem),
         linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.022)),
@@ -10001,7 +10176,7 @@ textarea::placeholder {
 }
 
 .enquiry-modal-dialog.is-scrolled .enquiry-modal-form::before {
-    opacity: 0.66;
+    opacity: 0.44;
     transform: translateY(calc(var(--modal-scroll-progress) * -14px));
 }
 
@@ -10254,12 +10429,12 @@ textarea::placeholder {
 
     .enquiry-modal-form::before {
         background:
-            url("/images/objects/feather-horizontal.png") right -4.8rem top -0.5rem / 13rem auto no-repeat,
-            radial-gradient(circle at 92% 10%, rgba(0, 118, 168, 0.16), transparent 13rem),
+            url("/images/objects/feather-horizontal-mirrored.png") left -5.8rem bottom -2.75rem / 12rem auto no-repeat,
             radial-gradient(circle at 4% 92%, rgba(201, 154, 51, 0.12), transparent 12rem);
     }
 
     .enquiry-modal-header h2 {
+        font-size: clamp(2.7rem, 13vw, 4.4rem);
         padding-right: 2.4rem;
     }
 
@@ -10691,14 +10866,19 @@ main > .section-divider:first-child > .shell:first-child::after {
     transform-origin: center;
 }
 
+.symbolism-brand-art {
+    transform: translateY(-1%);
+}
+
 .symbolism-brand-panel::after {
     content: "";
     position: absolute;
-    inset: 12% 12% auto auto;
-    width: 44%;
+    inset: 12% auto auto 50%;
+    width: 52%;
     aspect-ratio: 1;
     border-radius: 999px;
-    background: radial-gradient(circle, rgba(214, 199, 145, 0.14), transparent 68%);
+    background: radial-gradient(circle, rgba(214, 199, 145, 0.12), transparent 68%);
+    transform: translateX(-50%);
     pointer-events: none;
 }
 

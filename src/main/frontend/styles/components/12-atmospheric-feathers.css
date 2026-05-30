@@ -245,14 +245,19 @@ main > .section-divider:first-child > .shell:first-child::after {
     transform-origin: center;
 }
 
+.symbolism-brand-art {
+    transform: translateY(-1%);
+}
+
 .symbolism-brand-panel::after {
     content: "";
     position: absolute;
-    inset: 12% 12% auto auto;
-    width: 44%;
+    inset: 12% auto auto 50%;
+    width: 52%;
     aspect-ratio: 1;
     border-radius: 999px;
-    background: radial-gradient(circle, rgba(214, 199, 145, 0.14), transparent 68%);
+    background: radial-gradient(circle, rgba(214, 199, 145, 0.12), transparent 68%);
+    transform: translateX(-50%);
     pointer-events: none;
 }
 

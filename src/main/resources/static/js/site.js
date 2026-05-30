@@ -435,26 +435,9 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         return;
     }
 
-    if (isReviewCarousel && track && slides.length > 1) {
-        const firstClone = slides[0].cloneNode(true);
-        const lastClone = slides[slides.length - 1].cloneNode(true);
-
-        [firstClone, lastClone].forEach((clone) => {
-            clone.removeAttribute("data-carousel-slide");
-            clone.classList.remove("is-active", "is-entering", "is-leaving");
-            clone.classList.add("is-clone");
-            clone.setAttribute("aria-hidden", "true");
-        });
-
-        track.prepend(lastClone);
-        track.append(firstClone);
-    }
-
     if (currentIndex < 0) {
         currentIndex = 0;
     }
-
-    reviewTrackIndex = isReviewCarousel && slides.length > 1 ? currentIndex + 1 : currentIndex;
 
     const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const normaliseIndex = (index) => (index + slides.length) % slides.length;
@@ -478,6 +461,27 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         }
     };
 
+    const renderReviewLoopOrder = (instant = false) => {
+        if (!isReviewCarousel || !track) {
+            return;
+        }
+
+        if (slides.length <= 1) {
+            reviewTrackIndex = 0;
+            setReviewTrackPosition(instant);
+            return;
+        }
+
+        const orderedSlides = [];
+        for (let offset = -1; offset < slides.length - 1; offset += 1) {
+            orderedSlides.push(slides[normaliseIndex(currentIndex + offset)]);
+        }
+
+        orderedSlides.forEach((slide) => track.append(slide));
+        reviewTrackIndex = 1;
+        setReviewTrackPosition(instant);
+    };
+
     const setDots = () => {
         dots.forEach((dot, index) => {
             const active = index === currentIndex;
@@ -491,7 +495,6 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
             return;
         }
 
-        setReviewTrackPosition();
         slides.forEach((slide, index) => {
             const previous = normaliseIndex(currentIndex - 1) === index;
             const next = normaliseIndex(currentIndex + 1) === index;
@@ -502,8 +505,6 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     };
 
     const finishTransition = () => {
-        const shouldSnapReviewTrack = isReviewCarousel && slides.length > 1 && reviewTrackIndex !== currentIndex + 1;
-
         slides.forEach((slide, index) => {
             const active = index === currentIndex;
             slide.classList.toggle("is-active", active);
@@ -512,9 +513,8 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         });
 
         carouselRoot.classList.remove("is-transitioning");
-        if (shouldSnapReviewTrack) {
-            reviewTrackIndex = currentIndex + 1;
-            setReviewTrackPosition(true);
+        if (isReviewCarousel) {
+            renderReviewLoopOrder(true);
         }
         setReviewSlideStates();
         setDots();
@@ -544,14 +544,19 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         carouselRoot.dataset.carouselDirection = direction;
 
         if (isReviewCarousel && slides.length > 1) {
-            if (direction === "next" && previousIndex === slides.length - 1 && normalisedNext === 0) {
-                reviewTrackIndex = slides.length + 1;
+            const isAdjacentNext = normaliseIndex(previousIndex + 1) === normalisedNext;
+            const isAdjacentPrevious = normaliseIndex(previousIndex - 1) === normalisedNext;
+
+            if (direction === "next" && isAdjacentNext) {
+                reviewTrackIndex = 2;
             }
-            else if (direction === "previous" && previousIndex === 0 && normalisedNext === slides.length - 1) {
+            else if (direction === "previous" && isAdjacentPrevious) {
                 reviewTrackIndex = 0;
             }
             else {
-                reviewTrackIndex = normalisedNext + 1;
+                renderReviewLoopOrder(true);
+                finishTransition();
+                return;
             }
         }
 
@@ -576,6 +581,7 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         });
 
         carouselRoot.classList.add("is-transitioning");
+        setReviewTrackPosition();
         setReviewSlideStates();
         transitionTimerId = window.setTimeout(finishTransition, transitionMs);
     };
