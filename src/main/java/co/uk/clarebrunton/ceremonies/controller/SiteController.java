@@ -115,7 +115,7 @@ public class SiteController {
 	public String weddings(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Wedding ceremonies in Durham");
-		model.addAttribute("pageDescription", "Bespoke celebrant-led wedding ceremonies by Clare Riley Brunton, designed with freedom, warmth, personality and meaningful ceremony choices.");
+		model.addAttribute("pageDescription", "Bespoke celebrant-led wedding ceremonies by Clare Brunton, designed with freedom, warmth, personality and meaningful ceremony choices.");
 		return "weddings";
 	}
 
@@ -123,7 +123,7 @@ public class SiteController {
 	public String funerals(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Funeral ceremonies in Durham");
-		model.addAttribute("pageDescription", "Funeral, memorial and celebration of life ceremonies by Clare Riley Brunton, created with compassion, dignity and heartfelt personal tribute.");
+		model.addAttribute("pageDescription", "Funeral, memorial and celebration of life ceremonies by Clare Brunton, created with compassion, dignity and heartfelt personal tribute.");
 		return "funerals";
 	}
 
@@ -436,7 +436,7 @@ public class SiteController {
 	private void prepareHomeModel(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Clare's Life Celebrations | Weddings and funerals in Durham");
-		model.addAttribute("pageDescription", "Clare Riley Brunton creates personal ceremonies for moments that matter, from joyful weddings to dignified celebrations of life across Durham and the North East.");
+		model.addAttribute("pageDescription", "Clare Brunton creates personal ceremonies for moments that matter, from joyful weddings to dignified celebrations of life across Durham and the North East.");
 		model.addAttribute("featuredReviews", reviewService.getApprovedFiveStarReviews());
 	}
 

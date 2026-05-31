@@ -731,10 +731,11 @@ img {
     overflow: hidden;
     padding: 18mm 13mm;
     background:
-        radial-gradient(circle at 90% 11%, rgba(214, 199, 145, 0.24), transparent 43mm),
-        radial-gradient(circle at 9% 85%, rgba(0, 137, 123, 0.24), transparent 48mm),
-        radial-gradient(circle at 50% 50%, rgba(9, 111, 144, 0.16), transparent 60mm),
-        linear-gradient(150deg, #171c21 0%, #090d10 58%, #030405 100%);
+        radial-gradient(circle at 82% 13%, rgba(214, 199, 145, 0.34), transparent 44mm),
+        radial-gradient(circle at 11% 83%, rgba(0, 137, 123, 0.34), transparent 50mm),
+        radial-gradient(circle at 50% 45%, rgba(255, 248, 236, 0.08), transparent 58mm),
+        radial-gradient(circle at 50% 50%, rgba(9, 111, 144, 0.24), transparent 66mm),
+        linear-gradient(150deg, #252b2e 0%, #141d1f 56%, #0a0d0f 100%);
     color: var(--cream);
     box-shadow: var(--shadow);
 }
@@ -749,16 +750,16 @@ img {
 
 .front-cover-page::before {
     inset: 6mm;
-    border: 0.35mm solid rgba(214, 199, 145, 0.38);
+    border: 0.35mm solid rgba(214, 199, 145, 0.5);
     border-radius: 5mm;
     box-shadow:
-        inset 0 0 0 0.22mm rgba(0, 137, 123, 0.22),
-        0 0 28mm rgba(0, 137, 123, 0.1);
+        inset 0 0 0 0.22mm rgba(0, 137, 123, 0.3),
+        0 0 32mm rgba(0, 137, 123, 0.16);
 }
 
 .front-cover-page::after {
     inset: 11mm;
-    border: 0.2mm solid rgba(214, 199, 145, 0.16);
+    border: 0.2mm solid rgba(214, 199, 145, 0.24);
     border-radius: 3.5mm;
 }
 
@@ -775,26 +776,26 @@ img {
 }
 
 .front-cover-feather-top {
-    top: -26mm;
-    right: -24mm;
-    width: 102mm;
-    opacity: 0.28;
+    top: -28mm;
+    right: -34mm;
+    width: 86mm;
+    opacity: 0.25;
     transform: rotate(190deg);
 }
 
 .front-cover-feather-left {
-    left: -26mm;
-    top: 26mm;
-    width: 86mm;
-    opacity: 0.3;
-    transform: rotate(-18deg);
+    left: -27mm;
+    top: 49mm;
+    width: 82mm;
+    opacity: 0.34;
+    transform: rotate(-15deg);
 }
 
 .front-cover-feather-right {
     right: -21mm;
     bottom: 26mm;
     width: 94mm;
-    opacity: 0.26;
+    opacity: 0.36;
     transform: rotate(20deg);
 }
 
@@ -802,8 +803,20 @@ img {
     left: 7mm;
     bottom: -24mm;
     width: 120mm;
-    opacity: 0.22;
+    opacity: 0.31;
     transform: rotate(-7deg);
+}
+
+.front-cover-feather-extra {
+    left: -15mm;
+    top: -8mm;
+    width: 96mm;
+    opacity: 0.46;
+    transform: rotate(16deg);
+    filter:
+        saturate(1.12)
+        drop-shadow(0 18px 34px rgba(0, 0, 0, 0.34))
+        drop-shadow(0 0 16mm rgba(214, 199, 145, 0.12));
 }
 
 .front-cover-orbit {
@@ -816,10 +829,10 @@ img {
     top: 23mm;
     width: 82mm;
     height: 82mm;
-    border: 0.35mm solid rgba(214, 199, 145, 0.13);
+    border: 0.35mm solid rgba(214, 199, 145, 0.2);
     box-shadow:
-        0 0 38mm rgba(214, 199, 145, 0.12),
-        inset 0 0 24mm rgba(0, 137, 123, 0.12);
+        0 0 38mm rgba(214, 199, 145, 0.18),
+        inset 0 0 24mm rgba(0, 137, 123, 0.18);
 }
 
 .front-cover-orbit-two {
@@ -827,8 +840,8 @@ img {
     bottom: 28mm;
     width: 74mm;
     height: 74mm;
-    border: 0.28mm solid rgba(0, 137, 123, 0.16);
-    box-shadow: 0 0 34mm rgba(0, 137, 123, 0.18);
+    border: 0.28mm solid rgba(0, 137, 123, 0.24);
+    box-shadow: 0 0 34mm rgba(0, 137, 123, 0.26);
 }
 
 .front-cover-orbit-three {
@@ -836,7 +849,7 @@ img {
     top: 18mm;
     width: 36mm;
     height: 36mm;
-    border: 0.24mm solid rgba(214, 199, 145, 0.1);
+    border: 0.24mm solid rgba(214, 199, 145, 0.18);
     transform: translateX(-50%);
 }
 
@@ -845,39 +858,110 @@ img {
     z-index: 3;
     display: grid;
     justify-items: center;
-    gap: 7mm;
+    gap: 8mm;
     width: min(100%, 112mm);
-    padding: 14mm 10mm;
-    border: 1px solid rgba(214, 199, 145, 0.24);
+    padding: 13mm 9mm;
+    border: 1px solid rgba(214, 199, 145, 0.38);
     border-radius: 24px;
     background:
-        radial-gradient(circle at 90% 0%, rgba(214, 199, 145, 0.12), transparent 34mm),
-        radial-gradient(circle at 10% 100%, rgba(0, 137, 123, 0.16), transparent 34mm),
-        linear-gradient(145deg, rgba(17, 22, 26, 0.9), rgba(5, 7, 9, 0.76));
+        radial-gradient(circle at 90% 0%, rgba(214, 199, 145, 0.2), transparent 35mm),
+        radial-gradient(circle at 10% 100%, rgba(0, 137, 123, 0.24), transparent 35mm),
+        linear-gradient(145deg, rgba(34, 41, 43, 0.9), rgba(12, 18, 20, 0.72));
     box-shadow:
-        0 26px 60px rgba(0, 0, 0, 0.3),
-        inset 0 0 0 0.25mm rgba(0, 137, 123, 0.14);
+        0 26px 60px rgba(0, 0, 0, 0.24),
+        inset 0 0 0 0.25mm rgba(0, 137, 123, 0.22);
     text-align: center;
 }
 
-.front-cover-logo {
+.front-cover-name {
+    position: absolute;
+    left: 50%;
+    top: -5.2mm;
+    margin: 0;
+    padding: 0 5mm;
+    color: var(--gold);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.46),
+        0 0 14mm rgba(214, 199, 145, 0.18);
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.front-cover-name::before,
+.front-cover-name::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 13mm;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(214, 199, 145, 0.68));
+}
+
+.front-cover-name::before {
+    right: 100%;
+}
+
+.front-cover-name::after {
+    left: 100%;
+    transform: rotate(180deg);
+}
+
+.front-cover-brand {
+    display: grid;
+    grid-template-columns: 32mm minmax(0, 1fr);
+    gap: 6mm;
+    align-items: center;
     width: 100%;
-    max-width: 96mm;
+    max-width: 92mm;
+    text-align: left;
+}
+
+.front-cover-logo {
+    width: 32mm;
+    height: 32mm;
+    object-fit: contain;
     filter:
         drop-shadow(0 16px 30px rgba(0, 0, 0, 0.38))
         drop-shadow(0 0 13mm rgba(214, 199, 145, 0.14));
 }
 
+.front-cover-brand-text {
+    display: grid;
+    gap: 2mm;
+    min-width: 0;
+}
+
+.front-cover-brand h1 {
+    color: var(--cream);
+    font-size: 26px;
+    line-height: 0.98;
+}
+
+.front-cover-tagline {
+    margin: 0;
+    color: rgba(238, 240, 238, 0.88);
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.26em;
+    line-height: 1.1;
+    text-transform: uppercase;
+}
+
 .front-cover-divider {
-    width: 44mm;
+    width: 58mm;
     height: 0.8mm;
     border-radius: 999px;
     background: linear-gradient(90deg, transparent, rgba(0, 137, 123, 0.8), rgba(214, 199, 145, 0.82), transparent);
 }
 
-.front-cover-panel p {
+.front-cover-role {
     max-width: 76mm;
-    color: rgba(255, 248, 236, 0.72);
+    margin: 0;
+    color: rgba(255, 248, 236, 0.86);
     font-size: 10.8px;
     font-weight: 900;
     letter-spacing: 0.16em;
@@ -1090,7 +1174,7 @@ img {
 
 .wedding-a4-premium {
     display: grid;
-    grid-template-rows: 124mm 1fr 16mm;
+    grid-template-rows: 118mm 1fr 12mm;
     background:
         radial-gradient(circle at 92% 58%, rgba(0, 137, 123, 0.22), transparent 48mm),
         radial-gradient(circle at 6% 92%, rgba(214, 199, 145, 0.16), transparent 46mm),
@@ -1102,7 +1186,7 @@ img {
     overflow: hidden;
     display: grid;
     align-content: end;
-    padding: 10mm 13mm 11mm;
+    padding: 9mm 13mm 9mm;
     color: var(--cream);
     isolation: isolate;
 }
@@ -1119,16 +1203,16 @@ img {
     height: 100%;
     object-fit: cover;
     object-position: center 46%;
-    filter: none;
+    filter: saturate(0.82) contrast(1.04) brightness(0.92);
 }
 
 .wedding-premium-overlay {
     z-index: -2;
     background:
-        radial-gradient(circle at 12% 28%, rgba(0, 137, 123, 0.18), transparent 42mm),
-        radial-gradient(circle at 86% 10%, rgba(214, 199, 145, 0.13), transparent 48mm),
-        linear-gradient(90deg, rgba(5, 10, 12, 0.64) 0%, rgba(9, 30, 31, 0.36) 42%, rgba(5, 7, 9, 0.22) 100%),
-        linear-gradient(180deg, rgba(5, 7, 9, 0.08) 0%, rgba(8, 18, 19, 0.2) 38%, rgba(9, 14, 16, 0.58) 76%, rgba(5, 7, 9, 0.95) 100%);
+        radial-gradient(circle at 15% 88%, rgba(0, 137, 123, 0.13), transparent 24mm),
+        radial-gradient(circle at 86% 12%, rgba(214, 199, 145, 0.1), transparent 38mm),
+        linear-gradient(90deg, rgba(5, 10, 12, 0.7) 0%, rgba(7, 18, 20, 0.42) 44%, rgba(5, 7, 9, 0.3) 100%),
+        linear-gradient(180deg, rgba(5, 7, 9, 0.12) 0%, rgba(7, 12, 13, 0.28) 50%, rgba(5, 7, 9, 0.88) 100%);
     mix-blend-mode: normal;
 }
 
@@ -1148,10 +1232,10 @@ img {
     content: "";
     position: absolute;
     left: 50%;
-    bottom: -3.2mm;
+    bottom: 1.2mm;
     z-index: 3;
-    width: 49mm;
-    height: 8mm;
+    width: 56mm;
+    height: 9.5mm;
     background:
         url("../../src/main/resources/static/images/objects/feather-horizontal-mirrored.png") 0 50% / 48% 100% no-repeat,
         url("../../src/main/resources/static/images/objects/feather-horizontal.png") 100% 50% / 48% 100% no-repeat;
@@ -1188,14 +1272,14 @@ img {
 .wedding-premium-brand {
     position: absolute;
     left: 13mm;
-    top: 10mm;
+    top: 9mm;
     display: grid;
     gap: 2mm;
     justify-items: start;
 }
 
 .wedding-premium-brand .logo {
-    width: 38mm;
+    width: 35mm;
     filter:
         drop-shadow(0 10px 18px rgba(0, 0, 0, 0.32))
         drop-shadow(0 0 7mm rgba(214, 199, 145, 0.16));
@@ -1223,20 +1307,20 @@ img {
 
 .wedding-premium-copy h1 {
     color: var(--cream);
-    font-size: 39px;
+    font-size: 37px;
     line-height: 0.93;
 }
 
 .wedding-premium-copy p:not(.eyebrow) {
     max-width: 95mm;
     color: rgba(255, 248, 236, 0.84);
-    font-size: 12.6px;
-    line-height: 1.5;
+    font-size: 12px;
+    line-height: 1.44;
 }
 
 .wedding-premium-body {
     position: relative;
-    padding: 12mm 13mm 5mm;
+    padding: 9.5mm 13mm 3mm;
     color: var(--cream);
 }
 
@@ -1278,43 +1362,114 @@ img {
     pointer-events: none;
 }
 
+.wedding-premium-body::after {
+    content: "";
+    position: absolute;
+    left: 22mm;
+    top: 11mm;
+    width: 58mm;
+    height: 34mm;
+    background: url("../../src/main/resources/static/images/objects/feather-horizontal.png") center / contain no-repeat;
+    opacity: 0.28;
+    filter:
+        saturate(1.12)
+        drop-shadow(0 12px 20px rgba(0, 0, 0, 0.34));
+    transform: rotate(-14deg);
+    pointer-events: none;
+}
+
 .wedding-premium-intro {
     position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.82fr);
     gap: 10mm;
     align-items: end;
-    margin-bottom: 6mm;
-    padding-bottom: 5.5mm;
+    margin-bottom: 4mm;
+    padding-bottom: 4mm;
     border-bottom: 1px solid rgba(214, 199, 145, 0.16);
+}
+
+.wedding-premium-intro::after {
+    content: "";
+    position: absolute;
+    right: 4mm;
+    top: -2mm;
+    width: 52mm;
+    height: 24mm;
+    background: url("../../src/main/resources/static/images/objects/feather-horizontal-mirrored.png") center / contain no-repeat;
+    opacity: 0.44;
+    filter:
+        saturate(1.12)
+        drop-shadow(0 8px 14px rgba(0, 0, 0, 0.34));
+    transform: rotate(-5deg);
+    pointer-events: none;
 }
 
 .wedding-premium-intro h2 {
     max-width: 108mm;
     color: var(--cream);
-    font-size: 24px;
+    font-size: 22px;
     line-height: 1.02;
 }
 
-.wedding-premium-intro > p {
+.wedding-premium-intro-detail {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 2.3mm;
+    align-self: stretch;
+    align-content: center;
+    padding: 4mm 5mm;
+    border: 1px solid rgba(214, 199, 145, 0.12);
+    border-radius: 12px;
+    background:
+        radial-gradient(circle at 88% 14%, rgba(214, 199, 145, 0.08), transparent 22mm),
+        linear-gradient(140deg, rgba(255, 255, 255, 0.045), rgba(0, 137, 123, 0.045));
+}
+
+.wedding-premium-intro-detail > p:first-child {
+    margin: 0;
     color: rgba(238, 240, 238, 0.74);
-    font-size: 10.9px;
-    line-height: 1.55;
+    font-size: 10px;
+    line-height: 1.42;
+}
+
+.wedding-premium-signature {
+    margin: 0;
+    color: rgba(255, 248, 236, 0.82);
+    font-size: 7.8px;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    line-height: 1.25;
+    text-transform: uppercase;
+}
+
+.wedding-premium-signature span {
+    display: block;
+    margin-bottom: 1mm;
+    color: var(--gold);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 0.95;
+    text-transform: none;
 }
 
 .wedding-peacock-list {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 4.5mm;
-    margin: 0 0 6mm;
+    margin: 0 0 4mm;
     padding: 0;
     list-style: none;
 }
 
 .wedding-peacock-list li {
     position: relative;
-    min-height: 35mm;
-    padding: 6mm 5mm 5mm 13mm;
+    min-height: 31mm;
+    padding: 5mm 4.5mm 4mm 14mm;
     border: 1px solid rgba(214, 199, 145, 0.22);
     border-radius: 14px;
     background:
@@ -1328,15 +1483,18 @@ img {
 .wedding-peacock-list li::before {
     content: "";
     position: absolute;
-    left: 4mm;
-    top: 5.3mm;
+    left: 4.2mm;
+    top: 5mm;
     width: 7mm;
-    height: 7mm;
+    height: calc(100% - 10mm);
+    min-height: 18mm;
     background: url("../../src/main/resources/static/images/objects/feather-vertical.png") center / contain no-repeat;
     filter:
-        saturate(1.15)
-        drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
-    transform: rotate(-18deg);
+        saturate(1.18)
+        drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4));
+    opacity: 0.92;
+    transform: rotate(-10deg);
+    transform-origin: center;
 }
 
 .wedding-peacock-list strong {
@@ -1349,10 +1507,9 @@ img {
 
 .wedding-peacock-list span {
     display: block;
-    margin-top: 2.5mm;
     color: rgba(238, 240, 238, 0.7);
-    font-size: 9.4px;
-    line-height: 1.45;
+    font-size: 8.7px;
+    line-height: 1.36;
 }
 
 /* Retained for legacy flyer variants. */
@@ -1408,7 +1565,7 @@ img {
 .wedding-premium-lower {
     display: grid;
     grid-template-columns: 52mm minmax(0, 105mm);
-    gap: 7mm;
+    gap: 6mm;
     align-items: stretch;
     justify-content: center;
 }
@@ -1427,7 +1584,7 @@ img {
 .wedding-premium-portrait img {
     width: 100%;
     height: 100%;
-    min-height: 48mm;
+    min-height: 43mm;
     object-fit: cover;
     object-position: center 18%;
     filter: saturate(1.08) contrast(1.04);
@@ -1446,8 +1603,8 @@ img {
 .wedding-premium-contact {
     display: grid;
     align-content: center;
-    gap: 4mm;
-    padding: 7mm 8mm;
+    gap: 3mm;
+    padding: 5.5mm 7mm;
     background:
         radial-gradient(circle at 92% 0%, rgba(214, 199, 145, 0.22), transparent 31mm),
         radial-gradient(circle at 4% 98%, rgba(0, 137, 123, 0.28), transparent 34mm),
@@ -1464,31 +1621,31 @@ img {
 .wedding-premium-contact h3 {
     max-width: 84mm;
     color: var(--cream);
-    font-size: 20px;
+    font-size: 18.5px;
     line-height: 1.04;
 }
 
 .wedding-premium-contact .contact-list {
     display: grid;
-    gap: 2.2mm;
-    padding-top: 1mm;
+    gap: 1.8mm;
+    padding-top: 0.6mm;
 }
 
 .wedding-premium-contact .contact-row {
-    grid-template-columns: 6.6mm minmax(0, 1fr);
-    gap: 3mm;
+    grid-template-columns: 6.2mm minmax(0, 1fr);
+    gap: 2.5mm;
     align-items: center;
-    min-height: 6.6mm;
+    min-height: 6.2mm;
     color: rgba(255, 248, 236, 0.9);
-    font-size: 10.2px;
+    font-size: 9.7px;
     font-weight: 800;
     line-height: 1;
     white-space: nowrap;
 }
 
 .wedding-premium-contact .contact-icon {
-    width: 6.6mm;
-    height: 6.6mm;
+    width: 6.2mm;
+    height: 6.2mm;
     background: transparent;
     color: inherit;
     box-shadow: none;
@@ -1502,15 +1659,15 @@ img {
 }
 
 .wedding-premium-contact .contact-icon img {
-    width: 5.2mm;
-    height: 5.2mm;
+    width: 5mm;
+    height: 5mm;
     object-fit: contain;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.42));
 }
 
 .wedding-premium-contact .contact-icon-clc img {
-    width: 6.2mm;
-    height: 6.2mm;
+    width: 5.9mm;
+    height: 5.9mm;
 }
 
 .wedding-premium-footer {
@@ -1580,8 +1737,9 @@ img {
 .funeral-hero-overlay {
     z-index: -2;
     background:
-        linear-gradient(90deg, rgba(5, 8, 10, 0.9) 0%, rgba(5, 8, 10, 0.76) 48%, rgba(5, 8, 10, 0.52) 100%),
-        linear-gradient(180deg, rgba(5, 8, 10, 0.14), rgba(5, 8, 10, 0.76));
+        radial-gradient(circle at 18% 22%, rgba(214, 199, 145, 0.1), transparent 46mm),
+        linear-gradient(90deg, rgba(5, 8, 10, 0.84) 0%, rgba(8, 12, 14, 0.58) 46%, rgba(8, 12, 14, 0.3) 100%),
+        linear-gradient(180deg, rgba(5, 8, 10, 0.08), rgba(5, 8, 10, 0.78));
 }
 
 .funeral-feather {
@@ -1636,8 +1794,8 @@ img {
     position: relative;
     z-index: 1;
     display: grid;
-    gap: 2.8mm;
-    max-width: 104mm;
+    gap: 2.5mm;
+    max-width: 83mm;
 }
 
 .funeral-hero-copy .eyebrow {
@@ -1645,17 +1803,42 @@ img {
 }
 
 .funeral-hero-copy h1 {
-    max-width: 108mm;
+    max-width: 82mm;
     color: var(--cream);
-    font-size: 24px;
-    line-height: 0.98;
+    font-size: 23px;
+    line-height: 1;
 }
 
 .funeral-hero-copy p:not(.eyebrow) {
-    max-width: 101mm;
+    max-width: 79mm;
     color: rgba(255, 248, 236, 0.78);
-    font-size: 8.7px;
-    line-height: 1.42;
+    font-size: 9.4px;
+    line-height: 1.35;
+}
+
+.funeral-hero-quote-print {
+    position: absolute;
+    right: 9mm;
+    bottom: 8mm;
+    z-index: 1;
+    width: 45mm;
+    margin: 0;
+    padding: 4mm 4.2mm;
+    border: 1px solid rgba(243, 244, 246, 0.16);
+    border-radius: 13px;
+    background:
+        radial-gradient(circle at 92% 8%, rgba(214, 199, 145, 0.12), transparent 20mm),
+        linear-gradient(145deg, rgba(26, 29, 36, 0.76), rgba(12, 14, 18, 0.64));
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.funeral-hero-quote-print p {
+    margin: 0;
+    color: rgba(255, 248, 236, 0.84);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 8.8px;
+    font-weight: 700;
+    line-height: 1.34;
 }
 
 .funeral-premium-body {
@@ -1675,10 +1858,30 @@ img {
     background: linear-gradient(90deg, transparent, rgba(214, 199, 145, 0.52), rgba(0, 137, 123, 0.42), transparent);
 }
 
+.funeral-premium-body::after {
+    content: "";
+    position: absolute;
+    left: 47mm;
+    top: 42mm;
+    z-index: 0;
+    width: 78mm;
+    height: 48mm;
+    background: url("../../src/main/resources/static/images/objects/feather-horizontal-mirrored.png") center / contain no-repeat;
+    opacity: 0.16;
+    filter:
+        saturate(0.9)
+        brightness(0.92)
+        drop-shadow(0 14px 22px rgba(0, 0, 0, 0.28));
+    transform: rotate(-9deg);
+    pointer-events: none;
+}
+
 .funeral-intro {
+    position: relative;
+    z-index: 1;
     display: grid;
-    grid-template-columns: 36mm minmax(0, 1fr);
-    gap: 4.5mm;
+    grid-template-columns: 34mm minmax(0, 1fr);
+    gap: 8mm;
     align-items: stretch;
 }
 
@@ -1708,24 +1911,26 @@ img {
 
 .funeral-intro .eyebrow {
     color: var(--gold);
-    font-size: 7.4px;
+    font-size: 8.3px;
 }
 
 .funeral-intro h2 {
     color: var(--cream);
-    font-size: 18px;
+    font-size: 16.5px;
     line-height: 1.03;
 }
 
 .funeral-intro p:not(.eyebrow) {
     color: rgba(238, 240, 238, 0.72);
-    font-size: 7.8px;
-    line-height: 1.42;
+    font-size: 8.8px;
+    line-height: 1.4;
 }
 
 .funeral-peacock-list {
+    position: relative;
+    z-index: 1;
     display: grid;
-    gap: 2mm;
+    gap: 2.4mm;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -1733,50 +1938,69 @@ img {
 
 .funeral-peacock-list li {
     position: relative;
-    min-height: 15mm;
-    padding: 3mm 4mm 2.8mm 11mm;
-    border: 1px solid rgba(214, 199, 145, 0.2);
+    overflow: hidden;
+    min-height: 17.4mm;
+    padding: 3mm 4mm 2.9mm 13mm;
+    border: 1px solid rgba(214, 199, 145, 0.26);
     border-radius: 12px;
     background:
-        radial-gradient(circle at 96% 0%, rgba(214, 199, 145, 0.11), transparent 20mm),
-        linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.022));
+        radial-gradient(circle at 94% 8%, rgba(214, 199, 145, 0.14), transparent 21mm),
+        radial-gradient(circle at 4% 100%, rgba(0, 137, 123, 0.12), transparent 18mm),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.082), rgba(255, 255, 255, 0.026));
     box-shadow:
-        0 14px 26px rgba(0, 0, 0, 0.18),
-        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+        0 14px 26px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 3px 0 0 rgba(0, 137, 123, 0.12);
 }
 
 .funeral-peacock-list li::before {
     content: "";
     position: absolute;
-    left: 3.5mm;
-    top: 3.4mm;
-    width: 5.2mm;
-    height: 5.2mm;
+    left: 3.2mm;
+    top: 3.1mm;
+    width: 7.2mm;
+    height: calc(100% - 6.2mm);
+    min-height: 10.6mm;
     background: url("../../src/main/resources/static/images/objects/feather-vertical.png") center / contain no-repeat;
     filter:
-        saturate(0.96)
-        drop-shadow(0 2px 3px rgba(0, 0, 0, 0.36));
-    transform: rotate(-18deg);
+        saturate(0.98)
+        brightness(0.94)
+        drop-shadow(0 3px 5px rgba(0, 0, 0, 0.38));
+    opacity: 0.88;
+    transform: rotate(-10deg);
+    transform-origin: center;
+}
+
+.funeral-peacock-list li::after {
+    content: "";
+    position: absolute;
+    left: 9.8mm;
+    top: 3.2mm;
+    bottom: 3.2mm;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, rgba(214, 199, 145, 0.32), rgba(0, 137, 123, 0.2), transparent);
+    pointer-events: none;
 }
 
 .funeral-peacock-list strong {
     display: block;
     color: var(--cream);
     font-family: Georgia, "Times New Roman", serif;
-    font-size: 11.8px;
+    font-size: 12.8px;
     line-height: 1.05;
 }
 
 .funeral-peacock-list span {
     display: block;
-    margin-top: 1mm;
+    margin-top: 0.8mm;
     color: rgba(238, 240, 238, 0.68);
-    font-size: 7.1px;
-    line-height: 1.28;
+    font-size: 8.1px;
+    line-height: 1.22;
 }
 
 .funeral-contact {
     position: relative;
+    z-index: 1;
     overflow: hidden;
     display: grid;
     grid-template-columns: minmax(0, 0.86fr) minmax(0, 1fr);
@@ -1807,13 +2031,13 @@ img {
 
 .funeral-contact .eyebrow {
     color: var(--gold);
-    font-size: 7.8px;
+    font-size: 8px;
 }
 
 .funeral-contact h3 {
     margin-top: 1.4mm;
     color: var(--cream);
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.08;
 }
 
@@ -1824,12 +2048,12 @@ img {
 }
 
 .funeral-contact .contact-row {
-    grid-template-columns: 14px minmax(0, 1fr);
-    gap: 5px;
+    grid-template-columns: 15px minmax(0, 1fr);
+    gap: 6px;
     align-items: center;
-    min-height: 14px;
+    min-height: 15px;
     color: rgba(255, 248, 236, 0.86);
-    font-size: 7.1px;
+    font-size: 7.9px;
     font-weight: 800;
     line-height: 1;
     white-space: nowrap;
@@ -1843,23 +2067,23 @@ img {
 }
 
 .funeral-contact .contact-icon {
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
     background: transparent;
     color: inherit;
     box-shadow: none;
 }
 
 .funeral-contact .contact-icon img {
-    width: 11px;
-    height: 11px;
+    width: 12px;
+    height: 12px;
     object-fit: contain;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.42));
 }
 
 .funeral-contact .contact-icon-clc img {
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
 }
 
 .funeral-premium-footer {
@@ -1870,7 +2094,7 @@ img {
     margin-inline: 9mm;
     border-top: 1px solid rgba(214, 199, 145, 0.24);
     color: rgba(238, 240, 238, 0.58);
-    font-size: 6.9px;
+    font-size: 7.6px;
     font-weight: 900;
     letter-spacing: 0.09em;
     text-transform: uppercase;

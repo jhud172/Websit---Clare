@@ -23,12 +23,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class SiteModelAdvice {
 
 	private static final Logger logger = LoggerFactory.getLogger(SiteModelAdvice.class);
-	private static final String DEFAULT_LOGO_PATH = "/images/brand/logo-clare-no-background+no-wreath-CLC.png";
+	private static final String DEFAULT_LOGO_PATH = "/images/brand/clc-wreath-logo.png";
 	private static final String CLC_LOGO_PATH = "/images/brand/logo-clare-no-background+no-wreath-CLC.png";
 	private static final String WREATH_LOGO_PATH = "/images/brand/logo-clare-no-background-wreath-only.png";
 	private static final String HORIZONTAL_FEATHER_PATH = "/images/objects/feather-horizontal.png";
 	private static final String VERTICAL_FEATHER_PATH = "/images/objects/feather-vertical.png";
-	private static final String OPEN_GRAPH_IMAGE_PATH = "/images/clare/weddings-confetti.jpg";
+	private static final String OPEN_GRAPH_IMAGE_PATH = "/images/brand/clc-wreath-logo.png";
 	private static final String DEFAULT_INSTAGRAM_URL = "https://www.instagram.com/clareslifecelebrations/";
 
 	private final SiteProperties siteProperties;
