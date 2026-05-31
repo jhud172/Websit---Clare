@@ -291,6 +291,10 @@ main {
 img {
     display: block;
     max-width: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 a {

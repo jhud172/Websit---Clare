@@ -5,13 +5,13 @@
     <section class="wedding-hero section-reveal-zone">
         <div class="wedding-hero-media" data-carousel data-carousel-interval="5400" data-carousel-transition="920">
             <figure class="wedding-hero-slide is-active" data-carousel-slide>
-                <img th:src="@{/images/weddings/amy-wedding-1.jpg}" alt="A newly married couple walking through confetti with smiling guests around them.">
+                <img th:src="@{/images/weddings/amy-wedding-1.jpg}" alt="A newly married couple walking through confetti with smiling guests around them." loading="eager" fetchpriority="high" decoding="async">
             </figure>
             <figure class="wedding-hero-slide" data-carousel-slide>
-                <img th:src="@{/images/weddings/home-hero.jpg}" alt="A bride smiling during a joyful wedding ceremony.">
+                <img th:src="@{/images/weddings/home-hero.jpg}" alt="A bride smiling during a joyful wedding ceremony." loading="lazy" decoding="async">
             </figure>
             <figure class="wedding-hero-slide" data-carousel-slide>
-                <img th:src="@{/images/weddings/amy-wedding-1.jpg}" alt="A wedding couple celebrating as they walk back down the aisle.">
+                <img th:src="@{/images/weddings/amy-wedding-1.jpg}" alt="A wedding couple celebrating as they walk back down the aisle." loading="lazy" decoding="async">
             </figure>
         </div>
         <div class="wedding-hero-overlay"></div>

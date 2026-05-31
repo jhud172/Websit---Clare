@@ -124,8 +124,8 @@ img {
 }
 
 .contact-icon-clc img {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
 }
 
 .pill-list {
@@ -410,8 +410,8 @@ img {
 }
 
 .card-back .contact-icon-clc img {
-    width: 13px;
-    height: 13px;
+    width: 14px;
+    height: 14px;
 }
 
 .a5-card-design {
@@ -712,8 +712,177 @@ img {
 }
 
 .a5-card-back .contact-icon-clc img {
-    width: 7mm;
-    height: 7mm;
+    width: 8mm;
+    height: 8mm;
+}
+
+.front-cover-design {
+    background: #d9d4ca;
+}
+
+.front-cover-page {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    width: 148mm;
+    height: 210mm;
+    margin: 0 auto 14mm;
+    overflow: hidden;
+    padding: 18mm 13mm;
+    background:
+        radial-gradient(circle at 90% 11%, rgba(214, 199, 145, 0.24), transparent 43mm),
+        radial-gradient(circle at 9% 85%, rgba(0, 137, 123, 0.24), transparent 48mm),
+        radial-gradient(circle at 50% 50%, rgba(9, 111, 144, 0.16), transparent 60mm),
+        linear-gradient(150deg, #171c21 0%, #090d10 58%, #030405 100%);
+    color: var(--cream);
+    box-shadow: var(--shadow);
+}
+
+.front-cover-page::before,
+.front-cover-page::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.front-cover-page::before {
+    inset: 6mm;
+    border: 0.35mm solid rgba(214, 199, 145, 0.38);
+    border-radius: 5mm;
+    box-shadow:
+        inset 0 0 0 0.22mm rgba(0, 137, 123, 0.22),
+        0 0 28mm rgba(0, 137, 123, 0.1);
+}
+
+.front-cover-page::after {
+    inset: 11mm;
+    border: 0.2mm solid rgba(214, 199, 145, 0.16);
+    border-radius: 3.5mm;
+}
+
+.front-cover-feather,
+.front-cover-orbit {
+    position: absolute;
+    pointer-events: none;
+}
+
+.front-cover-feather {
+    z-index: 1;
+    object-fit: contain;
+    filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.32));
+}
+
+.front-cover-feather-top {
+    top: -26mm;
+    right: -24mm;
+    width: 102mm;
+    opacity: 0.28;
+    transform: rotate(190deg);
+}
+
+.front-cover-feather-left {
+    left: -26mm;
+    top: 26mm;
+    width: 86mm;
+    opacity: 0.3;
+    transform: rotate(-18deg);
+}
+
+.front-cover-feather-right {
+    right: -21mm;
+    bottom: 26mm;
+    width: 94mm;
+    opacity: 0.26;
+    transform: rotate(20deg);
+}
+
+.front-cover-feather-bottom {
+    left: 7mm;
+    bottom: -24mm;
+    width: 120mm;
+    opacity: 0.22;
+    transform: rotate(-7deg);
+}
+
+.front-cover-orbit {
+    z-index: 0;
+    border-radius: 999px;
+}
+
+.front-cover-orbit-one {
+    right: -12mm;
+    top: 23mm;
+    width: 82mm;
+    height: 82mm;
+    border: 0.35mm solid rgba(214, 199, 145, 0.13);
+    box-shadow:
+        0 0 38mm rgba(214, 199, 145, 0.12),
+        inset 0 0 24mm rgba(0, 137, 123, 0.12);
+}
+
+.front-cover-orbit-two {
+    left: -19mm;
+    bottom: 28mm;
+    width: 74mm;
+    height: 74mm;
+    border: 0.28mm solid rgba(0, 137, 123, 0.16);
+    box-shadow: 0 0 34mm rgba(0, 137, 123, 0.18);
+}
+
+.front-cover-orbit-three {
+    left: 50%;
+    top: 18mm;
+    width: 36mm;
+    height: 36mm;
+    border: 0.24mm solid rgba(214, 199, 145, 0.1);
+    transform: translateX(-50%);
+}
+
+.front-cover-panel {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    justify-items: center;
+    gap: 7mm;
+    width: min(100%, 112mm);
+    padding: 14mm 10mm;
+    border: 1px solid rgba(214, 199, 145, 0.24);
+    border-radius: 24px;
+    background:
+        radial-gradient(circle at 90% 0%, rgba(214, 199, 145, 0.12), transparent 34mm),
+        radial-gradient(circle at 10% 100%, rgba(0, 137, 123, 0.16), transparent 34mm),
+        linear-gradient(145deg, rgba(17, 22, 26, 0.9), rgba(5, 7, 9, 0.76));
+    box-shadow:
+        0 26px 60px rgba(0, 0, 0, 0.3),
+        inset 0 0 0 0.25mm rgba(0, 137, 123, 0.14);
+    text-align: center;
+}
+
+.front-cover-logo {
+    width: 100%;
+    max-width: 96mm;
+    filter:
+        drop-shadow(0 16px 30px rgba(0, 0, 0, 0.38))
+        drop-shadow(0 0 13mm rgba(214, 199, 145, 0.14));
+}
+
+.front-cover-divider {
+    width: 44mm;
+    height: 0.8mm;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(0, 137, 123, 0.8), rgba(214, 199, 145, 0.82), transparent);
+}
+
+.front-cover-panel p {
+    max-width: 76mm;
+    color: rgba(255, 248, 236, 0.72);
+    font-size: 10.8px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    line-height: 1.45;
+    text-transform: uppercase;
 }
 
 .flyer-page {
@@ -956,8 +1125,10 @@ img {
 .wedding-premium-overlay {
     z-index: -2;
     background:
-        linear-gradient(90deg, rgba(5, 10, 12, 0.24) 0%, transparent 42%),
-        linear-gradient(180deg, transparent 0%, rgba(5, 7, 9, 0.08) 54%, rgba(5, 7, 9, 0.72) 100%);
+        radial-gradient(circle at 12% 28%, rgba(0, 137, 123, 0.18), transparent 42mm),
+        radial-gradient(circle at 86% 10%, rgba(214, 199, 145, 0.13), transparent 48mm),
+        linear-gradient(90deg, rgba(5, 10, 12, 0.64) 0%, rgba(9, 30, 31, 0.36) 42%, rgba(5, 7, 9, 0.22) 100%),
+        linear-gradient(180deg, rgba(5, 7, 9, 0.08) 0%, rgba(8, 18, 19, 0.2) 38%, rgba(9, 14, 16, 0.58) 76%, rgba(5, 7, 9, 0.95) 100%);
     mix-blend-mode: normal;
 }
 
@@ -1076,8 +1247,8 @@ img {
     right: 13mm;
     top: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(214, 199, 145, 0.52), rgba(0, 137, 123, 0.46), transparent);
-    box-shadow: 0 -8mm 22mm rgba(0, 137, 123, 0.12);
+    background: linear-gradient(90deg, transparent, rgba(214, 199, 145, 0.3), rgba(0, 137, 123, 0.26), transparent);
+    box-shadow: 0 -12mm 32mm rgba(0, 137, 123, 0.08);
 }
 
 .peacock-section-flow::after {
@@ -1089,8 +1260,8 @@ img {
     height: 1.2mm;
     border-radius: 999px;
     background:
-        radial-gradient(circle at 50% 50%, rgba(214, 199, 145, 0.95) 0 1.2mm, transparent 1.25mm),
-        linear-gradient(90deg, transparent, rgba(214, 199, 145, 0.68), transparent);
+        radial-gradient(circle at 50% 50%, rgba(214, 199, 145, 0.74) 0 1mm, transparent 1.05mm),
+        linear-gradient(90deg, transparent, rgba(214, 199, 145, 0.42), rgba(0, 137, 123, 0.3), transparent);
     transform: translateX(-50%);
     filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.36));
 }
@@ -1236,8 +1407,8 @@ img {
 
 .wedding-premium-lower {
     display: grid;
-    grid-template-columns: 50mm minmax(0, 82mm);
-    gap: 6mm;
+    grid-template-columns: 52mm minmax(0, 105mm);
+    gap: 7mm;
     align-items: stretch;
     justify-content: center;
 }
@@ -1246,15 +1417,17 @@ img {
     overflow: hidden;
     margin: 0;
     border: 1px solid rgba(214, 199, 145, 0.42);
-    border-radius: 17px;
+    border-radius: 18px;
     background: var(--charcoal);
-    box-shadow: 0 16px 32px rgba(23, 26, 31, 0.14);
+    box-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.22),
+        0 0 22mm rgba(0, 137, 123, 0.06);
 }
 
 .wedding-premium-portrait img {
     width: 100%;
     height: 100%;
-    min-height: 40mm;
+    min-height: 48mm;
     object-fit: cover;
     object-position: center 18%;
     filter: saturate(1.08) contrast(1.04);
@@ -1263,51 +1436,59 @@ img {
 .wedding-premium-contact {
     position: relative;
     overflow: hidden;
-    border-radius: 17px;
-    border: 1px solid rgba(214, 199, 145, 0.22);
+    border-radius: 19px;
+    border: 1px solid rgba(214, 199, 145, 0.34);
+    box-shadow:
+        0 18px 44px rgba(0, 0, 0, 0.24),
+        inset 0 0 0 0.25mm rgba(0, 137, 123, 0.18);
 }
 
 .wedding-premium-contact {
     display: grid;
     align-content: center;
-    gap: 2.8mm;
-    padding: 4.8mm 5mm;
+    gap: 4mm;
+    padding: 7mm 8mm;
     background:
-        radial-gradient(circle at 94% 4%, rgba(214, 199, 145, 0.18), transparent 24mm),
-        radial-gradient(circle at 12% 100%, rgba(0, 137, 123, 0.2), transparent 24mm),
-        linear-gradient(145deg, #1a1e21, #07090b);
+        radial-gradient(circle at 92% 0%, rgba(214, 199, 145, 0.22), transparent 31mm),
+        radial-gradient(circle at 4% 98%, rgba(0, 137, 123, 0.28), transparent 34mm),
+        linear-gradient(145deg, #202326 0%, #111619 45%, #06080a 100%);
     color: var(--cream);
 }
 
 .wedding-premium-contact .eyebrow {
     color: var(--gold);
+    font-size: 8.8px;
+    letter-spacing: 0.16em;
 }
 
 .wedding-premium-contact h3 {
+    max-width: 84mm;
     color: var(--cream);
-    font-size: 16px;
-    line-height: 1.08;
+    font-size: 20px;
+    line-height: 1.04;
 }
 
 .wedding-premium-contact .contact-list {
-    gap: 6px;
+    display: grid;
+    gap: 2.2mm;
+    padding-top: 1mm;
 }
 
 .wedding-premium-contact .contact-row {
-    grid-template-columns: 17px minmax(0, 1fr);
-    gap: 7px;
+    grid-template-columns: 6.6mm minmax(0, 1fr);
+    gap: 3mm;
     align-items: center;
-    min-height: 16px;
-    color: rgba(255, 248, 236, 0.86);
-    font-size: 8.7px;
+    min-height: 6.6mm;
+    color: rgba(255, 248, 236, 0.9);
+    font-size: 10.2px;
     font-weight: 800;
     line-height: 1;
     white-space: nowrap;
 }
 
 .wedding-premium-contact .contact-icon {
-    width: 17px;
-    height: 16px;
+    width: 6.6mm;
+    height: 6.6mm;
     background: transparent;
     color: inherit;
     box-shadow: none;
@@ -1316,20 +1497,20 @@ img {
 .wedding-premium-contact .contact-row > span:last-child {
     display: block;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow: visible;
+    text-overflow: clip;
 }
 
 .wedding-premium-contact .contact-icon img {
-    width: 13px;
-    height: 13px;
+    width: 5.2mm;
+    height: 5.2mm;
     object-fit: contain;
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.42));
 }
 
 .wedding-premium-contact .contact-icon-clc img {
-    width: 15px;
-    height: 15px;
+    width: 6.2mm;
+    height: 6.2mm;
 }
 
 .wedding-premium-footer {
@@ -1677,8 +1858,8 @@ img {
 }
 
 .funeral-contact .contact-icon-clc img {
-    width: 13px;
-    height: 13px;
+    width: 14px;
+    height: 14px;
 }
 
 .funeral-premium-footer {

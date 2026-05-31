@@ -430,6 +430,8 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     let transitionTimerId = null;
     let pointerStartX = null;
     let pointerStartY = null;
+    let carouselIsVisible = true;
+    let carouselIsHovered = false;
 
     if (slides.length === 0) {
         return;
@@ -587,7 +589,7 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     };
 
     const restartTimer = () => {
-        if (prefersReducedMotion()) {
+        if (prefersReducedMotion() || !carouselIsVisible || carouselIsHovered) {
             return;
         }
 
@@ -599,6 +601,33 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
             moveTo(currentIndex + 1, "next");
         }, intervalMs);
     };
+
+    const stopTimer = () => {
+        if (timerId) {
+            window.clearInterval(timerId);
+            timerId = null;
+        }
+    };
+
+    if ("IntersectionObserver" in window) {
+        const carouselObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                carouselIsVisible = entry.isIntersecting;
+
+                if (carouselIsVisible) {
+                    restartTimer();
+                }
+                else {
+                    stopTimer();
+                }
+            });
+        }, {
+            rootMargin: "160px 0px",
+            threshold: 0.01
+        });
+
+        carouselObserver.observe(carouselRoot);
+    }
 
     prevButton?.addEventListener("click", () => {
         moveTo(currentIndex - 1, "previous");
@@ -618,12 +647,14 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     });
 
     carouselRoot.addEventListener("mouseenter", () => {
-        if (timerId) {
-            window.clearInterval(timerId);
-        }
+        carouselIsHovered = true;
+        stopTimer();
     });
 
-    carouselRoot.addEventListener("mouseleave", restartTimer);
+    carouselRoot.addEventListener("mouseleave", () => {
+        carouselIsHovered = false;
+        restartTimer();
+    });
 
     if (supportsSwipe) {
         carouselRoot.addEventListener("pointerdown", (event) => {
@@ -663,8 +694,17 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     restartTimer();
 });
 
-document.querySelectorAll(".protected-image, .hero-media img, .showcase-slide img, .media-stage img, .gallery-card img, .review-photo-grid img, .logo-composite img, .peacock-badge-logo img").forEach((image) => {
+const protectImage = (image) => {
+    if (!(image instanceof HTMLImageElement) || image.dataset.imageProtected === "true") {
+        return;
+    }
+
+    image.dataset.imageProtected = "true";
+    if (!image.hasAttribute("decoding")) {
+        image.decoding = "async";
+    }
     image.setAttribute("draggable", "false");
+    image.setAttribute("oncontextmenu", "return false;");
 
     image.addEventListener("dragstart", (event) => {
         event.preventDefault();
@@ -673,6 +713,59 @@ document.querySelectorAll(".protected-image, .hero-media img, .showcase-slide im
     image.addEventListener("contextmenu", (event) => {
         event.preventDefault();
     });
+};
+
+document.querySelectorAll("img").forEach(protectImage);
+
+document.addEventListener("dragstart", (event) => {
+    if (event.target instanceof Element && event.target.closest("img")) {
+        event.preventDefault();
+    }
+}, true);
+
+document.addEventListener("contextmenu", (event) => {
+    if (event.target instanceof Element && event.target.closest("img")) {
+        event.preventDefault();
+    }
+}, true);
+
+document.addEventListener("copy", (event) => {
+    const selection = window.getSelection();
+
+    if (!selection || selection.isCollapsed) {
+        return;
+    }
+
+    const container = document.createElement("div");
+
+    for (let index = 0; index < selection.rangeCount; index += 1) {
+        container.appendChild(selection.getRangeAt(index).cloneContents());
+    }
+
+    if (container.querySelector("img")) {
+        event.preventDefault();
+    }
+});
+
+const imageProtectionObserver = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+            if (!(node instanceof Element)) {
+                return;
+            }
+
+            if (node instanceof HTMLImageElement) {
+                protectImage(node);
+            }
+
+            node.querySelectorAll("img").forEach(protectImage);
+        });
+    });
+});
+
+imageProtectionObserver.observe(document.documentElement, {
+    childList: true,
+    subtree: true
 });
 
 const revealTargets = Array.from(new Set(

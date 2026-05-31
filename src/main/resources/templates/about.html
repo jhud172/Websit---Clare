@@ -14,6 +14,9 @@
                 <figure class="about-image-slide is-active" data-carousel-slide>
                     <img class="about-image-contain about-image-clare-folder"
                          th:src="@{/images/clare/clare-folder-portrait.jpg}"
+                         loading="eager"
+                         fetchpriority="high"
+                         decoding="async"
                          alt="Clare smiling warmly while holding a ceremony folder.">
                     <figcaption class="media-stage-overlay">
                         <p class="media-stage-kicker">Personal, modern and approachable</p>
@@ -24,6 +27,7 @@
                     <img class="about-image-cover about-image-clare-folder-detail"
                          th:src="@{/images/clare/wedding-symbolism-ribbons.jpg}"
                          loading="lazy"
+                         decoding="async"
                          alt="Clare holding a ceremony folder in a garden setting.">
                     <figcaption class="media-stage-overlay">
                         <p class="media-stage-kicker">Calm, prepared and present</p>
@@ -34,6 +38,7 @@
                     <img class="about-image-cover about-image-clare-confetti"
                          th:src="@{/images/clare/weddings-confetti.jpg}"
                          loading="lazy"
+                         decoding="async"
                          alt="Clare smiling as petals fall during a joyful ceremony moment.">
                     <figcaption class="media-stage-overlay">
                         <p class="media-stage-kicker">For moments that matter</p>

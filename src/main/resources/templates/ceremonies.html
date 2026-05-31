@@ -5,13 +5,13 @@
     <section class="services-hero section-reveal-zone">
         <div class="services-hero-media" data-carousel data-carousel-interval="6200" data-carousel-transition="880" aria-hidden="true">
             <figure class="services-hero-slide is-active" data-carousel-slide>
-                <img th:src="@{/images/weddings/home-hero.jpg}" alt="">
+                <img th:src="@{/images/weddings/home-hero.jpg}" alt="" loading="eager" fetchpriority="high" decoding="async">
             </figure>
             <figure class="services-hero-slide" data-carousel-slide>
-                <img th:src="@{/images/clare/wedding-symbolism-ribbons.jpg}" alt="">
+                <img th:src="@{/images/clare/wedding-symbolism-ribbons.jpg}" alt="" loading="lazy" decoding="async">
             </figure>
             <figure class="services-hero-slide" data-carousel-slide>
-                <img th:src="@{/images/funerals/memorial-flowers-detail.jpg}" alt="">
+                <img th:src="@{/images/funerals/memorial-flowers-detail.jpg}" alt="" loading="lazy" decoding="async">
             </figure>
         </div>
         <div class="services-hero-overlay"></div>

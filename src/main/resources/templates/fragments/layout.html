@@ -3,7 +3,7 @@
       th:fragment="page(pageTitle, pageDescription, activePage, mainContent)">
 <head>
     <th:block th:replace="~{fragments/metadata :: page-metadata(${pageTitle}, ${pageDescription})}"></th:block>
-    <th:block th:replace="~{base :: asset-imports}"></th:block>
+    <th:block th:replace="~{base :: asset-imports(${activePage})}"></th:block>
 </head>
 <body>
 <div th:replace="~{fragments/header :: site-header(${activePage})}"></div>
