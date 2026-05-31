@@ -109,6 +109,11 @@
                 <p class="eyebrow">Leave a review</p>
                 <h2>Share your experience for moderation and approval.</h2>
                 <p>Reviews are never published automatically. Clare will check each submission before it appears on the site.</p>
+                <div class="reviews-submit-points" aria-label="Review process">
+                    <span>Checked before publication</span>
+                    <span>Photos are optional</span>
+                    <span>Private details stay private</span>
+                </div>
             </div>
             <div class="reviews-submit-panel">
                 <form class="contact-form review-submission-form enquiry-modal-form"
@@ -118,6 +123,17 @@
                       method="post"
                       enctype="multipart/form-data"
                       novalidate>
+                    <div class="review-form-intro">
+                        <span class="logo-composite review-form-logo" aria-hidden="true">
+                            <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                            <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                        </span>
+                        <div>
+                            <p class="eyebrow">Share a few details</p>
+                            <h3>Help future couples and families understand what working with Clare felt like.</h3>
+                        </div>
+                    </div>
+
                     <div class="field-row">
                         <div class="field-group" data-review-field="reviewerName">
                             <label for="reviewerName">Your name</label>
@@ -166,11 +182,11 @@
                                 <div class="field-popup-select" role="listbox" aria-label="Rating">
                                     <p class="field-option-placeholder">How did the ceremony feel?</p>
                                     <ul class="field-option-list">
-                                        <li><button class="field-option" type="button" role="option" data-choice-option data-value="5">★★★★★ · 5 stars</button></li>
-                                        <li><button class="field-option" type="button" role="option" data-choice-option data-value="4">★★★★ · 4 stars</button></li>
-                                        <li><button class="field-option" type="button" role="option" data-choice-option data-value="3">★★★ · 3 stars</button></li>
-                                        <li><button class="field-option" type="button" role="option" data-choice-option data-value="2">★★ · 2 stars</button></li>
-                                        <li><button class="field-option" type="button" role="option" data-choice-option data-value="1">★ · 1 star</button></li>
+                                        <li><button class="field-option rating-option" type="button" role="option" data-choice-option data-value="5">★★★★★ <span>5 stars</span></button></li>
+                                        <li><button class="field-option rating-option" type="button" role="option" data-choice-option data-value="4">★★★★ <span>4 stars</span></button></li>
+                                        <li><button class="field-option rating-option" type="button" role="option" data-choice-option data-value="3">★★★ <span>3 stars</span></button></li>
+                                        <li><button class="field-option rating-option" type="button" role="option" data-choice-option data-value="2">★★ <span>2 stars</span></button></li>
+                                        <li><button class="field-option rating-option" type="button" role="option" data-choice-option data-value="1">★ <span>1 star</span></button></li>
                                     </ul>
                                 </div>
                             </div>
@@ -249,7 +265,10 @@
                     </div>
                     <p class="field-error" th:if="${#fields.hasErrors('consentAccepted')}" th:errors="*{consentAccepted}">Consent error</p>
 
-                    <button class="button button-peacock" type="submit" data-review-submit>Submit review for approval</button>
+                    <div class="review-form-actions">
+                        <button class="button button-peacock" type="submit" data-review-submit>Submit review for approval</button>
+                        <p>Clare will approve suitable reviews before they go live.</p>
+                    </div>
                 </form>
                 <p class="field-error review-form-banner" data-review-form-error th:if="${reviewUploadError != null}" th:text="${reviewUploadError}">Upload error</p>
                 <p class="callout review-form-banner" data-review-form-success th:if="${reviewSubmissionSuccess != null}" th:text="${reviewSubmissionSuccess}">Success message</p>

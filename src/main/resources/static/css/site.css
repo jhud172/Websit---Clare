@@ -10305,6 +10305,7 @@ textarea::placeholder {
 
 .enquiry-modal-form .field-popup {
     z-index: 60;
+    max-width: 100%;
 }
 
 .enquiry-modal-form .field-popup-select,
@@ -10323,6 +10324,10 @@ textarea::placeholder {
 
 .enquiry-modal-form .field-option {
     color: var(--ink);
+}
+
+.enquiry-modal-form .field-option-list {
+    max-height: min(17rem, calc(var(--field-popup-max-height, 22rem) - 1rem));
 }
 
 .enquiry-modal-form .field-option:hover,
@@ -10462,11 +10467,16 @@ textarea::placeholder {
     }
 }
 
-/* Review submission form: match the enquiry form's peacock glass treatment. */
+/* Review submission form */
 
 .reviews-submit-section {
     position: relative;
     overflow: hidden;
+    padding-block: clamp(4rem, 8vw, 7rem);
+    background:
+        radial-gradient(circle at 14% 24%, rgba(0, 137, 123, 0.14), transparent 28rem),
+        radial-gradient(circle at 88% 18%, rgba(214, 199, 145, 0.12), transparent 26rem),
+        linear-gradient(140deg, #0b0e13 0%, #111720 48%, #090b0f 100%);
 }
 
 .reviews-submit-section::before {
@@ -10479,15 +10489,24 @@ textarea::placeholder {
         url("/images/objects/feather-horizontal-mirrored.png") left 7vw bottom 5rem / min(17rem, 34vw) auto no-repeat,
         radial-gradient(circle at 78% 14%, rgba(0, 118, 168, 0.15), transparent 24rem),
         radial-gradient(circle at 18% 88%, rgba(201, 154, 51, 0.12), transparent 22rem);
-    opacity: 0.72;
+    opacity: 0.56;
     mix-blend-mode: screen;
 }
 
 .reviews-submit-grid {
     position: relative;
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.5fr) minmax(0, 0.82fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 5.5rem);
 }
 
 .reviews-submit-copy {
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+    display: grid;
+    gap: 1.25rem;
+    max-width: 36rem;
     padding-top: 0.6rem;
 }
 
@@ -10496,104 +10515,271 @@ textarea::placeholder {
 }
 
 .reviews-submit-copy h2 {
+    max-width: 10ch;
     color: #fff7cf;
+    font-size: clamp(3rem, 5.8vw, 5.65rem);
+    line-height: 0.96;
     background:
         linear-gradient(180deg, #fff7cf 0%, #d5aa42 34%, #60c5b0 72%, #78c7ee 100%);
     -webkit-background-clip: text;
     background-clip: text;
 }
 
+.reviews-submit-copy > p:not(.eyebrow) {
+    max-width: 31rem;
+    color: rgba(243, 244, 246, 0.72);
+    font-size: clamp(1rem, 1.2vw, 1.12rem);
+    line-height: 1.8;
+}
+
+.reviews-submit-points {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 0.35rem;
+}
+
+.reviews-submit-points span {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.72rem;
+    color: rgba(243, 244, 246, 0.82);
+    font-weight: 800;
+}
+
+.reviews-submit-points span::before {
+    content: "";
+    flex: 0 0 auto;
+    width: 1.15rem;
+    aspect-ratio: 1;
+    border-radius: 999px;
+    background:
+        radial-gradient(circle at 50% 50%, var(--peacock-blue) 0 22%, transparent 23%),
+        radial-gradient(circle at 50% 50%, var(--peacock-sage) 0 58%, transparent 59%),
+        radial-gradient(circle, rgba(214, 199, 145, 0.88), rgba(214, 199, 145, 0.12));
+    box-shadow: 0 0 18px rgba(0, 137, 123, 0.2);
+}
+
 .reviews-submit-panel {
     position: relative;
-    padding: clamp(1rem, 2.4vw, 1.55rem);
-    border-radius: 26px;
-    border: 1px solid rgba(0, 118, 168, 0.42);
-    border-top-color: rgba(201, 154, 51, 0.62);
-    border-right-color: rgba(215, 121, 35, 0.42);
-    border-bottom-color: rgba(39, 149, 111, 0.42);
+    min-width: 0;
+    padding: clamp(0.7rem, 1.4vw, 1rem);
+    border: 1px solid transparent;
+    border-radius: clamp(22px, 2vw, 32px);
     background:
-        url("/images/objects/feather-vertical.png") right -2.6rem top 1rem / min(12rem, 22vw) auto no-repeat,
-        radial-gradient(circle at 94% 0%, rgba(0, 118, 168, 0.18), transparent 18rem),
-        radial-gradient(circle at 0% 100%, rgba(201, 154, 51, 0.12), transparent 17rem),
-        linear-gradient(155deg, rgba(31, 36, 43, 0.985), rgba(14, 18, 24, 0.985) 50%, rgba(7, 9, 12, 0.995));
+        linear-gradient(90deg, rgba(0, 137, 123, 0.72), rgba(214, 199, 145, 0.76), rgba(215, 121, 35, 0.46)) border-box,
+        linear-gradient(155deg, rgba(18, 24, 31, 0.94), rgba(7, 10, 14, 0.96)) padding-box;
     box-shadow:
-        0 34px 95px rgba(0, 0, 0, 0.42),
-        0 0 0 1px rgba(201, 154, 51, 0.08),
-        0 0 54px rgba(0, 118, 168, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 34px 100px rgba(0, 0, 0, 0.46),
+        0 0 70px rgba(0, 137, 123, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .reviews-submit-panel::before {
     content: "";
     position: absolute;
-    left: clamp(1rem, 2.4vw, 1.55rem);
-    right: clamp(1rem, 2.4vw, 1.55rem);
-    top: 0;
-    height: 3px;
-    border-radius: 999px;
-    background: linear-gradient(90deg,
-        transparent,
-        var(--peacock-sage),
-        var(--peacock-blue),
-        var(--peacock-gold),
-        var(--peacock-orange),
-        transparent);
-    opacity: 0.86;
+    inset: auto -2.5rem -2rem auto;
+    width: min(18rem, 30vw);
+    aspect-ratio: 0.55;
+    background: url("/images/objects/feather-vertical.png") center / contain no-repeat;
+    opacity: 0.34;
+    filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.38));
+    pointer-events: none;
 }
 
 .review-submission-form.enquiry-modal-form {
     position: relative;
-    border-radius: 22px;
+    display: grid;
+    gap: clamp(0.9rem, 1.5vw, 1.15rem);
+    max-width: none;
+    overflow: visible;
+    padding: clamp(1rem, 2.4vw, 1.75rem);
+    border: 1px solid rgba(243, 244, 246, 0.1);
+    border-radius: clamp(18px, 1.7vw, 26px);
     background:
-        radial-gradient(circle at 94% 3%, rgba(39, 149, 111, 0.12), transparent 15rem),
+        url("/images/objects/feather-horizontal.png") right -4.5rem top 1.3rem / min(13rem, 22vw) auto no-repeat,
+        radial-gradient(circle at 94% 3%, rgba(39, 149, 111, 0.14), transparent 15rem),
+        radial-gradient(circle at 0% 100%, rgba(214, 199, 145, 0.08), transparent 17rem),
         linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.018)),
-        rgba(11, 14, 19, 0.68);
+        rgba(11, 14, 19, 0.78);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.review-submission-form.enquiry-modal-form::before {
-    content: "Share a few details";
-    display: block;
-    width: -moz-fit-content;
-    width: fit-content;
-    margin-bottom: 1.65rem;
-    color: var(--peacock-gold);
-    font-size: 0.72rem;
-    font-weight: 800;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-}
-
+.review-submission-form.enquiry-modal-form::before,
 .review-submission-form.enquiry-modal-form::after {
-    content: "";
-    position: absolute;
-    left: clamp(1rem, 2.2vw, 1.75rem);
-    top: clamp(3.1rem, 4.8vw, 3.85rem);
-    width: min(24rem, 54%);
-    height: 1px;
-    background: linear-gradient(90deg,
-        var(--peacock-gold),
-        var(--peacock-sage),
-        var(--peacock-blue),
-        transparent);
-    opacity: 0.82;
-    pointer-events: none;
+    content: none;
+}
+
+.review-form-intro {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.2rem;
+    padding-bottom: 1.15rem;
+    border-bottom: 1px solid rgba(214, 199, 145, 0.22);
+}
+
+.review-form-logo {
+    --logo-clc-size: 80;
+    --logo-wreath-scale: 1.22;
+    width: clamp(3.9rem, 6vw, 5.25rem);
+    overflow: visible;
+}
+
+.review-submission-form:hover .review-form-logo .logo-wreath,
+.review-submission-form:focus-within .review-form-logo .logo-wreath {
+    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
+}
+
+.review-form-intro .eyebrow {
+    margin-bottom: 0.35rem;
+    color: var(--peacock-gold);
+}
+
+.review-form-intro h3 {
+    max-width: 42rem;
+    color: #fff8d8;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(1.45rem, 2vw, 2rem);
+    font-weight: 700;
+    line-height: 1.08;
+}
+
+.review-submission-form .field-row {
+    gap: clamp(0.85rem, 1.5vw, 1.1rem);
+    align-items: start;
+    overflow: visible;
+}
+
+.review-submission-form .field-group {
+    gap: 0.55rem;
+    margin-bottom: 0;
+    min-width: 0;
+}
+
+.review-submission-form .field-group label {
+    color: rgba(243, 244, 246, 0.86);
+    font-size: 0.95rem;
+}
+
+.review-submission-form .form-choice.is-open,
+.review-submission-form .phone-field.is-open {
+    z-index: 40;
 }
 
 .review-submission-form.enquiry-modal-form .field-control,
 .review-submission-form.enquiry-modal-form .field-control-button,
 .review-submission-form.enquiry-modal-form .checkbox-label,
 .review-submission-form.enquiry-modal-form .file-dropzone {
-    border-color: rgba(0, 118, 168, 0.28);
+    border-color: rgba(0, 137, 123, 0.32);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015)),
+        rgba(8, 11, 16, 0.84);
+    box-shadow:
+        0 16px 38px rgba(0, 0, 0, 0.22),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.review-submission-form.enquiry-modal-form .field-control:hover,
+.review-submission-form.enquiry-modal-form .field-control:focus-within,
+.review-submission-form.enquiry-modal-form .field-control-button:hover,
+.review-submission-form.enquiry-modal-form .field-control-button:focus-visible {
+    border-color: rgba(214, 199, 145, 0.5);
+    box-shadow:
+        0 0 0 4px rgba(0, 137, 123, 0.12),
+        0 18px 42px rgba(0, 0, 0, 0.3);
 }
 
 .review-submission-form.enquiry-modal-form .field-popup-select,
 .review-submission-form.enquiry-modal-form .date-picker-shell {
     border-top-color: rgba(201, 154, 51, 0.46);
+    background:
+        radial-gradient(circle at 94% 0%, rgba(0, 137, 123, 0.12), transparent 12rem),
+        linear-gradient(180deg, rgba(27, 32, 40, 0.98), rgba(10, 13, 18, 0.98));
 }
 
-.review-submission-form.enquiry-modal-form > .button {
+.review-submission-form .field-popup {
+    position: absolute;
+    top: calc(100% + 0.65rem);
+    right: 0;
+    bottom: auto;
+    left: auto;
     width: 100%;
-    margin-top: 0.35rem;
+    max-height: var(--field-popup-max-height, min(22rem, calc(100vh - 8rem)));
+    margin-top: 0;
+    overflow: visible;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-0.45rem) scale(0.98);
+    transform-origin: top center;
+}
+
+.review-submission-form .field-popup.is-above {
+    top: auto;
+    bottom: calc(100% + 0.65rem);
+    transform: translateY(0.45rem) scale(0.98);
+    transform-origin: bottom center;
+}
+
+.review-submission-form .form-choice.is-open .field-popup,
+.review-submission-form .phone-field.is-open .field-popup {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.review-submission-form .field-option-list {
+    max-height: min(17rem, calc(var(--field-popup-max-height, 22rem) - 1rem));
+}
+
+.review-submission-form .rating-option {
+    justify-content: space-between;
+    gap: 0.9rem;
+    color: var(--peacock-gold);
+    font-weight: 900;
+}
+
+.review-submission-form .rating-option span {
+    color: rgba(243, 244, 246, 0.76);
+    font-size: 0.88rem;
+    font-weight: 800;
+}
+
+.review-submission-form .field-popup-date {
+    width: min(100%, 22rem);
+}
+
+.review-submission-form .date-picker-shell {
+    max-height: none;
+}
+
+.review-submission-form .file-dropzone {
+    min-height: 5.7rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.review-submission-form .file-dropzone-action {
+    border-color: rgba(214, 199, 145, 0.48);
+    background: rgba(214, 199, 145, 0.1);
+    color: #fff8d8;
+}
+
+.review-submission-form .checkbox-row {
+    margin-top: 0.25rem;
+}
+
+.review-submission-form .checkbox-label {
+    padding: 0.95rem 1rem;
+    color: rgba(243, 244, 246, 0.84);
+}
+
+.review-submission-form.enquiry-modal-form > .button,
+.review-form-actions > .button {
+    width: 100%;
+    margin-top: 0;
     border-color: rgba(201, 154, 51, 0.58);
     background:
         radial-gradient(circle at 14% 16%, rgba(201, 154, 51, 0.28), transparent 42%),
@@ -10604,17 +10790,176 @@ textarea::placeholder {
         inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
+.review-form-actions {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 0.2rem;
+}
+
+.review-form-actions p {
+    margin: 0;
+    color: rgba(243, 244, 246, 0.62);
+    font-size: 0.88rem;
+    text-align: center;
+}
+
 @media (max-width: 1040px) {
+    .reviews-submit-grid {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+
     .reviews-submit-copy {
         position: relative;
         top: auto;
+        max-width: 44rem;
+    }
+
+    .reviews-submit-panel {
+        width: min(100%, 52rem);
+        justify-self: center;
     }
 }
 
 @media (max-width: 720px) {
+    .reviews-submit-section {
+        padding-block: 3.2rem 4rem;
+    }
+
+    .reviews-submit-section::before {
+        background:
+            url("/images/objects/feather-horizontal.png") right -4rem top 2rem / 13rem auto no-repeat,
+            radial-gradient(circle at 80% 12%, rgba(0, 118, 168, 0.14), transparent 15rem);
+        opacity: 0.42;
+    }
+
+    .reviews-submit-grid {
+        gap: 1.7rem;
+    }
+
+    .reviews-submit-copy h2 {
+        max-width: 100%;
+        font-size: clamp(2.45rem, 13vw, 3.6rem);
+        line-height: 1.02;
+    }
+
+    .reviews-submit-points {
+        gap: 0.62rem;
+    }
+
     .reviews-submit-panel {
         padding: 0.75rem;
         border-radius: 22px;
+    }
+
+    .reviews-submit-panel::before {
+        content: none;
+    }
+
+    .review-submission-form.enquiry-modal-form {
+        gap: 0.9rem;
+        padding: 0.9rem;
+        border-radius: 18px;
+        background:
+            radial-gradient(circle at 100% 0%, rgba(39, 149, 111, 0.1), transparent 12rem),
+            rgba(11, 14, 19, 0.86);
+    }
+
+    .review-form-intro {
+        grid-template-columns: 1fr;
+        gap: 0.7rem;
+        padding-bottom: 0.95rem;
+    }
+
+    .review-form-logo {
+        width: 4.2rem;
+    }
+
+    .review-form-intro h3 {
+        font-size: clamp(1.35rem, 7vw, 1.75rem);
+    }
+
+    .review-submission-form .field-row {
+        grid-template-columns: 1fr;
+    }
+
+    .review-submission-form .field-control,
+    .review-submission-form .field-control-button {
+        min-height: 3.45rem;
+        border-radius: 17px;
+    }
+
+    .review-submission-form .field-control input,
+    .review-submission-form .field-control textarea,
+    .review-submission-form .field-control-button {
+        padding-block: 0.88rem;
+    }
+
+    .review-submission-form .field-control-button {
+        padding-right: 3.15rem;
+    }
+
+    .review-submission-form .field-popup-date {
+        width: 100%;
+    }
+
+    .enquiry-modal-form .field-popup,
+    .review-submission-form .field-popup {
+        max-height: var(--field-popup-max-height, min(18rem, 48vh));
+    }
+
+    .enquiry-modal-form .field-popup-select,
+    .enquiry-modal-form .field-popup-phone,
+    .enquiry-modal-form .date-picker-shell,
+    .review-submission-form .field-popup-select,
+    .review-submission-form .date-picker-shell {
+        border-radius: 18px;
+    }
+
+    .enquiry-modal-form .field-option-placeholder,
+    .review-submission-form .field-option-placeholder {
+        padding: 0.58rem 0.82rem 0.3rem;
+        font-size: 0.78rem;
+    }
+
+    .enquiry-modal-form .field-option-list,
+    .review-submission-form .field-option-list {
+        max-height: min(15.5rem, calc(var(--field-popup-max-height, 18rem) - 0.75rem));
+        padding: 0.45rem;
+    }
+
+    .enquiry-modal-form .field-option,
+    .review-submission-form .field-option {
+        padding: 0.78rem 0.82rem;
+        border-radius: 13px;
+        font-size: 0.95rem;
+        line-height: 1.25;
+    }
+
+    .review-submission-form .file-dropzone {
+        grid-template-columns: 1fr;
+        gap: 0.85rem;
+        min-height: auto;
+    }
+
+    .review-submission-form .file-dropzone-action {
+        justify-self: start;
+    }
+}
+
+@media (max-width: 420px) {
+    .review-submission-form.enquiry-modal-form {
+        padding: 0.75rem;
+    }
+
+    .reviews-submit-panel {
+        padding: 0.55rem;
+    }
+
+    .review-submission-form .field-control input,
+    .review-submission-form .field-control textarea,
+    .review-submission-form .field-control-button {
+        font-size: 0.95rem;
     }
 }
 
