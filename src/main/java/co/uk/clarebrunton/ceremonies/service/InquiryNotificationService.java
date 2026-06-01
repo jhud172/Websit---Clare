@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import co.uk.clarebrunton.ceremonies.config.SiteProperties;
 import co.uk.clarebrunton.ceremonies.model.InquiryForm;
+import co.uk.clarebrunton.ceremonies.model.ReviewEntry;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -52,6 +53,9 @@ public class InquiryNotificationService {
 
 	@Value("${inquiry.fallback-directory:data/inquiries}")
 	private String fallbackDirectory;
+
+	@Value("${reviews.notification-email:}")
+	private String reviewNotificationEmail;
 
 	public InquiryNotificationService(ObjectProvider<JavaMailSender> mailSenderProvider, SiteProperties siteProperties) {
 		this.mailSenderProvider = mailSenderProvider;
@@ -95,6 +99,70 @@ public class InquiryNotificationService {
 
 	public void handleInquiry(InquiryForm inquiryForm) {
 		handleInquiry(inquiryForm, List.of());
+	}
+
+	public void notifyReviewSubmitted(ReviewEntry review) {
+		sendReviewNotification(review,
+				"New review submitted by " + orNotSupplied(review.getReviewerName()),
+				"New review awaiting moderation",
+				"A new client review has been submitted and is ready for Clare to review in the moderation area.",
+				"Review submitted for moderation",
+				"Open the review admin area to approve or reject this review.");
+	}
+
+	public void notifyReviewReady(ReviewEntry review) {
+		sendReviewNotification(review,
+				"Review approved from " + orNotSupplied(review.getReviewerName()),
+				"Review is now ready",
+				"A client review has been approved and is ready on the website reviews page.",
+				"Review approved",
+				"This review is now available to appear publicly on the website.");
+	}
+
+	private void sendReviewNotification(ReviewEntry review,
+			String subject,
+			String heading,
+			String intro,
+			String statusLabel,
+			String nextStep) {
+		String recipient = StringUtils.hasText(reviewNotificationEmail) ? reviewNotificationEmail : siteProperties.getContactEmail();
+		JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
+
+		if (mailSender == null || !StringUtils.hasText(recipient)) {
+			logger.info("Review notification skipped (no outbound email configured): reviewer={}, status={}",
+					review.getReviewerName(), review.getStatus());
+			return;
+		}
+
+		try {
+			mailSender.send(createReviewMessage(mailSender, recipient, review, subject, heading, intro, statusLabel, nextStep));
+			logger.info("Review notification sent to {} for review {}", recipient, review.getId());
+		}
+		catch (MailException | MessagingException exception) {
+			logger.error("Review notification could not be sent for review {}. Check SMTP settings.", review.getId(), exception);
+		}
+	}
+
+	private MimeMessage createReviewMessage(JavaMailSender mailSender,
+			String recipient,
+			ReviewEntry review,
+			String subject,
+			String heading,
+			String intro,
+			String statusLabel,
+			String nextStep) throws MessagingException {
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+
+		if (StringUtils.hasText(siteProperties.getFromEmail())) {
+			helper.setFrom(siteProperties.getFromEmail());
+		}
+		helper.setTo(recipient);
+		helper.setReplyTo(siteProperties.getContactEmail());
+		helper.setSubject(subject);
+		helper.setText(buildReviewPlainText(review, statusLabel, nextStep), buildReviewHtml(review, heading, intro, statusLabel, nextStep));
+		addInlineBrandImages(helper);
+		return message;
 	}
 
 	private MimeMessage createAdminMessage(JavaMailSender mailSender,
@@ -215,6 +283,79 @@ public class InquiryNotificationService {
 						messageCard("Client message", orNotSupplied(inquiryForm.getMessage())),
 						emailSpacer(18),
 						darkNotice("Reply directly to this email to respond to " + orNotSupplied(inquiryForm.getFullName()) + ".")
+				)
+		);
+	}
+
+	private String buildReviewPlainText(ReviewEntry review, String statusLabel, String nextStep) {
+		return """
+				%s
+				%s
+				------------------------------------------------------------
+
+				%s
+
+				Reviewer
+				Name: %s
+				Role: %s
+
+				Review details
+				Ceremony: %s
+				Rating: %s/5
+				Event date: %s
+				Photos: %s
+
+				Headline
+				%s
+
+				Review
+				%s
+
+				%s
+				""".formatted(
+				siteProperties.getName(),
+				resolveTagline(),
+				statusLabel,
+				orNotSupplied(review.getReviewerName()),
+				orNotSupplied(review.getReviewerRole()),
+				orNotSupplied(review.getCeremonyType()),
+				review.getRating(),
+				formatDate(review.getEventDate()),
+				formatPhotoCount(review),
+				orNotSupplied(review.getHeadline()),
+				orNotSupplied(review.getMessage()),
+				nextStep
+		);
+	}
+
+	private String buildReviewHtml(ReviewEntry review, String heading, String intro, String statusLabel, String nextStep) {
+		return emailShell(
+				heading,
+				heading,
+				intro,
+				"""
+						%s
+						%s
+						%s
+						%s
+						%s
+						""".formatted(
+						highlightCard(statusLabel, orNotSupplied(review.getReviewerName()),
+								"%s<br>%s star review".formatted(
+										escapeHtml(orNotSupplied(review.getCeremonyType())),
+										review.getRating()
+								)
+						),
+						emailSpacer(18),
+						emailSection("Review details",
+								detailRow("Reviewer role", review.getReviewerRole())
+										+ detailRow("Event date", formatDate(review.getEventDate()))
+										+ detailRow("Photos", formatPhotoCount(review))
+						),
+						emailSpacer(18),
+						messageCard(orNotSupplied(review.getHeadline()), orNotSupplied(review.getMessage())),
+						emailSpacer(18),
+						darkNotice(nextStep)
 				)
 		);
 	}
@@ -452,6 +593,14 @@ public class InquiryNotificationService {
 
 	private String formatDate(LocalDate date) {
 		return date != null ? date.format(DISPLAY_DATE_FORMAT) : "Not supplied";
+	}
+
+	private String formatPhotoCount(ReviewEntry review) {
+		List<String> photoFileNames = review.getPhotoFileNames();
+		if (photoFileNames == null || photoFileNames.isEmpty()) {
+			return "None";
+		}
+		return photoFileNames.size() + " photo(s) uploaded";
 	}
 
 	private String withLineBreaks(String value) {

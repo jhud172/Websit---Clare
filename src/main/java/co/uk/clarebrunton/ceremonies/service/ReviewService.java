@@ -76,7 +76,7 @@ public class ReviewService {
 				.toList();
 	}
 
-	public synchronized void submitReview(ReviewForm form, List<MultipartFile> photos) {
+	public synchronized ReviewEntry submitReview(ReviewForm form, List<MultipartFile> photos) {
 		List<MultipartFile> safePhotos = normalisePhotos(photos);
 		String validationError = validatePhotos(safePhotos);
 
@@ -100,10 +100,11 @@ public class ReviewService {
 
 		entries.add(entry);
 		saveAll(entries);
+		return entry;
 	}
 
-	public synchronized void approveReview(String reviewId, String note) {
-		moderate(reviewId, ReviewStatus.APPROVED, note);
+	public synchronized ReviewEntry approveReview(String reviewId, String note) {
+		return moderate(reviewId, ReviewStatus.APPROVED, note);
 	}
 
 	public synchronized void rejectReview(String reviewId, String note) {
@@ -133,7 +134,7 @@ public class ReviewService {
 		return resolved;
 	}
 
-	private void moderate(String reviewId, ReviewStatus status, String note) {
+	private ReviewEntry moderate(String reviewId, ReviewStatus status, String note) {
 		List<ReviewEntry> entries = loadAll();
 		ReviewEntry matched = findReview(entries, reviewId);
 
@@ -141,6 +142,7 @@ public class ReviewService {
 		matched.setModerationNote(cleanNullable(note));
 		matched.setModeratedAt(OffsetDateTime.now());
 		saveAll(entries);
+		return matched;
 	}
 
 	private ReviewEntry findReview(List<ReviewEntry> entries, String reviewId) {

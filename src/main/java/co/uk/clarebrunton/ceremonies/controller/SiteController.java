@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import co.uk.clarebrunton.ceremonies.config.ReviewProperties;
 import co.uk.clarebrunton.ceremonies.model.InquiryForm;
+import co.uk.clarebrunton.ceremonies.model.ReviewEntry;
 import co.uk.clarebrunton.ceremonies.model.ReviewForm;
 import co.uk.clarebrunton.ceremonies.service.BlogService;
 import co.uk.clarebrunton.ceremonies.service.InquiryNotificationService;
@@ -151,7 +152,8 @@ public class SiteController {
 		}
 
 		try {
-			reviewService.submitReview(reviewForm, reviewPhotos);
+			ReviewEntry submittedReview = reviewService.submitReview(reviewForm, reviewPhotos);
+			inquiryNotificationService.notifyReviewSubmitted(submittedReview);
 		}
 		catch (IllegalArgumentException exception) {
 			model.addAttribute("logoPath", LOGO_CLARE);
@@ -182,7 +184,8 @@ public class SiteController {
 		}
 
 		try {
-			reviewService.submitReview(reviewForm, reviewPhotos);
+			ReviewEntry submittedReview = reviewService.submitReview(reviewForm, reviewPhotos);
+			inquiryNotificationService.notifyReviewSubmitted(submittedReview);
 		}
 		catch (IllegalArgumentException exception) {
 			Map<String, Object> body = new LinkedHashMap<>();
@@ -267,7 +270,8 @@ public class SiteController {
 			return "redirect:/reviews/admin/login";
 		}
 
-		reviewService.approveReview(reviewId, note);
+		ReviewEntry approvedReview = reviewService.approveReview(reviewId, note);
+		inquiryNotificationService.notifyReviewReady(approvedReview);
 		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review approved.");
 		return "redirect:/reviews/admin";
 	}
