@@ -10,6 +10,14 @@
     mix-blend-mode: screen;
 }
 
+body:has(.thank-you-page) .atmospheric-feathers {
+    display: none;
+}
+
+body:has(.thank-you-page)::before {
+    opacity: 0.22;
+}
+
 body > main,
 body > footer,
 body > .site-footer {

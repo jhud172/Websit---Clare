@@ -1,5 +1,7 @@
 package co.uk.clarebrunton.ceremonies;
 
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -80,6 +82,12 @@ class InquiryNotificationServiceTest {
 		}
 	}
 
+	private String rawMessage(MimeMessage message) throws Exception {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		message.writeTo(output);
+		return output.toString(StandardCharsets.UTF_8);
+	}
+
 	@Test
 	void handleInquiryWritesFallbackWhenNoMailSenderConfigured(@TempDir Path fallbackDirectory) throws Exception {
 		@SuppressWarnings("unchecked")
@@ -130,6 +138,10 @@ class InquiryNotificationServiceTest {
 		assertThat(sentMessages).hasSize(2);
 		assertThat(sentMessages.get(0).getSubject()).isEqualTo("New enquiry from Jane Smith - Wedding ceremony");
 		assertThat(sentMessages.get(0).getAllRecipients()[0].toString()).isEqualTo("clare-notifications@example.com");
+		assertThat(rawMessage(sentMessages.get(0)))
+				.contains("/images/brand/logo-banner-no-background.png")
+				.doesNotContain("CLC wreath logo")
+				.doesNotContain("/images/brand/clc-wreath-logo.png");
 		assertThat(sentMessages.get(1).getSubject()).isEqualTo("Your enquiry has been received - Clare's Life Celebrations");
 		assertThat(sentMessages.get(1).getAllRecipients()[0].toString()).isEqualTo("jane@example.com");
 	}
@@ -176,6 +188,10 @@ class InquiryNotificationServiceTest {
 		MimeMessage sent = messageCaptor.getValue();
 		assertThat(sent.getSubject()).isEqualTo("New review submitted by Alex Smith");
 		assertThat(sent.getAllRecipients()[0].toString()).isEqualTo("clare-reviews@example.com");
+		assertThat(rawMessage(sent))
+				.contains("/images/brand/logo-banner-no-background.png")
+				.doesNotContain("CLC wreath logo")
+				.doesNotContain("/images/brand/clc-wreath-logo.png");
 	}
 
 	@Test

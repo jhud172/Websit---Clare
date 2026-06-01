@@ -1,39 +1,48 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, '', ~{::main})}">
-<main class="theme-contact secondary-page thank-you-page">
-    <section class="secondary-hero section-reveal-zone">
-        <div class="shell secondary-hero-grid">
-            <div class="secondary-hero-copy">
-                <p class="eyebrow">Enquiry received</p>
+<main class="theme-contact thank-you-page">
+    <section class="thank-you-hero section-reveal-zone">
+        <div class="shell thank-you-hero-grid">
+            <div class="thank-you-copy">
                 <h1>Your message has reached Clare.</h1>
                 <p class="lead">Clare will read through your details personally and come back to you as soon as she can.</p>
-                <div class="secondary-actions">
+                <div class="thank-you-actions">
                     <a class="button" th:href="@{/}">Return home</a>
                     <a class="button button-secondary" th:href="@{/services}">View ceremonies</a>
                 </div>
             </div>
-            <div class="secondary-brand-panel" aria-label="Confirmation">
-                <img th:src="@{${wreathLogoPath}}" alt="" aria-hidden="true">
-                <p class="secondary-status">Safely submitted</p>
-                <span th:text="${submittedServiceType != null ? submittedServiceType : 'Website enquiry'}">Website enquiry</span>
-            </div>
+
+            <aside class="thank-you-confirmation" aria-label="Enquiry confirmation">
+                <div class="thank-you-mark">
+                    <img th:src="@{${wreathLogoPath}}" alt="" aria-hidden="true">
+                </div>
+                <div>
+                    <p class="thank-you-status">Safely submitted</p>
+                    <p class="thank-you-service" th:text="${submittedServiceType != null ? submittedServiceType : 'Website enquiry'}">Website enquiry</p>
+                </div>
+                <ul class="thank-you-checklist">
+                    <li>Your enquiry has been received securely.</li>
+                    <li>Clare will reply to the email address you provided.</li>
+                    <li>Nothing else is needed from you right now.</li>
+                </ul>
+            </aside>
         </div>
     </section>
 
-    <section class="section secondary-flow-section section-divider section-reveal-zone">
-        <div class="shell secondary-step-grid">
-            <article class="secondary-step">
+    <section class="thank-you-flow section-reveal-zone">
+        <div class="shell thank-you-step-grid">
+            <article class="thank-you-step">
                 <span>01</span>
                 <h2>Clare reviews the details</h2>
                 <p>Your enquiry is checked by Clare, including the ceremony type, date, venue and message you shared.</p>
             </article>
-            <article class="secondary-step">
+            <article class="thank-you-step">
                 <span>02</span>
                 <h2>She replies directly</h2>
                 <p>Her response will come back to the email address you provided, with any questions or next steps.</p>
             </article>
-            <article class="secondary-step">
+            <article class="thank-you-step">
                 <span>03</span>
                 <h2>You can follow up</h2>
                 <p>If timing is important, use the direct contact details below so the enquiry can be picked up quickly.</p>
@@ -41,13 +50,12 @@
         </div>
     </section>
 
-    <section class="section secondary-contact-band section-reveal-zone">
-        <div class="shell secondary-split">
-            <div>
-                <p class="eyebrow">Direct contact</p>
+    <section class="thank-you-contact section-reveal-zone">
+        <div class="shell thank-you-contact-grid">
+            <div class="thank-you-contact-copy">
                 <h2>If your plans are time-sensitive, contact Clare directly.</h2>
             </div>
-            <div class="secondary-contact-list">
+            <div class="thank-you-contact-list">
                 <a th:href="'mailto:' + ${site.contactEmail}" th:text="${site.contactEmail}">clarebruntoncelebrant@gmail.com</a>
                 <a th:href="'tel:' + ${site.phoneNumber}" th:text="${site.phoneNumber}">07885 428304</a>
             </div>

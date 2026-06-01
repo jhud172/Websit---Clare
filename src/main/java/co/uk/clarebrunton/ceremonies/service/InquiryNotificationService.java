@@ -37,9 +37,9 @@ public class InquiryNotificationService {
 
 	private static final DateTimeFormatter DISPLAY_DATE_FORMAT = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
-	private static final String CLC_CONTENT_ID = "clareClcLogo";
+	private static final String BRAND_BANNER_CONTENT_ID = "clareBrandBanner";
 
-	private static final String CLC_IMAGE_RESOURCE = "static/images/brand/clc-wreath-logo.png";
+	private static final String BRAND_BANNER_RESOURCE = "static/images/brand/logo-banner-no-background.png";
 
 	private final ObjectProvider<JavaMailSender> mailSenderProvider;
 
@@ -497,7 +497,7 @@ public class InquiryNotificationService {
 	}
 
 	private String emailShell(String preheader, String heading, String intro, String bodyHtml) {
-		String clcUrl = inlineImageSource(CLC_CONTENT_ID, "/images/brand/clc-wreath-logo.png");
+		String bannerUrl = inlineImageSource(BRAND_BANNER_CONTENT_ID, "/images/brand/logo-banner-no-background.png");
 		String siteUrl = StringUtils.hasText(siteProperties.getBaseUrl()) ? siteProperties.getBaseUrl() : "";
 		return """
 				<!doctype html>
@@ -512,68 +512,34 @@ public class InquiryNotificationService {
 					<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:#070a0d;">
 						<tr>
 							<td align="center" style="padding:34px 12px;">
-								<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="max-width:700px;border-collapse:collapse;background:#fbf6f0;border:1px solid #2f3f3d;border-radius:26px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,0.45);">
+								<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="max-width:700px;border-collapse:collapse;background:#111317;border:1px solid #365f5e;border-radius:26px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,0.45);">
 									<tr>
-										<td style="padding:0;background:#090d11;">
-											<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:linear-gradient(135deg,#070a0d 0%%,#0d2024 52%%,#111317 100%%);">
-												<tr>
-													<td style="padding:26px 28px 24px;border-bottom:1px solid rgba(214,199,145,0.28);">
-														<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-															<tr>
-																<td width="94" valign="middle" style="padding:0 20px 0 0;">
-																	<img src="%s" width="82" alt="CLC wreath logo" style="display:block;width:82px;height:82px;border:0;border-radius:999px;background:#f6f1e7;">
-																</td>
-																<td valign="middle" style="padding:0;">
-																	<div style="margin:0;color:#f8f0dc;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.08;font-weight:400;">%s</div>
-																	<div style="margin-top:7px;color:#c99a33;font-size:11px;font-weight:800;letter-spacing:0.22em;text-transform:uppercase;">%s</div>
-																	<div style="margin-top:10px;width:120px;height:2px;line-height:2px;background:linear-gradient(90deg,#c99a33,#27956f,#0076a8);">&nbsp;</div>
-																</td>
-															</tr>
-														</table>
-													</td>
-												</tr>
-												<tr>
-													<td style="height:4px;line-height:4px;background:linear-gradient(90deg,#c99a33 0%%,#27956f 34%%,#0076a8 68%%,#c99a33 100%%);">&nbsp;</td>
-												</tr>
-											</table>
+										<td style="padding:0;background:#080b0f;">
+											<div style="padding:24px 28px 22px;background:linear-gradient(135deg,#070a0d 0%%,#0c292c 52%%,#111317 100%%);border-bottom:1px solid #5d5f36;">
+												<img src="%s" width="620" alt="%s" style="display:block;width:100%%;max-width:620px;height:auto;margin:0 auto;border:0;">
+											</div>
+											<div style="height:4px;line-height:4px;background:linear-gradient(90deg,#c99a33 0%%,#27956f 34%%,#0076a8 68%%,#c99a33 100%%);">&nbsp;</div>
 										</td>
 									</tr>
 									<tr>
-										<td style="padding:30px 28px 28px;background:#fbf6f0;">
-											<p style="margin:0 0 10px;color:#96722a;font-size:11px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;">Website notification</p>
-											<h1 style="margin:0;color:#171a1f;font-family:Georgia,'Times New Roman',serif;font-size:36px;line-height:1.08;font-weight:400;">%s</h1>
-											<p style="margin:14px 0 24px;color:#535a5f;font-size:16px;line-height:1.65;">%s</p>
+										<td style="padding:34px 28px 30px;background:#191a17;">
+											<p style="margin:0 0 12px;color:#f0c866;font-size:12px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;">Website notification</p>
+											<h1 style="margin:0;color:#fffdf7;font-family:Georgia,'Times New Roman',serif;font-size:38px;line-height:1.08;font-weight:400;">%s</h1>
+											<p style="margin:16px 0 26px;color:#e0e5e4;font-size:17px;line-height:1.66;">%s</p>
 											%s
 										</td>
 									</tr>
 									<tr>
-										<td style="padding:0;background:#090d11;">
-											<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;background:linear-gradient(135deg,#070a0d 0%%,#0d2024 52%%,#111317 100%%);">
-												<tr>
-													<td style="height:4px;line-height:4px;background:linear-gradient(90deg,#c99a33 0%%,#27956f 34%%,#0076a8 68%%,#c99a33 100%%);">&nbsp;</td>
-												</tr>
-												<tr>
-													<td style="padding:24px 28px 26px;border-top:1px solid rgba(214,199,145,0.2);">
-														<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-															<tr>
-																<td width="94" valign="middle" style="padding:0 20px 0 0;">
-																	<img src="%s" width="82" alt="CLC wreath logo" style="display:block;width:82px;height:82px;border:0;border-radius:999px;background:#f6f1e7;">
-																</td>
-																<td valign="middle" style="padding:0;">
-																	<div style="margin:0;color:#f8f0dc;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.08;font-weight:400;">%s</div>
-																	<div style="margin-top:7px;color:#c99a33;font-size:11px;font-weight:800;letter-spacing:0.22em;text-transform:uppercase;">%s</div>
-																	<div style="margin-top:10px;width:120px;height:2px;line-height:2px;background:linear-gradient(90deg,#c99a33,#27956f,#0076a8);">&nbsp;</div>
-																	<div style="margin-top:12px;color:#bfc7cb;font-size:13px;line-height:1.55;">
-																		<a href="mailto:%s" style="color:#f6f1e7;text-decoration:none;font-weight:700;">%s</a>
-																		&nbsp;&bull;&nbsp;
-																		<a href="%s" style="color:#f6f1e7;text-decoration:none;font-weight:700;">Website</a>
-																	</div>
-																</td>
-															</tr>
-														</table>
-													</td>
-												</tr>
-											</table>
+										<td style="padding:0;background:#080b0f;">
+											<div style="height:4px;line-height:4px;background:linear-gradient(90deg,#c99a33 0%%,#27956f 34%%,#0076a8 68%%,#c99a33 100%%);">&nbsp;</div>
+											<div style="padding:22px 28px 24px;background:linear-gradient(135deg,#070a0d 0%%,#0c292c 52%%,#111317 100%%);border-top:1px solid #5d5f36;">
+												<img src="%s" width="620" alt="%s" style="display:block;width:100%%;max-width:620px;height:auto;margin:0 auto 16px;border:0;">
+												<div style="margin:0;color:#bfc7cb;font-size:13px;line-height:1.55;text-align:center;">
+													<a href="mailto:%s" style="color:#f6f1e7;text-decoration:none;font-weight:700;">%s</a>
+													&nbsp;&bull;&nbsp;
+													<a href="%s" style="color:#f6f1e7;text-decoration:none;font-weight:700;">Website</a>
+												</div>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -585,15 +551,13 @@ public class InquiryNotificationService {
 				""".formatted(
 				escapeHtml(preheader),
 				escapeHtml(preheader),
-				escapeHtml(clcUrl),
+				escapeHtml(bannerUrl),
 				escapeHtml(siteProperties.getName()),
-				escapeHtml(resolveTagline()),
 				heading,
 				escapeHtml(intro),
 				bodyHtml,
-				escapeHtml(clcUrl),
+				escapeHtml(bannerUrl),
 				escapeHtml(siteProperties.getName()),
-				escapeHtml(resolveTagline()),
 				escapeHtml(siteProperties.getContactEmail()),
 				escapeHtml(siteProperties.getContactEmail()),
 				escapeHtml(siteUrl)
@@ -602,8 +566,8 @@ public class InquiryNotificationService {
 
 	private String emailSection(String label, String rows) {
 		return """
-				<div style="margin:0 0 10px;color:#6a521f;font-size:12px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;">%s</div>
-				<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:separate;border-spacing:0;border:1px solid #ddd0b7;border-radius:18px;overflow:hidden;background:#fffdf8;">
+				<div style="margin:0 0 10px;color:#f0c866;font-size:12px;font-weight:800;letter-spacing:0.17em;text-transform:uppercase;">%s</div>
+				<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:separate;border-spacing:0;border:1px solid #4f5e47;border-radius:18px;overflow:hidden;background:#101b1d;">
 					%s
 				</table>
 				""".formatted(escapeHtml(label), rows);
@@ -611,12 +575,12 @@ public class InquiryNotificationService {
 
 	private String highlightCard(String eyebrow, String heading, String copy) {
 		return """
-				<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-radius:20px;overflow:hidden;background:#111820;border:1px solid #24595b;">
+				<table role="presentation" width="100%%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;border-radius:20px;overflow:hidden;background:#0b2328;border:1px solid #69a6a2;">
 					<tr>
-						<td style="padding:20px 22px;background:linear-gradient(135deg,#111820 0%%,#092a2e 56%%,#15181e 100%%);">
-							<div style="margin:0 0 8px;color:#c99a33;font-size:11px;font-weight:800;letter-spacing:0.18em;text-transform:uppercase;">%s</div>
-							<div style="margin:0;color:#fff7cf;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.12;">%s</div>
-							<div style="margin-top:10px;color:#d8dee2;font-size:15px;line-height:1.65;">%s</div>
+						<td style="padding:22px 24px;background:linear-gradient(135deg,#0b2328 0%%,#123d40 54%%,#101716 100%%);">
+							<div style="margin:0 0 10px;color:#f0c866;font-size:12px;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;">%s</div>
+							<div style="margin:0;color:#fffdf7;font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:1.14;">%s</div>
+							<div style="margin-top:12px;color:#e8eeee;font-size:16px;line-height:1.66;font-weight:600;">%s</div>
 						</td>
 					</tr>
 				</table>
@@ -626,24 +590,24 @@ public class InquiryNotificationService {
 	private String detailRow(String label, String value) {
 		return """
 				<tr>
-					<td style="width:34%%;padding:13px 15px;border-bottom:1px solid #eee4d2;color:#6f767a;font-size:12px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;">%s</td>
-					<td style="padding:13px 15px;border-bottom:1px solid #eee4d2;color:#1d2226;font-size:15px;line-height:1.45;font-weight:600;">%s</td>
+					<td style="width:34%%;padding:14px 15px;border-bottom:1px solid #334445;color:#ccd5d4;font-size:12px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;">%s</td>
+					<td style="padding:14px 15px;border-bottom:1px solid #334445;color:#fffdf7;font-size:16px;line-height:1.45;font-weight:700;">%s</td>
 				</tr>
 				""".formatted(escapeHtml(label), escapeHtml(orNotSupplied(value)));
 	}
 
 	private String messageCard(String label, String message) {
 		return """
-				<div style="padding:20px;border-radius:18px;background:#fffdf8;border:1px solid #ddd0b7;">
+				<div style="padding:20px;border-radius:18px;background:#fffaf0;border:1px solid #e6d59f;">
 					<div style="margin:0 0 8px;color:#6a521f;font-size:12px;font-weight:800;letter-spacing:0.16em;text-transform:uppercase;">%s</div>
-					<div style="margin:0;color:#25272a;font-size:16px;line-height:1.68;">%s</div>
+					<div style="margin:0;color:#1d2226;font-size:16px;line-height:1.68;font-weight:500;">%s</div>
 				</div>
 				""".formatted(escapeHtml(label), withLineBreaks(message));
 	}
 
 	private String darkNotice(String message) {
 		return """
-				<div style="padding:16px 18px;border-radius:16px;background:#101317;color:#f4f0e8;border:1px solid #24595b;font-size:14px;line-height:1.55;">
+				<div style="padding:16px 18px;border-radius:16px;background:#0b2328;color:#fffdf7;border:1px solid #69a6a2;font-size:15px;line-height:1.58;font-weight:600;">
 					%s
 				</div>
 				""".formatted(escapeHtml(message));
@@ -660,7 +624,7 @@ public class InquiryNotificationService {
 	}
 
 	private void addInlineBrandImages(MimeMessageHelper helper) throws MessagingException {
-		addInlineImageIfPresent(helper, CLC_CONTENT_ID, CLC_IMAGE_RESOURCE);
+		addInlineImageIfPresent(helper, BRAND_BANNER_CONTENT_ID, BRAND_BANNER_RESOURCE);
 	}
 
 	private void addInlineImageIfPresent(MimeMessageHelper helper, String contentId, String resourcePath) throws MessagingException {
