@@ -10474,6 +10474,394 @@ textarea::placeholder {
     }
 }
 
+/* Secondary pages */
+
+.secondary-page {
+    background:
+        radial-gradient(circle at 84% 8%, rgba(183, 192, 204, 0.14), transparent 28rem),
+        radial-gradient(circle at 12% 84%, rgba(58, 70, 83, 0.24), transparent 30rem),
+        linear-gradient(180deg, #090a0d 0%, #141820 46%, #0d0f14 100%);
+}
+
+.secondary-hero {
+    position: relative;
+    min-height: min(74vh, 48rem);
+    display: grid;
+    align-items: center;
+    padding: clamp(5.2rem, 10vw, 8rem) 0 clamp(3.8rem, 7vw, 6rem);
+    overflow: hidden;
+}
+
+.secondary-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        url("/images/objects/feather-horizontal.png") right 8vw top 9vh / min(20rem, 34vw) auto no-repeat,
+        radial-gradient(circle at 74% 20%, rgba(201, 154, 51, 0.14), transparent 21rem),
+        radial-gradient(circle at 15% 82%, rgba(0, 118, 168, 0.16), transparent 25rem);
+    opacity: 0.9;
+}
+
+.secondary-hero-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+}
+
+.secondary-hero-copy {
+    max-width: 52rem;
+}
+
+.secondary-hero-copy h1 {
+    max-width: 11ch;
+    margin: 0;
+    font-size: clamp(3.3rem, 8vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: 0;
+}
+
+.secondary-hero-copy .lead {
+    max-width: 42rem;
+    margin-top: 1.25rem;
+    font-size: clamp(1.08rem, 1.8vw, 1.35rem);
+    color: rgba(243, 244, 246, 0.78);
+}
+
+.secondary-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 2rem;
+}
+
+.secondary-brand-panel,
+.secondary-login-form,
+.secondary-step,
+.secondary-empty-state,
+.admin-toolbar-panel,
+.admin-review-row {
+    border: 1px solid rgba(243, 244, 246, 0.12);
+    border-top-color: rgba(201, 154, 51, 0.3);
+    background:
+        radial-gradient(circle at 86% 8%, rgba(201, 154, 51, 0.12), transparent 13rem),
+        linear-gradient(145deg, rgba(37, 43, 52, 0.95), rgba(13, 16, 21, 0.94));
+    box-shadow:
+        0 26px 76px rgba(0, 0, 0, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.secondary-brand-panel {
+    display: grid;
+    justify-items: start;
+    gap: 0.85rem;
+    min-height: 24rem;
+    padding: clamp(1.35rem, 3vw, 2rem);
+    border-radius: 26px;
+}
+
+.secondary-brand-panel img {
+    width: clamp(5.4rem, 11vw, 8rem);
+    height: auto;
+    padding: 0.35rem;
+    border-radius: 999px;
+    background: rgba(246, 241, 231, 0.95);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.secondary-status,
+.policy-number {
+    margin: auto 0 0;
+    color: #c99a33;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.secondary-brand-panel span {
+    max-width: 18rem;
+    color: rgba(243, 244, 246, 0.72);
+    line-height: 1.6;
+}
+
+.admin-count-panel strong {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(4.5rem, 10vw, 7rem);
+    line-height: 0.9;
+}
+
+.secondary-flow-section,
+.privacy-overview-section,
+.admin-workspace-section {
+    background:
+        radial-gradient(circle at 8% 8%, rgba(0, 118, 168, 0.12), transparent 24rem),
+        linear-gradient(180deg, rgba(16, 19, 24, 0.98), rgba(9, 11, 15, 0.98));
+}
+
+.secondary-step-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 1.4rem);
+}
+
+.secondary-step {
+    min-height: 18rem;
+    padding: clamp(1.25rem, 2.5vw, 1.8rem);
+    border-radius: 24px;
+}
+
+.secondary-step span {
+    display: inline-grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1.7rem;
+    border-radius: 999px;
+    background: rgba(201, 154, 51, 0.14);
+    color: #f3d992;
+    font-weight: 800;
+}
+
+.secondary-step h2 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(1.45rem, 2.3vw, 2rem);
+}
+
+.secondary-contact-band,
+.privacy-body-section {
+    background:
+        radial-gradient(circle at 86% 18%, rgba(201, 154, 51, 0.09), transparent 24rem),
+        linear-gradient(180deg, rgba(17, 20, 26, 0.98), rgba(13, 15, 20, 0.98));
+}
+
+.secondary-split {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(1.4rem, 4vw, 3.5rem);
+    align-items: center;
+}
+
+.secondary-split h2 {
+    margin: 0;
+    font-size: clamp(2rem, 4.5vw, 4.4rem);
+    line-height: 1;
+}
+
+.secondary-split > p {
+    max-width: 42rem;
+    font-size: 1.08rem;
+    line-height: 1.75;
+}
+
+.secondary-contact-list {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.secondary-contact-list a {
+    min-width: 0;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(243, 244, 246, 0.12);
+    border-radius: 16px;
+    background: rgba(243, 244, 246, 0.055);
+    color: var(--ink);
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.secondary-policy-layout {
+    grid-template-columns: minmax(15rem, 0.32fr) minmax(0, 1fr);
+    align-items: start;
+}
+
+.secondary-policy-index {
+    position: sticky;
+    top: calc(var(--header-height) + 1rem);
+    padding: 1.2rem;
+    border-radius: 22px;
+    border: 1px solid rgba(243, 244, 246, 0.12);
+    background: rgba(15, 18, 23, 0.82);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.secondary-policy-index .footer-list {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.secondary-policy-index a {
+    color: rgba(243, 244, 246, 0.76);
+}
+
+.secondary-policy-sections {
+    gap: 1rem;
+}
+
+.secondary-policy-sections .policy-card {
+    position: relative;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border-radius: 22px;
+    background:
+        linear-gradient(145deg, rgba(39, 44, 52, 0.94), rgba(14, 17, 22, 0.94));
+}
+
+.secondary-policy-sections .policy-card h2 {
+    margin-top: 0.6rem;
+}
+
+.secondary-login-form {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.25rem, 3vw, 1.85rem);
+    border-radius: 26px;
+}
+
+.secondary-login-form .button {
+    justify-self: start;
+}
+
+.admin-workspace {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.admin-toolbar-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 20px;
+}
+
+.admin-toolbar-panel .callout {
+    margin: 0;
+}
+
+.admin-toolbar-actions,
+.admin-review-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.admin-review-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.admin-review-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(1rem, 2.5vw, 1.6rem);
+    align-items: start;
+    padding: clamp(1rem, 2vw, 1.45rem);
+    border-radius: 24px;
+}
+
+.admin-review-row-managed {
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.34fr) auto;
+}
+
+.admin-review-main h2 {
+    margin: 0.25rem 0 0.65rem;
+    font-size: clamp(1.45rem, 2.3vw, 2rem);
+}
+
+.admin-review-topline {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.65rem;
+}
+
+.admin-review-actions {
+    justify-content: flex-end;
+}
+
+.admin-review-photos {
+    align-self: stretch;
+    min-width: 0;
+}
+
+.secondary-empty-state {
+    display: grid;
+    justify-items: start;
+    gap: 0.75rem;
+    max-width: 42rem;
+    padding: clamp(1.4rem, 3vw, 2rem);
+    border-radius: 24px;
+}
+
+.secondary-empty-state img {
+    width: 4.5rem;
+    height: auto;
+    padding: 0.25rem;
+    border-radius: 999px;
+    background: rgba(246, 241, 231, 0.95);
+}
+
+@media (max-width: 900px) {
+    .secondary-hero-grid,
+    .secondary-step-grid,
+    .secondary-split,
+    .secondary-policy-layout,
+    .admin-review-row,
+    .admin-review-row-managed {
+        grid-template-columns: 1fr;
+    }
+
+    .secondary-brand-panel {
+        min-height: 16rem;
+    }
+
+    .secondary-policy-index {
+        position: relative;
+        top: auto;
+    }
+
+    .admin-toolbar-panel,
+    .admin-review-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .admin-toolbar-actions {
+        width: 100%;
+    }
+
+    .admin-toolbar-actions .button,
+    .admin-toolbar-actions form,
+    .admin-review-actions .button,
+    .admin-review-actions form {
+        width: 100%;
+    }
+}
+
+@media (max-width: 620px) {
+    .secondary-hero {
+        min-height: auto;
+        padding-top: 4.5rem;
+    }
+
+    .secondary-hero-copy h1 {
+        max-width: 100%;
+        font-size: clamp(2.7rem, 13vw, 4rem);
+    }
+
+    .secondary-actions .button,
+    .secondary-actions .button-secondary {
+        width: 100%;
+        white-space: normal;
+    }
+}
+
 /* Review submission form */
 
 .reviews-submit-section {

@@ -18,7 +18,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
@@ -79,9 +81,22 @@ public class SiteModelAdvice {
 		return "redirect:/";
 	}
 
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(NoResourceFoundException.class)
+	public String handleNoResourceFound(NoResourceFoundException exception, Model model, HttpServletRequest request) {
+		addSiteData(model, request);
+		model.addAttribute("status", HttpStatus.NOT_FOUND.value());
+		model.addAttribute("pageTitle", "Page not found");
+		model.addAttribute("pageDescription", "The page you were looking for could not be found.");
+		model.addAttribute("robotsContent", "noindex, nofollow");
+		return "error";
+	}
+
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Exception.class)
-	public String handleUnexpectedError(Exception exception, Model model) {
+	public String handleUnexpectedError(Exception exception, Model model, HttpServletRequest request) {
 		logger.error("Unexpected error handled by global handler", exception);
+		addSiteData(model, request);
 		model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		model.addAttribute("pageTitle", "Something went wrong");
 		model.addAttribute("pageDescription", "An unexpected error occurred.");

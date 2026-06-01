@@ -1,29 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'reviews', ~{::main})}">
-<main class="theme-trust">
-    <section class="page-hero page-hero-editorial section-reveal-zone">
-        <div class="shell section-heading">
-            <p class="eyebrow">Review moderation</p>
-            <h1>Admin login</h1>
-            <p class="lead">Sign in to approve or reject submitted reviews before publication.</p>
-        </div>
-    </section>
-
-    <section class="section section-soft section-atmosphere-sage section-reveal-zone">
-        <div class="shell contact-note-card">
-            <p class="field-error" th:if="${reviewAdminError != null}" th:text="${reviewAdminError}">Login error</p>
-            <form class="contact-form reviews-admin-login-form" th:action="@{/reviews/admin/login}" method="post">
+<main class="theme-trust secondary-page reviews-admin-page">
+    <section class="secondary-hero admin-login-hero section-reveal-zone">
+        <div class="shell secondary-hero-grid">
+            <div class="secondary-hero-copy">
+                <p class="eyebrow">Review moderation</p>
+                <h1>Sign in to manage reviews.</h1>
+                <p class="lead">Approve, reject, enable or disable submitted reviews before they appear publicly.</p>
+            </div>
+            <form class="secondary-login-form" th:action="@{/reviews/admin/login}" method="post">
+                <p class="field-error" th:if="${reviewAdminError != null}" th:text="${reviewAdminError}">Login error</p>
                 <div class="field-group">
                     <label for="username">Username</label>
                     <div class="field-control">
-                        <input id="username" name="username" type="text" autocomplete="username" value="admin" required>
+                        <input id="username" name="username" type="text" autocomplete="username" required>
                     </div>
                 </div>
                 <div class="field-group">
                     <label for="password">Password</label>
                     <div class="field-control">
-                        <input id="password" name="password" type="password" autocomplete="current-password" value="password" required>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required>
                     </div>
                 </div>
                 <button class="button" type="submit">Sign in</button>

@@ -1,49 +1,56 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, '', ~{::main})}">
-<main class="theme-contact">
-    <section class="page-hero">
-        <div class="shell page-hero-grid">
-            <div>
-                <p class="eyebrow">Thank you</p>
-                <h1>Your enquiry has been safely received.</h1>
+<main class="theme-contact secondary-page thank-you-page">
+    <section class="secondary-hero section-reveal-zone">
+        <div class="shell secondary-hero-grid">
+            <div class="secondary-hero-copy">
+                <p class="eyebrow">Enquiry received</p>
+                <h1>Your message has reached Clare.</h1>
+                <p class="lead">Clare will read through your details personally and come back to you as soon as she can.</p>
+                <div class="secondary-actions">
+                    <a class="button" th:href="@{/}">Return home</a>
+                    <a class="button button-secondary" th:href="@{/services}">View ceremonies</a>
+                </div>
             </div>
-            <p class="lead">Clare will read through your details and come back to you personally as soon as she can.</p>
+            <div class="secondary-brand-panel" aria-label="Confirmation">
+                <img th:src="@{${wreathLogoPath}}" alt="" aria-hidden="true">
+                <p class="secondary-status">Safely submitted</p>
+                <span th:text="${submittedServiceType != null ? submittedServiceType : 'Website enquiry'}">Website enquiry</span>
+            </div>
         </div>
     </section>
 
-    <section class="section">
-        <div class="shell detail-grid">
-            <article class="detail-card">
-                <p class="eyebrow">What happens next</p>
-                <h3>Clare replies personally.</h3>
-                <p>Your enquiry is not going into a faceless system. Clare will review it herself and come back to you directly.</p>
+    <section class="section secondary-flow-section section-divider section-reveal-zone">
+        <div class="shell secondary-step-grid">
+            <article class="secondary-step">
+                <span>01</span>
+                <h2>Clare reviews the details</h2>
+                <p>Your enquiry is checked by Clare, including the ceremony type, date, venue and message you shared.</p>
             </article>
-            <article class="detail-card">
-                <p class="eyebrow">If it is urgent</p>
-                <h3>You can follow up directly.</h3>
-                <p>If your enquiry is time-sensitive, you are welcome to email or phone using the details shown below.</p>
+            <article class="secondary-step">
+                <span>02</span>
+                <h2>She replies directly</h2>
+                <p>Her response will come back to the email address you provided, with any questions or next steps.</p>
             </article>
-            <article class="detail-card">
-                <p class="eyebrow">In the meantime</p>
-                <h3>You can continue exploring the site.</h3>
-                <p>If you want to revisit ceremony options or learn more about Clare's approach, the main pages are ready for you.</p>
+            <article class="secondary-step">
+                <span>03</span>
+                <h2>You can follow up</h2>
+                <p>If timing is important, use the direct contact details below so the enquiry can be picked up quickly.</p>
             </article>
         </div>
     </section>
 
-    <section class="section section-soft">
-        <div class="shell cta-panel">
+    <section class="section secondary-contact-band section-reveal-zone">
+        <div class="shell secondary-split">
             <div>
-                <p class="eyebrow">Need anything else?</p>
-                <h2>If something is time-sensitive, feel free to get in touch directly.</h2>
-                <p>
-                    <a class="text-link" th:href="'mailto:' + ${site.contactEmail}" th:text="${site.contactEmail}">clarebruntoncelebrant@gmail.com</a>
-                    <span> or </span>
-                    <a class="text-link" th:href="'tel:' + ${site.phoneNumber}" th:text="${site.phoneNumber}">07885 428304</a>
-                </p>
+                <p class="eyebrow">Direct contact</p>
+                <h2>If your plans are time-sensitive, contact Clare directly.</h2>
             </div>
-            <a class="button" th:href="@{/}">Return home</a>
+            <div class="secondary-contact-list">
+                <a th:href="'mailto:' + ${site.contactEmail}" th:text="${site.contactEmail}">clarebruntoncelebrant@gmail.com</a>
+                <a th:href="'tel:' + ${site.phoneNumber}" th:text="${site.phoneNumber}">07885 428304</a>
+            </div>
         </div>
     </section>
 </main>
