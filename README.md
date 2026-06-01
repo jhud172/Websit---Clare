@@ -111,14 +111,22 @@ Set these in Render before launch:
 - `SITE_BASE_URL`
 - `SITE_FROM_EMAIL`
 - `INQUIRY_NOTIFICATION_EMAIL`
+- `REVIEWS_NOTIFICATION_EMAIL`
+- `RESEND_API_KEY`
+- `RESEND_FROM_EMAIL`
 - `SPRING_MAIL_HOST`
 - `SPRING_MAIL_PORT`
 - `SPRING_MAIL_USERNAME`
 - `SPRING_MAIL_PASSWORD`
+- `SPRING_MAIL_SMTP_CONNECTION_TIMEOUT` defaults to `5000`
+- `SPRING_MAIL_SMTP_TIMEOUT` defaults to `5000`
+- `SPRING_MAIL_SMTP_WRITE_TIMEOUT` defaults to `5000`
 - `REVIEWS_STORAGE_DIRECTORY` defaults to `data/reviews`
 - `REVIEWS_PHOTO_DIRECTORY` defaults to `uploads`
 - `REVIEWS_ADMIN_USERNAME`
 - `REVIEWS_ADMIN_PASSWORD`
+
+On Render free web services, use the Resend variables rather than Gmail SMTP. Render blocks outbound SMTP ports on free services, so `smtp.gmail.com:587` can time out even when the Gmail app password is correct.
 
 ## Reviews moderation
 

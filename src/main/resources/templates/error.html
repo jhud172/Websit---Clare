@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{fragments/layout :: page('Something went wrong', 'An unexpected error has occurred.', '', ~{::main})}">
-<main>
-    <section class="page-hero">
-        <div class="shell page-hero-inner">
-            <div>
+      th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, '', ~{::main})}">
+<main class="theme-trust secondary-page error-page">
+    <section class="secondary-hero secondary-error-hero section-reveal-zone">
+        <div class="shell secondary-hero-grid">
+            <div class="secondary-hero-copy">
                 <p class="eyebrow" th:text="${status != null} ? ${status} : 'Error'">Error</p>
-                <h1>Something went wrong.</h1>
+                <h1 th:text="${status == 404} ? 'This page could not be found.' : 'Something did not load as expected.'">Something did not load as expected.</h1>
+                <p class="lead" th:text="${status == 404} ? 'The page may have moved, or the link may no longer be available.' : 'You can return to the homepage or try the page again in a moment.'">You can return to the homepage or try the page again in a moment.</p>
+                <div class="secondary-actions">
+                    <a class="button" th:href="@{/}">Go to homepage</a>
+                    <button class="button button-secondary" type="button" onclick="window.location.reload()">Try again</button>
+                </div>
             </div>
-            <p class="lead">An unexpected error occurred. Please try again or return to the homepage.</p>
-            <a class="button" th:href="@{/}">Go to homepage</a>
+            <div class="secondary-brand-panel error-status-panel" aria-label="Error status">
+                <img th:src="@{${wreathLogoPath}}" alt="" aria-hidden="true">
+                <p class="secondary-status" th:text="${status == 404} ? 'Page not found' : 'Page unavailable'">Page unavailable</p>
+                <span>If this keeps happening, contact Clare directly using the details in the footer.</span>
+            </div>
         </div>
     </section>
 </main>

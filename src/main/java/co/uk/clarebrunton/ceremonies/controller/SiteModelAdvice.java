@@ -1,11 +1,13 @@
 package co.uk.clarebrunton.ceremonies.controller;
 
 import co.uk.clarebrunton.ceremonies.config.SiteProperties;
+import co.uk.clarebrunton.ceremonies.model.InquiryForm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -16,20 +18,29 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
 public class SiteModelAdvice {
 
 	private static final Logger logger = LoggerFactory.getLogger(SiteModelAdvice.class);
-	private static final String DEFAULT_LOGO_PATH = "/images/brand/logo-clare-no-background+no-wreath-CLC.png";
+	private static final String DEFAULT_LOGO_PATH = "/images/brand/clc-wreath-logo.png";
 	private static final String CLC_LOGO_PATH = "/images/brand/logo-clare-no-background+no-wreath-CLC.png";
 	private static final String WREATH_LOGO_PATH = "/images/brand/logo-clare-no-background-wreath-only.png";
 	private static final String HORIZONTAL_FEATHER_PATH = "/images/objects/feather-horizontal.png";
 	private static final String VERTICAL_FEATHER_PATH = "/images/objects/feather-vertical.png";
-	private static final String OPEN_GRAPH_IMAGE_PATH = "/images/clare/weddings-confetti.jpg";
+	private static final String OPEN_GRAPH_IMAGE_PATH = "/images/brand/clc-wreath-logo.png";
 	private static final String DEFAULT_INSTAGRAM_URL = "https://www.instagram.com/clareslifecelebrations/";
+	private static final List<String> SERVICE_OPTIONS = List.of(
+			"Wedding ceremony",
+			"Funeral or memorial",
+			"Naming ceremony",
+			"Vow renewal",
+			"Other ceremony"
+	);
 
 	private final SiteProperties siteProperties;
 
@@ -55,6 +66,12 @@ public class SiteModelAdvice {
 		model.addAttribute("canonicalUrl", canonicalUrl);
 		model.addAttribute("openGraphImageUrl", baseUrl + OPEN_GRAPH_IMAGE_PATH);
 		model.addAttribute("structuredDataJson", buildStructuredDataJson(baseUrl));
+		if (!model.containsAttribute("serviceOptions")) {
+			model.addAttribute("serviceOptions", SERVICE_OPTIONS);
+		}
+		if (!model.containsAttribute("inquiryForm")) {
+			model.addAttribute("inquiryForm", new InquiryForm());
+		}
 	}
 
 	@ExceptionHandler(MaxUploadSizeExceededException.class)
@@ -64,9 +81,22 @@ public class SiteModelAdvice {
 		return "redirect:/";
 	}
 
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(NoResourceFoundException.class)
+	public String handleNoResourceFound(NoResourceFoundException exception, Model model, HttpServletRequest request) {
+		addSiteData(model, request);
+		model.addAttribute("status", HttpStatus.NOT_FOUND.value());
+		model.addAttribute("pageTitle", "Page not found");
+		model.addAttribute("pageDescription", "The page you were looking for could not be found.");
+		model.addAttribute("robotsContent", "noindex, nofollow");
+		return "error";
+	}
+
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Exception.class)
-	public String handleUnexpectedError(Exception exception, Model model) {
+	public String handleUnexpectedError(Exception exception, Model model, HttpServletRequest request) {
 		logger.error("Unexpected error handled by global handler", exception);
+		addSiteData(model, request);
 		model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
 		model.addAttribute("pageTitle", "Something went wrong");
 		model.addAttribute("pageDescription", "An unexpected error occurred.");

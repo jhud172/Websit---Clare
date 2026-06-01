@@ -215,10 +215,13 @@
 
                 <div class="checkbox-row" data-form-field="privacyAccepted" th:classappend="${#fields.hasErrors('privacyAccepted')} ? ' is-invalid'">
                     <input class="checkbox-input" id="privacyAccepted" type="checkbox" th:field="*{privacyAccepted}">
-                    <label class="checkbox-label" for="privacyAccepted">
+                    <div class="checkbox-label" role="checkbox" tabindex="0" aria-checked="false" aria-labelledby="privacyAcceptedText">
                         <span class="checkbox-box" aria-hidden="true"></span>
-                        <span>I am happy for my details to be used so Clare can respond to this enquiry in line with the <a class="text-link" th:href="@{/privacy}">privacy notice</a>.</span>
-                    </label>
+                        <span id="privacyAcceptedText" class="checkbox-copy">
+                            I am happy for my details to be used so Clare can respond to this enquiry in line with the
+                            <a class="text-link" th:href="@{/privacy}">privacy notice</a>.
+                        </span>
+                    </div>
                 </div>
                 <p class="field-error" th:if="${#fields.hasErrors('privacyAccepted')}" th:errors="*{privacyAccepted}">Privacy error</p>
 

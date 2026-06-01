@@ -26,6 +26,10 @@ services:
         sync: false
       - key: REVIEWS_NOTIFICATION_EMAIL
         sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false
       - key: SPRING_MAIL_HOST
         sync: false
       - key: SPRING_MAIL_PORT

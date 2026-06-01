@@ -1,28 +1,43 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'reviews', ~{::main})}">
-<main class="theme-trust reviews-admin-page">
-    <section class="page-hero page-hero-editorial section-reveal-zone">
-        <div class="shell section-heading">
-            <p class="eyebrow">Review moderation</p>
-            <h1>Pending reviews</h1>
-            <p class="lead">Approve suitable reviews for public display or reject unsuitable submissions.</p>
+<main class="theme-trust secondary-page reviews-admin-page">
+    <section class="secondary-hero admin-hero section-reveal-zone">
+        <div class="shell secondary-hero-grid">
+            <div class="secondary-hero-copy">
+                <p class="eyebrow">Review moderation</p>
+                <h1>Pending reviews</h1>
+                <p class="lead">Check new submissions before they are allowed onto the public reviews page.</p>
+            </div>
+            <div class="secondary-brand-panel admin-count-panel">
+                <p class="secondary-status">Awaiting decision</p>
+                <strong th:text="${#lists.size(pendingReviews)}">0</strong>
+                <span>pending review(s)</span>
+            </div>
         </div>
     </section>
 
-    <section class="section section-atmosphere-clay section-divider section-reveal-zone">
-        <div class="shell">
-            <p class="callout" th:if="${reviewAdminMessage != null}" th:text="${reviewAdminMessage}">Action completed.</p>
-            <div class="reviews-admin-toolbar">
-                <a class="button button-secondary" th:href="@{/reviews/admin/manage}">Manage accepted reviews</a>
+    <section class="section admin-workspace-section section-divider section-reveal-zone">
+        <div class="shell admin-workspace">
+            <div class="admin-toolbar-panel">
+                <p class="callout" th:if="${reviewAdminMessage != null}" th:text="${reviewAdminMessage}">Action completed.</p>
+                <div class="admin-toolbar-actions">
+                    <a class="button button-secondary" th:href="@{/reviews/admin/manage}">Manage accepted reviews</a>
+                    <form th:action="@{/reviews/admin/logout}" method="post">
+                        <button class="button button-secondary" type="submit">Sign out</button>
+                    </form>
+                </div>
             </div>
-            <div class="detail-grid reviews-admin-grid" th:if="${!#lists.isEmpty(pendingReviews)}">
-                <article class="detail-card reviews-admin-card" th:each="review : ${pendingReviews}">
-                    <p class="eyebrow" th:text="${review.ceremonyType}">Wedding ceremony</p>
-                    <h3 th:text="${review.headline != null ? review.headline : 'Review submission'}">Review</h3>
-                    <p class="reviews-admin-meta"><strong th:text="${review.reviewerName}">Reviewer</strong> · <span th:text="${review.rating + ' stars'}">5 stars</span></p>
-                    <p class="reviews-admin-message" th:text="${review.message}">Review message</p>
-                    <div class="hero-actions reviews-admin-actions">
+
+            <div class="admin-review-list" th:if="${!#lists.isEmpty(pendingReviews)}">
+                <article class="admin-review-row" th:each="review : ${pendingReviews}">
+                    <div class="admin-review-main">
+                        <p class="eyebrow" th:text="${review.ceremonyType}">Wedding ceremony</p>
+                        <h2 th:text="${review.headline != null ? review.headline : 'Review submission'}">Review</h2>
+                        <p class="reviews-admin-meta"><strong th:text="${review.reviewerName}">Reviewer</strong> <span th:text="${review.rating + ' stars'}">5 stars</span></p>
+                        <p class="reviews-admin-message" th:text="${review.message}">Review message</p>
+                    </div>
+                    <div class="admin-review-actions">
                         <form th:action="@{'/reviews/admin/' + ${review.id} + '/approve'}" method="post">
                             <button class="button" type="submit">Approve</button>
                         </form>
@@ -32,23 +47,13 @@
                     </div>
                 </article>
             </div>
-            <div class="contact-note-card" th:if="${#lists.isEmpty(pendingReviews)}">
+
+            <div class="secondary-empty-state" th:if="${#lists.isEmpty(pendingReviews)}">
+                <img th:src="@{${wreathLogoPath}}" alt="" aria-hidden="true">
                 <p class="eyebrow">No pending reviews</p>
                 <h2>All submissions have been reviewed.</h2>
+                <a class="button button-secondary" th:href="@{/reviews/admin/manage}">Manage accepted reviews</a>
             </div>
-        </div>
-    </section>
-
-    <section class="section section-soft section-atmosphere-sage section-reveal-zone">
-        <div class="shell cta-panel">
-            <div>
-                <p class="eyebrow">Session</p>
-                <h2>Finished moderating?</h2>
-                <p>Sign out to end this admin session.</p>
-            </div>
-            <form th:action="@{/reviews/admin/logout}" method="post">
-                <button class="button" type="submit">Sign out</button>
-            </form>
         </div>
     </section>
 </main>
