@@ -44,3 +44,4 @@ reviews:
   admin-password: ${REVIEWS_ADMIN_PASSWORD:password}
   max-photo-count: ${REVIEWS_MAX_PHOTO_COUNT:10}
   max-photo-size-bytes: ${REVIEWS_MAX_PHOTO_SIZE_BYTES:5242880}
+  notification-email: ${REVIEWS_NOTIFICATION_EMAIL:${INQUIRY_NOTIFICATION_EMAIL:${SITE_CONTACT_EMAIL:clarebruntoncelebrant@gmail.com}}}

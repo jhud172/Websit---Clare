@@ -283,10 +283,16 @@ img {
 }
 
 .card-front p {
-    color: rgba(255, 248, 236, 0.72);
-    font-size: 7.4px;
-    font-weight: 800;
-    letter-spacing: 0.18em;
+    color: #8cc2aa;
+    font-size: 8.2px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    line-height: 1.18;
+    text-shadow:
+        0 0.3mm 0.8mm rgba(0, 0, 0, 0.38),
+        0 0 1.8mm rgba(79, 111, 102, 0.28);
+    text-rendering: geometricPrecision;
+    -webkit-font-smoothing: antialiased;
     text-transform: uppercase;
 }
 

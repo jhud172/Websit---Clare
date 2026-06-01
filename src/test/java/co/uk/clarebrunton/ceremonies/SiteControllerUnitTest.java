@@ -19,6 +19,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 import co.uk.clarebrunton.ceremonies.config.ReviewProperties;
 import co.uk.clarebrunton.ceremonies.controller.SiteController;
 import co.uk.clarebrunton.ceremonies.model.InquiryForm;
+import co.uk.clarebrunton.ceremonies.model.ReviewEntry;
+import co.uk.clarebrunton.ceremonies.model.ReviewStatus;
 import co.uk.clarebrunton.ceremonies.service.BlogService;
 import co.uk.clarebrunton.ceremonies.service.InquiryNotificationService;
 import co.uk.clarebrunton.ceremonies.service.ReviewService;
@@ -199,12 +201,18 @@ class SiteControllerUnitTest {
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("reviewAdminAuthenticated", true);
 		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
+		ReviewEntry approvedEntry = new ReviewEntry();
+		approvedEntry.setId("review-123");
+		approvedEntry.setReviewerName("Jane Smith");
+		approvedEntry.setStatus(ReviewStatus.APPROVED);
+		when(reviewService.approveReview("review-123", "Looks good")).thenReturn(approvedEntry);
 
 		String view = controller.approveReview("review-123", "Looks good", redirectAttributes, session);
 
 		assertThat(view).isEqualTo("redirect:/reviews/admin");
 		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review approved.");
 		verify(reviewService).approveReview("review-123", "Looks good");
+		verify(inquiryNotificationService).notifyReviewReady(approvedEntry);
 	}
 
 	@Test
@@ -284,6 +292,11 @@ class SiteControllerUnitTest {
 		reviewForm.setRating(5);
 		reviewForm.setMessage("This ceremony was so personal and thoughtful from beginning to end.");
 		reviewForm.setConsentAccepted(true);
+		ReviewEntry submittedEntry = new ReviewEntry();
+		submittedEntry.setId("review-456");
+		submittedEntry.setReviewerName("Jane Smith");
+		submittedEntry.setStatus(ReviewStatus.PENDING);
+		when(reviewService.submitReview(reviewForm, List.of())).thenReturn(submittedEntry);
 
 		BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(reviewForm, "reviewForm");
 		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
@@ -300,6 +313,7 @@ class SiteControllerUnitTest {
 		assertThat(redirectAttributes.getFlashAttributes().get("reviewSubmissionSuccess"))
 				.isEqualTo("Thank you. Your review has been received and is now pending approval.");
 		verify(reviewService).submitReview(reviewForm, List.of());
+		verify(inquiryNotificationService).notifyReviewSubmitted(submittedEntry);
 		verifyNoMoreInteractions(reviewService);
 	}
 }
