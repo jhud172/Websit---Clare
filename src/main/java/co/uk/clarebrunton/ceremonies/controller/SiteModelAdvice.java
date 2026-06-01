@@ -1,11 +1,13 @@
 package co.uk.clarebrunton.ceremonies.controller;
 
 import co.uk.clarebrunton.ceremonies.config.SiteProperties;
+import co.uk.clarebrunton.ceremonies.model.InquiryForm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -30,6 +32,13 @@ public class SiteModelAdvice {
 	private static final String VERTICAL_FEATHER_PATH = "/images/objects/feather-vertical.png";
 	private static final String OPEN_GRAPH_IMAGE_PATH = "/images/brand/clc-wreath-logo.png";
 	private static final String DEFAULT_INSTAGRAM_URL = "https://www.instagram.com/clareslifecelebrations/";
+	private static final List<String> SERVICE_OPTIONS = List.of(
+			"Wedding ceremony",
+			"Funeral or memorial",
+			"Naming ceremony",
+			"Vow renewal",
+			"Other ceremony"
+	);
 
 	private final SiteProperties siteProperties;
 
@@ -55,6 +64,12 @@ public class SiteModelAdvice {
 		model.addAttribute("canonicalUrl", canonicalUrl);
 		model.addAttribute("openGraphImageUrl", baseUrl + OPEN_GRAPH_IMAGE_PATH);
 		model.addAttribute("structuredDataJson", buildStructuredDataJson(baseUrl));
+		if (!model.containsAttribute("serviceOptions")) {
+			model.addAttribute("serviceOptions", SERVICE_OPTIONS);
+		}
+		if (!model.containsAttribute("inquiryForm")) {
+			model.addAttribute("inquiryForm", new InquiryForm());
+		}
 	}
 
 	@ExceptionHandler(MaxUploadSizeExceededException.class)

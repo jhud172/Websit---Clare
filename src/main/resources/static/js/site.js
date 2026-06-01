@@ -308,7 +308,6 @@ if (enquiryModal) {
 
         const maxScroll = Math.max(1, modalDialog.scrollHeight - modalDialog.clientHeight);
         const progress = Math.min(1, Math.max(0, modalDialog.scrollTop / maxScroll));
-        modalDialog.style.setProperty("--modal-scroll-progress", progress.toFixed(3));
         modalDialog.classList.toggle("is-scrolled", modalDialog.scrollTop > 12);
         modalDialog.classList.toggle("is-at-bottom", progress > 0.96);
     };
@@ -328,7 +327,6 @@ if (enquiryModal) {
         enquiryModal.hidden = true;
         enquiryModal.classList.remove("is-open");
         modalDialog?.classList.remove("is-scrolled", "is-at-bottom");
-        modalDialog?.style.setProperty("--modal-scroll-progress", "0");
         lockScroll(false);
         if (previousFocus && typeof previousFocus.focus === "function") {
             previousFocus.focus({ preventScroll: true });
@@ -1665,10 +1663,17 @@ if (contactForm) {
 
     const privacyRow = getFieldWrapper("privacyAccepted");
     const privacyInput = fieldConfig.privacyAccepted.input;
+    const privacyToggle = privacyRow?.querySelector(".checkbox-label");
 
     if (privacyRow && privacyInput) {
         const syncPrivacyCheckedState = () => {
             privacyRow.classList.toggle("is-checked", privacyInput.checked);
+            privacyToggle?.setAttribute("aria-checked", privacyInput.checked ? "true" : "false");
+        };
+
+        const togglePrivacyAccepted = () => {
+            privacyInput.checked = !privacyInput.checked;
+            privacyInput.dispatchEvent(new Event("change", { bubbles: true }));
         };
 
         privacyRow.addEventListener("click", (event) => {
@@ -1677,8 +1682,16 @@ if (contactForm) {
             }
 
             event.preventDefault();
-            privacyInput.checked = !privacyInput.checked;
-            privacyInput.dispatchEvent(new Event("change", { bubbles: true }));
+            togglePrivacyAccepted();
+        });
+
+        privacyToggle?.addEventListener("keydown", (event) => {
+            if (event.key !== " " && event.key !== "Enter") {
+                return;
+            }
+
+            event.preventDefault();
+            togglePrivacyAccepted();
         });
 
         privacyInput.addEventListener("change", syncPrivacyCheckedState);
