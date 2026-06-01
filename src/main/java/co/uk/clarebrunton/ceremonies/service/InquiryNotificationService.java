@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -46,6 +47,8 @@ public class InquiryNotificationService {
 
 	private final ObjectProvider<JavaMailSender> mailSenderProvider;
 
+	private final ObjectProvider<ResendEmailClient> resendEmailClientProvider;
+
 	private final SiteProperties siteProperties;
 
 	@Value("${inquiry.notification-email:}")
@@ -58,16 +61,40 @@ public class InquiryNotificationService {
 	private String reviewNotificationEmail;
 
 	public InquiryNotificationService(ObjectProvider<JavaMailSender> mailSenderProvider, SiteProperties siteProperties) {
+		this(mailSenderProvider, null, siteProperties);
+	}
+
+	@Autowired
+	public InquiryNotificationService(ObjectProvider<JavaMailSender> mailSenderProvider,
+			ObjectProvider<ResendEmailClient> resendEmailClientProvider,
+			SiteProperties siteProperties) {
 		this.mailSenderProvider = mailSenderProvider;
+		this.resendEmailClientProvider = resendEmailClientProvider;
 		this.siteProperties = siteProperties;
 	}
 
 	public void handleInquiry(InquiryForm inquiryForm, List<MultipartFile> attachments) {
 		String recipient = StringUtils.hasText(notificationEmail) ? notificationEmail : siteProperties.getContactEmail();
 		JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
+		ResendEmailClient resendEmailClient = resendEmailClientProvider != null ? resendEmailClientProvider.getIfAvailable() : null;
 		List<MultipartFile> safeAttachments = attachments == null ? List.of() : attachments;
 
-		if (mailSender == null || !StringUtils.hasText(recipient)) {
+		if (!StringUtils.hasText(recipient)) {
+			logger.info("Inquiry received (no outbound email configured): name={}, service={}, email={}, attachments={}",
+					inquiryForm.getFullName(),
+					inquiryForm.getServiceType(),
+					inquiryForm.getEmail(),
+					safeAttachments.size());
+			writeFallbackRecord(inquiryForm, safeAttachments, "outbound-email-not-configured");
+			return;
+		}
+
+		if (resendEmailClient != null && resendEmailClient.isConfigured()) {
+			sendInquiryWithResend(resendEmailClient, recipient, inquiryForm, safeAttachments);
+			return;
+		}
+
+		if (mailSender == null) {
 			logger.info("Inquiry received (no outbound email configured): name={}, service={}, email={}, attachments={}",
 					inquiryForm.getFullName(),
 					inquiryForm.getServiceType(),
@@ -127,8 +154,32 @@ public class InquiryNotificationService {
 			String nextStep) {
 		String recipient = StringUtils.hasText(reviewNotificationEmail) ? reviewNotificationEmail : siteProperties.getContactEmail();
 		JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
+		ResendEmailClient resendEmailClient = resendEmailClientProvider != null ? resendEmailClientProvider.getIfAvailable() : null;
 
-		if (mailSender == null || !StringUtils.hasText(recipient)) {
+		if (!StringUtils.hasText(recipient)) {
+			logger.info("Review notification skipped (no outbound email configured): reviewer={}, status={}",
+					review.getReviewerName(), review.getStatus());
+			return;
+		}
+
+		if (resendEmailClient != null && resendEmailClient.isConfigured()) {
+			try {
+				resendEmailClient.send(
+						recipient,
+						siteProperties.getContactEmail(),
+						subject,
+						buildReviewPlainText(review, statusLabel, nextStep),
+						buildReviewHtml(review, heading, intro, statusLabel, nextStep),
+						List.of());
+				logger.info("Review notification sent via Resend to {} for review {}", recipient, review.getId());
+			}
+			catch (ResendEmailClient.EmailDeliveryException | IllegalStateException exception) {
+				logger.error("Review notification could not be sent for review {}. Check Resend settings.", review.getId(), exception);
+			}
+			return;
+		}
+
+		if (mailSender == null) {
 			logger.info("Review notification skipped (no outbound email configured): reviewer={}, status={}",
 					review.getReviewerName(), review.getStatus());
 			return;
@@ -140,6 +191,42 @@ public class InquiryNotificationService {
 		}
 		catch (MailException | MessagingException exception) {
 			logger.error("Review notification could not be sent for review {}. Check SMTP settings.", review.getId(), exception);
+		}
+	}
+
+	private void sendInquiryWithResend(ResendEmailClient resendEmailClient,
+			String recipient,
+			InquiryForm inquiryForm,
+			List<MultipartFile> attachments) {
+		try {
+			resendEmailClient.send(
+					recipient,
+					inquiryForm.getEmail(),
+					"New enquiry from " + inquiryForm.getFullName() + " - " + inquiryForm.getServiceType(),
+					buildAdminPlainText(inquiryForm, attachments),
+					buildAdminHtml(inquiryForm, attachments),
+					attachments);
+			logger.info("Admin notification sent via Resend to {} for inquiry from {}", recipient, inquiryForm.getEmail());
+		}
+		catch (ResendEmailClient.EmailDeliveryException | IllegalStateException exception) {
+			logger.error("Admin notification could not be sent for inquiry from {}. Check Resend settings.",
+					inquiryForm.getEmail(), exception);
+			writeFallbackRecord(inquiryForm, attachments, "admin-email-send-failed");
+		}
+
+		try {
+			resendEmailClient.send(
+					inquiryForm.getEmail(),
+					siteProperties.getContactEmail(),
+					"Your enquiry has been received - " + siteProperties.getName(),
+					buildConfirmationPlainText(inquiryForm),
+					buildConfirmationHtml(inquiryForm),
+					List.of());
+			logger.info("Confirmation email sent via Resend to {}", inquiryForm.getEmail());
+		}
+		catch (ResendEmailClient.EmailDeliveryException | IllegalStateException exception) {
+			logger.error("Confirmation email could not be sent to {}. Check Resend settings.",
+					inquiryForm.getEmail(), exception);
 		}
 	}
 
