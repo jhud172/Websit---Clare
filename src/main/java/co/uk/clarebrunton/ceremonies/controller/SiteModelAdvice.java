@@ -1,11 +1,5 @@
 package co.uk.clarebrunton.ceremonies.controller;
 
-import co.uk.clarebrunton.ceremonies.config.SiteProperties;
-import co.uk.clarebrunton.ceremonies.model.InquiryForm;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +9,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import co.uk.clarebrunton.ceremonies.config.SiteProperties;
+import co.uk.clarebrunton.ceremonies.model.InquiryForm;
+import co.uk.clarebrunton.ceremonies.service.SiteUrlResolver;
+import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class SiteModelAdvice {
@@ -43,16 +45,18 @@ public class SiteModelAdvice {
 	);
 
 	private final SiteProperties siteProperties;
+	private final SiteUrlResolver siteUrlResolver;
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	public SiteModelAdvice(SiteProperties siteProperties) {
+	public SiteModelAdvice(SiteProperties siteProperties, SiteUrlResolver siteUrlResolver) {
 		this.siteProperties = siteProperties;
+		this.siteUrlResolver = siteUrlResolver;
 	}
 
 	@ModelAttribute
 	public void addSiteData(Model model, HttpServletRequest request) {
-		String baseUrl = normaliseBaseUrl(siteProperties.getBaseUrl());
+		String baseUrl = siteUrlResolver.resolvePublicBaseUrl(request, siteProperties.getBaseUrl());
 		String canonicalUrl = baseUrl + normalisePath(request.getRequestURI());
 		model.addAttribute("site", siteProperties);
 		model.addAttribute("logoPath", DEFAULT_LOGO_PATH);
@@ -102,13 +106,6 @@ public class SiteModelAdvice {
 		model.addAttribute("pageDescription", "An unexpected error occurred.");
 		model.addAttribute("robotsContent", "noindex, nofollow");
 		return "error";
-	}
-
-	private String normaliseBaseUrl(String baseUrl) {
-		if (!StringUtils.hasText(baseUrl)) {
-			return "http://localhost:8080";
-		}
-		return baseUrl.replaceAll("/+$", "");
 	}
 
 	private String normalisePath(String requestUri) {
