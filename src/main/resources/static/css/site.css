@@ -6911,6 +6911,12 @@ main::before {
     max-width: 46rem;
 }
 
+.wedding-intro-copy h2,
+.funeral-intro-copy h2 {
+    margin-bottom: clamp(1rem, 1.8vw, 1.35rem);
+    line-height: 1.1;
+}
+
 .wedding-story-copy {
     max-width: 54rem;
 }
@@ -7462,7 +7468,7 @@ main::before {
     .funeral-final-panel h2 {
         max-width: 100%;
         font-size: clamp(2.2rem, 8.8vw, 2.9rem);
-        line-height: 1.08;
+        line-height: 1.12;
         overflow-wrap: anywhere;
     }
 
@@ -7497,16 +7503,39 @@ main::before {
 
     .wedding-editorial-carousel,
     .funeral-memory-carousel {
-        min-height: 30rem;
+        min-height: 32rem;
     }
 
     .wedding-editorial-slide figcaption {
+        left: 1rem;
         right: 1rem;
+        bottom: 4.9rem;
+        max-width: none;
+        padding: 0.95rem 1rem;
+    }
+
+    .wedding-editorial-slide figcaption strong {
+        font-size: clamp(1.08rem, 4.4vw, 1.45rem);
+        line-height: 1.08;
     }
 
     .wedding-carousel-controls,
     .funeral-carousel-controls {
         justify-content: center;
+    }
+
+    .wedding-carousel-controls {
+        bottom: 1rem;
+    }
+
+    .wedding-carousel-controls .carousel-arrow {
+        inline-size: 2.8rem;
+        block-size: 2.8rem;
+        font-size: 1.25rem;
+    }
+
+    .wedding-carousel-controls .carousel-dots {
+        min-block-size: 2rem;
     }
 }
 
@@ -11778,6 +11807,10 @@ textarea::placeholder {
     pointer-events: none;
     opacity: 0.62;
     mix-blend-mode: screen;
+    backface-visibility: hidden;
+    contain: strict;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
 }
 
 body:has(.thank-you-page) .atmospheric-feathers {
@@ -11829,6 +11862,8 @@ body::before {
         radial-gradient(circle at 82% 22%, rgba(201, 154, 51, 0.14), transparent 18rem);
     opacity: 0.78;
     mix-blend-mode: screen;
+    backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
 }
 
 .site-header,

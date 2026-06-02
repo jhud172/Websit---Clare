@@ -8,6 +8,10 @@
     pointer-events: none;
     opacity: 0.62;
     mix-blend-mode: screen;
+    backface-visibility: hidden;
+    contain: strict;
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
 }
 
 body:has(.thank-you-page) .atmospheric-feathers {
@@ -59,6 +63,8 @@ body::before {
         radial-gradient(circle at 82% 22%, rgba(201, 154, 51, 0.14), transparent 18rem);
     opacity: 0.78;
     mix-blend-mode: screen;
+    backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
 }
 
 .site-header,

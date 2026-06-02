@@ -17,7 +17,7 @@ class SiteUrlResolverTest {
 		request.setServerName("www.clarebruntonlifeceremonies.com");
 		request.setServerPort(443);
 
-		String resolved = resolver.resolvePublicBaseUrl(request, "https://clarebruntonlifecelebrant.com");
+		String resolved = resolver.resolvePublicBaseUrl(request, "https://configured-host.example");
 
 		assertThat(resolved).isEqualTo("https://www.clarebruntonlifeceremonies.com");
 	}

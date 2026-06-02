@@ -79,6 +79,7 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
     let featherDpr = 1;
     let featherFrameId = null;
     let featherResizeFrameId = null;
+    let featherLastScrollAt = 0;
 
     const randomBetween = (min, max) => min + Math.random() * (max - min);
 
@@ -100,15 +101,31 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
         };
     };
 
-    const resizeFeatherField = () => {
+    const resizeFeatherField = ({ force = false } = {}) => {
         featherResizeFrameId = null;
         featherDpr = Math.min(window.devicePixelRatio || 1, 2);
         const nextWidth = window.innerWidth || document.documentElement.clientWidth;
-        const nextHeight = window.innerHeight || document.documentElement.clientHeight;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+        const stableViewportHeight = coarsePointer
+            ? Math.max(viewportHeight, window.screen?.height || viewportHeight)
+            : viewportHeight;
+        const nextHeight = force ? stableViewportHeight : Math.max(stableViewportHeight, featherHeight);
+        const widthChanged = nextWidth !== featherWidth;
+        const heightDelta = Math.abs(nextHeight - featherHeight);
+        const isScrollViewportResize = !force
+            && !widthChanged
+            && heightDelta > 0
+            && heightDelta < 180
+            && Date.now() - featherLastScrollAt < 420;
 
-        if (nextWidth === featherWidth && nextHeight === featherHeight) {
+        if (isScrollViewportResize || (nextWidth === featherWidth && nextHeight === featherHeight)) {
             return;
         }
+
+        const previousParticles = featherParticles;
+        const previousWidth = featherWidth || nextWidth;
+        const previousHeight = featherHeight || nextHeight;
 
         featherWidth = nextWidth;
         featherHeight = nextHeight;
@@ -119,7 +136,20 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
         featherContext.setTransform(featherDpr, 0, 0, featherDpr, 0, 0);
 
         const particleCount = Math.max(32, Math.min(74, Math.round((featherWidth * featherHeight) / 25000)));
-        featherParticles = Array.from({ length: particleCount }, createFeatherParticle);
+        featherParticles = Array.from({ length: particleCount }, (_, index) => {
+            const particle = previousParticles[index];
+
+            if (!particle || force || widthChanged) {
+                return createFeatherParticle();
+            }
+
+            return {
+                ...particle,
+                x: Math.min(Math.max(particle.x, -40), featherWidth + 40),
+                y: Math.min(Math.max((particle.y / previousHeight) * featherHeight, -48), featherHeight + 48),
+                size: particle.size * Math.min(1.08, Math.max(0.92, featherWidth / previousWidth))
+            };
+        });
     };
 
     const scheduleFeatherResize = () => {
@@ -127,7 +157,7 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
             window.clearTimeout(featherResizeFrameId);
         }
 
-        featherResizeFrameId = window.setTimeout(resizeFeatherField, 140);
+        featherResizeFrameId = window.setTimeout(() => resizeFeatherField(), 140);
     };
 
     const drawFallbackFeather = (particle) => {
@@ -189,11 +219,16 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
     };
 
     featherImage.src = "/images/objects/feather-vertical.png";
-    resizeFeatherField();
+    resizeFeatherField({ force: true });
     renderFeathers();
 
     window.addEventListener("resize", scheduleFeatherResize, { passive: true });
-    window.addEventListener("orientationchange", scheduleFeatherResize, { passive: true });
+    window.addEventListener("orientationchange", () => {
+        window.setTimeout(() => resizeFeatherField({ force: true }), 220);
+    }, { passive: true });
+    window.addEventListener("scroll", () => {
+        featherLastScrollAt = Date.now();
+    }, { passive: true });
     window.addEventListener("pointermove", (event) => {
         if (event.pointerType === "touch") {
             return;
