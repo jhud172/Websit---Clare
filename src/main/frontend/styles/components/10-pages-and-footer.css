@@ -795,7 +795,7 @@
 }
 
 .services-experience-section {
-    padding-top: clamp(6rem, 10vw, 9rem);
+    padding-top: calc(var(--safe-header-gap) + clamp(6rem, 10vw, 9rem));
     padding-bottom: clamp(6rem, 10vw, 9rem);
     background:
         radial-gradient(circle at 12% 18%, rgba(66, 86, 90, 0.24), transparent 26rem),
@@ -1349,6 +1349,13 @@
         radial-gradient(circle at 18% 12%, rgba(84, 101, 103, 0.18), transparent 25rem),
         radial-gradient(circle at 92% 86%, rgba(214, 199, 145, 0.08), transparent 24rem),
         linear-gradient(150deg, #0d0f12 0%, #181b20 56%, #0b0c0f 100%);
+}
+
+.wedding-process-section,
+.wedding-legal-section,
+.funeral-memory-section,
+.services-final-section {
+    padding-top: calc(var(--safe-header-gap) + clamp(6rem, 10vw, 9rem));
 }
 
 .funeral-intro-section,

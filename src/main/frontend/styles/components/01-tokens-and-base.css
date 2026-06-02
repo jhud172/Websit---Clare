@@ -17,6 +17,8 @@
     --shadow: 0 22px 70px rgba(36, 31, 27, 0.08);
     --shell: min(1200px, calc(100vw - 3rem));
     --header-height: 86px;
+    --safe-header-gap: clamp(2.5rem, 5vw, 5.75rem);
+    --safe-anchor-offset: calc(var(--header-height) + clamp(2rem, 4vw, 4.5rem));
     --radius: 30px;
     --page-glow-clay: rgba(157, 117, 94, 0.12);
     --page-glow-sage: rgba(113, 128, 107, 0.12);
@@ -149,6 +151,7 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: var(--safe-anchor-offset);
     -webkit-text-size-adjust: 100%;
     max-width: 100%;
     overflow-x: hidden;
@@ -189,6 +192,11 @@ main {
         radial-gradient(circle at 88% 24%, var(--theme-glow-two), transparent 28rem),
         linear-gradient(180deg, var(--theme-bg-start) 0%, var(--theme-bg-mid) 42%, var(--theme-bg-end) 100%);
     transition: background 420ms ease, color 260ms ease;
+}
+
+section,
+[id] {
+    scroll-margin-top: var(--safe-anchor-offset);
 }
 
 .theme-home {
