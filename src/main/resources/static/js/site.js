@@ -78,6 +78,7 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
     let featherHeight = 0;
     let featherDpr = 1;
     let featherFrameId = null;
+    let featherResizeFrameId = null;
 
     const randomBetween = (min, max) => min + Math.random() * (max - min);
 
@@ -100,9 +101,17 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
     };
 
     const resizeFeatherField = () => {
+        featherResizeFrameId = null;
         featherDpr = Math.min(window.devicePixelRatio || 1, 2);
-        featherWidth = window.innerWidth || document.documentElement.clientWidth;
-        featherHeight = window.innerHeight || document.documentElement.clientHeight;
+        const nextWidth = window.innerWidth || document.documentElement.clientWidth;
+        const nextHeight = window.innerHeight || document.documentElement.clientHeight;
+
+        if (nextWidth === featherWidth && nextHeight === featherHeight) {
+            return;
+        }
+
+        featherWidth = nextWidth;
+        featherHeight = nextHeight;
         featherField.width = Math.round(featherWidth * featherDpr);
         featherField.height = Math.round(featherHeight * featherDpr);
         featherField.style.width = `${featherWidth}px`;
@@ -111,6 +120,14 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
 
         const particleCount = Math.max(32, Math.min(74, Math.round((featherWidth * featherHeight) / 25000)));
         featherParticles = Array.from({ length: particleCount }, createFeatherParticle);
+    };
+
+    const scheduleFeatherResize = () => {
+        if (featherResizeFrameId) {
+            window.clearTimeout(featherResizeFrameId);
+        }
+
+        featherResizeFrameId = window.setTimeout(resizeFeatherField, 140);
     };
 
     const drawFallbackFeather = (particle) => {
@@ -175,8 +192,13 @@ if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").match
     resizeFeatherField();
     renderFeathers();
 
-    window.addEventListener("resize", resizeFeatherField);
+    window.addEventListener("resize", scheduleFeatherResize, { passive: true });
+    window.addEventListener("orientationchange", scheduleFeatherResize, { passive: true });
     window.addEventListener("pointermove", (event) => {
+        if (event.pointerType === "touch") {
+            return;
+        }
+
         pointer.x = event.clientX;
         pointer.y = event.clientY;
         pointer.active = true;

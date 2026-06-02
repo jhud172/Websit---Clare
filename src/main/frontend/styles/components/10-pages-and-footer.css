@@ -1393,6 +1393,12 @@
     max-width: 46rem;
 }
 
+.wedding-intro-copy h2,
+.funeral-intro-copy h2 {
+    margin-bottom: clamp(1rem, 1.8vw, 1.35rem);
+    line-height: 1.1;
+}
+
 .wedding-story-copy {
     max-width: 54rem;
 }
@@ -1939,7 +1945,7 @@
     .funeral-final-panel h2 {
         max-width: 100%;
         font-size: clamp(2.2rem, 8.8vw, 2.9rem);
-        line-height: 1.08;
+        line-height: 1.12;
         overflow-wrap: anywhere;
     }
 
@@ -1974,16 +1980,39 @@
 
     .wedding-editorial-carousel,
     .funeral-memory-carousel {
-        min-height: 30rem;
+        min-height: 32rem;
     }
 
     .wedding-editorial-slide figcaption {
+        left: 1rem;
         right: 1rem;
+        bottom: 4.9rem;
+        max-width: none;
+        padding: 0.95rem 1rem;
+    }
+
+    .wedding-editorial-slide figcaption strong {
+        font-size: clamp(1.08rem, 4.4vw, 1.45rem);
+        line-height: 1.08;
     }
 
     .wedding-carousel-controls,
     .funeral-carousel-controls {
         justify-content: center;
+    }
+
+    .wedding-carousel-controls {
+        bottom: 1rem;
+    }
+
+    .wedding-carousel-controls .carousel-arrow {
+        inline-size: 2.8rem;
+        block-size: 2.8rem;
+        font-size: 1.25rem;
+    }
+
+    .wedding-carousel-controls .carousel-dots {
+        min-block-size: 2rem;
     }
 }
 
