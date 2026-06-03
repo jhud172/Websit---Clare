@@ -1,11 +1,14 @@
 package co.uk.clarebrunton.ceremonies.controller;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -52,6 +55,33 @@ public class SiteController {
 	private static final Set<String> ALLOWED_ATTACHMENT_EXTENSIONS = Set.of("jpg", "jpeg", "png", "webp", "pdf");
 	private static final String REVIEW_ADMIN_SESSION_KEY = "reviewAdminAuthenticated";
 
+	private static final List<Map<String, String>> SERVICE_FAQS = List.of(
+			faq(
+					"What ceremonies does Clare's Life Celebrations offer?",
+					"Clare creates personal wedding ceremonies, funeral and memorial ceremonies, naming ceremonies, vow renewals and other meaningful life celebrations. Each ceremony is shaped around the people, story, tone and moment involved."
+			),
+			faq(
+					"Where does Clare work?",
+					"Clare is based in Durham and supports ceremonies across the North East and beyond. Travel, venue details and any extra costs are discussed clearly during your enquiry."
+			),
+			faq(
+					"Can Clare legally marry us?",
+					"In England and Wales, the legal marriage registration is completed separately with a registrar. Clare creates and leads the personal celebrant ceremony, where your vows, readings, music, family moments and symbolic details can be completely personal."
+			),
+			faq(
+					"How does the ceremony process work?",
+					"The process starts with a conversation about your date, location, ceremony type and the atmosphere you want. Clare then listens carefully, shapes the tone with you, writes the ceremony and delivers it with calm, confident presence on the day."
+			),
+			faq(
+					"How much does a ceremony cost?",
+					"Wedding ceremony investment starts from 600 pounds for 2026. Funeral, memorial and bespoke life ceremony costs depend on the type of support, location and complexity, so Clare will provide a clear quotation after your enquiry."
+			),
+			faq(
+					"How do I enquire about availability?",
+					"Use the enquiry form to share the ceremony type, preferred date, location and anything Clare should know at this stage. Clare will then guide you towards the best next step."
+			)
+	);
+
 	private final BlogService blogService;
 
 	private final InquiryNotificationService inquiryNotificationService;
@@ -59,6 +89,8 @@ public class SiteController {
 	private final ReviewService reviewService;
 
 	private final ReviewProperties reviewProperties;
+
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	public SiteController(BlogService blogService,
 			InquiryNotificationService inquiryNotificationService,
@@ -109,6 +141,8 @@ public class SiteController {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Ceremony services");
 		model.addAttribute("pageDescription", "Wedding, funeral, naming, vow renewal and life ceremony services by Clare's Life Celebrations, created for moments that matter.");
+		model.addAttribute("serviceFaqs", SERVICE_FAQS);
+		model.addAttribute("structuredDataJson", buildFaqStructuredDataJson(SERVICE_FAQS));
 		return "ceremonies";
 	}
 
@@ -461,6 +495,41 @@ public class SiteController {
 		}
 
 		return null;
+	}
+
+	private static Map<String, String> faq(String question, String answer) {
+		Map<String, String> faq = new LinkedHashMap<>();
+		faq.put("question", question);
+		faq.put("answer", answer);
+		return faq;
+	}
+
+	private String buildFaqStructuredDataJson(List<Map<String, String>> faqs) {
+		Map<String, Object> faqPage = new LinkedHashMap<>();
+		faqPage.put("@context", "https://schema.org");
+		faqPage.put("@type", "FAQPage");
+
+		List<Map<String, Object>> mainEntity = new ArrayList<>();
+		for (Map<String, String> faq : faqs) {
+			Map<String, Object> question = new LinkedHashMap<>();
+			question.put("@type", "Question");
+			question.put("name", faq.get("question"));
+
+			Map<String, Object> answer = new LinkedHashMap<>();
+			answer.put("@type", "Answer");
+			answer.put("text", faq.get("answer"));
+
+			question.put("acceptedAnswer", answer);
+			mainEntity.add(question);
+		}
+		faqPage.put("mainEntity", mainEntity);
+
+		try {
+			return objectMapper.writeValueAsString(faqPage);
+		}
+		catch (JsonProcessingException exception) {
+			return null;
+		}
 	}
 
 	private boolean isReviewAdminAuthenticated(HttpSession session) {

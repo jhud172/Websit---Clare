@@ -61,6 +61,21 @@ class SiteControllerUnitTest {
 	}
 
 	@Test
+	void servicesAddsFaqContentAndStructuredData() {
+		Model model = new ExtendedModelMap();
+
+		String view = controller.services(model);
+
+		assertThat(view).isEqualTo("ceremonies");
+		assertThat((List<?>) model.getAttribute("serviceFaqs")).hasSize(6);
+		assertThat((String) model.getAttribute("structuredDataJson"))
+				.contains("\"@type\":\"FAQPage\"")
+				.contains("\"@type\":\"Question\"")
+				.contains("What ceremonies does Clare's Life Celebrations offer?")
+				.contains("Can Clare legally marry us?");
+	}
+
+	@Test
 	void submitContactReturnsHomeWithOpenModalWhenBindingHasErrors() {
 		InquiryForm inquiryForm = new InquiryForm();
 		BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(inquiryForm, "inquiryForm");

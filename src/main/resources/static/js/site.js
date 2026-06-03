@@ -21,6 +21,8 @@ const revealSelectors = [
     ".split-layout .visual-stage",
     ".process-list li",
     ".faq-list article",
+    ".services-faq-heading",
+    ".services-faq-list article",
     ".contact-panel",
     ".contact-form",
     ".cta-panel",

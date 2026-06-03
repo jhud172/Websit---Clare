@@ -169,6 +169,24 @@
         </div>
     </section>
 
+    <section class="section services-faq-section section-divider section-reveal-zone" aria-labelledby="services-faq-heading">
+        <div class="shell services-faq-grid">
+            <div class="services-faq-heading">
+                <p class="eyebrow">Common questions</p>
+                <h2 id="services-faq-heading">Helpful answers before you enquire.</h2>
+                <p>Clear guidance on Clare's ceremony services, locations, legal wedding details, pricing and how to start the conversation.</p>
+            </div>
+            <div class="services-faq-list" itemscope itemtype="https://schema.org/FAQPage">
+                <article th:each="faq, iterStat : ${serviceFaqs}" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 itemprop="name" th:text="${faq.question}">What ceremonies does Clare's Life Celebrations offer?</h3>
+                    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p itemprop="text" th:text="${faq.answer}">Clare creates personal wedding ceremonies, funeral and memorial ceremonies, naming ceremonies, vow renewals and other meaningful life celebrations.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
     <section class="section services-final-section section-reveal-zone">
         <div class="shell services-final-panel">
             <div>
