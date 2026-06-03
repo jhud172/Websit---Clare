@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'faq', ~{::main})}">
+<main class="theme-privacy secondary-page faq-page">
+    <section class="secondary-hero section-reveal-zone">
+        <div class="shell secondary-hero-grid">
+            <div class="secondary-hero-copy">
+                <p class="eyebrow">Celebrant FAQ</p>
+                <h1>Common celebrant questions, clearly answered.</h1>
+                <p class="lead">Straight answers on legalities, ceremony options, pricing, timelines and planning so couples and families can make confident decisions.</p>
+            </div>
+            <div class="secondary-brand-panel faq-hero-panel" aria-label="FAQ page summary and quick filters">
+                <span class="logo-composite faq-hero-logo" aria-hidden="true">
+                    <img class="logo-layer logo-clc"
+                         th:src="@{${clcLogoPath}}"
+                         alt="">
+                    <img class="logo-layer logo-wreath"
+                         th:src="@{${wreathLogoPath}}"
+                         alt="">
+                </span>
+                <p class="secondary-status">Quick topics</p>
+                <p class="faq-hero-note">Jump to popular answers and start with the topic that matches what you need right now.</p>
+                <div class="faq-hero-chips" aria-label="Popular FAQ searches">
+                    <button class="faq-hero-chip" type="button" data-faq-chip="legal">Legal</button>
+                    <button class="faq-hero-chip" type="button" data-faq-chip="cost">Cost</button>
+                    <button class="faq-hero-chip" type="button" data-faq-chip="vows">Vows</button>
+                    <button class="faq-hero-chip" type="button" data-faq-chip="outdoor">Outdoor</button>
+                    <button class="faq-hero-chip" type="button" data-faq-chip="Durham">Durham</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-soft faq-body-section section-reveal-zone" aria-labelledby="faq-list-heading">
+        <div class="shell">
+            <div class="faq-toolbar" data-faq-search-root>
+                <div class="faq-search-heading">
+                    <p class="eyebrow">Find an answer fast</p>
+                    <h2 id="faq-list-heading">Search all frequently asked questions.</h2>
+                </div>
+                <label class="faq-search-label" for="faq-search-input">Search by keyword</label>
+                <div class="faq-search-field">
+                    <span class="faq-search-icon" aria-hidden="true">⌕</span>
+                    <input id="faq-search-input"
+                           class="faq-search-input"
+                           type="search"
+                           data-faq-search
+                           placeholder="Try: legal, vows, outdoor, cost, Durham"
+                           autocomplete="off">
+                    <button class="faq-search-clear" type="button" data-faq-clear hidden>Clear</button>
+                </div>
+                <p class="faq-search-summary" data-faq-search-summary>Showing all questions.</p>
+            </div>
+
+            <div class="services-faq-list faq-list faq-enhanced-list" data-faq-list itemscope itemtype="https://schema.org/FAQPage">
+                <article class="faq-card" data-faq-item th:each="faq : ${faqEntries}" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 itemprop="name" th:text="${faq.question}">What does a celebrant do?</h3>
+                    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                        <p itemprop="text" th:text="${faq.answer}">A celebrant creates and leads personalised ceremonies for weddings, funerals and life events.</p>
+                    </div>
+                </article>
+            </div>
+
+            <p class="faq-empty-state" data-faq-empty hidden>No matches yet. Try broader terms like wedding, funeral, legal, cost or vows.</p>
+        </div>
+    </section>
+</main>
+</html>

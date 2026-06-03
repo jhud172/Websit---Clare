@@ -20,6 +20,15 @@
     <meta name="twitter:description" th:content="${pageDescription != null ? pageDescription : site.tagline}">
     <meta name="twitter:image" th:content="${openGraphImageUrl}">
     <meta name="theme-color" content="#1f2724">
+    <th:block th:if="${site.analyticsMeasurementId != null and !#strings.isEmpty(site.analyticsMeasurementId)}">
+        <script async th:src="${'https://www.googletagmanager.com/gtag/js?id=' + site.analyticsMeasurementId}"></script>
+        <script th:inline="javascript">
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', [[${site.analyticsMeasurementId}]]);
+        </script>
+    </th:block>
     <script th:if="${structuredDataJson != null}" type="application/ld+json" th:utext="${structuredDataJson}"></script>
 </th:block>
 </html>

@@ -17,6 +17,8 @@ public class SiteProperties {
 
 	private String baseUrl;
 
+	private String analyticsMeasurementId;
+
 	private String fromEmail;
 
 	public String getName() {
@@ -65,6 +67,14 @@ public class SiteProperties {
 
 	public void setBaseUrl(String baseUrl) {
 		this.baseUrl = baseUrl;
+	}
+
+	public String getAnalyticsMeasurementId() {
+		return analyticsMeasurementId;
+	}
+
+	public void setAnalyticsMeasurementId(String analyticsMeasurementId) {
+		this.analyticsMeasurementId = analyticsMeasurementId;
 	}
 
 	public String getFromEmail() {

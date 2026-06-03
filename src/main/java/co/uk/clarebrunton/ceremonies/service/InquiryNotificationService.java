@@ -12,8 +12,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import co.uk.clarebrunton.ceremonies.config.SiteProperties;
 import co.uk.clarebrunton.ceremonies.model.InquiryForm;
 import co.uk.clarebrunton.ceremonies.model.ReviewEntry;
+import jakarta.mail.AuthenticationFailedException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -105,8 +106,7 @@ public class InquiryNotificationService {
 			logger.info("Admin notification sent to {} for inquiry from {}", recipient, inquiryForm.getEmail());
 		}
 		catch (MailException | MessagingException exception) {
-			logger.error("Admin notification could not be sent for inquiry from {}. Check SMTP settings.",
-					inquiryForm.getEmail(), exception);
+			logSmtpFailure("Admin notification", inquiryForm.getEmail(), exception);
 			writeFallbackRecord(inquiryForm, safeAttachments, "admin-email-send-failed");
 		}
 
@@ -115,8 +115,7 @@ public class InquiryNotificationService {
 			logger.info("Confirmation email sent to {}", inquiryForm.getEmail());
 		}
 		catch (MailException | MessagingException exception) {
-			logger.error("Confirmation email could not be sent to {}. Check SMTP settings.",
-					inquiryForm.getEmail(), exception);
+			logSmtpFailure("Confirmation email", inquiryForm.getEmail(), exception);
 		}
 	}
 
@@ -186,8 +185,34 @@ public class InquiryNotificationService {
 			logger.info("Review notification sent to {} for review {}", recipient, review.getId());
 		}
 		catch (MailException | MessagingException exception) {
-			logger.error("Review notification could not be sent for review {}. Check SMTP settings.", review.getId(), exception);
+			logSmtpFailure("Review notification", recipient, exception);
 		}
+	}
+
+	private void logSmtpFailure(String emailType, String target, Exception exception) {
+		if (isAuthenticationFailure(exception)) {
+			logger.warn(
+					"{} could not be sent to {} because SMTP authentication failed. "
+							+ "If using Gmail, enable 2-Step Verification and use an App Password for SPRING_MAIL_PASSWORD.",
+					emailType,
+					target
+			);
+			logger.debug("SMTP authentication failure details", exception);
+			return;
+		}
+
+		logger.error("{} could not be sent to {}. Check SMTP settings.", emailType, target, exception);
+	}
+
+	private boolean isAuthenticationFailure(Throwable throwable) {
+		Throwable current = throwable;
+		while (current != null) {
+			if (current instanceof AuthenticationFailedException) {
+				return true;
+			}
+			current = current.getCause();
+		}
+		return false;
 	}
 
 	private void sendInquiryWithResend(ResendEmailClient resendEmailClient,

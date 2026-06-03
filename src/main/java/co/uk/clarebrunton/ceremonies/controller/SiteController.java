@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -27,6 +25,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.uk.clarebrunton.ceremonies.config.ReviewProperties;
 import co.uk.clarebrunton.ceremonies.model.InquiryForm;
@@ -79,6 +80,129 @@ public class SiteController {
 			faq(
 					"How do I enquire about availability?",
 					"Use the enquiry form to share the ceremony type, preferred date, location and anything Clare should know at this stage. Clare will then guide you towards the best next step."
+			)
+	);
+
+	private static final List<Map<String, String>> FAQ_PAGE_ENTRIES = List.of(
+			faq(
+					"What does a celebrant do?",
+					"A celebrant creates and leads personalised ceremonies for weddings, vow renewals, naming ceremonies, funerals and other meaningful life events."
+			),
+			faq(
+					"Why choose a celebrant instead of a registrar?",
+					"A celebrant offers a fully personalised ceremony, while a registrar usually follows a fixed legal format with less flexibility."
+			),
+			faq(
+					"How much does a celebrant cost?",
+					"Celebrant pricing varies by ceremony type, location and level of support, with UK wedding celebrant fees often ranging from 500 pounds to 1,500 pounds."
+			),
+			faq(
+					"How far in advance should I book a celebrant?",
+					"Booking 12 to 18 months ahead is recommended, especially for popular spring and summer weekend dates."
+			),
+			faq(
+					"Can a celebrant legally marry us in the UK?",
+					"In England and Wales, celebrant-led ceremonies are usually not legally binding on their own, so legal registration is typically completed separately."
+			),
+			faq(
+					"What happens at a celebrant wedding ceremony?",
+					"A celebrant wedding ceremony is built around your story and can include personal vows, readings, music, symbolic rituals and family involvement."
+			),
+			faq(
+					"Can we write our own vows?",
+					"Yes, couples are encouraged to write personal vows, and celebrant guidance can be provided to help shape them with confidence."
+			),
+			faq(
+					"How long does a celebrant-led ceremony last?",
+					"Most celebrant-led ceremonies run for around 20 to 45 minutes, depending on readings, rituals, speakers and personal elements."
+			),
+			faq(
+					"Can we include family members, children or pets?",
+					"Yes, celebrant ceremonies can include family, children, friends and pets through meaningful roles, readings and symbolic moments."
+			),
+			faq(
+					"Can we have a wedding ceremony outdoors?",
+					"Yes, celebrant-led ceremonies can be held outdoors or in almost any venue, subject to permissions, safety and a weather backup plan."
+			),
+			faq(
+					"Can you create a completely bespoke ceremony?",
+					"Yes, each ceremony is written from scratch to reflect your relationship, values, personality and the atmosphere you want on the day."
+			),
+			faq(
+					"Can we include cultural, spiritual or religious traditions?",
+					"Yes, ceremonies can include cultural, spiritual and religious traditions in a way that feels respectful, authentic and personal to you."
+			),
+			faq(
+					"What symbolic rituals can we include?",
+					"Popular options include handfasting, unity candles, sand ceremonies, ring warming, tree planting, wine rituals and family traditions."
+			),
+			faq(
+					"Can we have a non-religious ceremony?",
+					"Yes, celebrant ceremonies can be fully non-religious and focused on your relationship, commitments and shared values."
+			),
+			faq(
+					"What is included in your celebrant fee?",
+					"Most packages include consultations, planning support, ceremony writing, revisions and officiating on the day, with options for rehearsals and vow support."
+			),
+			faq(
+					"Do you travel?",
+					"Yes, travel across Durham, the North East and further afield is available, with any additional travel costs agreed in advance."
+			),
+			faq(
+					"What happens if it rains during an outdoor ceremony?",
+					"A practical wet-weather backup plan is agreed in advance, such as a covered area or an indoor alternative at the venue."
+			),
+			faq(
+					"Do you offer virtual consultations?",
+					"Yes, virtual consultations are available by video call, making planning simple and flexible regardless of location."
+			),
+			faq(
+					"What is the difference between a celebrant and a registrar?",
+					"A registrar handles the legal ceremony, while a celebrant creates and leads a personalised ceremony with much greater flexibility of content and style."
+			),
+			faq(
+					"Can a celebrant marry us anywhere?",
+					"A celebrant can lead a ceremony in almost any setting, including gardens, beaches, woodlands, family homes and destination venues."
+			),
+			faq(
+					"Are celebrant weddings worth it?",
+					"Many couples feel celebrant weddings are worth it because they offer a deeply personal and memorable ceremony experience."
+			),
+			faq(
+					"How do I choose the right wedding celebrant?",
+					"Choose someone whose tone, personality and approach match your vision, then confirm fit through an introductory conversation and reviews."
+			),
+			faq(
+					"What questions should I ask a celebrant before booking?",
+					"Ask about availability, pricing, planning process, ceremony style, travel, inclusions and how support works from enquiry to ceremony day."
+			),
+			faq(
+					"Do celebrants attend wedding rehearsals?",
+					"Many celebrants offer rehearsal guidance or attendance to help everyone feel clear, calm and prepared before the ceremony."
+			),
+			faq(
+					"Can a celebrant perform a same-sex wedding ceremony?",
+					"Yes, celebrants regularly create and lead same-sex wedding ceremonies that are inclusive, personal and respectful."
+			),
+			faq(
+					"How much does a wedding celebrant cost in the UK?",
+					"Wedding celebrant fees in the UK are often between 500 pounds and 1,500 pounds, depending on experience, travel, ceremony complexity and personalisation."
+			),
+			faq(
+					"Is a celebrant wedding legally binding?",
+					"In England and Wales, most celebrant weddings are not legally binding by themselves, so couples usually complete legal registration separately."
+			),
+			faq(
+					"Can a celebrant perform an outdoor wedding?",
+					"Yes, celebrants commonly lead outdoor wedding ceremonies in locations such as gardens, beaches, woodlands and private venues, with practical weather contingencies planned in advance."
+			),
+			faq(
+					"Can a celebrant include religious elements?",
+					"Yes, religious elements can be included when meaningful, alongside spiritual, cultural and personal traditions, to create a ceremony that reflects your beliefs and values."
+			),
+			faq(
+					"How far in advance should I book a wedding celebrant?",
+					"Booking 12 to 18 months in advance is recommended to secure your preferred date and allow time for a fully personalised ceremony planning process."
 			)
 	);
 
@@ -144,6 +268,16 @@ public class SiteController {
 		model.addAttribute("serviceFaqs", SERVICE_FAQS);
 		model.addAttribute("structuredDataJson", buildFaqStructuredDataJson(SERVICE_FAQS));
 		return "ceremonies";
+	}
+
+	@GetMapping("/faq")
+	public String faq(Model model) {
+		model.addAttribute("logoPath", LOGO_CLARE);
+		model.addAttribute("pageTitle", "Celebrant FAQ");
+		model.addAttribute("pageDescription", "Answers to common celebrant questions, including legal wedding details, pricing, vows, ceremony planning and location flexibility.");
+		model.addAttribute("faqEntries", FAQ_PAGE_ENTRIES);
+		model.addAttribute("structuredDataJson", buildFaqStructuredDataJson(FAQ_PAGE_ENTRIES));
+		return "faq";
 	}
 
 	@GetMapping("/weddings")

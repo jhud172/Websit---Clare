@@ -1,5 +1,5 @@
 server:
-  port: ${PORT:8080}
+  port: ${PORT:8081}
 
 spring:
   config:
@@ -33,7 +33,8 @@ site:
   contact-email: ${SITE_CONTACT_EMAIL:clarebruntoncelebrant@gmail.com}
   phone-number: ${SITE_PHONE_NUMBER:07885 428304}
   instagram-url: ${SITE_INSTAGRAM_URL:https://www.instagram.com/clareslifecelebrations/}
-  base-url: ${SITE_BASE_URL:http://localhost:8080}
+  base-url: ${SITE_BASE_URL:http://localhost:8081}
+  analytics-measurement-id: ${SITE_ANALYTICS_MEASUREMENT_ID:G-TMXC09D8VW}
   from-email: ${SITE_FROM_EMAIL:}
 
 inquiry:

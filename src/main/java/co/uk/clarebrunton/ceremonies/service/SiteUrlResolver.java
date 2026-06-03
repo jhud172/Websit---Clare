@@ -23,7 +23,7 @@ public class SiteUrlResolver {
 			return requestBaseUrl;
 		}
 		if (!StringUtils.hasText(requestBaseUrl)) {
-			return StringUtils.hasText(normalisedConfigured) ? normalisedConfigured : "http://localhost:8080";
+			return StringUtils.hasText(normalisedConfigured) ? normalisedConfigured : "http://localhost:8081";
 		}
 
 		String configuredHost = extractHost(normalisedConfigured);
@@ -31,11 +31,20 @@ public class SiteUrlResolver {
 		if (StringUtils.hasText(configuredHost)
 				&& StringUtils.hasText(requestHost)
 				&& !configuredHost.equalsIgnoreCase(requestHost)) {
-			logger.warn(
-					"Ignoring SITE_BASE_URL host '{}' because it does not match request host '{}'. Using request host instead.",
-					configuredHost,
-					requestHost
-			);
+			if (isLocalHost(requestHost)) {
+				logger.debug(
+						"Ignoring SITE_BASE_URL host '{}' for local request host '{}'. Using request host instead.",
+						configuredHost,
+						requestHost
+				);
+			}
+			else {
+				logger.warn(
+						"Ignoring SITE_BASE_URL host '{}' because it does not match request host '{}'. Using request host instead.",
+						configuredHost,
+						requestHost
+				);
+			}
 			return requestBaseUrl;
 		}
 
@@ -114,6 +123,16 @@ public class SiteUrlResolver {
 			logger.warn("Could not parse base URL '{}': {}", baseUrl, exception.getMessage());
 			return null;
 		}
+	}
+
+	private boolean isLocalHost(String host) {
+		if (!StringUtils.hasText(host)) {
+			return false;
+		}
+		return "localhost".equalsIgnoreCase(host)
+				|| "127.0.0.1".equals(host)
+				|| "::1".equals(host)
+				|| "[::1]".equals(host);
 	}
 
 }

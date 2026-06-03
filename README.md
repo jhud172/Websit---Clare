@@ -64,7 +64,7 @@ Windows:
 .\mvnw.cmd spring-boot:run
 ```
 
-Then open `http://localhost:8080`.
+Then open `http://localhost:8081`.
 
 ## Key files
 
@@ -127,6 +127,8 @@ Set these in Render before launch:
 - `REVIEWS_ADMIN_PASSWORD`
 
 On Render free web services, use the Resend variables rather than Gmail SMTP. Render blocks outbound SMTP ports on free services, so `smtp.gmail.com:587` can time out even when the Gmail app password is correct.
+
+If you use Gmail SMTP locally, set `SPRING_MAIL_PASSWORD` to a Google App Password (not your normal account password). Error `534-5.7.9 Application-specific password required` means Gmail rejected the login.
 
 ## Reviews moderation
 

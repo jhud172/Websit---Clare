@@ -20,6 +20,7 @@ const revealSelectors = [
     ".story-copy",
     ".split-layout .visual-stage",
     ".process-list li",
+    ".faq-toolbar",
     ".faq-list article",
     ".services-faq-heading",
     ".services-faq-list article",
@@ -2039,6 +2040,84 @@ document.querySelectorAll("[data-review-marquee]").forEach((marquee) => {
     marquee.addEventListener("pointercancel", () => setPaused(false));
 
     window.requestAnimationFrame(tick);
+});
+
+document.querySelectorAll("[data-faq-search-root]").forEach((faqRoot) => {
+    const searchInput = faqRoot.querySelector("[data-faq-search]");
+    const clearButton = faqRoot.querySelector("[data-faq-clear]");
+    const summary = faqRoot.querySelector("[data-faq-search-summary]");
+    const list = faqRoot.parentElement?.querySelector("[data-faq-list]");
+    const emptyState = faqRoot.parentElement?.querySelector("[data-faq-empty]");
+
+    if (!searchInput || !list) {
+        return;
+    }
+
+    const items = Array.from(list.querySelectorAll("[data-faq-item]"));
+    const indexedItems = items.map((item) => ({
+        element: item,
+        text: item.textContent.toLowerCase().replace(/\s+/g, " ").trim()
+    }));
+
+    const updateSummary = (visibleCount, query) => {
+        if (!summary) {
+            return;
+        }
+
+        if (!query) {
+            summary.textContent = `Showing all ${items.length} questions.`;
+            return;
+        }
+
+        summary.textContent = visibleCount === 1
+            ? "Showing 1 matching question."
+            : `Showing ${visibleCount} matching questions.`;
+    };
+
+    const applyFilter = () => {
+        const query = searchInput.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        indexedItems.forEach(({ element, text }) => {
+            const isVisible = !query || text.includes(query);
+            element.classList.toggle("is-filtered-out", !isVisible);
+            element.hidden = !isVisible;
+            if (isVisible) {
+                visibleCount += 1;
+            }
+        });
+
+        if (clearButton) {
+            clearButton.hidden = query.length === 0;
+        }
+
+        if (emptyState) {
+            emptyState.hidden = visibleCount > 0;
+        }
+
+        updateSummary(visibleCount, query);
+    };
+
+    searchInput.addEventListener("input", applyFilter);
+
+    document.querySelectorAll("[data-faq-chip]").forEach((chip) => {
+        chip.addEventListener("click", () => {
+            const term = chip.getAttribute("data-faq-chip") || "";
+            searchInput.value = term;
+            applyFilter();
+            searchInput.focus();
+        });
+    });
+
+    if (clearButton) {
+        clearButton.addEventListener("click", () => {
+            searchInput.value = "";
+            applyFilter();
+            searchInput.focus();
+        });
+    }
+
+    applyFilter();
 });
 
 const lightboxTriggers = Array.from(document.querySelectorAll("[data-lightbox-src]"));
