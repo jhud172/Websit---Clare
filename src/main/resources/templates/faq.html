@@ -49,7 +49,21 @@
                            autocomplete="off">
                     <button class="faq-search-clear" type="button" data-faq-clear hidden>Clear</button>
                 </div>
-                <p class="faq-search-summary" data-faq-search-summary>Showing all questions.</p>
+                <div class="faq-search-meta" aria-live="polite">
+                    <p class="faq-search-summary" data-faq-search-summary>Showing all questions.</p>
+                    <span class="faq-search-count-pill" data-faq-search-pill>All questions</span>
+                </div>
+                <div class="faq-search-dictionary" aria-label="Suggested search terms">
+                    <span class="faq-search-dictionary-label">Smart terms</span>
+                    <div class="faq-search-dictionary-list">
+                        <button class="faq-search-dictionary-chip" type="button" data-faq-chip="legal">legal</button>
+                        <button class="faq-search-dictionary-chip" type="button" data-faq-chip="price">price</button>
+                        <button class="faq-search-dictionary-chip" type="button" data-faq-chip="registrar">registrar</button>
+                        <button class="faq-search-dictionary-chip" type="button" data-faq-chip="personalised">personalised</button>
+                        <button class="faq-search-dictionary-chip" type="button" data-faq-chip="same sex">same sex</button>
+                        <button class="faq-search-dictionary-chip" type="button" data-faq-chip="consultation">consultation</button>
+                    </div>
+                </div>
             </div>
 
             <div class="services-faq-list faq-list faq-enhanced-list" data-faq-list itemscope itemtype="https://schema.org/FAQPage">

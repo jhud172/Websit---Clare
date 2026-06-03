@@ -2042,21 +2042,88 @@ document.querySelectorAll("[data-review-marquee]").forEach((marquee) => {
     window.requestAnimationFrame(tick);
 });
 
+const FAQ_SEARCH_DICTIONARY = {
+    legal: ["legal", "legally", "law", "laws", "registrar", "binding", "registration", "england", "wales", "uk"],
+    registrar: ["registrar", "legal", "registration", "binding"],
+    cost: ["cost", "price", "pricing", "fee", "fees", "budget", "package", "packages"],
+    price: ["price", "pricing", "cost", "fees", "budget"],
+    vows: ["vow", "vows", "reading", "readings", "promise", "promises", "script"],
+    outdoor: ["outdoor", "outside", "garden", "beach", "woodland", "venue", "rain", "weather"],
+    durham: ["durham", "north east", "travel", "location", "venue"],
+    personalised: ["personalised", "personalized", "bespoke", "custom", "tailored", "unique"],
+    "same sex": ["same sex", "same-sex", "inclusive", "lgbt", "lgbtq"],
+    consultation: ["consultation", "meeting", "video", "virtual", "call", "plan", "planning"]
+};
+
+const normalizeFaqSearchText = (value) => (value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const FAQ_DICTIONARY_LOOKUP = (() => {
+    const lookup = {};
+
+    Object.entries(FAQ_SEARCH_DICTIONARY).forEach(([canonicalTerm, values]) => {
+        const canonical = normalizeFaqSearchText(canonicalTerm);
+        const normalizedValues = [canonical, ...values.map((value) => normalizeFaqSearchText(value))]
+            .filter(Boolean);
+        const uniqueValues = Array.from(new Set(normalizedValues));
+
+        uniqueValues.forEach((term) => {
+            lookup[term] = uniqueValues;
+        });
+    });
+
+    return lookup;
+})();
+
 document.querySelectorAll("[data-faq-search-root]").forEach((faqRoot) => {
     const searchInput = faqRoot.querySelector("[data-faq-search]");
     const clearButton = faqRoot.querySelector("[data-faq-clear]");
     const summary = faqRoot.querySelector("[data-faq-search-summary]");
+    const countPill = faqRoot.querySelector("[data-faq-search-pill]");
     const list = faqRoot.parentElement?.querySelector("[data-faq-list]");
     const emptyState = faqRoot.parentElement?.querySelector("[data-faq-empty]");
+    const chips = Array.from(document.querySelectorAll("[data-faq-chip]"));
 
     if (!searchInput || !list) {
         return;
     }
 
+    const expandDictionaryTerm = (term) => {
+        const normalizedTerm = normalizeFaqSearchText(term);
+        if (!normalizedTerm) {
+            return [];
+        }
+
+        return FAQ_DICTIONARY_LOOKUP[normalizedTerm] || [normalizedTerm];
+    };
+
+    const getExpandedTerms = (query) => {
+        const normalizedQuery = normalizeFaqSearchText(query);
+
+        if (!normalizedQuery) {
+            return [];
+        }
+
+        const phrases = [];
+        Object.keys(FAQ_DICTIONARY_LOOKUP).forEach((term) => {
+            if (term.includes(" ") && normalizedQuery.includes(term)) {
+                phrases.push(term);
+            }
+        });
+
+        const words = normalizedQuery.split(" ").filter(Boolean);
+        return [...phrases, ...words].map((term) => expandDictionaryTerm(term));
+    };
+
     const items = Array.from(list.querySelectorAll("[data-faq-item]"));
     const indexedItems = items.map((item) => ({
         element: item,
-        text: item.textContent.toLowerCase().replace(/\s+/g, " ").trim()
+        text: normalizeFaqSearchText(item.textContent)
     }));
 
     const updateSummary = (visibleCount, query) => {
@@ -2074,12 +2141,36 @@ document.querySelectorAll("[data-faq-search-root]").forEach((faqRoot) => {
             : `Showing ${visibleCount} matching questions.`;
     };
 
+    const updateCountPill = (visibleCount, query) => {
+        if (!countPill) {
+            return;
+        }
+
+        if (!query) {
+            countPill.textContent = "All questions";
+            return;
+        }
+
+        countPill.textContent = `${visibleCount} result${visibleCount === 1 ? "" : "s"}`;
+    };
+
+    const syncChipState = (query) => {
+        const normalizedQuery = normalizeFaqSearchText(query);
+        chips.forEach((chip) => {
+            const term = normalizeFaqSearchText(chip.getAttribute("data-faq-chip") || "");
+            chip.classList.toggle("is-active", normalizedQuery === term);
+        });
+    };
+
     const applyFilter = () => {
-        const query = searchInput.value.toLowerCase().trim();
+        const query = searchInput.value || "";
+        const normalizedQuery = normalizeFaqSearchText(query);
+        const expandedTerms = getExpandedTerms(normalizedQuery);
         let visibleCount = 0;
 
         indexedItems.forEach(({ element, text }) => {
-            const isVisible = !query || text.includes(query);
+            const isVisible = expandedTerms.length === 0
+                || expandedTerms.every((variants) => variants.some((variant) => text.includes(variant)));
             element.classList.toggle("is-filtered-out", !isVisible);
             element.hidden = !isVisible;
             if (isVisible) {
@@ -2095,12 +2186,16 @@ document.querySelectorAll("[data-faq-search-root]").forEach((faqRoot) => {
             emptyState.hidden = visibleCount > 0;
         }
 
-        updateSummary(visibleCount, query);
+        faqRoot.classList.toggle("has-active-query", normalizedQuery.length > 0);
+        updateSummary(visibleCount, normalizedQuery);
+        updateCountPill(visibleCount, normalizedQuery);
+        syncChipState(normalizedQuery);
     };
 
     searchInput.addEventListener("input", applyFilter);
+    searchInput.addEventListener("keyup", applyFilter);
 
-    document.querySelectorAll("[data-faq-chip]").forEach((chip) => {
+    chips.forEach((chip) => {
         chip.addEventListener("click", () => {
             const term = chip.getAttribute("data-faq-chip") || "";
             searchInput.value = term;
