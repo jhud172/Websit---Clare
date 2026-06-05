@@ -139,11 +139,7 @@
             <div class="secondary-empty-state" th:if="${#lists.isEmpty(pendingReviews)}">
                 <div class="admin-empty-mark">
                     <span class="logo-composite admin-empty-logo" aria-hidden="true">
-                        <span class="clc-lettermark">
-                            <span class="clc-letter clc-letter-one">C</span>
-                            <span class="clc-letter clc-letter-two">L</span>
-                            <span class="clc-letter clc-letter-three">C</span>
-                        </span>
+                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
                         <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
                     </span>
                 </div>
