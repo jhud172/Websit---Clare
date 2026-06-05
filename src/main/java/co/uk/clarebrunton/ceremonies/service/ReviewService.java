@@ -70,8 +70,8 @@ public class ReviewService {
 	}
 
 	public synchronized List<ReviewEntry> getManageableReviews() {
+		ensureInitialReviewData();
 		return loadAll().stream()
-				.filter(entry -> entry.getStatus() == ReviewStatus.APPROVED || entry.getStatus() == ReviewStatus.DISABLED)
 				.sorted(Comparator.comparing(ReviewEntry::getSubmittedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
 				.toList();
 	}
@@ -108,6 +108,10 @@ public class ReviewService {
 	}
 
 	public synchronized void rejectReview(String reviewId, String note) {
+		deleteReview(reviewId);
+	}
+
+	public synchronized void deleteReview(String reviewId) {
 		List<ReviewEntry> entries = loadAll();
 		ReviewEntry matched = findReview(entries, reviewId);
 		entries.remove(matched);
@@ -143,6 +147,13 @@ public class ReviewService {
 		matched.setModeratedAt(OffsetDateTime.now());
 		saveAll(entries);
 		return matched;
+	}
+
+	private void ensureInitialReviewData() {
+		if (Files.exists(getDataFilePath())) {
+			return;
+		}
+		saveAll(new ArrayList<>(demoApprovedReviews()));
 	}
 
 	private ReviewEntry findReview(List<ReviewEntry> entries, String reviewId) {

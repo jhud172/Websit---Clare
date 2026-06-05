@@ -9,9 +9,9 @@ public class ReviewProperties {
 
 	private String photoDirectory = "uploads";
 
-	private String adminUsername = "admin";
+	private String adminUsername;
 
-	private String adminPassword = "password";
+	private String adminPassword;
 
 	private int maxPhotoCount = 10;
 

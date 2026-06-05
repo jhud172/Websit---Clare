@@ -49,8 +49,11 @@ email:
 reviews:
   storage-directory: ${REVIEWS_STORAGE_DIRECTORY:data/reviews}
   photo-directory: ${REVIEWS_PHOTO_DIRECTORY:uploads}
-  admin-username: ${REVIEWS_ADMIN_USERNAME:admin}
-  admin-password: ${REVIEWS_ADMIN_PASSWORD:password}
+  admin-username: ${REVIEWS_ADMIN_USERNAME:}
+  admin-password: ${REVIEWS_ADMIN_PASSWORD:}
   max-photo-count: ${REVIEWS_MAX_PHOTO_COUNT:10}
   max-photo-size-bytes: ${REVIEWS_MAX_PHOTO_SIZE_BYTES:5242880}
   notification-email: ${REVIEWS_NOTIFICATION_EMAIL:${INQUIRY_NOTIFICATION_EMAIL:${SITE_CONTACT_EMAIL:clarebruntoncelebrant@gmail.com}}}
+
+analytics:
+  storage-directory: ${ANALYTICS_STORAGE_DIRECTORY:data/analytics}

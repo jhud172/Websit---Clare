@@ -33,6 +33,7 @@ import co.uk.clarebrunton.ceremonies.config.ReviewProperties;
 import co.uk.clarebrunton.ceremonies.model.InquiryForm;
 import co.uk.clarebrunton.ceremonies.model.ReviewEntry;
 import co.uk.clarebrunton.ceremonies.model.ReviewForm;
+import co.uk.clarebrunton.ceremonies.service.AnalyticsService;
 import co.uk.clarebrunton.ceremonies.service.BlogService;
 import co.uk.clarebrunton.ceremonies.service.InquiryNotificationService;
 import co.uk.clarebrunton.ceremonies.service.ReviewService;
@@ -208,6 +209,8 @@ public class SiteController {
 
 	private final BlogService blogService;
 
+	private final AnalyticsService analyticsService;
+
 	private final InquiryNotificationService inquiryNotificationService;
 
 	private final ReviewService reviewService;
@@ -217,10 +220,12 @@ public class SiteController {
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	public SiteController(BlogService blogService,
+			AnalyticsService analyticsService,
 			InquiryNotificationService inquiryNotificationService,
 			ReviewService reviewService,
 			ReviewProperties reviewProperties) {
 		this.blogService = blogService;
+		this.analyticsService = analyticsService;
 		this.inquiryNotificationService = inquiryNotificationService;
 		this.reviewService = reviewService;
 		this.reviewProperties = reviewProperties;
@@ -386,6 +391,11 @@ public class SiteController {
 			@RequestParam("password") String password,
 			RedirectAttributes redirectAttributes,
 			HttpSession session) {
+		if (!areReviewAdminCredentialsConfigured()) {
+			redirectAttributes.addFlashAttribute("reviewAdminError", "Admin login is not configured. Set REVIEWS_ADMIN_USERNAME and REVIEWS_ADMIN_PASSWORD in the environment.");
+			return "redirect:/reviews/admin/login";
+		}
+
 		if (reviewProperties.getAdminUsername().equals(username) && reviewProperties.getAdminPassword().equals(password)) {
 			session.setAttribute(REVIEW_ADMIN_SESSION_KEY, Boolean.TRUE);
 			return "redirect:/reviews/admin";
@@ -412,6 +422,7 @@ public class SiteController {
 		model.addAttribute("pageDescription", "Approve or reject submitted reviews.");
 		model.addAttribute("robotsContent", "noindex, nofollow");
 		model.addAttribute("pendingReviews", reviewService.getPendingReviews());
+		model.addAttribute("analyticsSummary", analyticsService.getSummary());
 		return "reviews-admin";
 	}
 
@@ -422,8 +433,8 @@ public class SiteController {
 		}
 
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Manage reviews");
-		model.addAttribute("pageDescription", "Enable or disable approved reviews.");
+		model.addAttribute("pageTitle", "Manage all reviews");
+		model.addAttribute("pageDescription", "Enable, disable, approve, reject or delete saved reviews.");
 		model.addAttribute("robotsContent", "noindex, nofollow");
 		model.addAttribute("managedReviews", reviewService.getManageableReviews());
 		return "reviews-admin-manage";
@@ -432,6 +443,7 @@ public class SiteController {
 	@PostMapping("/reviews/admin/{reviewId}/approve")
 	public String approveReview(@PathVariable String reviewId,
 			@RequestParam(name = "note", required = false) String note,
+			@RequestParam(name = "returnTo", required = false) String returnTo,
 			RedirectAttributes redirectAttributes,
 			HttpSession session) {
 		if (!isReviewAdminAuthenticated(session)) {
@@ -441,12 +453,13 @@ public class SiteController {
 		ReviewEntry approvedReview = reviewService.approveReview(reviewId, note);
 		inquiryNotificationService.notifyReviewReady(approvedReview);
 		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review approved.");
-		return "redirect:/reviews/admin";
+		return redirectAfterReviewAction(returnTo);
 	}
 
 	@PostMapping("/reviews/admin/{reviewId}/reject")
 	public String rejectReview(@PathVariable String reviewId,
 			@RequestParam(name = "note", required = false) String note,
+			@RequestParam(name = "returnTo", required = false) String returnTo,
 			RedirectAttributes redirectAttributes,
 			HttpSession session) {
 		if (!isReviewAdminAuthenticated(session)) {
@@ -455,7 +468,7 @@ public class SiteController {
 
 		reviewService.rejectReview(reviewId, note);
 		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review rejected and deleted.");
-		return "redirect:/reviews/admin";
+		return redirectAfterReviewAction(returnTo);
 	}
 
 	@PostMapping("/reviews/admin/{reviewId}/enable")
@@ -481,6 +494,19 @@ public class SiteController {
 
 		reviewService.disableReview(reviewId);
 		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review disabled.");
+		return "redirect:/reviews/admin/manage";
+	}
+
+	@PostMapping("/reviews/admin/{reviewId}/delete")
+	public String deleteReview(@PathVariable String reviewId,
+			RedirectAttributes redirectAttributes,
+			HttpSession session) {
+		if (!isReviewAdminAuthenticated(session)) {
+			return "redirect:/reviews/admin/login";
+		}
+
+		reviewService.deleteReview(reviewId);
+		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review deleted permanently.");
 		return "redirect:/reviews/admin/manage";
 	}
 
@@ -669,6 +695,18 @@ public class SiteController {
 	private boolean isReviewAdminAuthenticated(HttpSession session) {
 		Object value = session.getAttribute(REVIEW_ADMIN_SESSION_KEY);
 		return value instanceof Boolean authenticated && authenticated;
+	}
+
+	private boolean areReviewAdminCredentialsConfigured() {
+		return StringUtils.hasText(reviewProperties.getAdminUsername())
+				&& StringUtils.hasText(reviewProperties.getAdminPassword());
+	}
+
+	private String redirectAfterReviewAction(String returnTo) {
+		if ("manage".equalsIgnoreCase(returnTo)) {
+			return "redirect:/reviews/admin/manage";
+		}
+		return "redirect:/reviews/admin";
 	}
 
 }

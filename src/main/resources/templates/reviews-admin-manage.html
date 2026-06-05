@@ -6,13 +6,13 @@
         <div class="shell secondary-hero-grid">
             <div class="secondary-hero-copy">
                 <p class="eyebrow">Review management</p>
-                <h1>Accepted reviews</h1>
-                <p class="lead">Enable or disable approved reviews that can appear across the public site.</p>
+                <h1>Manage all reviews</h1>
+                <p class="lead">Approve, disable, enable or permanently delete saved review records.</p>
             </div>
             <div class="secondary-brand-panel admin-count-panel">
-                <p class="secondary-status">Managed reviews</p>
+                <p class="secondary-status">Saved reviews</p>
                 <strong th:text="${#lists.size(managedReviews)}">0</strong>
-                <span>approved record(s)</span>
+                <span>record(s) in the review data file</span>
             </div>
         </div>
     </section>
@@ -35,8 +35,8 @@
                         <div class="admin-review-topline">
                             <p class="review-stars"><span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span></p>
                             <span class="reviews-manage-status"
-                                  th:classappend="${review.status.name() == 'APPROVED'} ? ' is-enabled' : ' is-disabled'"
-                                  th:text="${review.status.name() == 'APPROVED'} ? 'Enabled' : 'Disabled'">Enabled</span>
+                                  th:classappend="${review.status.name() == 'APPROVED'} ? ' is-enabled' : (${review.status.name() == 'PENDING'} ? ' is-pending' : ' is-disabled')"
+                                  th:text="${review.status.name() == 'APPROVED'} ? 'Enabled' : (${review.status.name() == 'PENDING'} ? 'Pending' : 'Disabled')">Enabled</span>
                         </div>
                         <p class="eyebrow" th:text="${review.ceremonyType}">Wedding ceremony</p>
                         <h2 th:text="${review.headline != null ? review.headline : 'Review submission'}">Review</h2>
@@ -72,21 +72,46 @@
                     </div>
 
                     <div class="admin-review-actions">
+                        <form th:if="${review.status.name() == 'PENDING'}" th:action="@{'/reviews/admin/' + ${review.id} + '/approve'}" method="post">
+                            <input type="hidden" name="returnTo" value="manage">
+                            <button class="button" type="submit">Approve review</button>
+                        </form>
+                        <form th:if="${review.status.name() == 'PENDING'}" th:action="@{'/reviews/admin/' + ${review.id} + '/reject'}" method="post">
+                            <input type="hidden" name="returnTo" value="manage">
+                            <button class="button button-secondary button-danger" type="submit">Reject and delete</button>
+                        </form>
                         <form th:if="${review.status.name() == 'DISABLED'}" th:action="@{'/reviews/admin/' + ${review.id} + '/enable'}" method="post">
                             <button class="button" type="submit">Enable review</button>
                         </form>
                         <form th:if="${review.status.name() == 'APPROVED'}" th:action="@{'/reviews/admin/' + ${review.id} + '/disable'}" method="post">
                             <button class="button button-secondary" type="submit">Disable review</button>
                         </form>
+                        <form th:if="${review.status.name() != 'PENDING'}" th:action="@{'/reviews/admin/' + ${review.id} + '/delete'}" method="post">
+                            <button class="button button-secondary button-danger" type="submit">Delete permanently</button>
+                        </form>
                     </div>
                 </article>
             </div>
 
             <div class="secondary-empty-state" th:if="${#lists.isEmpty(managedReviews)}">
-                <img th:src="@{${wreathLogoPath}}" alt="" aria-hidden="true">
-                <p class="eyebrow">No accepted reviews</p>
-                <h2>Approved reviews will appear here after moderation.</h2>
-                <a class="button button-secondary" th:href="@{/reviews/admin}">Review pending submissions</a>
+                <div class="admin-empty-mark">
+                    <span class="logo-composite admin-empty-logo" aria-hidden="true">
+                        <span class="clc-lettermark">
+                            <span class="clc-letter clc-letter-one">C</span>
+                            <span class="clc-letter clc-letter-two">L</span>
+                            <span class="clc-letter clc-letter-three">C</span>
+                        </span>
+                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    </span>
+                </div>
+                <div class="admin-empty-copy">
+                    <p class="eyebrow">No saved reviews</p>
+                    <h2>Review records will appear here after submissions are saved.</h2>
+                    <p>Approved, disabled and pending review data will be listed here once it exists in the local review data file.</p>
+                </div>
+                <div class="admin-empty-actions">
+                    <a class="button button-secondary" th:href="@{/reviews/admin}">Review pending submissions</a>
+                </div>
             </div>
         </div>
     </section>

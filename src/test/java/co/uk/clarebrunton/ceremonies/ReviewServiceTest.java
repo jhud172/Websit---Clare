@@ -76,6 +76,30 @@ class ReviewServiceTest {
 	}
 
 	@Test
+	void manageableReviewsIncludesPendingSavedReviews(@TempDir Path tempDir) {
+		ReviewService service = createService(tempDir);
+
+		service.submitReview(validForm(), List.of());
+
+		assertThat(service.getManageableReviews()).singleElement()
+				.extracting(ReviewEntry::getStatus)
+				.isEqualTo(ReviewStatus.PENDING);
+	}
+
+	@Test
+	void deleteReviewRemovesSavedReview(@TempDir Path tempDir) {
+		ReviewService service = createService(tempDir);
+		service.submitReview(validForm(), List.of());
+		ReviewEntry pendingEntry = service.getPendingReviews().get(0);
+		service.approveReview(pendingEntry.getId(), "Verified genuine");
+
+		service.deleteReview(pendingEntry.getId());
+
+		assertThat(service.getApprovedReviews()).isEmpty();
+		assertThat(service.getManageableReviews()).isEmpty();
+	}
+
+	@Test
 	void approvedReviewCanBeDisabledAndEnabled(@TempDir Path tempDir) {
 		ReviewService service = createService(tempDir);
 		service.submitReview(validForm(), List.of());

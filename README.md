@@ -123,8 +123,9 @@ Set these in Render before launch:
 - `SPRING_MAIL_SMTP_WRITE_TIMEOUT` defaults to `5000`
 - `REVIEWS_STORAGE_DIRECTORY` defaults to `data/reviews`
 - `REVIEWS_PHOTO_DIRECTORY` defaults to `uploads`
-- `REVIEWS_ADMIN_USERNAME`
-- `REVIEWS_ADMIN_PASSWORD`
+- `REVIEWS_ADMIN_USERNAME` required for `/reviews/admin`
+- `REVIEWS_ADMIN_PASSWORD` required for `/reviews/admin`
+- `ANALYTICS_STORAGE_DIRECTORY` defaults to `data/analytics`
 
 On Render free web services, use the Resend variables rather than Gmail SMTP. Render blocks outbound SMTP ports on free services, so `smtp.gmail.com:587` can time out even when the Gmail app password is correct.
 
@@ -138,6 +139,10 @@ If you use Gmail SMTP locally, set `SPRING_MAIL_PASSWORD` to a Google App Passwo
   - `/reviews/admin/login`
   - `/reviews/admin`
 - Approved reviews appear on `/reviews` and approved five-star reviews are featured on the homepage carousel.
+
+## Local visit analytics
+
+The admin panel shows simple aggregate public page visit counts for today, the last 7 days, the last 30 days and all time. Counts are stored in `ANALYTICS_STORAGE_DIRECTORY` and do not store names, IP addresses, user agents or personal visitor profiles.
 
 ## Docker / Render deployment
 

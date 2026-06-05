@@ -8,11 +8,23 @@
                 <p class="eyebrow">Review moderation</p>
                 <h1>Pending reviews</h1>
                 <p class="lead">Check new submissions before they are allowed onto the public reviews page.</p>
+                <div class="admin-hero-actions">
+                    <a class="button button-secondary" th:href="@{/reviews/admin/manage}">Manage all reviews</a>
+                    <a class="button button-secondary" th:href="@{/reviews}">View public reviews</a>
+                </div>
             </div>
             <div class="secondary-brand-panel admin-count-panel">
-                <p class="secondary-status">Awaiting decision</p>
+                <div class="admin-count-panel-top">
+                    <p class="secondary-status">Awaiting decision</p>
+                    <span class="admin-count-status"
+                          th:classappend="${#lists.isEmpty(pendingReviews)} ? ' is-clear' : ' is-active'"
+                          th:text="${#lists.isEmpty(pendingReviews)} ? 'Clear' : 'Needs review'">Clear</span>
+                </div>
                 <strong th:text="${#lists.size(pendingReviews)}">0</strong>
-                <span>pending review(s)</span>
+                <span th:text="${#lists.size(pendingReviews) == 1} ? 'submission waiting for moderation' : 'submissions waiting for moderation'">pending review(s)</span>
+                <div class="admin-count-meter" aria-hidden="true">
+                    <span th:style="${'--meter-width: ' + (#lists.isEmpty(pendingReviews) ? 8 : (#lists.size(pendingReviews) > 10 ? 100 : #lists.size(pendingReviews) * 10)) + '%'}"></span>
+                </div>
             </div>
         </div>
     </section>
@@ -20,21 +32,97 @@
     <section class="section admin-workspace-section section-divider section-reveal-zone">
         <div class="shell admin-workspace">
             <div class="admin-toolbar-panel">
-                <p class="callout" th:if="${reviewAdminMessage != null}" th:text="${reviewAdminMessage}">Action completed.</p>
+                <div class="admin-toolbar-copy">
+                    <p class="eyebrow">Moderation queue</p>
+                    <h2 th:text="${#lists.isEmpty(pendingReviews)} ? 'Nothing waiting right now' : 'Reviews ready to check'">Reviews ready to check</h2>
+                    <p th:text="${#lists.isEmpty(pendingReviews)} ? 'New review submissions will appear here with approve and reject controls.' : 'Read each submission carefully before it appears on the public reviews page.'">Read each submission carefully before it appears on the public reviews page.</p>
+                    <p class="callout" th:if="${reviewAdminMessage != null}" th:text="${reviewAdminMessage}">Action completed.</p>
+                </div>
                 <div class="admin-toolbar-actions">
-                    <a class="button button-secondary" th:href="@{/reviews/admin/manage}">Manage accepted reviews</a>
+                    <a class="button button-secondary" th:href="@{/reviews/admin/manage}">Manage all reviews</a>
                     <form th:action="@{/reviews/admin/logout}" method="post">
                         <button class="button button-secondary" type="submit">Sign out</button>
                     </form>
                 </div>
             </div>
 
+            <section class="admin-analytics-panel" aria-labelledby="admin-analytics-heading">
+                <div class="admin-analytics-header">
+                    <div class="admin-analytics-heading">
+                        <p class="eyebrow">Website visits</p>
+                        <h2 id="admin-analytics-heading">Visitor activity</h2>
+                        <p>Simple visit totals from public pages. These are not personal profiles or exact unique user counts.</p>
+                    </div>
+                    <div class="admin-analytics-lead">
+                        <span>Last 7 days</span>
+                        <strong th:text="${analyticsSummary.weekVisits}">0</strong>
+                        <small th:classappend="${analyticsSummary.weekUp} ? ' is-positive' : (${analyticsSummary.weekDown} ? ' is-negative' : '')"
+                               th:text="${analyticsSummary.weekDeltaLabel}">Level with previous 7 days</small>
+                    </div>
+                </div>
+
+                <div class="admin-analytics-grid">
+                    <article class="admin-analytics-card">
+                        <span>Today</span>
+                        <strong th:text="${analyticsSummary.todayVisits}">0</strong>
+                        <small>Public page visits today</small>
+                    </article>
+                    <article class="admin-analytics-card">
+                        <span>30 days</span>
+                        <strong th:text="${analyticsSummary.monthVisits}">0</strong>
+                        <small>Rolling monthly view</small>
+                    </article>
+                    <article class="admin-analytics-card">
+                        <span>Daily average</span>
+                        <strong th:text="${analyticsSummary.averageDailyVisits}">0</strong>
+                        <small>Average across 7 days</small>
+                    </article>
+                    <article class="admin-analytics-card">
+                        <span>All time</span>
+                        <strong th:text="${analyticsSummary.allTimeVisits}">0</strong>
+                        <small>Since tracking began</small>
+                    </article>
+                </div>
+
+                <div class="admin-analytics-detail">
+                    <div class="admin-analytics-chart" aria-label="Visits over the last 7 days">
+                        <div class="admin-chart-bar"
+                             th:each="day : ${analyticsSummary.lastSevenDays}"
+                             th:style="${'--bar-height: ' + day.percentage + '%'}"
+                             th:attr="aria-label=${day.dayLabel + ' ' + day.dateLabel + ': ' + day.visits + ' visits'}">
+                            <span class="admin-chart-value" th:text="${day.visits}">0</span>
+                            <span class="admin-chart-track"><span class="admin-chart-fill"></span></span>
+                            <span class="admin-chart-label" th:text="${day.dayLabel}">Mon</span>
+                        </div>
+                    </div>
+                    <div class="admin-analytics-insights">
+                        <div class="admin-insight-pill">
+                            <span>Busiest day</span>
+                            <strong th:text="${analyticsSummary.busiestDayLabel}">No visits yet</strong>
+                            <small th:text="${analyticsSummary.busiestDayVisits + ' visit(s)'}">0 visit(s)</small>
+                        </div>
+                        <div class="admin-insight-pill">
+                            <span>Tracking type</span>
+                            <strong>Aggregate</strong>
+                            <small>No IP or user profile storage</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <div class="admin-review-list" th:if="${!#lists.isEmpty(pendingReviews)}">
                 <article class="admin-review-row" th:each="review : ${pendingReviews}">
                     <div class="admin-review-main">
-                        <p class="eyebrow" th:text="${review.ceremonyType}">Wedding ceremony</p>
+                        <div class="admin-review-topline">
+                            <p class="eyebrow" th:text="${review.ceremonyType}">Wedding ceremony</p>
+                            <span class="reviews-manage-status is-pending">Pending</span>
+                        </div>
                         <h2 th:text="${review.headline != null ? review.headline : 'Review submission'}">Review</h2>
-                        <p class="reviews-admin-meta"><strong th:text="${review.reviewerName}">Reviewer</strong> <span th:text="${review.rating + ' stars'}">5 stars</span></p>
+                        <div class="admin-review-meta-grid">
+                            <p class="reviews-admin-meta"><span>Reviewer</span><strong th:text="${review.reviewerName}">Reviewer</strong></p>
+                            <p class="reviews-admin-meta"><span>Rating</span><strong th:text="${review.rating + ' stars'}">5 stars</strong></p>
+                            <p class="reviews-admin-meta" th:if="${review.reviewerRole != null and !#strings.isEmpty(review.reviewerRole)}"><span>Relationship</span><strong th:text="${review.reviewerRole}">Couple</strong></p>
+                        </div>
                         <p class="reviews-admin-message" th:text="${review.message}">Review message</p>
                     </div>
                     <div class="admin-review-actions">
@@ -49,10 +137,25 @@
             </div>
 
             <div class="secondary-empty-state" th:if="${#lists.isEmpty(pendingReviews)}">
-                <img th:src="@{${wreathLogoPath}}" alt="" aria-hidden="true">
-                <p class="eyebrow">No pending reviews</p>
-                <h2>All submissions have been reviewed.</h2>
-                <a class="button button-secondary" th:href="@{/reviews/admin/manage}">Manage accepted reviews</a>
+                <div class="admin-empty-mark">
+                    <span class="logo-composite admin-empty-logo" aria-hidden="true">
+                        <span class="clc-lettermark">
+                            <span class="clc-letter clc-letter-one">C</span>
+                            <span class="clc-letter clc-letter-two">L</span>
+                            <span class="clc-letter clc-letter-three">C</span>
+                        </span>
+                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    </span>
+                </div>
+                <div class="admin-empty-copy">
+                    <p class="eyebrow">No pending reviews</p>
+                    <h2>All submissions have been reviewed.</h2>
+                    <p>When Clare receives a new review, it will appear here with everything needed to approve or reject it cleanly.</p>
+                </div>
+                <div class="admin-empty-actions">
+                    <a class="button button-secondary" th:href="@{/reviews/admin/manage}">Manage all reviews</a>
+                    <a class="button button-secondary" th:href="@{/reviews}">View public reviews</a>
+                </div>
             </div>
         </div>
     </section>

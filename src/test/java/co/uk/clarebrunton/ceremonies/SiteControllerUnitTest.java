@@ -18,9 +18,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import co.uk.clarebrunton.ceremonies.config.ReviewProperties;
 import co.uk.clarebrunton.ceremonies.controller.SiteController;
+import co.uk.clarebrunton.ceremonies.model.AnalyticsSummary;
 import co.uk.clarebrunton.ceremonies.model.InquiryForm;
 import co.uk.clarebrunton.ceremonies.model.ReviewEntry;
 import co.uk.clarebrunton.ceremonies.model.ReviewStatus;
+import co.uk.clarebrunton.ceremonies.service.AnalyticsService;
 import co.uk.clarebrunton.ceremonies.service.BlogService;
 import co.uk.clarebrunton.ceremonies.service.InquiryNotificationService;
 import co.uk.clarebrunton.ceremonies.service.ReviewService;
@@ -28,8 +30,9 @@ import co.uk.clarebrunton.ceremonies.service.ReviewService;
 class SiteControllerUnitTest {
 
 	private final InquiryNotificationService inquiryNotificationService = mock(InquiryNotificationService.class);
+	private final AnalyticsService analyticsService = mock(AnalyticsService.class);
 	private final ReviewService reviewService = mock(ReviewService.class);
-	private final SiteController controller = new SiteController(new BlogService(), inquiryNotificationService, reviewService, new ReviewProperties());
+	private final SiteController controller = new SiteController(new BlogService(), analyticsService, inquiryNotificationService, reviewService, new ReviewProperties());
 
 	@Test
 	void launchRoutesReturnExpectedViews() {
@@ -134,8 +137,12 @@ class SiteControllerUnitTest {
 	void submitReviewAdminLoginRedirectsWithErrorForInvalidCredentials() {
 		MockHttpSession session = new MockHttpSession();
 		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
+		ReviewProperties properties = new ReviewProperties();
+		properties.setAdminUsername("clare-admin");
+		properties.setAdminPassword("top-secret");
+		SiteController localController = new SiteController(new BlogService(), analyticsService, inquiryNotificationService, reviewService, properties);
 
-		String view = controller.submitReviewAdminLogin("wrong", "credentials", redirectAttributes, session);
+		String view = localController.submitReviewAdminLogin("wrong", "credentials", redirectAttributes, session);
 
 		assertThat(view).isEqualTo("redirect:/reviews/admin/login");
 		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminError"))
@@ -144,11 +151,24 @@ class SiteControllerUnitTest {
 	}
 
 	@Test
+	void submitReviewAdminLoginFailsSafelyWhenCredentialsAreMissing() {
+		MockHttpSession session = new MockHttpSession();
+		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
+
+		String view = controller.submitReviewAdminLogin("admin", "password", redirectAttributes, session);
+
+		assertThat(view).isEqualTo("redirect:/reviews/admin/login");
+		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminError"))
+				.isEqualTo("Admin login is not configured. Set REVIEWS_ADMIN_USERNAME and REVIEWS_ADMIN_PASSWORD in the environment.");
+		assertThat(session.getAttribute("reviewAdminAuthenticated")).isNull();
+	}
+
+	@Test
 	void submitReviewAdminLoginRedirectsToDashboardForValidCredentials() {
 		ReviewProperties properties = new ReviewProperties();
 		properties.setAdminUsername("clare-admin");
 		properties.setAdminPassword("top-secret");
-		SiteController localController = new SiteController(new BlogService(), inquiryNotificationService, reviewService, properties);
+		SiteController localController = new SiteController(new BlogService(), analyticsService, inquiryNotificationService, reviewService, properties);
 
 		MockHttpSession session = new MockHttpSession();
 
@@ -176,11 +196,15 @@ class SiteControllerUnitTest {
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute("reviewAdminAuthenticated", true);
 		when(reviewService.getPendingReviews()).thenReturn(List.of());
+		when(analyticsService.getSummary()).thenReturn(new AnalyticsSummary(1, 2, 0, 3, 4, 1, "Fri", 1, List.of()));
+		Model model = new ExtendedModelMap();
 
-		String view = controller.reviewAdmin(new ExtendedModelMap(), session);
+		String view = controller.reviewAdmin(model, session);
 
 		assertThat(view).isEqualTo("reviews-admin");
+		assertThat(model.getAttribute("analyticsSummary")).isInstanceOf(AnalyticsSummary.class);
 		verify(reviewService).getPendingReviews();
+		verify(analyticsService).getSummary();
 	}
 
 	@Test
@@ -205,7 +229,7 @@ class SiteControllerUnitTest {
 
 	@Test
 	void approveReviewRedirectsToLoginWhenNotAuthenticated() {
-		String view = controller.approveReview("review-123", "Looks good", new RedirectAttributesModelMap(), new MockHttpSession());
+		String view = controller.approveReview("review-123", "Looks good", null, new RedirectAttributesModelMap(), new MockHttpSession());
 
 		assertThat(view).isEqualTo("redirect:/reviews/admin/login");
 		verifyNoInteractions(reviewService);
@@ -222,11 +246,28 @@ class SiteControllerUnitTest {
 		approvedEntry.setStatus(ReviewStatus.APPROVED);
 		when(reviewService.approveReview("review-123", "Looks good")).thenReturn(approvedEntry);
 
-		String view = controller.approveReview("review-123", "Looks good", redirectAttributes, session);
+		String view = controller.approveReview("review-123", "Looks good", null, redirectAttributes, session);
 
 		assertThat(view).isEqualTo("redirect:/reviews/admin");
 		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review approved.");
 		verify(reviewService).approveReview("review-123", "Looks good");
+		verify(inquiryNotificationService).notifyReviewReady(approvedEntry);
+	}
+
+	@Test
+	void approveReviewCanReturnToManagePageWhenRequested() {
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("reviewAdminAuthenticated", true);
+		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
+		ReviewEntry approvedEntry = new ReviewEntry();
+		approvedEntry.setId("review-123");
+		approvedEntry.setStatus(ReviewStatus.APPROVED);
+		when(reviewService.approveReview("review-123", null)).thenReturn(approvedEntry);
+
+		String view = controller.approveReview("review-123", null, "manage", redirectAttributes, session);
+
+		assertThat(view).isEqualTo("redirect:/reviews/admin/manage");
+		verify(reviewService).approveReview("review-123", null);
 		verify(inquiryNotificationService).notifyReviewReady(approvedEntry);
 	}
 
@@ -236,11 +277,44 @@ class SiteControllerUnitTest {
 		session.setAttribute("reviewAdminAuthenticated", true);
 		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
 
-		String view = controller.rejectReview("review-123", "Not suitable", redirectAttributes, session);
+		String view = controller.rejectReview("review-123", "Not suitable", null, redirectAttributes, session);
 
 		assertThat(view).isEqualTo("redirect:/reviews/admin");
 		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review rejected and deleted.");
 		verify(reviewService).rejectReview("review-123", "Not suitable");
+	}
+
+	@Test
+	void rejectReviewCanReturnToManagePageWhenRequested() {
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("reviewAdminAuthenticated", true);
+		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
+
+		String view = controller.rejectReview("review-123", null, "manage", redirectAttributes, session);
+
+		assertThat(view).isEqualTo("redirect:/reviews/admin/manage");
+		verify(reviewService).rejectReview("review-123", null);
+	}
+
+	@Test
+	void deleteReviewRedirectsToLoginWhenNotAuthenticated() {
+		String view = controller.deleteReview("review-123", new RedirectAttributesModelMap(), new MockHttpSession());
+
+		assertThat(view).isEqualTo("redirect:/reviews/admin/login");
+		verifyNoInteractions(reviewService);
+	}
+
+	@Test
+	void deleteReviewCallsServiceWhenAuthenticated() {
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute("reviewAdminAuthenticated", true);
+		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
+
+		String view = controller.deleteReview("review-123", redirectAttributes, session);
+
+		assertThat(view).isEqualTo("redirect:/reviews/admin/manage");
+		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review deleted permanently.");
+		verify(reviewService).deleteReview("review-123");
 	}
 
 	@Test

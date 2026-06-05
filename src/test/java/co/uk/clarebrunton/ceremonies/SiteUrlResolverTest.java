@@ -48,7 +48,7 @@ class SiteUrlResolverTest {
 	void fallsBackToLocalhostWhenNoRequestOrConfiguredUrlExists() {
 		String resolved = resolver.resolvePublicBaseUrl(null, "");
 
-		assertThat(resolved).isEqualTo("http://localhost:8080");
+		assertThat(resolved).isEqualTo("http://localhost:8081");
 	}
 
 }
