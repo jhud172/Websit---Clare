@@ -1809,14 +1809,50 @@
     padding: 0.25rem 0 0;
 }
 
-.footer-accreditation img {
-    width: clamp(7.5rem, 12vw, 10.25rem);
+.professional-accreditations {
+    --accreditation-logo-size: clamp(7.25rem, 11vw, 9.75rem);
+}
+
+.accreditation-logos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.8rem, 2vw, 1.15rem);
+}
+
+.accreditation-logo,
+.accreditation-logo-link {
+    display: block;
+    width: var(--accreditation-logo-size);
     aspect-ratio: 1;
+    border-radius: 999px;
+}
+
+.accreditation-logo {
     object-fit: contain;
+    background: rgba(255, 255, 255, 0.96);
     border-radius: 999px;
     filter:
         drop-shadow(0 18px 34px rgba(0, 0, 0, 0.22))
         drop-shadow(0 0 18px rgba(201, 154, 51, 0.08));
+}
+
+.accreditation-logo-link {
+    text-decoration: none;
+    transition:
+        transform 220ms cubic-bezier(0.2, 0.75, 0.25, 1),
+        filter 220ms ease;
+}
+
+.accreditation-logo-link:hover,
+.accreditation-logo-link:focus-visible {
+    transform: translateY(-0.16rem);
+}
+
+.accreditation-logo-link:focus-visible {
+    outline: 2px solid rgba(214, 199, 145, 0.52);
+    outline-offset: 0.38rem;
 }
 
 .sr-only {
@@ -1871,6 +1907,10 @@
 
     .footer-accreditation {
         justify-items: start;
+    }
+
+    .footer-accreditation .accreditation-logos {
+        justify-content: flex-start;
     }
 
     .path-grid,
