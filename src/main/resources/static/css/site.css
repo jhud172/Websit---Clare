@@ -3377,6 +3377,19 @@ blockquote {
     outline-offset: 0.38rem;
 }
 
+.accreditation-logo-link-hitched {
+    width: clamp(10.5rem, 16vw, 12.75rem);
+    aspect-ratio: auto;
+    border-radius: 1rem;
+}
+
+.accreditation-logo-hitched {
+    width: 100%;
+    aspect-ratio: auto;
+    border-radius: 1rem;
+    padding: 0.35rem 0.45rem;
+}
+
 .sr-only {
     position: absolute;
     width: 1px;
