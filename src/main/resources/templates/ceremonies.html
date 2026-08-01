@@ -31,16 +31,21 @@
                     <strong>Weddings</strong>
                     <small>Bespoke celebrant-led ceremonies with freedom, personality and polish.</small>
                 </a>
-                <a class="service-rail-item" th:href="@{/funerals}">
+                <a class="service-rail-item" th:href="@{/celebrations-of-life}">
                     <span>02</span>
-                    <strong>Funerals</strong>
+                    <strong>Celebrations of Life</strong>
                     <small>Respectful, personal tributes written with sensitivity and care.</small>
                 </a>
-                <button class="service-rail-item" type="button" data-open-enquiry-modal>
+                <a class="service-rail-item" href="#naming-ceremonies">
                     <span>03</span>
-                    <strong>Life moments</strong>
-                    <small>Naming ceremonies, vow renewals and milestone moments with meaning.</small>
-                </button>
+                    <strong>Naming Ceremonies</strong>
+                    <small>Warm, joyful welcomes shaped around your child and family.</small>
+                </a>
+                <a class="service-rail-item" href="#vow-renewals">
+                    <span>04</span>
+                    <strong>Vow Renewals</strong>
+                    <small>Meaningful ceremonies that celebrate your story and promises.</small>
+                </a>
             </div>
         </div>
     </section>
@@ -48,11 +53,11 @@
     <section class="section services-signature-section section-divider section-reveal-zone peacock-divider-top">
         <div class="shell services-centered-heading">
             <p class="eyebrow">What Clare offers</p>
-            <h2>Three ceremony paths, one personal standard.</h2>
+            <h2>Four ceremony paths, one personal standard.</h2>
             <p>Every service is grounded in listening, thoughtful writing and a ceremony experience that feels calm, polished and unmistakably personal.</p>
         </div>
-        <div class="shell services-pathways">
-            <article class="service-path-panel service-path-panel-featured">
+        <div class="shell services-pathways services-pathways-four">
+            <article class="service-path-panel">
                 <a class="service-path-image" th:href="@{/weddings}" aria-label="View wedding ceremonies">
                     <img th:src="@{/images/weddings/wedding-couple-moment.jpg}"
                          loading="lazy"
@@ -67,30 +72,58 @@
             </article>
 
             <article class="service-path-panel">
-                <a class="service-path-image" th:href="@{/funerals}" aria-label="View funeral ceremonies">
+                <a class="service-path-image" th:href="@{/celebrations-of-life}" aria-label="View Celebration of Life ceremonies">
                     <img th:src="@{/images/funerals/memorial-flowers-soft.jpg}"
                          loading="lazy"
                          alt="Soft floral tribute flowers for remembrance.">
                 </a>
                 <div class="service-path-content">
-                    <p class="eyebrow">Funerals</p>
-                    <h3>Heartfelt funeral and memorial ceremonies, held with dignity.</h3>
-                    <p>Calm support for families and funeral directors, with words that honour a life honestly and sensitively.</p>
-                    <a class="text-link" th:href="@{/funerals}">View funeral support</a>
+                    <p class="eyebrow">Celebrations of Life</p>
+                    <h3>Heartfelt ceremonies and memorials, held with dignity.</h3>
+                    <p>Calm support for families and ceremony professionals, with words that honour a life honestly and sensitively.</p>
+                    <a class="text-link" th:href="@{/celebrations-of-life}">View Celebration of Life support</a>
                 </div>
             </article>
 
-            <article class="service-path-panel">
-                <button class="service-path-image" type="button" data-open-enquiry-modal aria-label="Ask about naming ceremonies, vow renewals and life moments">
+            <article class="service-path-panel" id="naming-ceremonies">
+                <button class="service-path-image" type="button" data-open-enquiry-modal data-enquiry-service="Naming ceremony" aria-label="Enquire about naming ceremonies">
                     <img th:src="@{/images/clare/weddings-confetti-alt.jpg}"
                          loading="lazy"
                          alt="Clare creating a joyful petal moment in a garden.">
                 </button>
                 <div class="service-path-content">
-                    <p class="eyebrow">Life moments</p>
-                    <h3>Naming ceremonies, vow renewals and meaningful milestones.</h3>
-                    <p>Personal ceremony design for family moments, new chapters and promises that deserve thoughtful words.</p>
-                    <button class="text-link" type="button" data-open-enquiry-modal>Ask Clare about this</button>
+                    <p class="eyebrow">Naming Ceremonies</p>
+                    <h3>A joyful welcome, created around your child and family.</h3>
+                    <p>A warm, inclusive ceremony for welcoming a child, celebrating their name and bringing together the people who will support them as they grow.</p>
+                    <p class="life-package-status">Price to be confirmed</p>
+                    <ul class="life-package-inclusions">
+                        <li>Planning consultation and ceremony guidance</li>
+                        <li>A bespoke script shaped around your family</li>
+                        <li>Promises, readings and symbolic elements</li>
+                        <li>Warm, confident delivery on the day</li>
+                    </ul>
+                    <button class="text-link" type="button" data-open-enquiry-modal data-enquiry-service="Naming ceremony">Enquire about a naming ceremony</button>
+                </div>
+            </article>
+
+            <article class="service-path-panel" id="vow-renewals">
+                <button class="service-path-image" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal" aria-label="Enquire about vow renewals">
+                    <img th:src="@{/images/weddings/detail-rings.jpg}"
+                         loading="lazy"
+                         alt="Wedding rings arranged as a symbol of lasting promises.">
+                </button>
+                <div class="service-path-content">
+                    <p class="eyebrow">Vow Renewals</p>
+                    <h3>Celebrate the story you have shared and the promises still ahead.</h3>
+                    <p>A personal ceremony for an anniversary, a new chapter or simply the right moment to reaffirm your commitment in front of the people you love.</p>
+                    <p class="life-package-status">Price to be confirmed</p>
+                    <ul class="life-package-inclusions">
+                        <li>Planning conversation and ceremony guidance</li>
+                        <li>Your shared story written into a bespoke script</li>
+                        <li>Support shaping renewed vows and promises</li>
+                        <li>Readings, music, symbolic elements and delivery</li>
+                    </ul>
+                    <button class="text-link" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal">Enquire about a vow renewal</button>
                 </div>
             </article>
         </div>
@@ -180,7 +213,7 @@
                 <article th:each="faq, iterStat : ${serviceFaqs}" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
                     <h3 itemprop="name" th:text="${faq.question}">What ceremonies does Clare's Life Celebrations offer?</h3>
                     <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                        <p itemprop="text" th:text="${faq.answer}">Clare creates personal wedding ceremonies, funeral and memorial ceremonies, naming ceremonies, vow renewals and other meaningful life celebrations.</p>
+                        <p itemprop="text" th:text="${faq.answer}">Clare creates personal wedding ceremonies, celebrations of life, naming ceremonies, vow renewals and other meaningful life celebrations.</p>
                     </div>
                 </article>
             </div>

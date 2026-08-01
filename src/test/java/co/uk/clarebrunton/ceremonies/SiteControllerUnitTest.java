@@ -44,7 +44,8 @@ class SiteControllerUnitTest {
 		assertThat(controller.about(new ExtendedModelMap())).isEqualTo("about");
 		assertThat(controller.services(new ExtendedModelMap())).isEqualTo("ceremonies");
 		assertThat(controller.weddings(new ExtendedModelMap())).isEqualTo("weddings");
-		assertThat(controller.funerals(new ExtendedModelMap())).isEqualTo("funerals");
+		assertThat(controller.celebrationsOfLife(new ExtendedModelMap())).isEqualTo("funerals");
+		assertThat(controller.funeralsRedirect()).isEqualTo("redirect:/celebrations-of-life");
 		assertThat(controller.reviews(new ExtendedModelMap())).isEqualTo("reviews");
 		assertThat(controller.contact(new ExtendedModelMap())).isEqualTo("redirect:/");
 		assertThat(controller.privacy(new ExtendedModelMap())).isEqualTo("privacy");

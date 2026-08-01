@@ -24,23 +24,23 @@ public class BlogService {
 					)
 			),
 			new BlogPost(
-					"how-to-shape-a-funeral-tribute-with-warmth-and-clarity",
-					"How to shape a funeral tribute with warmth and clarity",
+					"how-to-shape-a-celebration-of-life-tribute",
+					"How to shape a Celebration of Life tribute",
 					"Practical notes for families who want a tribute that is honest, sensitive and steady for everyone in the room.",
-					"Funerals",
+					"Celebrations of Life",
 					"5 min read",
 					"May 2026",
-					"Supportive planning for funeral and memorial services",
+					"Supportive planning for celebrations of life and memorial services",
 					List.of(
 							"A thoughtful tribute makes space for both grief and gratitude. The strongest scripts usually balance practical structure with a few details that bring the person fully into the room.",
-							"When planning a funeral or memorial service, it helps to gather stories early, decide who is speaking and agree where music, readings or moments of reflection should sit.",
-							"Clare works gently with families and funeral directors, listening carefully so memories can be woven into a heartfelt tribute with dignity and care."
+							"When planning a celebration of life or memorial service, it helps to gather stories early, decide who is speaking and agree where music, readings or moments of reflection should sit.",
+							"Clare works gently with families and ceremony professionals, listening carefully so memories can be woven into a heartfelt tribute with dignity and care."
 					)
 			),
 			new BlogPost(
 					"questions-to-ask-before-booking-a-celebrant",
 					"Questions to ask before booking a celebrant",
-					"A short checklist for choosing the right person to lead a wedding, funeral or milestone ceremony with confidence.",
+					"A short checklist for choosing the right person to lead a wedding, Celebration of Life or milestone ceremony with confidence.",
 					"Planning",
 					"3 min read",
 					"June 2026",

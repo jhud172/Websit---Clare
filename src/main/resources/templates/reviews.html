@@ -36,7 +36,7 @@
                     </span>
                     <span class="reviews-proof-item">
                         <span class="reviews-proof-kicker">03</span>
-                        <span class="reviews-proof-text">Weddings, funerals and life moments</span>
+                        <span class="reviews-proof-text">Weddings, celebrations of life and life moments</span>
                     </span>
                 </div>
             </div>
@@ -145,7 +145,7 @@
                         <div class="field-group" data-review-field="reviewerRole">
                             <label for="reviewerRole">How do you know Clare?</label>
                             <div class="field-control" th:classappend="${#fields.hasErrors('reviewerRole')} ? ' is-invalid'">
-                                <input id="reviewerRole" type="text" th:field="*{reviewerRole}" placeholder="Couple, family member, venue, funeral director...">
+                                <input id="reviewerRole" type="text" th:field="*{reviewerRole}" placeholder="Couple, family member, venue, ceremony professional...">
                             </div>
                             <p class="field-error" th:if="${#fields.hasErrors('reviewerRole')}" th:errors="*{reviewerRole}">Role error</p>
                         </div>

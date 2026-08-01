@@ -47,7 +47,7 @@ public class SiteController {
 
 	private static final List<String> SERVICE_OPTIONS = List.of(
 			"Wedding ceremony",
-			"Funeral or memorial",
+			"Celebration of Life or memorial",
 			"Naming ceremony",
 			"Vow renewal",
 			"Other ceremony"
@@ -60,7 +60,7 @@ public class SiteController {
 	private static final List<Map<String, String>> SERVICE_FAQS = List.of(
 			faq(
 					"What ceremonies does Clare's Life Celebrations offer?",
-					"Clare creates personal wedding ceremonies, funeral and memorial ceremonies, naming ceremonies, vow renewals and other meaningful life celebrations. Each ceremony is shaped around the people, story, tone and moment involved."
+					"Clare creates personal wedding ceremonies, celebrations of life and memorial ceremonies, naming ceremonies, vow renewals and other meaningful life celebrations. Each ceremony is shaped around the people, story, tone and moment involved."
 			),
 			faq(
 					"Where does Clare work?",
@@ -76,7 +76,7 @@ public class SiteController {
 			),
 			faq(
 					"How much does a ceremony cost?",
-					"Wedding ceremony investment starts from 600 pounds for 2026. Funeral, memorial and bespoke life ceremony costs depend on the type of support, location and complexity, so Clare will provide a clear quotation after your enquiry."
+					"Clare is currently reviewing her package prices. Please enquire for the latest wedding, Celebration of Life, naming ceremony or vow renewal pricing while the updated figures are confirmed."
 			),
 			faq(
 					"How do I enquire about availability?",
@@ -87,7 +87,7 @@ public class SiteController {
 	private static final List<Map<String, String>> FAQ_PAGE_ENTRIES = List.of(
 			faq(
 					"What does a celebrant do?",
-					"A celebrant creates and leads personalised ceremonies for weddings, vow renewals, naming ceremonies, funerals and other meaningful life events."
+					"A celebrant creates and leads personalised ceremonies for weddings, vow renewals, naming ceremonies, celebrations of life and other meaningful life events."
 			),
 			faq(
 					"Why choose a celebrant instead of a registrar?",
@@ -95,7 +95,7 @@ public class SiteController {
 			),
 			faq(
 					"How much does a celebrant cost?",
-					"Celebrant pricing varies by ceremony type, location and level of support, with UK wedding celebrant fees often ranging from 500 pounds to 1,500 pounds."
+					"Celebrant pricing varies by ceremony type, location and level of support. Clare will provide a clear quotation once she understands the ceremony you are planning."
 			),
 			faq(
 					"How far in advance should I book a celebrant?",
@@ -187,7 +187,7 @@ public class SiteController {
 			),
 			faq(
 					"How much does a wedding celebrant cost in the UK?",
-					"Wedding celebrant fees in the UK are often between 500 pounds and 1,500 pounds, depending on experience, travel, ceremony complexity and personalisation."
+					"Wedding celebrant fees depend on the level of support, travel, ceremony complexity and personalisation. Clare will confirm the current package price after discussing your plans."
 			),
 			faq(
 					"Is a celebrant wedding legally binding?",
@@ -269,7 +269,7 @@ public class SiteController {
 	public String services(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Ceremony services");
-		model.addAttribute("pageDescription", "Wedding, funeral, naming, vow renewal and life ceremony services by Clare's Life Celebrations, created for moments that matter.");
+		model.addAttribute("pageDescription", "Wedding, Celebration of Life, naming ceremony and vow renewal services by Clare's Life Celebrations, created for moments that matter.");
 		model.addAttribute("serviceFaqs", SERVICE_FAQS);
 		model.addAttribute("structuredDataJson", buildFaqStructuredDataJson(SERVICE_FAQS));
 		return "ceremonies";
@@ -293,12 +293,17 @@ public class SiteController {
 		return "weddings";
 	}
 
-	@GetMapping("/funerals")
-	public String funerals(Model model) {
+	@GetMapping("/celebrations-of-life")
+	public String celebrationsOfLife(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Funeral ceremonies in Durham");
-		model.addAttribute("pageDescription", "Funeral, memorial and celebration of life ceremonies by Clare Brunton, created with compassion, dignity and heartfelt personal tribute.");
+		model.addAttribute("pageTitle", "Celebration of Life ceremonies in Durham");
+		model.addAttribute("pageDescription", "Celebration of Life and memorial ceremonies by Clare Brunton, created with compassion, dignity and heartfelt personal tribute.");
 		return "funerals";
+	}
+
+	@GetMapping("/funerals")
+	public String funeralsRedirect() {
+		return "redirect:/celebrations-of-life";
 	}
 
 	@GetMapping("/reviews")
@@ -545,9 +550,14 @@ public class SiteController {
 	public String blog(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Journal");
-		model.addAttribute("pageDescription", "Journal notes on celebrant-led weddings, funeral ceremonies and planning meaningful moments.");
+		model.addAttribute("pageDescription", "Journal notes on celebrant-led weddings, celebrations of life and planning meaningful moments.");
 		model.addAttribute("posts", blogService.findAll());
 		return "blog";
+	}
+
+	@GetMapping("/blog/how-to-shape-a-funeral-tribute-with-warmth-and-clarity")
+	public String legacyCelebrationOfLifeBlogRedirect() {
+		return "redirect:/blog/how-to-shape-a-celebration-of-life-tribute";
 	}
 
 	@GetMapping("/blog/{slug}")
@@ -633,7 +643,7 @@ public class SiteController {
 
 	private void prepareHomeModel(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Clare's Life Celebrations | Weddings and funerals in Durham");
+		model.addAttribute("pageTitle", "Clare's Life Celebrations | Weddings and Celebrations of Life in Durham");
 		model.addAttribute("pageDescription", "Clare Brunton creates personal ceremonies for moments that matter, from joyful weddings to dignified celebrations of life across Durham and the North East.");
 		model.addAttribute("featuredReviews", reviewService.getApprovedFiveStarReviews());
 	}

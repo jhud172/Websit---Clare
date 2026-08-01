@@ -18,12 +18,12 @@ public class SeoController {
 			"/about",
 			"/services",
 			"/weddings",
-			"/funerals",
+			"/celebrations-of-life",
 			"/reviews",
 			"/privacy",
 			"/blog",
 			"/blog/creating-a-wedding-ceremony-that-still-feels-like-you",
-			"/blog/how-to-shape-a-funeral-tribute-with-warmth-and-clarity",
+			"/blog/how-to-shape-a-celebration-of-life-tribute",
 			"/blog/questions-to-ask-before-booking-a-celebrant"
 	);
 

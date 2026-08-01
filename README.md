@@ -165,8 +165,10 @@ Suggested deploy path:
 Before launch, Clare should still sign off:
 
 - final about copy
+- final wedding package wording
 - final wedding pricing
-- final funeral pricing
+- final Celebration of Life pricing
+- final Naming Ceremony and Vow Renewal wording and pricing
 - real photography
 - testimonials once available
 - any final wording around travel

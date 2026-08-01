@@ -38,7 +38,7 @@ public class SiteModelAdvice {
 	private static final String DEFAULT_INSTAGRAM_URL = "https://www.instagram.com/clareslifecelebrations/";
 	private static final List<String> SERVICE_OPTIONS = List.of(
 			"Wedding ceremony",
-			"Funeral or memorial",
+			"Celebration of Life or memorial",
 			"Naming ceremony",
 			"Vow renewal",
 			"Other ceremony"

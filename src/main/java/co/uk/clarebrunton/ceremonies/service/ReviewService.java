@@ -325,7 +325,7 @@ public class ReviewService {
 						"demo-review-funeral-henderson-family",
 						"The Henderson family",
 						"Family member",
-						"Funeral or memorial",
+						"Celebration of Life or memorial",
 						"A tribute full of care and dignity",
 						"Clare handled a difficult day with real compassion. She took time to understand Dad's life, his humour and what mattered to us, then created a tribute that felt gentle, dignified and deeply personal.",
 						LocalDate.of(2026, 3, 27),

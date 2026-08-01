@@ -70,12 +70,12 @@
                 <article class="faq-card" data-faq-item th:each="faq : ${faqEntries}" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
                     <h3 itemprop="name" th:text="${faq.question}">What does a celebrant do?</h3>
                     <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-                        <p itemprop="text" th:text="${faq.answer}">A celebrant creates and leads personalised ceremonies for weddings, funerals and life events.</p>
+                        <p itemprop="text" th:text="${faq.answer}">A celebrant creates and leads personalised ceremonies for weddings, celebrations of life and life events.</p>
                     </div>
                 </article>
             </div>
 
-            <p class="faq-empty-state" data-faq-empty hidden>No matches yet. Try broader terms like wedding, funeral, legal, cost or vows.</p>
+            <p class="faq-empty-state" data-faq-empty hidden>No matches yet. Try broader terms like wedding, celebration of life, legal, cost or vows.</p>
         </div>
     </section>
 </main>

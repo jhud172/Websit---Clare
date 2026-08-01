@@ -733,6 +733,14 @@
     margin-top: clamp(2.5rem, 5vw, 4.25rem);
 }
 
+.services-pathways-four {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.services-pathways-four .service-path-panel {
+    min-height: clamp(36rem, 48vw, 43rem);
+}
+
 .service-path-panel {
     position: relative;
     min-height: clamp(25rem, 35vw, 33rem);
@@ -808,6 +816,41 @@
 
 .service-path-content .text-link {
     color: rgba(247, 247, 244, 0.9);
+}
+
+.life-package-status {
+    margin-top: 1rem;
+    color: #d6c791;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.life-package-inclusions {
+    display: grid;
+    gap: 0.45rem;
+    margin: 1rem 0 1.25rem;
+    padding: 0;
+    list-style: none;
+    color: rgba(247, 247, 244, 0.76);
+    font-size: 0.92rem;
+}
+
+.life-package-inclusions li {
+    position: relative;
+    padding-left: 1.15rem;
+}
+
+.life-package-inclusions li::before {
+    content: "";
+    position: absolute;
+    top: 0.62em;
+    left: 0;
+    width: 0.32rem;
+    height: 0.32rem;
+    border-radius: 50%;
+    background: #d6c791;
 }
 
 .service-path-panel:hover .service-path-image img,
@@ -3160,7 +3203,7 @@
     }
 
     .services-hero-rail {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .service-rail-item {
@@ -3659,6 +3702,10 @@ li,
 
     .service-path-content h3 {
         font-size: clamp(2.2rem, 10vw, 3.25rem);
+    }
+
+    .services-pathways-four .service-path-content {
+        padding-bottom: 2rem;
     }
 
     .services-process {
