@@ -528,19 +528,6 @@
     text-align: center;
 }
 
-.detail-card:hover .detail-card-logo .logo-wreath,
-.detail-card:focus-within .detail-card-logo .logo-wreath {
-    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
-    filter:
-        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
-        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
-}
-
-.detail-card:hover .detail-card-logo .logo-clc,
-.detail-card:focus-within .detail-card-logo .logo-clc {
-    transform: translateY(1%) scale(1.035);
-}
-
 .path-index,
 .package-tag,
 .quote-label {
@@ -1613,8 +1600,19 @@
 
 .field-error {
     margin: 0;
-    color: #992d1f;
+    color: #ffb4a8;
     font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.field-group.is-invalid .field-control,
+.field-group.is-invalid .field-control-button,
+.field-group input[aria-invalid="true"],
+.field-group textarea[aria-invalid="true"],
+.field-group select[aria-invalid="true"] {
+    border-color: rgba(255, 150, 134, 0.78);
+    box-shadow: 0 0 0 3px rgba(255, 150, 134, 0.13);
 }
 
 .callout {
@@ -1867,6 +1865,39 @@
     border: 0;
 }
 
+.skip-link {
+    position: fixed;
+    top: 0.65rem;
+    left: 0.75rem;
+    z-index: 30000;
+    padding: 0.78rem 1rem;
+    border: 1px solid var(--peacock-gold);
+    border-radius: 12px;
+    background: #071015;
+    color: #fff7dd;
+    font-weight: 850;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.42);
+    transform: translateY(-180%);
+    transition: transform var(--motion-fast) ease;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+}
+
+.main-content-anchor {
+    position: relative;
+    display: block;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    scroll-margin-top: var(--safe-anchor-offset);
+}
+
+.site-nav-enquiry {
+    display: none;
+}
+
 [data-site-nav].is-open {
     display: flex;
 }
@@ -1880,8 +1911,90 @@
 .site-nav a:focus-visible,
 .nav-toggle:focus-visible,
 .theme-toggle:focus-visible {
-    outline: 2px solid rgba(113, 128, 107, 0.34);
+    outline: 3px solid var(--focus-ring);
     outline-offset: 3px;
+}
+
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 3px;
+}
+
+@media (min-width: 1041px) and (max-width: 1240px) {
+    :root {
+        --shell: min(1200px, calc(100vw - 2rem));
+    }
+
+    .header-inner {
+        position: relative;
+    }
+
+    .brand {
+        flex-basis: auto;
+        max-width: calc(100% - 4.5rem);
+    }
+
+    .site-nav {
+        position: absolute;
+        top: calc(100% + 0.75rem);
+        left: 1rem;
+        right: 1rem;
+        z-index: 60;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.35rem;
+        max-height: calc(100dvh - var(--header-height) - 1.5rem);
+        overflow: auto;
+        margin: 0;
+        padding: 0.85rem;
+        border: 1px solid var(--panel-border);
+        border-radius: 24px;
+        background: var(--mobile-nav-bg);
+        box-shadow: var(--shadow);
+    }
+
+    .nav-toggle {
+        display: inline-flex;
+    }
+
+    .header-actions {
+        display: none;
+    }
+}
+
+@media (max-width: 1240px) {
+    .site-nav a,
+    .site-nav .site-nav-enquiry {
+        min-height: 3rem;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 0.72rem 0.9rem;
+        border-radius: 14px;
+        font-size: 0.98rem;
+        font-weight: 760;
+    }
+
+    .site-nav a:hover,
+    .site-nav a:focus-visible,
+    .site-nav a.is-active {
+        background: rgba(95, 159, 136, 0.1);
+    }
+
+    .site-nav a::after {
+        content: none;
+    }
+
+    .site-nav-enquiry {
+        justify-content: center;
+        margin-top: 0.5rem;
+        border: 1px solid rgba(211, 173, 114, 0.44);
+        background:
+            linear-gradient(135deg, rgba(95, 159, 136, 0.18), rgba(211, 173, 114, 0.1)),
+            rgba(12, 23, 27, 0.94);
+        color: #fff4d2;
+    }
 }
 
 @media (max-width: 1040px) {
@@ -1972,6 +2085,22 @@
 
     .header-cta {
         display: none;
+    }
+}
+
+@media (min-width: 721px) and (max-width: 1040px) {
+    .path-grid,
+    .detail-grid,
+    .quote-grid,
+    .package-grid,
+    .package-grid-two,
+    .brand-concept-grid,
+    .wedding-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .package-card.featured {
+        transform: none;
     }
 }
 

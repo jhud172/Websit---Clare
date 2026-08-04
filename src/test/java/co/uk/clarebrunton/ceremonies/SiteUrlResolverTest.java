@@ -14,23 +14,23 @@ class SiteUrlResolverTest {
 	void usesRequestHostWhenConfiguredHostIsDifferent() {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setScheme("https");
-		request.setServerName("www.clarebruntonlifeceremonies.com");
+		request.setServerName("clareslifecelebrations.com");
 		request.setServerPort(443);
 
 		String resolved = resolver.resolvePublicBaseUrl(request, "https://configured-host.example");
 
-		assertThat(resolved).isEqualTo("https://www.clarebruntonlifeceremonies.com");
+		assertThat(resolved).isEqualTo("https://clareslifecelebrations.com");
 	}
 
 	@Test
 	void keepsConfiguredHostWhenItMatchesRequestHost() {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.addHeader("X-Forwarded-Proto", "https");
-		request.addHeader("X-Forwarded-Host", "www.clarebruntonlifeceremonies.com");
+		request.addHeader("X-Forwarded-Host", "clareslifecelebrations.com");
 
-		String resolved = resolver.resolvePublicBaseUrl(request, "https://www.clarebruntonlifeceremonies.com/");
+		String resolved = resolver.resolvePublicBaseUrl(request, "https://clareslifecelebrations.com/");
 
-		assertThat(resolved).isEqualTo("https://www.clarebruntonlifeceremonies.com");
+		assertThat(resolved).isEqualTo("https://clareslifecelebrations.com");
 	}
 
 	@Test

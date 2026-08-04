@@ -47,13 +47,24 @@ public class ReviewService {
 	}
 
 	public synchronized List<ReviewEntry> getApprovedReviews() {
-		boolean hasReviewDataFile = Files.exists(getDataFilePath());
-		List<ReviewEntry> approvedReviews = loadAll().stream()
+		List<ReviewEntry> persistedReviews = loadAll();
+		List<ReviewEntry> approvedReviews = new ArrayList<>(persistedReviews.stream()
 				.filter(entry -> entry.getStatus() == ReviewStatus.APPROVED)
 				.sorted(Comparator.comparing(ReviewEntry::getSubmittedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
-				.toList();
+				.toList());
 
-		return approvedReviews.isEmpty() && !hasReviewDataFile ? demoApprovedReviews() : approvedReviews;
+		for (ReviewEntry curatedReview : curatedApprovedReviews()) {
+			boolean hasStableIdOverride = persistedReviews.stream()
+					.anyMatch(entry -> curatedReview.getId().equals(entry.getId()));
+			boolean hasApprovedDuplicate = approvedReviews.stream()
+					.anyMatch(entry -> hasSameReviewFingerprint(entry, curatedReview));
+
+			if (!hasStableIdOverride && !hasApprovedDuplicate) {
+				approvedReviews.add(0, curatedReview);
+			}
+		}
+
+		return List.copyOf(approvedReviews);
 	}
 
 	public synchronized List<ReviewEntry> getApprovedFiveStarReviews() {
@@ -70,7 +81,6 @@ public class ReviewService {
 	}
 
 	public synchronized List<ReviewEntry> getManageableReviews() {
-		ensureInitialReviewData();
 		return loadAll().stream()
 				.sorted(Comparator.comparing(ReviewEntry::getSubmittedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
 				.toList();
@@ -147,13 +157,6 @@ public class ReviewService {
 		matched.setModeratedAt(OffsetDateTime.now());
 		saveAll(entries);
 		return matched;
-	}
-
-	private void ensureInitialReviewData() {
-		if (Files.exists(getDataFilePath())) {
-			return;
-		}
-		saveAll(new ArrayList<>(demoApprovedReviews()));
 	}
 
 	private ReviewEntry findReview(List<ReviewEntry> entries, String reviewId) {
@@ -297,72 +300,39 @@ public class ReviewService {
 		return value.trim();
 	}
 
-	private List<ReviewEntry> demoApprovedReviews() {
-		return List.of(
-				demoReview(
-						"demo-review-wedding-emily-tom",
-						"Emily and Tom",
-						"Wedding couple",
-						"Wedding ceremony",
-						"A ceremony that felt completely like us",
-						"Clare brought such warmth, calm and personality to our wedding ceremony. The script felt beautifully written, relaxed and full of the little details that mattered to us. So many guests said it was the most personal ceremony they had been part of.",
-						LocalDate.of(2026, 5, 2),
-						OffsetDateTime.parse("2026-05-12T10:30:00+01:00"),
-						List.of("/images/weddings/amy-back-off-head-2.jpg", "/images/weddings/amy-back-off-head-1.jpg")
-				),
-				demoReview(
-						"demo-review-wedding-laura-ben",
-						"Laura and Ben",
-						"Wedding couple",
-						"Wedding ceremony",
-						"Warm, polished and so thoughtful",
-						"From the first conversation Clare made everything feel easy. She listened carefully, helped us shape the tone, and delivered a ceremony that was modern, sincere and full of joy.",
-						LocalDate.of(2026, 4, 18),
-						OffsetDateTime.parse("2026-05-08T14:15:00+01:00"),
-						List.of("/images/weddings/detail-rings.jpg")
-				),
-				demoReview(
-						"demo-review-funeral-henderson-family",
-						"The Henderson family",
-						"Family member",
-						"Celebration of Life or memorial",
-						"A tribute full of care and dignity",
-						"Clare handled a difficult day with real compassion. She took time to understand Dad's life, his humour and what mattered to us, then created a tribute that felt gentle, dignified and deeply personal.",
-						LocalDate.of(2026, 3, 27),
-						OffsetDateTime.parse("2026-04-20T09:40:00+01:00"),
-						List.of("/images/funerals/memorial-flowers-detail.jpg")
-				),
-				demoReview(
-						"demo-review-venue-rachel",
-						"Rachel",
-						"Venue coordinator",
-						"Wedding ceremony",
-						"Professional from start to finish",
-						"Clare was calm, organised and a pleasure to work with on the day. She gave us the space to enjoy the moment while making sure the ceremony flowed beautifully.",
-						LocalDate.of(2026, 2, 14),
-						OffsetDateTime.parse("2026-04-04T16:20:00+01:00"),
-						List.of("/images/clare/wedding-symbolism-ribbons.jpg")
-				)
-		);
+	private List<ReviewEntry> curatedApprovedReviews() {
+		ReviewEntry entry = new ReviewEntry();
+		entry.setId("client-review-jessica-wedding-2026-05-24");
+		entry.setReviewerName("Jessica");
+		entry.setReviewerRole("Wedding couple");
+		entry.setCeremonyType("Wedding ceremony");
+		entry.setRating(5);
+		entry.setHeadline("The most special wedding day");
+		entry.setMessage("""
+				What a fantastic wedding day delivered by the wonderful Clare. We couldn't have asked for a more wonderful celebrant to marry us. From our very first meeting, Clare took time to truly understand our story and what made our relationship special helping create a ceremony that felt completely personal and meaningful.
+
+				On the day itself, everything was delivered perfectly. Standing in the glorious sunshine marrying my best friend, was a moment we'll cherish forever and Clare played such a huge part in making it so memorable. Her warmth, professionalism and heartfelt delivery set exactly the right tone and kept everyone engaged throughout.
+
+				The ceremony was beautifully written and presented, striking the perfect balance between emotion, laughter, and love. In fact the whole day was so moving that it had my mum in tears more than once!
+
+				We are incredibly grateful for the care, attention and passion that went into making our wedding ceremony so special. If you're looking for a celebrant who will create a truly unforgettable experience, we cannot recommend Clare highly enough.
+				""".strip());
+		entry.setEventDate(LocalDate.of(2026, 5, 24));
+		entry.setStatus(ReviewStatus.APPROVED);
+		entry.setModerationNote("Client-supplied testimonial included in the website content source.");
+		entry.setPhotoFileNames(List.of());
+		return List.of(entry);
 	}
 
-	private ReviewEntry demoReview(String id, String reviewerName, String reviewerRole, String ceremonyType,
-			String headline, String message, LocalDate eventDate, OffsetDateTime submittedAt, List<String> photoFileNames) {
-		ReviewEntry entry = new ReviewEntry();
-		entry.setId(id);
-		entry.setReviewerName(reviewerName);
-		entry.setReviewerRole(reviewerRole);
-		entry.setCeremonyType(ceremonyType);
-		entry.setRating(5);
-		entry.setHeadline(headline);
-		entry.setMessage(message);
-		entry.setEventDate(eventDate);
-		entry.setStatus(ReviewStatus.APPROVED);
-		entry.setModerationNote("Demo review shown until real approved reviews are available.");
-		entry.setSubmittedAt(submittedAt);
-		entry.setModeratedAt(submittedAt);
-		entry.setPhotoFileNames(photoFileNames);
-		return entry;
+	private boolean hasSameReviewFingerprint(ReviewEntry first, ReviewEntry second) {
+		return normaliseFingerprintText(first.getReviewerName()).equals(normaliseFingerprintText(second.getReviewerName()))
+				&& first.getEventDate() != null
+				&& first.getEventDate().equals(second.getEventDate())
+				&& normaliseFingerprintText(first.getHeadline()).equals(normaliseFingerprintText(second.getHeadline()));
+	}
+
+	private String normaliseFingerprintText(String value) {
+		return value == null ? "" : value.trim().replaceAll("\\s+", " ").toLowerCase(Locale.ROOT);
 	}
 
 }

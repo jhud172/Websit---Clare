@@ -30,10 +30,10 @@ public class SiteModelAdvice {
 
 	private static final Logger logger = LoggerFactory.getLogger(SiteModelAdvice.class);
 	private static final String DEFAULT_LOGO_PATH = "/images/brand/clc-wreath-logo.png";
-	private static final String CLC_LOGO_PATH = "/images/brand/logo-clare-no-background+no-wreath-CLC.png";
-	private static final String WREATH_LOGO_PATH = "/images/brand/logo-clare-no-background-wreath-only.png";
-	private static final String HORIZONTAL_FEATHER_PATH = "/images/objects/feather-horizontal.png";
-	private static final String VERTICAL_FEATHER_PATH = "/images/objects/feather-vertical.png";
+	private static final String CLC_LOGO_PATH = "/images/brand/logo-clare-clc-384.webp";
+	private static final String WREATH_LOGO_PATH = "/images/brand/logo-clare-wreath-384.webp";
+	private static final String HORIZONTAL_FEATHER_PATH = "/images/objects/feather-horizontal-512.webp";
+	private static final String VERTICAL_FEATHER_PATH = "/images/objects/feather-vertical-384.webp";
 	private static final String OPEN_GRAPH_IMAGE_PATH = "/images/brand/clc-wreath-logo.png";
 	private static final String DEFAULT_INSTAGRAM_URL = "https://www.instagram.com/clareslifecelebrations/";
 	private static final List<String> SERVICE_OPTIONS = List.of(
@@ -120,10 +120,11 @@ public class SiteModelAdvice {
 		data.put("@context", "https://schema.org");
 		data.put("@type", "ProfessionalService");
 		data.put("name", siteProperties.getName());
+		data.put("alternateName", "Weddings and Celebrations of Life in Durham");
 		data.put("url", baseUrl + "/");
 		data.put("logo", baseUrl + DEFAULT_LOGO_PATH);
 		data.put("image", baseUrl + OPEN_GRAPH_IMAGE_PATH);
-		data.put("description", "Personal ceremonies for moments that matter, from joyful weddings to dignified celebrations of life across Durham and the North East.");
+		data.put("description", "Weddings and celebrations of life in Durham and across the North East, personally written and led by Clare Brunton.");
 		data.put("areaServed", "Durham and the North East");
 
 		if (StringUtils.hasText(siteProperties.getContactEmail())) {

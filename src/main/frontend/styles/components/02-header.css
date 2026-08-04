@@ -5,38 +5,31 @@
     right: 0;
     z-index: 30;
     background: var(--header-bg);
-    -webkit-backdrop-filter: blur(18px);
-    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     border-bottom: 1px solid var(--header-border);
-    transform: translateY(0);
     transition:
-        background 180ms ease,
-        box-shadow 180ms ease,
-        transform 260ms cubic-bezier(0.2, 0.75, 0.25, 1);
+        background var(--motion-fast) ease,
+        box-shadow var(--motion-fast) ease;
+}
+
+.site-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    pointer-events: none;
+    background: linear-gradient(90deg, var(--peacock-sage), var(--peacock-gold), #2b89a1);
+    transform: scaleX(var(--page-scroll-progress, 0));
+    transform-origin: left center;
+    opacity: 0.76;
 }
 
 .site-header.is-scrolled {
     background: var(--header-bg-strong);
     box-shadow: 0 10px 24px rgba(36, 31, 27, 0.06);
-}
-
-.site-header.is-scroll-up {
-    transform: translateY(0);
-    background: var(--header-bg-strong);
-}
-
-.site-header.is-scroll-up .header-inner {
-    width: var(--shell);
-    justify-content: space-between;
-}
-
-.site-header.is-scroll-up .site-nav,
-.site-header.is-scroll-up .header-actions {
-    max-width: 48rem;
-    opacity: 1;
-    transform: none;
-    overflow: visible;
-    pointer-events: auto;
 }
 
 .header-inner {
@@ -115,6 +108,7 @@
     display: inline-grid;
     place-items: center;
     aspect-ratio: 1;
+    isolation: isolate;
     filter:
         drop-shadow(0 15px 30px rgba(0, 0, 0, 0.22))
         drop-shadow(0 0 16px rgba(214, 199, 145, 0.08));
@@ -195,51 +189,23 @@
     width: 100%;
     height: 100%;
     margin: auto;
-    transform: rotate(0deg) scale(var(--logo-wreath-scale));
+    transform: scale(var(--logo-wreath-scale));
     transform-origin: center;
     filter:
         drop-shadow(0 0 10px rgba(214, 199, 145, 0.14))
         drop-shadow(0 10px 20px rgba(0, 0, 0, 0.22));
     transition:
-        transform 1280ms cubic-bezier(0.18, 0.86, 0.24, 1),
+        transform 620ms cubic-bezier(0.22, 1, 0.36, 1),
         filter 520ms ease;
-    will-change: transform;
 }
 
 .brand .logo-wreath {
-    transform: rotate(0deg) scale(var(--logo-wreath-scale));
+    transform: scale(var(--logo-wreath-scale));
 }
 
 .brand-logo-composite {
     width: 100%;
     overflow: visible;
-}
-
-.brand:hover .logo-wreath,
-.brand:focus-visible .logo-wreath {
-    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
-    filter:
-        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
-        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
-}
-
-.brand:hover .logo-clc,
-.brand:focus-visible .logo-clc {
-    transform: translateY(1%) scale(1.035);
-    filter:
-        drop-shadow(0 3px 10px rgba(0, 0, 0, 0.28))
-        drop-shadow(0 0 14px rgba(214, 199, 145, 0.14));
-}
-
-.footer-brand:hover .footer-logo-composite .logo-wreath,
-.brand-stage:hover .logo-wreath,
-.symbolism-mark:hover .logo-wreath,
-.service-path-card:hover .peacock-badge-logo .logo-wreath,
-.service-path-card:focus-within .peacock-badge-logo .logo-wreath {
-    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
-    filter:
-        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
-        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
 }
 
 .brand-wording {
@@ -250,7 +216,7 @@
 
 .brand-name {
     font-family: "Cormorant Garamond", serif;
-    font-size: clamp(1.28rem, 2vw, 1.62rem);
+    font-size: clamp(1.2rem, 1.55vw, 1.48rem);
     line-height: 1;
     color: var(--ink);
     white-space: nowrap;

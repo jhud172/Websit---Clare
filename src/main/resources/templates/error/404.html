@@ -2,19 +2,22 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page('Page not found', 'The requested page could not be found.', '', ~{::main})}">
 <main class="theme-trust secondary-page error-page">
-    <section class="secondary-hero secondary-error-hero section-reveal-zone">
+    <section class="secondary-hero secondary-error-hero section-reveal-zone" aria-labelledby="error-heading">
         <div class="shell secondary-hero-grid">
             <div class="secondary-hero-copy">
                 <p class="eyebrow">404</p>
-                <h1>This page could not be found.</h1>
+                <h1 id="error-heading">This page could not be found.</h1>
                 <p class="lead">The page may have moved, or the link may no longer be available.</p>
                 <div class="secondary-actions">
                     <a class="button" th:href="@{/}">Go to homepage</a>
-                    <a class="button button-secondary" th:href="@{/contact}">Contact Clare</a>
+                    <button class="button button-secondary" type="button" aria-haspopup="dialog" data-open-enquiry-modal>Contact Clare</button>
                 </div>
             </div>
             <div class="secondary-brand-panel error-status-panel" aria-label="Page not found">
-                <img th:src="@{${wreathLogoPath}}" alt="" aria-hidden="true">
+                <span class="logo-composite secondary-panel-logo" aria-hidden="true">
+                    <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                    <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                </span>
                 <p class="secondary-status">Page not found</p>
                 <span>Use the main navigation or return home to continue browsing Clare's Life Celebrations.</span>
             </div>

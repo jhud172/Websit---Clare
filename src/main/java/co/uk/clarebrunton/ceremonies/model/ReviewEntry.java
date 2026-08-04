@@ -2,10 +2,16 @@ package co.uk.clarebrunton.ceremonies.model;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ReviewEntry {
+
+	private static final DateTimeFormatter EVENT_DATE_FORMATTER = DateTimeFormatter.ofPattern("d MMMM uuuu", Locale.UK);
 
 	private String id;
 
@@ -95,6 +101,11 @@ public class ReviewEntry {
 
 	public void setEventDate(LocalDate eventDate) {
 		this.eventDate = eventDate;
+	}
+
+	@JsonIgnore
+	public String getEventDateDisplay() {
+		return eventDate == null ? null : eventDate.format(EVENT_DATE_FORMATTER);
 	}
 
 	public ReviewStatus getStatus() {

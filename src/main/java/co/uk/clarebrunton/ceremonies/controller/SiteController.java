@@ -1,5 +1,6 @@
 package co.uk.clarebrunton.ceremonies.controller;
 
+import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -68,7 +69,7 @@ public class SiteController {
 			),
 			faq(
 					"Can Clare legally marry us?",
-					"In England and Wales, the legal marriage registration is completed separately with a registrar. Clare creates and leads the personal celebrant ceremony, where your vows, readings, music, family moments and symbolic details can be completely personal."
+					"As the law currently stands in England and Wales, Clare's independent celebrant-led ceremony is not legally binding by itself. Couples choosing the civil route complete the legal marriage with a registrar, while Clare creates and leads the personal ceremony around your story, vows, readings, music and symbolic details."
 			),
 			faq(
 					"How does the ceremony process work?",
@@ -76,7 +77,7 @@ public class SiteController {
 			),
 			faq(
 					"How much does a ceremony cost?",
-					"Clare is currently reviewing her package prices. Please enquire for the latest wedding, Celebration of Life, naming ceremony or vow renewal pricing while the updated figures are confirmed."
+					"Wedding packages are £725, £925 and £1,195. Naming Ceremony packages are £395 and £545, Vow Renewal packages are £695 and £895, and Celebration of Life packages are £395 and £595. Concise venue farewells are typically £275 to £350. Optional extras and additional travel may affect the final total."
 			),
 			faq(
 					"How do I enquire about availability?",
@@ -90,12 +91,12 @@ public class SiteController {
 					"A celebrant creates and leads personalised ceremonies for weddings, vow renewals, naming ceremonies, celebrations of life and other meaningful life events."
 			),
 			faq(
-					"Why choose a celebrant instead of a registrar?",
-					"A celebrant offers a fully personalised ceremony, while a registrar usually follows a fixed legal format with less flexibility."
+					"Do we need a registrar as well as a celebrant?",
+					"A registrar conducts or attends the civil ceremony that fulfils the legal marriage requirements. Clare creates and leads a personalised, non-legally binding ceremony. Many couples choose both and arrange them for the same day or separate dates."
 			),
 			faq(
 					"How much does a celebrant cost?",
-					"Celebrant pricing varies by ceremony type, location and level of support. Clare will provide a clear quotation once she understands the ceremony you are planning."
+					"Clare's current packages range from £395 for a Naming Ceremony to £1,195 for the Complete Ceremony Experience. The service pages show each package, its inclusions and optional extras, and Clare will confirm the final total for your plans before booking."
 			),
 			faq(
 					"How far in advance should I book a celebrant?",
@@ -103,7 +104,7 @@ public class SiteController {
 			),
 			faq(
 					"Can a celebrant legally marry us in the UK?",
-					"In England and Wales, celebrant-led ceremonies are usually not legally binding on their own, so legal registration is typically completed separately."
+					"As the law currently stands in England and Wales, Clare's independent celebrant-led ceremony is not legally binding by itself. Couples choosing the civil route complete the legal marriage separately with a registrar."
 			),
 			faq(
 					"What happens at a celebrant wedding ceremony?",
@@ -143,11 +144,11 @@ public class SiteController {
 			),
 			faq(
 					"What is included in your celebrant fee?",
-					"Most packages include consultations, planning support, ceremony writing, revisions and officiating on the day, with options for rehearsals and vow support."
+					"Every core package includes planning support, a bespoke ceremony and delivery on the day. Inclusions vary by package and can also cover revisions, rehearsals, venue visits, vow support, symbolic rituals, certificates and keepsakes."
 			),
 			faq(
 					"Do you travel?",
-					"Yes, travel across Durham, the North East and further afield is available, with any additional travel costs agreed in advance."
+					"Yes. Core ceremony packages include travel within 30 miles, and additional travel is charged at 50p per mile. The Signature wedding venue visit is available within 40 miles. Any travel beyond these limits is agreed in advance."
 			),
 			faq(
 					"What happens if it rains during an outdoor ceremony?",
@@ -159,11 +160,11 @@ public class SiteController {
 			),
 			faq(
 					"What is the difference between a celebrant and a registrar?",
-					"A registrar handles the legal ceremony, while a celebrant creates and leads a personalised ceremony with much greater flexibility of content and style."
+					"A registrar conducts or attends the civil ceremony that fulfils the legal marriage requirements. An independent celebrant such as Clare creates and leads a personalised ceremony but does not register the marriage. Many couples choose both."
 			),
 			faq(
-					"Can a celebrant marry us anywhere?",
-					"A celebrant can lead a ceremony in almost any setting, including gardens, beaches, woodlands, family homes and destination venues."
+					"Where can we hold a celebrant-led wedding ceremony?",
+					"Clare can lead a non-legally binding ceremony in many settings, including gardens, beaches, woodland, family homes and wedding venues, subject to the owner's permission, safety and practical arrangements. The separate legal marriage must follow the requirements for your chosen legal route."
 			),
 			faq(
 					"Are celebrant weddings worth it?",
@@ -187,11 +188,11 @@ public class SiteController {
 			),
 			faq(
 					"How much does a wedding celebrant cost in the UK?",
-					"Wedding celebrant fees depend on the level of support, travel, ceremony complexity and personalisation. Clare will confirm the current package price after discussing your plans."
+					"Clare's Wedding Ceremony packages are £725 for Essential, £925 for Signature and £1,195 for the Complete Ceremony Experience. Optional extras and travel beyond the included mileage are priced separately."
 			),
 			faq(
 					"Is a celebrant wedding legally binding?",
-					"In England and Wales, most celebrant weddings are not legally binding by themselves, so couples usually complete legal registration separately."
+					"As the law currently stands in England and Wales, Clare's independent celebrant-led ceremony is not legally binding by itself. Couples choosing the civil route complete the legal marriage separately with a registrar."
 			),
 			faq(
 					"Can a celebrant perform an outdoor wedding?",
@@ -302,8 +303,8 @@ public class SiteController {
 	}
 
 	@GetMapping("/funerals")
-	public String funeralsRedirect() {
-		return "redirect:/celebrations-of-life";
+	public ResponseEntity<Void> funeralsRedirect() {
+		return permanentRedirect("/celebrations-of-life");
 	}
 
 	@GetMapping("/reviews")
@@ -542,8 +543,8 @@ public class SiteController {
 	}
 
 	@GetMapping("/ceremonies")
-	public String ceremoniesRedirect() {
-		return "redirect:/services";
+	public ResponseEntity<Void> ceremoniesRedirect() {
+		return permanentRedirect("/services");
 	}
 
 	@GetMapping("/blog")
@@ -556,8 +557,8 @@ public class SiteController {
 	}
 
 	@GetMapping("/blog/how-to-shape-a-funeral-tribute-with-warmth-and-clarity")
-	public String legacyCelebrationOfLifeBlogRedirect() {
-		return "redirect:/blog/how-to-shape-a-celebration-of-life-tribute";
+	public ResponseEntity<Void> legacyCelebrationOfLifeBlogRedirect() {
+		return permanentRedirect("/blog/how-to-shape-a-celebration-of-life-tribute");
 	}
 
 	@GetMapping("/blog/{slug}")
@@ -643,9 +644,15 @@ public class SiteController {
 
 	private void prepareHomeModel(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Clare's Life Celebrations | Weddings and Celebrations of Life in Durham");
-		model.addAttribute("pageDescription", "Clare Brunton creates personal ceremonies for moments that matter, from joyful weddings to dignified celebrations of life across Durham and the North East.");
+		model.addAttribute("pageTitle", "Weddings and Celebrations of Life in Durham");
+		model.addAttribute("pageDescription", "Weddings and Celebrations of Life in Durham, personally written and led by Clare Brunton with warmth, dignity and thoughtful attention to every story.");
 		model.addAttribute("featuredReviews", reviewService.getApprovedFiveStarReviews());
+	}
+
+	private ResponseEntity<Void> permanentRedirect(String path) {
+		return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
+				.location(URI.create(path))
+				.build();
 	}
 
 	private String validateAttachments(List<MultipartFile> attachments) {

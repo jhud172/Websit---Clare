@@ -2,14 +2,12 @@ const siteHeader = document.querySelector("[data-site-header]");
 const navToggle = document.querySelector("[data-nav-toggle]");
 const siteNav = document.querySelector("[data-site-nav]");
 const enquiryModal = document.querySelector("[data-enquiry-modal]");
-const featherField = document.querySelector("[data-feather-field]");
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const themeToggleLabel = document.querySelector("[data-theme-toggle-label]");
 const fileInputs = document.querySelectorAll("[data-file-input]");
 const THEME_STORAGE_KEY = "clare-theme";
 const revealSelectors = [
     ".page-hero-grid > *",
-    ".hero-copy",
     ".hero .visual-stage",
     ".section-heading",
     ".path-panel",
@@ -30,13 +28,13 @@ const revealSelectors = [
     ".policy-index",
     ".policy-card",
     ".review-story-card",
-    ".reviews-hero-copy",
     ".reviews-hero-proof",
     ".reviews-submit-copy",
     ".reviews-submit-panel"
 ];
 
 const modalTriggerSelector = "[data-open-enquiry-modal]";
+const reducedMotionRequested = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const applyTheme = (theme) => {
     document.documentElement.dataset.theme = theme;
@@ -68,193 +66,6 @@ const resolveTheme = () => {
 
 applyTheme(resolveTheme());
 
-if (featherField && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    const featherContext = featherField.getContext("2d");
-    const featherImage = new Image();
-    const pointer = {
-        x: -1000,
-        y: -1000,
-        active: false
-    };
-    let featherParticles = [];
-    let featherWidth = 0;
-    let featherHeight = 0;
-    let featherDpr = 1;
-    let featherFrameId = null;
-    let featherResizeFrameId = null;
-    let featherLastScrollAt = 0;
-
-    const randomBetween = (min, max) => min + Math.random() * (max - min);
-
-    const createFeatherParticle = () => {
-        const size = randomBetween(32, 68);
-
-        return {
-            x: randomBetween(0, featherWidth),
-            y: randomBetween(0, featherHeight),
-            size,
-            driftX: randomBetween(-0.08, 0.12),
-            driftY: randomBetween(0.08, 0.24),
-            pushX: 0,
-            pushY: 0,
-            rotation: randomBetween(-0.8, 0.8),
-            rotationSpeed: randomBetween(-0.0022, 0.0022),
-            sway: randomBetween(0, Math.PI * 2),
-            opacity: randomBetween(0.3, 0.58)
-        };
-    };
-
-    const resizeFeatherField = ({ force = false } = {}) => {
-        featherResizeFrameId = null;
-        featherDpr = Math.min(window.devicePixelRatio || 1, 2);
-        const nextWidth = window.innerWidth || document.documentElement.clientWidth;
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-        const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
-        const stableViewportHeight = coarsePointer
-            ? Math.max(viewportHeight, window.screen?.height || viewportHeight)
-            : viewportHeight;
-        const nextHeight = force ? stableViewportHeight : Math.max(stableViewportHeight, featherHeight);
-        const widthChanged = nextWidth !== featherWidth;
-        const heightDelta = Math.abs(nextHeight - featherHeight);
-        const isScrollViewportResize = !force
-            && !widthChanged
-            && heightDelta > 0
-            && heightDelta < 180
-            && Date.now() - featherLastScrollAt < 420;
-
-        if (isScrollViewportResize || (nextWidth === featherWidth && nextHeight === featherHeight)) {
-            return;
-        }
-
-        const previousParticles = featherParticles;
-        const previousWidth = featherWidth || nextWidth;
-        const previousHeight = featherHeight || nextHeight;
-
-        featherWidth = nextWidth;
-        featherHeight = nextHeight;
-        featherField.width = Math.round(featherWidth * featherDpr);
-        featherField.height = Math.round(featherHeight * featherDpr);
-        featherField.style.width = `${featherWidth}px`;
-        featherField.style.height = `${featherHeight}px`;
-        featherContext.setTransform(featherDpr, 0, 0, featherDpr, 0, 0);
-
-        const particleCount = Math.max(32, Math.min(74, Math.round((featherWidth * featherHeight) / 25000)));
-        featherParticles = Array.from({ length: particleCount }, (_, index) => {
-            const particle = previousParticles[index];
-
-            if (!particle || force || widthChanged) {
-                return createFeatherParticle();
-            }
-
-            return {
-                ...particle,
-                x: Math.min(Math.max(particle.x, -40), featherWidth + 40),
-                y: Math.min(Math.max((particle.y / previousHeight) * featherHeight, -48), featherHeight + 48),
-                size: particle.size * Math.min(1.08, Math.max(0.92, featherWidth / previousWidth))
-            };
-        });
-    };
-
-    const scheduleFeatherResize = () => {
-        if (featherResizeFrameId) {
-            window.clearTimeout(featherResizeFrameId);
-        }
-
-        featherResizeFrameId = window.setTimeout(() => resizeFeatherField(), 140);
-    };
-
-    const drawFallbackFeather = (particle) => {
-        featherContext.beginPath();
-        featherContext.ellipse(0, 0, particle.size * 0.24, particle.size, 0.18, 0, Math.PI * 2);
-        featherContext.fill();
-        featherContext.beginPath();
-        featherContext.moveTo(0, -particle.size * 0.92);
-        featherContext.lineTo(0, particle.size * 0.95);
-        featherContext.stroke();
-    };
-
-    const renderFeathers = () => {
-        featherContext.clearRect(0, 0, featherWidth, featherHeight);
-
-        featherParticles.forEach((particle) => {
-            const radius = Math.min(170, Math.max(96, featherWidth * 0.09));
-            const dx = particle.x - pointer.x;
-            const dy = particle.y - pointer.y;
-            const distance = Math.hypot(dx, dy);
-
-            if (pointer.active && distance < radius && distance > 0.1) {
-                const force = (1 - distance / radius) * 0.72;
-                particle.pushX += (dx / distance) * force;
-                particle.pushY += (dy / distance) * force;
-            }
-
-            particle.sway += 0.008;
-            particle.rotation += particle.rotationSpeed + particle.pushX * 0.002;
-            particle.x += particle.driftX + Math.sin(particle.sway) * 0.11 + particle.pushX;
-            particle.y += particle.driftY + Math.cos(particle.sway * 0.7) * 0.05 + particle.pushY;
-            particle.pushX *= 0.91;
-            particle.pushY *= 0.91;
-
-            if (particle.x > featherWidth + 40) particle.x = -40;
-            if (particle.x < -40) particle.x = featherWidth + 40;
-            if (particle.y > featherHeight + 48) particle.y = -48;
-            if (particle.y < -48) particle.y = featherHeight + 48;
-
-            featherContext.save();
-            featherContext.translate(particle.x, particle.y);
-            featherContext.rotate(particle.rotation);
-            featherContext.globalAlpha = particle.opacity;
-            featherContext.fillStyle = "rgba(214, 199, 145, 0.62)";
-            featherContext.strokeStyle = "rgba(243, 244, 246, 0.34)";
-            featherContext.lineWidth = 0.8;
-
-            if (featherImage.complete && featherImage.naturalWidth > 0) {
-                featherContext.drawImage(featherImage, -particle.size * 0.38, -particle.size * 1.22, particle.size * 0.76, particle.size * 2.68);
-            }
-            else {
-                drawFallbackFeather(particle);
-            }
-
-            featherContext.restore();
-        });
-
-        featherFrameId = window.requestAnimationFrame(renderFeathers);
-    };
-
-    featherImage.src = "/images/objects/feather-vertical.png";
-    resizeFeatherField({ force: true });
-    renderFeathers();
-
-    window.addEventListener("resize", scheduleFeatherResize, { passive: true });
-    window.addEventListener("orientationchange", () => {
-        window.setTimeout(() => resizeFeatherField({ force: true }), 220);
-    }, { passive: true });
-    window.addEventListener("scroll", () => {
-        featherLastScrollAt = Date.now();
-    }, { passive: true });
-    window.addEventListener("pointermove", (event) => {
-        if (event.pointerType === "touch") {
-            return;
-        }
-
-        pointer.x = event.clientX;
-        pointer.y = event.clientY;
-        pointer.active = true;
-    }, { passive: true });
-    window.addEventListener("pointerleave", () => {
-        pointer.active = false;
-    });
-    document.addEventListener("visibilitychange", () => {
-        if (document.hidden && featherFrameId) {
-            window.cancelAnimationFrame(featherFrameId);
-            featherFrameId = null;
-        }
-        else if (!document.hidden && !featherFrameId) {
-            renderFeathers();
-        }
-    });
-}
-
 if (themeToggle) {
     themeToggle.addEventListener("click", () => {
         const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
@@ -272,44 +83,30 @@ if (themeToggle) {
 }
 
 if (siteHeader) {
-    let lastScrollY = window.scrollY;
-    let lastDirection = "up";
+    let headerScrollFrame = null;
 
     const syncHeader = () => {
+        headerScrollFrame = null;
         const currentScrollY = window.scrollY;
-        const scrollDelta = currentScrollY - lastScrollY;
-        const scrollingDown = scrollDelta > 4;
-        const scrollingUp = scrollDelta < -4;
+        const scrollableDistance = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const scrollProgress = Math.min(1, Math.max(0, currentScrollY / scrollableDistance));
 
         siteHeader.classList.toggle("is-scrolled", currentScrollY > 16);
-
-        if (scrollingDown) {
-            lastDirection = "down";
-        }
-        else if (scrollingUp) {
-            lastDirection = "up";
-        }
-
-        siteHeader.classList.toggle("is-scroll-up", currentScrollY > 96 && lastDirection === "up");
-        siteHeader.classList.toggle("is-scroll-down", currentScrollY > 180 && lastDirection === "down");
-
-        if (window.innerWidth > 1040) {
-            if (currentScrollY > 180 && lastDirection === "down") {
-                siteHeader.classList.add("is-condensed");
-            }
-            else if (currentScrollY < 96 || lastDirection === "up") {
-                siteHeader.classList.remove("is-condensed");
-            }
-        }
-        else {
-            siteHeader.classList.remove("is-condensed");
-        }
-
-        lastScrollY = currentScrollY;
+        document.documentElement.style.setProperty("--page-scroll-progress", scrollProgress.toFixed(4));
     };
 
+    const requestHeaderSync = () => {
+        if (headerScrollFrame !== null) {
+            return;
+        }
+
+        headerScrollFrame = window.requestAnimationFrame(syncHeader);
+    };
+
+    siteHeader.classList.remove("is-scroll-up", "is-scroll-down", "is-condensed");
     syncHeader();
-    window.addEventListener("scroll", syncHeader, { passive: true });
+    window.addEventListener("scroll", requestHeaderSync, { passive: true });
+    window.addEventListener("resize", requestHeaderSync, { passive: true });
 }
 
 if (navToggle && siteNav) {
@@ -334,7 +131,7 @@ if (navToggle && siteNav) {
     });
 
     window.addEventListener("resize", () => {
-        if (window.innerWidth > 1040) {
+        if (window.innerWidth > 1240) {
             closeNav();
         }
     });
@@ -394,7 +191,12 @@ if (enquiryModal) {
     };
 
     const openModal = (trigger) => {
-        previousFocus = trigger || document.activeElement;
+        const openedFromNavigation = Boolean(trigger?.closest("[data-site-nav]"));
+        previousFocus = openedFromNavigation ? navToggle : (trigger || document.activeElement);
+        if (siteNav?.classList.contains("is-open")) {
+            siteNav.classList.remove("is-open");
+            navToggle?.setAttribute("aria-expanded", "false");
+        }
         enquiryModal.hidden = false;
         enquiryModal.classList.add("is-open");
         lockScroll(true);
@@ -472,6 +274,7 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     const dots = Array.from(carouselRoot.querySelectorAll("[data-carousel-dot]"));
     const prevButton = carouselRoot.querySelector("[data-carousel-prev]");
     const nextButton = carouselRoot.querySelector("[data-carousel-next]");
+    const controls = carouselRoot.querySelector(".carousel-controls");
     const isReviewCarousel = carouselRoot.classList.contains("review-carousel");
     const supportsSwipe = isReviewCarousel
         || carouselRoot.classList.contains("about-image-carousel")
@@ -490,6 +293,11 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     let pointerStartY = null;
     let carouselIsVisible = true;
     let carouselIsHovered = false;
+    let carouselHasFocus = false;
+    let userPaused = false;
+    let announceNextChange = false;
+    let pauseButton = null;
+    let carouselStatus = null;
 
     if (slides.length === 0) {
         return;
@@ -499,8 +307,86 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         currentIndex = 0;
     }
 
-    const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const carouselMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const prefersReducedMotion = () => carouselMotionQuery.matches;
     const normaliseIndex = (index) => (index + slides.length) % slides.length;
+
+    const hydrateSlideImages = (index) => {
+        const slide = slides[normaliseIndex(index)];
+
+        slide?.querySelectorAll("img[data-src]").forEach((image) => {
+            const source = image.dataset.src;
+            if (!source) {
+                return;
+            }
+
+            image.src = source;
+            image.removeAttribute("data-src");
+        });
+
+        slide?.querySelectorAll("source[data-srcset]").forEach((sourceElement) => {
+            const sourceSet = sourceElement.dataset.srcset;
+            if (!sourceSet) {
+                return;
+            }
+
+            sourceElement.srcset = sourceSet;
+            sourceElement.removeAttribute("data-srcset");
+        });
+    };
+
+    const hydrateCurrentAndNextSlides = () => {
+        hydrateSlideImages(currentIndex);
+        if (slides.length > 1) {
+            hydrateSlideImages(currentIndex + 1);
+        }
+    };
+
+    if (carouselRoot.getAttribute("aria-hidden") !== "true") {
+        carouselRoot.setAttribute("role", "region");
+        carouselRoot.setAttribute("aria-roledescription", "carousel");
+        if (!carouselRoot.hasAttribute("aria-label")) {
+            carouselRoot.setAttribute("aria-label", controls?.getAttribute("aria-label") || "Image carousel");
+        }
+
+        slides.forEach((slide, index) => {
+            slide.setAttribute("role", "group");
+            slide.setAttribute("aria-roledescription", "slide");
+            slide.setAttribute("aria-label", `${index + 1} of ${slides.length}`);
+        });
+    }
+
+    if (controls && slides.length > 1) {
+        pauseButton = document.createElement("button");
+        pauseButton.className = "carousel-arrow carousel-play-toggle";
+        pauseButton.type = "button";
+        pauseButton.dataset.carouselPlayToggle = "";
+        controls.appendChild(pauseButton);
+
+        carouselStatus = document.createElement("span");
+        carouselStatus.className = "sr-only";
+        carouselStatus.setAttribute("role", "status");
+        carouselStatus.setAttribute("aria-live", "polite");
+        carouselStatus.setAttribute("aria-atomic", "true");
+        controls.appendChild(carouselStatus);
+    }
+
+    if (prefersReducedMotion()) {
+        userPaused = true;
+    }
+
+    const updatePauseButton = () => {
+        if (!pauseButton) {
+            return;
+        }
+
+        pauseButton.textContent = userPaused ? "▶" : "Ⅱ";
+        pauseButton.setAttribute(
+            "aria-label",
+            userPaused ? "Play automatic slideshow" : "Pause automatic slideshow"
+        );
+        pauseButton.title = userPaused ? "Play slideshow" : "Pause slideshow";
+    };
 
     const setReviewTrackPosition = (instant = false) => {
         if (!isReviewCarousel) {
@@ -570,6 +456,9 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
             slide.classList.toggle("is-active", active);
             slide.classList.remove("is-entering", "is-leaving");
             slide.setAttribute("aria-hidden", String(!active));
+            if ("inert" in slide) {
+                slide.inert = !active;
+            }
         });
 
         carouselRoot.classList.remove("is-transitioning");
@@ -578,6 +467,11 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         }
         setReviewSlideStates();
         setDots();
+
+        if (announceNextChange && carouselStatus) {
+            carouselStatus.textContent = `Showing slide ${currentIndex + 1} of ${slides.length}.`;
+        }
+        announceNextChange = false;
     };
 
     const directionFromIndexes = (nextIndex) => {
@@ -587,7 +481,7 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         return forwardDistance <= backwardDistance ? "next" : "previous";
     };
 
-    const moveTo = (nextIndex, requestedDirection) => {
+    const moveTo = (nextIndex, requestedDirection, announce = false) => {
         if (carouselRoot.classList.contains("is-transitioning")) {
             return;
         }
@@ -600,7 +494,10 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
 
         const previousIndex = currentIndex;
         const direction = requestedDirection || directionFromIndexes(normalisedNext);
+        hydrateSlideImages(normalisedNext);
+        hydrateSlideImages(normalisedNext + (direction === "previous" ? -1 : 1));
         currentIndex = normalisedNext;
+        announceNextChange = announce;
         carouselRoot.dataset.carouselDirection = direction;
 
         if (isReviewCarousel && slides.length > 1) {
@@ -638,6 +535,9 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
             slide.classList.toggle("is-entering", entering);
             slide.classList.toggle("is-leaving", leaving);
             slide.setAttribute("aria-hidden", String(!entering));
+            if ("inert" in slide) {
+                slide.inert = !entering;
+            }
         });
 
         carouselRoot.classList.add("is-transitioning");
@@ -647,17 +547,20 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     };
 
     const restartTimer = () => {
-        if (prefersReducedMotion() || !carouselIsVisible || carouselIsHovered) {
-            return;
-        }
-
         if (timerId) {
             window.clearInterval(timerId);
+            timerId = null;
+        }
+
+        if (userPaused || !carouselIsVisible || carouselIsHovered || carouselHasFocus) {
+            updatePauseButton();
+            return;
         }
 
         timerId = window.setInterval(() => {
             moveTo(currentIndex + 1, "next");
         }, intervalMs);
+        updatePauseButton();
     };
 
     const stopTimer = () => {
@@ -666,6 +569,25 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
             timerId = null;
         }
     };
+
+    pauseButton?.addEventListener("click", () => {
+        userPaused = !userPaused;
+        if (userPaused) {
+            stopTimer();
+            if (carouselStatus) {
+                carouselStatus.textContent = "Automatic slideshow paused.";
+            }
+        }
+        else {
+            restartTimer();
+            if (carouselStatus) {
+                carouselStatus.textContent = carouselHasFocus
+                    ? "Automatic slideshow will play when focus leaves the carousel."
+                    : "Automatic slideshow playing.";
+            }
+        }
+        updatePauseButton();
+    });
 
     if ("IntersectionObserver" in window) {
         const carouselObserver = new IntersectionObserver((entries) => {
@@ -688,18 +610,18 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     }
 
     prevButton?.addEventListener("click", () => {
-        moveTo(currentIndex - 1, "previous");
+        moveTo(currentIndex - 1, "previous", true);
         restartTimer();
     });
 
     nextButton?.addEventListener("click", () => {
-        moveTo(currentIndex + 1, "next");
+        moveTo(currentIndex + 1, "next", true);
         restartTimer();
     });
 
     dots.forEach((dot, index) => {
         dot.addEventListener("click", () => {
-            moveTo(index, directionFromIndexes(index));
+            moveTo(index, directionFromIndexes(index), true);
             restartTimer();
         });
     });
@@ -712,6 +634,20 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     carouselRoot.addEventListener("mouseleave", () => {
         carouselIsHovered = false;
         restartTimer();
+    });
+
+    carouselRoot.addEventListener("focusin", () => {
+        carouselHasFocus = true;
+        stopTimer();
+    });
+
+    carouselRoot.addEventListener("focusout", () => {
+        window.setTimeout(() => {
+            carouselHasFocus = carouselRoot.contains(document.activeElement);
+            if (!carouselHasFocus) {
+                restartTimer();
+            }
+        }, 0);
     });
 
     if (supportsSwipe) {
@@ -736,7 +672,11 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
                 return;
             }
 
-            moveTo(currentIndex + (deltaX < 0 ? 1 : -1), deltaX < 0 ? "next" : "previous");
+            moveTo(
+                currentIndex + (deltaX < 0 ? 1 : -1),
+                deltaX < 0 ? "next" : "previous",
+                true
+            );
             restartTimer();
         });
 
@@ -747,9 +687,29 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         });
     }
 
+    carouselMotionQuery.addEventListener?.("change", (event) => {
+        if (!event.matches) {
+            return;
+        }
+
+        userPaused = true;
+        stopTimer();
+        if (transitionTimerId) {
+            window.clearTimeout(transitionTimerId);
+            transitionTimerId = null;
+            finishTransition();
+        }
+        if (carouselStatus) {
+            carouselStatus.textContent = "Automatic slideshow paused to respect reduced motion settings.";
+        }
+        updatePauseButton();
+    });
+
     carouselRoot.dataset.carouselDirection = "next";
+    updatePauseButton();
     finishTransition();
     restartTimer();
+    window.requestAnimationFrame(hydrateCurrentAndNextSlides);
 });
 
 const protectImage = (image) => {
@@ -836,9 +796,22 @@ if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     });
 }
 else if (revealTargets.length > 0) {
-    revealTargets.forEach((element, index) => {
+    const clearRevealMotionState = (element) => {
+        const finish = (event) => {
+            if (event && event.target !== element) {
+                return;
+            }
+
+            element.removeEventListener("transitionend", finish);
+            element.classList.remove("reveal-ready", "reveal-delay-1", "reveal-delay-2", "reveal-delay-3");
+        };
+
+        element.addEventListener("transitionend", finish);
+        window.setTimeout(() => finish(), 1100);
+    };
+
+    revealTargets.forEach((element) => {
         element.classList.add("reveal-ready");
-        element.classList.add(`reveal-delay-${index % 4}`);
     });
 
     const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -848,6 +821,7 @@ else if (revealTargets.length > 0) {
             }
 
             entry.target.classList.add("is-visible");
+            clearRevealMotionState(entry.target);
             observer.unobserve(entry.target);
         });
     }, {
@@ -900,16 +874,93 @@ fileInputs.forEach((input) => {
     const targetId = input.getAttribute("data-file-list-target");
     const fileList = targetId ? document.getElementById(targetId) : null;
     const dropzone = input.closest("[data-file-dropzone]");
+    const fieldGroup = input.closest(".field-group");
+    const maxFileCount = input.id === "reviewPhotos" ? 10 : 3;
+    const maxFileSize = 5 * 1024 * 1024;
+    let fileError = fieldGroup?.querySelector("[data-file-error]") || null;
     let previewUrls = [];
+
+    if (!fileError && fieldGroup) {
+        fileError = document.createElement("p");
+        fileError.className = "field-error";
+        fileError.dataset.fileError = "";
+        fileError.hidden = true;
+        (fileList || dropzone)?.insertAdjacentElement("afterend", fileError);
+    }
+
+    if (fileError) {
+        fileError.id = fileError.id || `${input.id || "file-upload"}-error`;
+        fileError.setAttribute("role", "alert");
+        fileError.setAttribute("aria-live", "polite");
+        fileError.setAttribute("aria-atomic", "true");
+        const describedBy = new Set((input.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
+        describedBy.add(fileError.id);
+        input.setAttribute("aria-describedby", Array.from(describedBy).join(" "));
+    }
 
     const clearPreviewUrls = () => {
         previewUrls.forEach((url) => URL.revokeObjectURL(url));
         previewUrls = [];
     };
 
-    const syncFiles = () => {
+    const replaceInputFiles = (files) => {
+        const dataTransfer = new DataTransfer();
+        files.forEach((file) => dataTransfer.items.add(file));
+        input.files = dataTransfer.files;
+    };
+
+    const setFileError = (message) => {
+        input.setAttribute("aria-invalid", String(Boolean(message)));
+        if (message && fileError?.id) {
+            input.setAttribute("aria-errormessage", fileError.id);
+        }
+        else {
+            input.removeAttribute("aria-errormessage");
+        }
+        if (!fileError) {
+            return;
+        }
+
+        fileError.textContent = message;
+        fileError.hidden = !message;
+    };
+
+    const validateSelectedFiles = (files) => {
+        const rejectedTypes = files.filter((file) => !acceptsFile(input, file));
+        const acceptedTypes = files.filter((file) => acceptsFile(input, file));
+        const oversizedFiles = acceptedTypes.filter((file) => file.size > maxFileSize);
+        const validFiles = acceptedTypes.filter((file) => file.size <= maxFileSize);
+        const keptFiles = validFiles.slice(0, input.multiple ? maxFileCount : 1);
+        const messages = [];
+
+        if (rejectedTypes.length > 0) {
+            messages.push(`${rejectedTypes.length} unsupported file${rejectedTypes.length === 1 ? " was" : "s were"} not added.`);
+        }
+        if (oversizedFiles.length > 0) {
+            messages.push(`${oversizedFiles.length} file${oversizedFiles.length === 1 ? " is" : "s are"} larger than 5 MB and ${oversizedFiles.length === 1 ? "was" : "were"} not added.`);
+        }
+        if (validFiles.length > keptFiles.length) {
+            messages.push(`Please choose no more than ${input.multiple ? maxFileCount : 1} file${input.multiple && maxFileCount !== 1 ? "s" : ""}.`);
+        }
+
+        return { files: keptFiles, message: messages.join(" ") };
+    };
+
+    const syncFiles = ({ validate = true } = {}) => {
         if (!dropzone || !fileList) {
             return;
+        }
+
+        const incomingFiles = Array.from(input.files || []);
+        const result = validate ? validateSelectedFiles(incomingFiles) : { files: incomingFiles, message: "" };
+        const filesChanged = result.files.length !== incomingFiles.length
+            || result.files.some((file, index) => file !== incomingFiles[index]);
+
+        if (filesChanged) {
+            replaceInputFiles(result.files);
+        }
+        if (validate) {
+            setFileError(result.message);
         }
 
         const files = Array.from(input.files || []);
@@ -958,23 +1009,21 @@ fileInputs.forEach((input) => {
     };
 
     const setDroppedFiles = (files) => {
-        const acceptedFiles = Array.from(files || [])
-            .filter((file) => acceptsFile(input, file))
-            .slice(0, input.multiple ? undefined : 1);
+        const droppedFiles = Array.from(files || []);
 
-        if (acceptedFiles.length === 0) {
+        if (droppedFiles.length === 0) {
             dropzone?.classList.remove("is-drag-over");
             return;
         }
 
-        const dataTransfer = new DataTransfer();
-        acceptedFiles.forEach((file) => dataTransfer.items.add(file));
-        input.files = dataTransfer.files;
+        replaceInputFiles(droppedFiles);
         input.dispatchEvent(new Event("change", { bubbles: true }));
     };
 
-    syncFiles();
-    input.addEventListener("change", syncFiles);
+    const initialFileError = fileError && !fileError.hidden ? fileError.textContent.trim() : "";
+    setFileError(initialFileError);
+    syncFiles({ validate: false });
+    input.addEventListener("change", () => syncFiles({ validate: true }));
 
     if (dropzone) {
         ["dragenter", "dragover"].forEach((eventName) => {
@@ -1074,6 +1123,26 @@ const formatMonthLabel = (date) => new Intl.DateTimeFormat("en-GB", {
 }).format(date);
 
 const customFieldRoots = Array.from(document.querySelectorAll("[data-choice-select], [data-date-picker], [data-phone-field]"));
+let customFieldId = 0;
+
+const ensureElementId = (element, prefix) => {
+    if (!element) {
+        return "";
+    }
+
+    if (!element.id) {
+        customFieldId += 1;
+        element.id = `${prefix}-${customFieldId}`;
+    }
+
+    return element.id;
+};
+
+const getCustomFieldLabel = (root, input) => {
+    const inputId = input?.id;
+    return (inputId ? root.querySelector(`label[for="${inputId}"]`) : null)
+        || root.querySelector("label, .field-label");
+};
 
 const positionCustomField = (root) => {
     const popup = root.querySelector(".field-popup");
@@ -1162,6 +1231,108 @@ window.addEventListener("scroll", () => {
     });
 }, { passive: true });
 
+customFieldRoots.forEach((root) => {
+    root.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape" || !root.classList.contains("is-open")) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        closeCustomField(root);
+        root.querySelector("[data-choice-trigger], [data-date-trigger], [data-phone-code-trigger]")?.focus();
+    });
+
+    root.addEventListener("focusout", () => {
+        window.setTimeout(() => {
+            if (!root.contains(document.activeElement)) {
+                closeCustomField(root);
+            }
+        }, 0);
+    });
+});
+
+const enableOptionKeyboardNavigation = (root, trigger, options) => {
+    let typeAhead = "";
+    let typeAheadTimer = null;
+
+    const focusOption = (index) => {
+        if (options.length === 0) {
+            return;
+        }
+
+        const normalisedIndex = (index + options.length) % options.length;
+        options[normalisedIndex].focus();
+    };
+
+    const focusMatchingOption = (character) => {
+        window.clearTimeout(typeAheadTimer);
+        typeAhead += character.toLowerCase();
+        typeAheadTimer = window.setTimeout(() => {
+            typeAhead = "";
+        }, 650);
+
+        const currentIndex = Math.max(0, options.indexOf(document.activeElement));
+        const orderedOptions = [...options.slice(currentIndex + 1), ...options.slice(0, currentIndex + 1)];
+        const match = orderedOptions.find((option) => option.textContent.trim().toLowerCase().startsWith(typeAhead));
+        match?.focus();
+    };
+
+    options.forEach((option) => {
+        option.tabIndex = -1;
+        option.addEventListener("keydown", (event) => {
+            const currentIndex = options.indexOf(option);
+
+            if (event.key === "ArrowDown" || event.key === "ArrowRight") {
+                event.preventDefault();
+                focusOption(currentIndex + 1);
+            }
+            else if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+                event.preventDefault();
+                focusOption(currentIndex - 1);
+            }
+            else if (event.key === "Home") {
+                event.preventDefault();
+                focusOption(0);
+            }
+            else if (event.key === "End") {
+                event.preventDefault();
+                focusOption(options.length - 1);
+            }
+            else if (event.key.length === 1 && /[\p{L}\p{N}]/u.test(event.key)) {
+                focusMatchingOption(event.key);
+            }
+        });
+    });
+
+    trigger.addEventListener("keydown", (event) => {
+        if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+            return;
+        }
+
+        event.preventDefault();
+        openCustomField(root);
+        const selectedIndex = options.findIndex((option) => option.getAttribute("aria-selected") === "true");
+        const targetIndex = event.key === "ArrowUp" || event.key === "End"
+            ? (event.key === "End" ? options.length - 1 : (selectedIndex >= 0 ? selectedIndex : options.length - 1))
+            : (event.key === "Home" ? 0 : (selectedIndex >= 0 ? selectedIndex : 0));
+        window.requestAnimationFrame(() => focusOption(targetIndex));
+    });
+
+    trigger.addEventListener("click", (event) => {
+        if (event.detail !== 0) {
+            return;
+        }
+
+        const selectedIndex = options.findIndex((option) => option.getAttribute("aria-selected") === "true");
+        window.requestAnimationFrame(() => {
+            if (root.classList.contains("is-open")) {
+                focusOption(selectedIndex >= 0 ? selectedIndex : 0);
+            }
+        });
+    });
+};
+
 document.querySelectorAll("[data-choice-select]").forEach((root) => {
     const input = root.querySelector("[data-choice-input]");
     const trigger = root.querySelector("[data-choice-trigger]");
@@ -1171,6 +1342,29 @@ document.querySelectorAll("[data-choice-select]").forEach((root) => {
 
     if (!input || !trigger || !label || options.length === 0) {
         return;
+    }
+
+    const fieldLabel = getCustomFieldLabel(root, input);
+    const listbox = root.querySelector('[role="listbox"]');
+    const fieldLabelId = ensureElementId(fieldLabel, "choice-label");
+    const valueLabelId = ensureElementId(label, "choice-value");
+    const listboxId = ensureElementId(listbox, "choice-listbox");
+    const fieldName = input.name || input.id || root.dataset.formField || root.dataset.reviewField || "";
+
+    if (fieldLabelId && valueLabelId) {
+        trigger.setAttribute("aria-labelledby", `${fieldLabelId} ${valueLabelId}`);
+    }
+    if (listboxId) {
+        trigger.setAttribute("aria-controls", listboxId);
+    }
+    if (fieldLabelId && listbox) {
+        listbox.setAttribute("aria-labelledby", fieldLabelId);
+        listbox.querySelector(".field-option-placeholder")?.setAttribute("aria-hidden", "true");
+        listbox.querySelectorAll("ul").forEach((list) => list.setAttribute("role", "presentation"));
+        listbox.querySelectorAll("li").forEach((item) => item.setAttribute("role", "presentation"));
+    }
+    if (["serviceType", "ceremonyType", "rating"].includes(fieldName)) {
+        trigger.setAttribute("aria-required", "true");
     }
 
     const syncChoice = () => {
@@ -1206,6 +1400,7 @@ document.querySelectorAll("[data-choice-select]").forEach((root) => {
         });
     });
 
+    enableOptionKeyboardNavigation(root, trigger, options);
     input.addEventListener("change", syncChoice);
     syncChoice();
 });
@@ -1226,8 +1421,39 @@ document.querySelectorAll("[data-date-picker]").forEach((root) => {
         return;
     }
 
+    const fieldLabel = getCustomFieldLabel(root, input);
+    const dateDialog = root.querySelector(".date-picker-shell");
+    const fieldLabelId = ensureElementId(fieldLabel, "date-label");
+    const valueLabelId = ensureElementId(label, "date-value");
+    const monthLabelId = ensureElementId(monthLabel, "date-month");
+    const dateDialogId = ensureElementId(dateDialog, "date-dialog");
+
+    if (fieldLabelId && valueLabelId) {
+        trigger.setAttribute("aria-labelledby", `${fieldLabelId} ${valueLabelId}`);
+    }
+    if (dateDialogId) {
+        trigger.setAttribute("aria-controls", dateDialogId);
+    }
+    if (fieldLabelId && monthLabelId) {
+        grid.setAttribute("aria-labelledby", `${fieldLabelId} ${monthLabelId}`);
+        dateDialog?.setAttribute("aria-labelledby", `${fieldLabelId} ${monthLabelId}`);
+    }
+    grid.setAttribute("role", "group");
+    dateDialog?.setAttribute("role", "dialog");
+    monthLabel.setAttribute("aria-live", "polite");
+    if (root.dataset.formField === "eventDate") {
+        trigger.setAttribute("aria-required", "true");
+    }
+
     let selectedDate = parseIsoDate(input.value);
     let viewDate = selectedDate ? new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1) : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+
+    const formatAccessibleDate = (date) => new Intl.DateTimeFormat("en-GB", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    }).format(date);
 
     const syncDateLabel = () => {
         selectedDate = parseIsoDate(input.value);
@@ -1235,7 +1461,7 @@ document.querySelectorAll("[data-date-picker]").forEach((root) => {
         trigger.classList.toggle("is-placeholder", !selectedDate);
     };
 
-    const renderCalendar = () => {
+    const renderCalendar = (focusDateValue = "") => {
         monthLabel.textContent = formatMonthLabel(viewDate);
         grid.innerHTML = "";
 
@@ -1243,6 +1469,21 @@ document.querySelectorAll("[data-date-picker]").forEach((root) => {
         const monthStart = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
         const weekdayOffset = (monthStart.getDay() + 6) % 7;
         const firstVisibleDate = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1 - weekdayOffset);
+        const preferredFocusDate = focusDateValue
+            || (selectedDate && selectedDate.getMonth() === viewDate.getMonth() && selectedDate.getFullYear() === viewDate.getFullYear()
+                ? toIsoDate(selectedDate)
+                : (today.getMonth() === viewDate.getMonth() && today.getFullYear() === viewDate.getFullYear()
+                    ? toIsoDate(today)
+                    : toIsoDate(monthStart)));
+
+        const focusCalendarDate = (date) => {
+            viewDate = new Date(date.getFullYear(), date.getMonth(), 1);
+            const targetValue = toIsoDate(date);
+            renderCalendar(targetValue);
+            window.requestAnimationFrame(() => {
+                grid.querySelector(`[data-date-value="${targetValue}"]`)?.focus();
+            });
+        };
 
         for (let index = 0; index < 42; index += 1) {
             const date = new Date(firstVisibleDate.getFullYear(), firstVisibleDate.getMonth(), firstVisibleDate.getDate() + index);
@@ -1252,7 +1493,9 @@ document.querySelectorAll("[data-date-picker]").forEach((root) => {
             dayButton.className = "calendar-day";
             dayButton.textContent = String(date.getDate());
             dayButton.dataset.dateValue = toIsoDate(date);
-            dayButton.setAttribute("role", "gridcell");
+            dayButton.setAttribute("aria-label", formatAccessibleDate(date));
+            dayButton.setAttribute("aria-pressed", String(Boolean(selectedDate && isSameDay(date, selectedDate))));
+            dayButton.tabIndex = dayButton.dataset.dateValue === preferredFocusDate ? 0 : -1;
 
             if (date.getMonth() !== viewDate.getMonth()) {
                 dayButton.classList.add("is-outside-month");
@@ -1260,6 +1503,7 @@ document.querySelectorAll("[data-date-picker]").forEach((root) => {
 
             if (isSameDay(date, today)) {
                 dayButton.classList.add("is-today");
+                dayButton.setAttribute("aria-current", "date");
             }
 
             if (selectedDate && isSameDay(date, selectedDate)) {
@@ -1276,23 +1520,81 @@ document.querySelectorAll("[data-date-picker]").forEach((root) => {
                 trigger.focus();
             });
 
+            dayButton.addEventListener("keydown", (event) => {
+                let targetDate = null;
+
+                if (event.key === "ArrowLeft") {
+                    targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1);
+                }
+                else if (event.key === "ArrowRight") {
+                    targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+                }
+                else if (event.key === "ArrowUp") {
+                    targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7);
+                }
+                else if (event.key === "ArrowDown") {
+                    targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7);
+                }
+                else if (event.key === "Home") {
+                    const mondayOffset = (date.getDay() + 6) % 7;
+                    targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - mondayOffset);
+                }
+                else if (event.key === "End") {
+                    const sundayOffset = 6 - ((date.getDay() + 6) % 7);
+                    targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + sundayOffset);
+                }
+                else if (event.key === "PageUp" || event.key === "PageDown") {
+                    const monthDelta = event.key === "PageUp" ? -1 : 1;
+                    const yearDelta = event.shiftKey ? monthDelta : 0;
+                    const targetMonth = event.shiftKey ? date.getMonth() : date.getMonth() + monthDelta;
+                    const targetYear = date.getFullYear() + yearDelta;
+                    const daysInTargetMonth = new Date(targetYear, targetMonth + 1, 0).getDate();
+                    targetDate = new Date(targetYear, targetMonth, Math.min(date.getDate(), daysInTargetMonth));
+                }
+
+                if (targetDate) {
+                    event.preventDefault();
+                    focusCalendarDate(targetDate);
+                }
+            });
+
             grid.appendChild(dayButton);
         }
     };
 
-    trigger.addEventListener("click", () => {
-        if (root.classList.contains("is-open")) {
-            closeCustomField(root);
-            return;
-        }
-
+    const openDatePicker = (focusGrid = false) => {
         const currentValue = parseIsoDate(input.value);
         const today = new Date();
         viewDate = currentValue
             ? new Date(currentValue.getFullYear(), currentValue.getMonth(), 1)
             : new Date(today.getFullYear(), today.getMonth(), 1);
-        renderCalendar();
+        const focusValue = focusGrid ? toIsoDate(currentValue || today) : "";
+        renderCalendar(focusValue);
         openCustomField(root);
+
+        if (focusGrid) {
+            window.requestAnimationFrame(() => {
+                grid.querySelector(`[data-date-value="${focusValue}"]`)?.focus();
+            });
+        }
+    };
+
+    trigger.addEventListener("click", (event) => {
+        if (root.classList.contains("is-open")) {
+            closeCustomField(root);
+            return;
+        }
+
+        openDatePicker(event.detail === 0);
+    });
+
+    trigger.addEventListener("keydown", (event) => {
+        if (event.key !== "ArrowDown" && event.key !== "ArrowUp") {
+            return;
+        }
+
+        event.preventDefault();
+        openDatePicker(true);
     });
 
     prevButton.addEventListener("click", () => {
@@ -1338,6 +1640,14 @@ document.querySelectorAll("[data-phone-field]").forEach((phoneRoot) => {
     const numberInput = phoneRoot.querySelector("[data-phone-number]");
     const combinedInput = phoneRoot.querySelector("[data-phone-combined]");
     const options = Array.from(phoneRoot.querySelectorAll("[data-phone-option]"));
+    const listbox = phoneRoot.querySelector('[role="listbox"]');
+
+    if (trigger && listbox) {
+        const listboxId = ensureElementId(listbox, "phone-listbox");
+        trigger.setAttribute("aria-controls", listboxId);
+        listbox.querySelectorAll("li").forEach((item) => item.setAttribute("role", "presentation"));
+        enableOptionKeyboardNavigation(phoneRoot, trigger, options);
+    }
 
     const getSelectedOption = () => {
         const selectedCode = codeEl ? codeEl.textContent.trim() : "+44";
@@ -1397,6 +1707,10 @@ document.querySelectorAll("[data-phone-field]").forEach((phoneRoot) => {
             option.classList.toggle("is-selected", isSelected);
             option.setAttribute("aria-selected", String(isSelected));
         });
+
+        if (trigger && selectedOption) {
+            trigger.setAttribute("aria-label", `Country code: ${selectedOption.textContent.trim()}`);
+        }
     };
 
     const updateCombined = () => {
@@ -1484,6 +1798,20 @@ if (contactForm) {
         return wrapper.querySelector(".field-control, .form-choice") || wrapper;
     };
 
+    const prepareErrorNode = (fieldName, errorNode) => {
+        if (!errorNode) {
+            return null;
+        }
+
+        if (!errorNode.id) {
+            errorNode.id = `${fieldName}-error`;
+        }
+        errorNode.setAttribute("role", "alert");
+        errorNode.setAttribute("aria-live", "polite");
+        errorNode.setAttribute("aria-atomic", "true");
+        return errorNode;
+    };
+
     const getErrorNode = (fieldName) => {
         const wrapper = getFieldWrapper(fieldName);
 
@@ -1495,27 +1823,51 @@ if (contactForm) {
             const existing = wrapper.nextElementSibling;
 
             if (existing && existing.classList.contains("field-error")) {
-                return existing;
+                return prepareErrorNode(fieldName, existing);
             }
 
             const created = document.createElement("p");
             created.className = "field-error";
             created.hidden = true;
             wrapper.insertAdjacentElement("afterend", created);
-            return created;
+            return prepareErrorNode(fieldName, created);
         }
 
         const existing = wrapper.querySelector(".field-error");
 
         if (existing) {
-            return existing;
+            return prepareErrorNode(fieldName, existing);
         }
 
         const created = document.createElement("p");
         created.className = "field-error";
         created.hidden = true;
         wrapper.appendChild(created);
-        return created;
+        return prepareErrorNode(fieldName, created);
+    };
+
+    const setFieldAccessibility = (fieldName, invalid, errorNode) => {
+        const config = fieldConfig[fieldName];
+        const targets = Array.from(new Set([config?.input, config?.focusTarget].filter(Boolean)));
+
+        targets.forEach((target) => {
+            target.setAttribute("aria-invalid", String(invalid));
+
+            if (!errorNode?.id) {
+                return;
+            }
+
+            const describedBy = new Set((target.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
+            describedBy.add(errorNode.id);
+            target.setAttribute("aria-describedby", Array.from(describedBy).join(" "));
+
+            if (invalid) {
+                target.setAttribute("aria-errormessage", errorNode.id);
+            }
+            else {
+                target.removeAttribute("aria-errormessage");
+            }
+        });
     };
 
     const clearFieldError = (fieldName) => {
@@ -1535,6 +1887,7 @@ if (contactForm) {
             errorNode.textContent = "";
             errorNode.hidden = true;
         }
+        setFieldAccessibility(fieldName, false, errorNode);
     };
 
     const setFieldError = (fieldName, message) => {
@@ -1551,9 +1904,12 @@ if (contactForm) {
         }
 
         if (errorNode) {
-            errorNode.textContent = message;
+            if (errorNode.textContent !== message) {
+                errorNode.textContent = message;
+            }
             errorNode.hidden = false;
         }
+        setFieldAccessibility(fieldName, true, errorNode);
     };
 
     const todayAtMidnight = () => {
@@ -1646,7 +2002,7 @@ if (contactForm) {
         },
         privacyAccepted: {
             input: contactForm.querySelector("#privacyAccepted"),
-            focusTarget: contactForm.querySelector(".checkbox-label"),
+            focusTarget: contactForm.querySelector("#privacyAccepted"),
             validate: (value, input) => input && input.checked ? "" : "Please confirm that you are happy for us to handle your details."
         }
     };
@@ -1677,7 +2033,7 @@ if (contactForm) {
 
                 modalDialog.scrollTo({
                     top: Math.max(0, top),
-                    behavior: "smooth"
+                    behavior: reducedMotionRequested() ? "auto" : "smooth"
                 });
             }
             else {
@@ -1685,7 +2041,7 @@ if (contactForm) {
 
                 window.scrollTo({
                     top: Math.max(0, top),
-                    behavior: "smooth"
+                    behavior: reducedMotionRequested() ? "auto" : "smooth"
                 });
             }
         }
@@ -1693,7 +2049,7 @@ if (contactForm) {
         if (focusTarget && typeof focusTarget.focus === "function") {
             window.setTimeout(() => {
                 focusTarget.focus({ preventScroll: true });
-            }, 180);
+            }, reducedMotionRequested() ? 0 : 180);
         }
     };
 
@@ -1704,6 +2060,10 @@ if (contactForm) {
             return;
         }
 
+        const errorNode = getErrorNode(fieldName);
+        const hasServerError = Boolean(errorNode && !errorNode.hidden && errorNode.textContent.trim());
+        setFieldAccessibility(fieldName, hasServerError, errorNode);
+
         const syncValidity = () => {
             const errorMessage = validateField(fieldName);
 
@@ -1712,7 +2072,11 @@ if (contactForm) {
                 return;
             }
 
-            if (getFieldWrapper(fieldName)?.classList.contains("is-invalid")) {
+            const control = getFieldControl(fieldName);
+            const visibleError = getErrorNode(fieldName);
+            if (getFieldWrapper(fieldName)?.classList.contains("is-invalid")
+                    || control?.classList.contains("is-invalid")
+                    || (visibleError && !visibleError.hidden)) {
                 setFieldError(fieldName, errorMessage);
             }
         };
@@ -1723,36 +2087,11 @@ if (contactForm) {
 
     const privacyRow = getFieldWrapper("privacyAccepted");
     const privacyInput = fieldConfig.privacyAccepted.input;
-    const privacyToggle = privacyRow?.querySelector(".checkbox-label");
 
     if (privacyRow && privacyInput) {
         const syncPrivacyCheckedState = () => {
             privacyRow.classList.toggle("is-checked", privacyInput.checked);
-            privacyToggle?.setAttribute("aria-checked", privacyInput.checked ? "true" : "false");
         };
-
-        const togglePrivacyAccepted = () => {
-            privacyInput.checked = !privacyInput.checked;
-            privacyInput.dispatchEvent(new Event("change", { bubbles: true }));
-        };
-
-        privacyRow.addEventListener("click", (event) => {
-            if (event.target.closest("a") || event.target === privacyInput) {
-                return;
-            }
-
-            event.preventDefault();
-            togglePrivacyAccepted();
-        });
-
-        privacyToggle?.addEventListener("keydown", (event) => {
-            if (event.key !== " " && event.key !== "Enter") {
-                return;
-            }
-
-            event.preventDefault();
-            togglePrivacyAccepted();
-        });
 
         privacyInput.addEventListener("change", syncPrivacyCheckedState);
         syncPrivacyCheckedState();
@@ -1813,6 +2152,37 @@ if (reviewForm) {
         return wrapper.querySelector(".field-control, .field-control-button, .file-dropzone") || wrapper;
     };
 
+    const getReviewFieldFocusTarget = (fieldName) => {
+        const wrapper = getReviewFieldWrapper(fieldName);
+
+        if (!wrapper) {
+            return null;
+        }
+
+        if (fieldName === "consentAccepted") {
+            return wrapper.querySelector("#consentAccepted");
+        }
+        if (fieldName === "reviewPhotos") {
+            return wrapper.querySelector("#reviewPhotos");
+        }
+
+        return wrapper.querySelector("[data-choice-trigger], [data-date-trigger], input:not([type='hidden']), textarea, button") || null;
+    };
+
+    const prepareReviewErrorNode = (fieldName, errorNode) => {
+        if (!errorNode) {
+            return null;
+        }
+
+        if (!errorNode.id) {
+            errorNode.id = `review-${fieldName}-error`;
+        }
+        errorNode.setAttribute("role", "alert");
+        errorNode.setAttribute("aria-live", "polite");
+        errorNode.setAttribute("aria-atomic", "true");
+        return errorNode;
+    };
+
     const getReviewFieldError = (fieldName) => {
         const wrapper = getReviewFieldWrapper(fieldName);
 
@@ -1824,27 +2194,51 @@ if (reviewForm) {
             const existing = wrapper.nextElementSibling;
 
             if (existing?.classList.contains("field-error")) {
-                return existing;
+                return prepareReviewErrorNode(fieldName, existing);
             }
 
             const created = document.createElement("p");
             created.className = "field-error";
             created.hidden = true;
             wrapper.insertAdjacentElement("afterend", created);
-            return created;
+            return prepareReviewErrorNode(fieldName, created);
         }
 
         const existing = wrapper.querySelector(".field-error");
 
         if (existing) {
-            return existing;
+            return prepareReviewErrorNode(fieldName, existing);
         }
 
         const created = document.createElement("p");
         created.className = "field-error";
         created.hidden = true;
         wrapper.appendChild(created);
-        return created;
+        return prepareReviewErrorNode(fieldName, created);
+    };
+
+    const setReviewFieldAccessibility = (fieldName, invalid, errorNode) => {
+        const target = getReviewFieldFocusTarget(fieldName);
+
+        if (!target) {
+            return;
+        }
+
+        target.setAttribute("aria-invalid", String(invalid));
+        if (!errorNode?.id) {
+            return;
+        }
+
+        const describedBy = new Set((target.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
+        describedBy.add(errorNode.id);
+        target.setAttribute("aria-describedby", Array.from(describedBy).join(" "));
+
+        if (invalid) {
+            target.setAttribute("aria-errormessage", errorNode.id);
+        }
+        else {
+            target.removeAttribute("aria-errormessage");
+        }
     };
 
     const clearReviewFieldError = (fieldName) => {
@@ -1859,6 +2253,7 @@ if (reviewForm) {
             errorNode.textContent = "";
             errorNode.hidden = true;
         }
+        setReviewFieldAccessibility(fieldName, false, errorNode);
     };
 
     const setReviewFieldError = (fieldName, message) => {
@@ -1870,12 +2265,15 @@ if (reviewForm) {
         control?.classList.add("is-invalid");
 
         if (errorNode) {
-            errorNode.textContent = message;
+            if (errorNode.textContent !== message) {
+                errorNode.textContent = message;
+            }
             errorNode.hidden = false;
         }
+        setReviewFieldAccessibility(fieldName, true, errorNode);
     };
 
-    const showReviewBanner = (type, message) => {
+    const showReviewBanner = (type, message, { focus = true } = {}) => {
         const activeBanner = type === "success" ? successBanner : errorBanner;
         const inactiveBanner = type === "success" ? errorBanner : successBanner;
 
@@ -1885,10 +2283,15 @@ if (reviewForm) {
         }
 
         if (activeBanner) {
+            activeBanner.setAttribute("role", type === "success" ? "status" : "alert");
+            activeBanner.setAttribute("aria-live", type === "success" ? "polite" : "assertive");
+            activeBanner.setAttribute("aria-atomic", "true");
             activeBanner.textContent = message;
             activeBanner.hidden = false;
-            activeBanner.setAttribute("tabindex", "-1");
-            activeBanner.focus({ preventScroll: true });
+            if (focus) {
+                activeBanner.setAttribute("tabindex", "-1");
+                activeBanner.focus({ preventScroll: true });
+            }
         }
     };
 
@@ -1911,6 +2314,38 @@ if (reviewForm) {
 
     reviewForm.querySelector("#consentAccepted")?.addEventListener("change", syncReviewCheckbox);
     attachNameAutoFormat(reviewForm.querySelector("#reviewerName"));
+    const reviewMessageInput = reviewForm.querySelector("#reviewMessage");
+    const reviewConsentInput = reviewForm.querySelector("#consentAccepted");
+    if (reviewMessageInput) {
+        reviewMessageInput.required = true;
+    }
+    if (reviewConsentInput) {
+        reviewConsentInput.required = true;
+    }
+
+    reviewFieldOrder.forEach((fieldName) => {
+        const errorNode = getReviewFieldError(fieldName);
+        const hasServerError = Boolean(errorNode && !errorNode.hidden && errorNode.textContent.trim());
+        setReviewFieldAccessibility(fieldName, hasServerError, errorNode);
+
+        if (fieldName === "reviewPhotos") {
+            return;
+        }
+
+        const fieldInput = getReviewFieldWrapper(fieldName)?.querySelector(
+            "[data-choice-input], [data-date-input], input:not([type='hidden']), textarea"
+        );
+        const clearOnEdit = () => {
+            const visibleError = getReviewFieldError(fieldName);
+            if (getReviewFieldWrapper(fieldName)?.classList.contains("is-invalid")
+                    || getReviewFieldControl(fieldName)?.classList.contains("is-invalid")
+                    || (visibleError && !visibleError.hidden)) {
+                clearReviewFieldError(fieldName);
+            }
+        };
+        fieldInput?.addEventListener("input", clearOnEdit);
+        fieldInput?.addEventListener("change", clearOnEdit);
+    });
     syncReviewCheckbox();
 
     reviewForm.addEventListener("submit", async (event) => {
@@ -1934,6 +2369,7 @@ if (reviewForm) {
             submitButton.dataset.originalText = submitButton.dataset.originalText || submitButton.textContent;
             submitButton.textContent = "Submitting...";
         }
+        reviewForm.setAttribute("aria-busy", "true");
 
         try {
             const response = await fetch(reviewForm.action, {
@@ -1953,7 +2389,22 @@ if (reviewForm) {
                     setReviewFieldError(fieldName, message);
                 });
 
-                showReviewBanner("error", payload.message || "Please check the highlighted fields.");
+                const firstInvalidField = reviewFieldOrder.find((fieldName) => (
+                    Object.prototype.hasOwnProperty.call(errors, fieldName)
+                ));
+                showReviewBanner("error", payload.message || "Please check the highlighted fields.", {
+                    focus: !firstInvalidField
+                });
+                if (firstInvalidField) {
+                    const focusTarget = getReviewFieldFocusTarget(firstInvalidField);
+                    focusTarget?.scrollIntoView({
+                        block: "center",
+                        behavior: reducedMotionRequested() ? "auto" : "smooth"
+                    });
+                    window.setTimeout(() => {
+                        focusTarget?.focus({ preventScroll: true });
+                    }, reducedMotionRequested() ? 0 : 180);
+                }
                 return;
             }
 
@@ -1973,6 +2424,7 @@ if (reviewForm) {
             showReviewBanner("error", "Sorry, the review could not be submitted just now. Please try again.");
         }
         finally {
+            reviewForm.setAttribute("aria-busy", "false");
             if (submitButton) {
                 submitButton.disabled = false;
                 submitButton.textContent = submitButton.dataset.originalText || "Submit review for approval";
@@ -2158,7 +2610,9 @@ document.querySelectorAll("[data-faq-search-root]").forEach((faqRoot) => {
         const normalizedQuery = normalizeFaqSearchText(query);
         chips.forEach((chip) => {
             const term = normalizeFaqSearchText(chip.getAttribute("data-faq-chip") || "");
-            chip.classList.toggle("is-active", normalizedQuery === term);
+            const isActive = normalizedQuery === term;
+            chip.classList.toggle("is-active", isActive);
+            chip.setAttribute("aria-pressed", String(isActive));
         });
     };
 
@@ -2198,7 +2652,9 @@ document.querySelectorAll("[data-faq-search-root]").forEach((faqRoot) => {
     chips.forEach((chip) => {
         chip.addEventListener("click", () => {
             const term = chip.getAttribute("data-faq-chip") || "";
-            searchInput.value = term;
+            searchInput.value = normalizeFaqSearchText(searchInput.value) === normalizeFaqSearchText(term)
+                ? ""
+                : term;
             applyFilter();
             searchInput.focus();
         });
@@ -2222,7 +2678,7 @@ if (lightboxTriggers.length > 0) {
     lightbox.className = "image-lightbox";
     lightbox.hidden = true;
     lightbox.innerHTML = `
-        <button class="image-lightbox-backdrop" type="button" data-lightbox-close aria-label="Close image preview"></button>
+        <button class="image-lightbox-backdrop" type="button" data-lightbox-close aria-label="Close image preview" tabindex="-1"></button>
         <div class="image-lightbox-dialog" role="dialog" aria-modal="true" aria-label="Image preview" tabindex="-1">
             <button class="image-lightbox-close" type="button" data-lightbox-close aria-label="Close image preview">×</button>
             <img class="image-lightbox-image protected-image" alt="Expanded review photo" draggable="false">
@@ -2232,15 +2688,35 @@ if (lightboxTriggers.length > 0) {
 
     const lightboxDialog = lightbox.querySelector(".image-lightbox-dialog");
     const lightboxImage = lightbox.querySelector(".image-lightbox-image");
+    const lightboxCloseButton = lightboxDialog?.querySelector(".image-lightbox-close");
+    let previousLightboxFocus = null;
+    let lightboxCloseTimerId = null;
+
+    const getLightboxFocusableElements = () => Array.from(lightboxDialog?.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    ) || []).filter((element) => !element.hidden && element.getAttribute("aria-hidden") !== "true");
+
     const closeLightbox = () => {
+        if (lightbox.hidden) {
+            return;
+        }
+
         lightbox.classList.remove("is-open");
         document.documentElement.classList.remove("is-modal-open");
-        window.setTimeout(() => {
+        if (lightboxCloseTimerId) {
+            window.clearTimeout(lightboxCloseTimerId);
+        }
+        lightboxCloseTimerId = window.setTimeout(() => {
             lightbox.hidden = true;
             if (lightboxImage) {
                 lightboxImage.removeAttribute("src");
             }
-        }, 180);
+            if (previousLightboxFocus?.isConnected) {
+                previousLightboxFocus.focus({ preventScroll: true });
+            }
+            previousLightboxFocus = null;
+            lightboxCloseTimerId = null;
+        }, reducedMotionRequested() ? 0 : 180);
     };
 
     lightboxTriggers.forEach((trigger) => {
@@ -2249,12 +2725,19 @@ if (lightboxTriggers.length > 0) {
                 return;
             }
 
+            if (lightboxCloseTimerId) {
+                window.clearTimeout(lightboxCloseTimerId);
+                lightboxCloseTimerId = null;
+            }
+            previousLightboxFocus = trigger;
+            const thumbnail = trigger.querySelector("img");
             lightboxImage.src = trigger.dataset.lightboxSrc || "";
+            lightboxImage.alt = thumbnail?.alt || trigger.getAttribute("aria-label") || "Expanded review photo";
             lightbox.hidden = false;
             document.documentElement.classList.add("is-modal-open");
             window.requestAnimationFrame(() => {
                 lightbox.classList.add("is-open");
-                lightboxDialog?.focus({ preventScroll: true });
+                (lightboxCloseButton || lightboxDialog)?.focus({ preventScroll: true });
             });
         });
     });
@@ -2263,9 +2746,34 @@ if (lightboxTriggers.length > 0) {
         button.addEventListener("click", closeLightbox);
     });
 
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && !lightbox.hidden) {
+    lightbox.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            event.preventDefault();
+            event.stopPropagation();
             closeLightbox();
+            return;
+        }
+
+        if (event.key !== "Tab") {
+            return;
+        }
+
+        const focusableElements = getLightboxFocusableElements();
+        if (focusableElements.length === 0) {
+            event.preventDefault();
+            lightboxDialog?.focus({ preventScroll: true });
+            return;
+        }
+
+        const first = focusableElements[0];
+        const last = focusableElements[focusableElements.length - 1];
+        if (event.shiftKey && (document.activeElement === first || document.activeElement === lightboxDialog)) {
+            event.preventDefault();
+            last.focus();
+        }
+        else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
         }
     });
 }

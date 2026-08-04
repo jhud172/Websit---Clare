@@ -35,7 +35,7 @@ public class ReviewForm {
 
 	private LocalDate eventDate;
 
-	@AssertTrue(message = "Please confirm you are happy for this review to be considered for publication.")
+	@AssertTrue(message = "Please confirm you give permission for the review and any uploaded photos to be considered for publication.")
 	private boolean consentAccepted;
 
 	public String getReviewerName() {

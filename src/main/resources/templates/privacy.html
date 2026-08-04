@@ -10,9 +10,12 @@
                 <p class="lead">A clear summary of what Clare's Life Celebrations collects, why it is used, and how to ask about your information.</p>
             </div>
             <div class="secondary-brand-panel privacy-stamp" aria-label="Privacy summary">
-                <img th:src="@{${wreathLogoPath}}" alt="" aria-hidden="true">
+                <span class="logo-composite secondary-panel-logo" aria-hidden="true">
+                    <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                    <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                </span>
                 <p class="secondary-status">Personal data</p>
-                <span>Used only for enquiries, ceremony planning and required records.</span>
+                <span>Used only for enquiries, ceremony planning, moderated reviews and required records.</span>
             </div>
         </div>
     </section>
@@ -23,7 +26,7 @@
                 <p class="eyebrow">Plain English summary</p>
                 <h2>The site only asks for details needed to respond properly.</h2>
             </div>
-            <p>Information from enquiries is used to reply, discuss ceremony requirements, prepare services and keep appropriate business records. It is not sold.</p>
+            <p>Information from enquiries and review submissions is used to reply, discuss ceremony requirements, moderate feedback, prepare services and keep appropriate business records. It is not sold.</p>
         </div>
     </section>
 
@@ -34,6 +37,7 @@
                 <ul class="footer-list">
                     <li><a href="#information-collected">Information collected</a></li>
                     <li><a href="#information-used">How information is used</a></li>
+                    <li><a href="#reviews-and-photos">Reviews and photos</a></li>
                     <li><a href="#information-stored">How information is stored</a></li>
                     <li><a href="#sharing-information">Sharing information</a></li>
                     <li><a href="#cookies-and-data">Cookies and website data</a></li>
@@ -47,35 +51,42 @@
                     <span class="policy-number">01</span>
                     <h2>Information collected</h2>
                     <p>When you contact Clare's Life Celebrations, the website may collect your name, email address, phone number, ceremony type, preferred date, venue or location, and any details you include in your message.</p>
+                    <p>If you submit a review, the website may also collect your display name, relationship to the ceremony, star rating, review heading and text, ceremony date, consent choice and any optional photographs you upload.</p>
                 </article>
                 <article class="policy-card" id="information-used">
                     <span class="policy-number">02</span>
                     <h2>How information is used</h2>
-                    <p>Your information is used to respond to your enquiry, discuss ceremony requirements, provide relevant information about services, and manage any next steps connected with your enquiry or booking.</p>
+                    <p>Your information is used to respond to your enquiry, discuss ceremony requirements, provide relevant information about services, manage any next steps connected with your enquiry or booking, and moderate review submissions before publication.</p>
+                </article>
+                <article class="policy-card" id="reviews-and-photos">
+                    <span class="policy-number">03</span>
+                    <h2>Reviews and photos</h2>
+                    <p>Submitting the review form gives Clare's Life Celebrations permission to consider the submission for publication. If approved, the website may publish the name you provide, your relationship to the ceremony, rating, review, ceremony date and any photographs you upload.</p>
+                    <p>Reviews are checked before publication and are never published automatically. You can ask for a published review or photograph to be corrected or removed by using the contact details below. Supporting records may be kept where reasonably needed to show that the review is genuine and that publication permission was provided.</p>
                 </article>
                 <article class="policy-card" id="information-stored">
-                    <span class="policy-number">03</span>
+                    <span class="policy-number">04</span>
                     <h2>How information is stored</h2>
-                    <p>Enquiry details may be stored in Clare's email system and related business records where needed to respond properly, prepare services or keep appropriate administrative records.</p>
+                    <p>Enquiry and review details may be stored in Clare's email system, website administration tools and related business records where needed to respond properly, prepare services, moderate content or keep appropriate administrative records.</p>
                 </article>
                 <article class="policy-card" id="sharing-information">
-                    <span class="policy-number">04</span>
+                    <span class="policy-number">05</span>
                     <h2>Sharing information</h2>
                     <p>Your data is not sold. Information is only shared where necessary to run the website, deliver communications, meet legal obligations or support a service you have asked Clare to provide.</p>
                 </article>
                 <article class="policy-card" id="cookies-and-data">
-                    <span class="policy-number">05</span>
+                    <span class="policy-number">06</span>
                     <h2>Cookies and website data</h2>
                     <p>This website may use essential website technologies needed for normal site operation. It also keeps simple aggregate visit counts, such as daily and weekly page visits, to help understand site activity without storing visitor names, IP addresses or personal profiles.</p>
                     <p>If broader analytics, cookie tools or embedded third-party services are added or changed later, this section should be updated to reflect them accurately.</p>
                 </article>
                 <article class="policy-card" id="your-rights">
-                    <span class="policy-number">06</span>
+                    <span class="policy-number">07</span>
                     <h2>Your rights</h2>
                     <p>You can ask for access to the personal information held about you, request corrections, ask for deletion where appropriate, or raise concerns about how your information is used.</p>
                 </article>
                 <article class="policy-card" id="privacy-contact-details">
-                    <span class="policy-number">07</span>
+                    <span class="policy-number">08</span>
                     <h2>Contact details</h2>
                     <p>For privacy questions or data requests, contact Clare's Life Celebrations by email at <a class="text-link" th:href="'mailto:' + ${site.contactEmail}" th:text="${site.contactEmail}">clarebruntoncelebrant@gmail.com</a>.</p>
                     <p th:if="${site.phoneNumber != null and !#strings.isEmpty(site.phoneNumber)}">Phone: <a class="text-link" th:href="'tel:' + ${site.phoneNumber}" th:text="${site.phoneNumber}">07885 428304</a></p>

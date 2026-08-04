@@ -22,15 +22,17 @@ This keeps the project within the repo rules:
 
 - `/`
 - `/about`
-- `/ceremonies`
+- `/services`
 - `/weddings`
-- `/funerals`
+- `/celebrations-of-life`
 - `/reviews`
 - `/contact`
 - `/privacy`
 - `/thank-you`
 
 The blog routes can remain in the codebase, but they are not part of the launch navigation.
+
+`/ceremonies` and the previous Celebration of Life URL remain as compatibility redirects for saved links and existing search traffic.
 
 ## Local development
 
@@ -139,6 +141,9 @@ If you use Gmail SMTP locally, set `SPRING_MAIL_PASSWORD` to a Google App Passwo
   - `/reviews/admin/login`
   - `/reviews/admin`
 - Approved reviews appear on `/reviews` and approved five-star reviews are featured on the homepage carousel.
+- Jessica's supplied wedding review is source-backed so it remains available across deployments; the former fictional demo reviews are no longer shown or seeded.
+
+The default JSON review store is suitable for local development. The current free Render service has an ephemeral filesystem, so newly submitted reviews and uploaded review photos are not durable across production restarts or redeployments. Moving those submissions to durable external storage or a paid persistent disk requires a separate implementation decision and explicit approval before any billable change.
 
 ## Local visit analytics
 
@@ -165,13 +170,13 @@ Suggested deploy path:
 Before launch, Clare should still sign off:
 
 - final about copy
-- final wedding package wording
-- final wedding pricing
-- final Celebration of Life pricing
-- final Naming Ceremony and Vow Renewal wording and pricing
 - real photography
-- testimonials once available
-- any final wording around travel
+- publication permission and supporting evidence for supplied testimonials
+- whether prices should be shown as fixed or “from” prices, plus their effective date
+- deposits, payment timing, cancellation and rescheduling terms
+- the exact mileage calculation and any final wording around travel
+- the preferred public label for the concise £275–£350 farewell option
+- an official North East Wedding Network profile link and any badge-usage rules
 - any final social profile links
 
 ## Important legal note

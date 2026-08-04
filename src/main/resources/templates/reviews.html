@@ -55,7 +55,9 @@
                          th:classappend="${#lists.isEmpty(review.photoFileNames)} ? ' review-story-card-text-only'">
                     <div class="review-story-content">
                         <div class="review-story-top">
-                            <p class="review-stars"><span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span></p>
+                            <p class="review-stars" th:attr="aria-label=|${review.rating} out of 5 stars|">
+                                <span aria-hidden="true" th:each="star : ${#numbers.sequence(1, review.rating)}">★</span>
+                            </p>
                             <span th:text="${review.ceremonyType}">Wedding ceremony</span>
                         </div>
                         <h3 th:text="${review.headline != null ? review.headline : 'A heartfelt experience'}">A heartfelt experience</h3>
@@ -65,28 +67,34 @@
                              th:classappend="${#lists.size(review.photoFileNames) == 1} ? ' review-photo-grid-single' : (${#lists.size(review.photoFileNames) == 2} ? ' review-photo-grid-pair' : '')">
                             <button class="review-photo-button"
                                     type="button"
-                                    th:each="photo : ${review.photoFileNames}"
+                                    th:each="photo, photoStat : ${review.photoFileNames}"
                                     th:if="${#strings.startsWith(photo, '/')}"
-                                    th:attr="data-lightbox-src=@{${photo}}">
+                                    th:attr="data-lightbox-src=@{${photo}},aria-label=|Open review photo ${photoStat.count} shared by ${review.reviewerName}|">
                                 <img th:src="@{${photo}}"
-                                     alt="Client review photo"
+                                     th:alt="|Review photo ${photoStat.count} shared by ${review.reviewerName}|"
                                      loading="lazy"
                                      draggable="false"
                                      class="protected-image">
                             </button>
                             <button class="review-photo-button"
                                     type="button"
-                                    th:each="photo : ${review.photoFileNames}"
+                                    th:each="photo, photoStat : ${review.photoFileNames}"
                                     th:unless="${#strings.startsWith(photo, '/')}"
-                                    th:attr="data-lightbox-src=@{'/review-photos/' + ${photo}}">
+                                    th:attr="data-lightbox-src=@{'/review-photos/' + ${photo}},aria-label=|Open review photo ${photoStat.count} shared by ${review.reviewerName}|">
                                 <img th:src="@{'/review-photos/' + ${photo}}"
-                                     alt="Client review photo"
+                                     th:alt="|Review photo ${photoStat.count} shared by ${review.reviewerName}|"
                                      loading="lazy"
                                      draggable="false"
                                      class="protected-image">
                             </button>
                         </div>
-                        <p class="review-meta"><strong th:text="${review.reviewerName}">Reviewer</strong><span th:if="${review.reviewerRole != null and !#strings.isEmpty(review.reviewerRole)}"> · </span><span th:if="${review.reviewerRole != null and !#strings.isEmpty(review.reviewerRole)}" th:text="${review.reviewerRole}">Role</span></p>
+                        <p class="review-meta">
+                            <strong th:text="${review.reviewerName}">Reviewer</strong>
+                            <span th:if="${review.reviewerRole != null and !#strings.isEmpty(review.reviewerRole)}"> · </span>
+                            <span th:if="${review.reviewerRole != null and !#strings.isEmpty(review.reviewerRole)}" th:text="${review.reviewerRole}">Role</span>
+                            <span th:if="${review.eventDate != null}"> · </span>
+                            <time th:if="${review.eventDate != null}" th:attr="datetime=${review.eventDate}" th:text="${review.eventDateDisplay}">24 May 2026</time>
+                        </p>
                     </div>
                 </article>
             </div>
@@ -260,20 +268,25 @@
                         <input class="checkbox-input" id="consentAccepted" type="checkbox" th:field="*{consentAccepted}">
                         <label class="checkbox-label" for="consentAccepted">
                             <span class="checkbox-box" aria-hidden="true"></span>
-                            <span>I understand my review will be checked before publication.</span>
+                            <span>I give Clare's Life Celebrations permission to check and, if approved, publish my name, review, ceremony details and any photos I upload.</span>
                         </label>
                     </div>
                     <p class="field-error" th:if="${#fields.hasErrors('consentAccepted')}" th:errors="*{consentAccepted}">Consent error</p>
+                    <p class="form-privacy-note">You can ask for your published review or photos to be removed. See the <a class="text-link" th:href="@{/privacy#reviews-and-photos}">privacy policy</a> for details.</p>
 
                     <div class="review-form-actions">
                         <button class="button button-peacock" type="submit" data-review-submit>Submit review for approval</button>
                         <p>Clare will approve suitable reviews before they go live.</p>
                     </div>
                 </form>
-                <p class="field-error review-form-banner" data-review-form-error th:if="${reviewUploadError != null}" th:text="${reviewUploadError}">Upload error</p>
-                <p class="callout review-form-banner" data-review-form-success th:if="${reviewSubmissionSuccess != null}" th:text="${reviewSubmissionSuccess}">Success message</p>
-                <p class="field-error review-form-banner" data-review-form-error th:unless="${reviewUploadError != null}" hidden></p>
-                <p class="callout review-form-banner" data-review-form-success th:unless="${reviewSubmissionSuccess != null}" hidden></p>
+                <p class="field-error review-form-banner" role="alert" aria-live="assertive" aria-atomic="true"
+                   data-review-form-error th:if="${reviewUploadError != null}" th:text="${reviewUploadError}">Upload error</p>
+                <p class="callout review-form-banner" role="status" aria-live="polite" aria-atomic="true"
+                   data-review-form-success th:if="${reviewSubmissionSuccess != null}" th:text="${reviewSubmissionSuccess}">Success message</p>
+                <p class="field-error review-form-banner" role="alert" aria-live="assertive" aria-atomic="true"
+                   data-review-form-error th:unless="${reviewUploadError != null}" hidden></p>
+                <p class="callout review-form-banner" role="status" aria-live="polite" aria-atomic="true"
+                   data-review-form-success th:unless="${reviewSubmissionSuccess != null}" hidden></p>
             </div>
         </div>
     </section>

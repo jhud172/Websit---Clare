@@ -18,6 +18,8 @@ import co.uk.clarebrunton.ceremonies.service.ReviewService;
 
 class ReviewServiceTest {
 
+	private static final String JESSICA_REVIEW_ID = "client-review-jessica-wedding-2026-05-24";
+
 	private ReviewService createService(Path tempDir) {
 		ReviewProperties properties = new ReviewProperties();
 		properties.setStorageDirectory(tempDir.toString());
@@ -41,6 +43,40 @@ class ReviewServiceTest {
 	}
 
 	@Test
+	void sourceBackedJessicaReviewReplacesPublicDemoFallback(@TempDir Path tempDir) {
+		ReviewService service = createService(tempDir);
+
+		List<ReviewEntry> approved = service.getApprovedReviews();
+
+		assertThat(approved).singleElement().satisfies(review -> {
+			assertThat(review.getId()).isEqualTo(JESSICA_REVIEW_ID);
+			assertThat(review.getReviewerName()).isEqualTo("Jessica");
+			assertThat(review.getHeadline()).isEqualTo("The most special wedding day");
+			assertThat(review.getEventDate()).isEqualTo(LocalDate.of(2026, 5, 24));
+			assertThat(review.getEventDateDisplay()).isEqualTo("24 May 2026");
+			assertThat(review.getRating()).isEqualTo(5);
+		});
+		assertThat(service.getApprovedReviews()).hasSize(1);
+		assertThat(service.getManageableReviews()).isEmpty();
+	}
+
+	@Test
+	void approvedPersistedCopyOfJessicaReviewIsNotDuplicated(@TempDir Path tempDir) {
+		ReviewService service = createService(tempDir);
+		ReviewForm form = validForm();
+		form.setReviewerName(" Jessica ");
+		form.setHeadline("The most special wedding day");
+		form.setEventDate(LocalDate.of(2026, 5, 24));
+
+		ReviewEntry persisted = service.submitReview(form, List.of());
+		service.approveReview(persisted.getId(), "Imported with publication evidence");
+
+		assertThat(service.getApprovedReviews()).singleElement()
+				.extracting(ReviewEntry::getId)
+				.isEqualTo(persisted.getId());
+	}
+
+	@Test
 	void submitReviewStoresPendingReviewAndAllowsModeration(@TempDir Path tempDir) {
 		ReviewService service = createService(tempDir);
 
@@ -50,15 +86,20 @@ class ReviewServiceTest {
 		assertThat(pending).hasSize(1);
 		ReviewEntry pendingEntry = pending.get(0);
 		assertThat(pendingEntry.getStatus()).isEqualTo(ReviewStatus.PENDING);
-		assertThat(service.getApprovedReviews()).isEmpty();
+		assertThat(service.getApprovedReviews())
+				.extracting(ReviewEntry::getId)
+				.containsExactly(JESSICA_REVIEW_ID);
 
 		service.approveReview(pendingEntry.getId(), "Verified genuine");
 
 		List<ReviewEntry> approved = service.getApprovedReviews();
-		assertThat(approved).hasSize(1);
-		assertThat(approved.get(0).getStatus()).isEqualTo(ReviewStatus.APPROVED);
-		assertThat(approved.get(0).getModerationNote()).isEqualTo("Verified genuine");
-		assertThat(service.getApprovedFiveStarReviews()).hasSize(1);
+		assertThat(approved).hasSize(2);
+		assertThat(approved).filteredOn(review -> review.getId().equals(pendingEntry.getId())).singleElement()
+				.satisfies(review -> {
+					assertThat(review.getStatus()).isEqualTo(ReviewStatus.APPROVED);
+					assertThat(review.getModerationNote()).isEqualTo("Verified genuine");
+				});
+		assertThat(service.getApprovedFiveStarReviews()).hasSize(2);
 		assertThat(service.getPendingReviews()).isEmpty();
 	}
 
@@ -71,7 +112,9 @@ class ReviewServiceTest {
 		service.rejectReview(pendingEntry.getId(), "Insufficient detail");
 
 		assertThat(service.getPendingReviews()).isEmpty();
-		assertThat(service.getApprovedReviews()).isEmpty();
+		assertThat(service.getApprovedReviews())
+				.extracting(ReviewEntry::getId)
+				.containsExactly(JESSICA_REVIEW_ID);
 		assertThat(service.getManageableReviews()).isEmpty();
 	}
 
@@ -95,7 +138,9 @@ class ReviewServiceTest {
 
 		service.deleteReview(pendingEntry.getId());
 
-		assertThat(service.getApprovedReviews()).isEmpty();
+		assertThat(service.getApprovedReviews())
+				.extracting(ReviewEntry::getId)
+				.containsExactly(JESSICA_REVIEW_ID);
 		assertThat(service.getManageableReviews()).isEmpty();
 	}
 
@@ -108,15 +153,17 @@ class ReviewServiceTest {
 
 		service.disableReview(pendingEntry.getId());
 
-		assertThat(service.getApprovedReviews()).isEmpty();
-		assertThat(service.getApprovedFiveStarReviews()).isEmpty();
+		assertThat(service.getApprovedReviews())
+				.extracting(ReviewEntry::getId)
+				.containsExactly(JESSICA_REVIEW_ID);
+		assertThat(service.getApprovedFiveStarReviews()).hasSize(1);
 		assertThat(service.getManageableReviews()).singleElement()
 				.extracting(ReviewEntry::getStatus)
 				.isEqualTo(ReviewStatus.DISABLED);
 
 		service.enableReview(pendingEntry.getId());
 
-		assertThat(service.getApprovedReviews()).hasSize(1);
+		assertThat(service.getApprovedReviews()).hasSize(2);
 		assertThat(service.getManageableReviews()).singleElement()
 				.extracting(ReviewEntry::getStatus)
 				.isEqualTo(ReviewStatus.APPROVED);

@@ -1,1 +1,1 @@
-Funeral Image Placeholders\n\nAdd funeral-specific supporting images here when available, for example:\n- funeral-hero-dark-tones.jpg\n- flowers-detail.jpg\n\nCurrent funeral imagery is temporarily sourced from /images/clare/.\n
+Celebration of Life image assets\n\nThis directory keeps its existing technical path so deployed image links remain compatible. All visitor-facing wording uses Celebration of Life.\n

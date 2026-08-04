@@ -157,9 +157,9 @@
 .header-cta {
     position: relative;
     flex-shrink: 0;
-    min-width: 15.3rem;
+    min-width: 13rem;
     min-height: 3.25rem;
-    padding: 0.72rem 1.45rem;
+    padding: 0.72rem 1.1rem;
     overflow: visible;
     flex-direction: column;
     gap: 0.08rem;

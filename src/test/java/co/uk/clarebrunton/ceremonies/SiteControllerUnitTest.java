@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.http.HttpStatus;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -45,14 +46,42 @@ class SiteControllerUnitTest {
 		assertThat(controller.services(new ExtendedModelMap())).isEqualTo("ceremonies");
 		assertThat(controller.weddings(new ExtendedModelMap())).isEqualTo("weddings");
 		assertThat(controller.celebrationsOfLife(new ExtendedModelMap())).isEqualTo("funerals");
-		assertThat(controller.funeralsRedirect()).isEqualTo("redirect:/celebrations-of-life");
 		assertThat(controller.reviews(new ExtendedModelMap())).isEqualTo("reviews");
 		assertThat(controller.contact(new ExtendedModelMap())).isEqualTo("redirect:/");
 		assertThat(controller.privacy(new ExtendedModelMap())).isEqualTo("privacy");
 		assertThat(controller.thankYou(new ExtendedModelMap())).isEqualTo("thank-you");
-		assertThat(controller.ceremoniesRedirect()).isEqualTo("redirect:/services");
 		verify(reviewService).getApprovedFiveStarReviews();
 		verify(reviewService).getApprovedReviews();
+	}
+
+	@Test
+	void homeUsesRequestedDurhamSearchWording() {
+		ExtendedModelMap model = new ExtendedModelMap();
+		when(reviewService.getApprovedFiveStarReviews()).thenReturn(List.of());
+
+		assertThat(controller.home(model)).isEqualTo("home");
+		assertThat(model.getAttribute("pageTitle"))
+				.isEqualTo("Weddings and Celebrations of Life in Durham");
+		assertThat(model.getAttribute("pageDescription"))
+				.asString()
+				.startsWith("Weddings and Celebrations of Life in Durham");
+	}
+
+	@Test
+	void legacyCelebrationOfLifeUrlsRedirectPermanently() {
+		var serviceRedirect = controller.funeralsRedirect();
+		var articleRedirect = controller.legacyCelebrationOfLifeBlogRedirect();
+		var ceremoniesRedirect = controller.ceremoniesRedirect();
+
+		assertThat(serviceRedirect.getStatusCode()).isEqualTo(HttpStatus.MOVED_PERMANENTLY);
+		assertThat(serviceRedirect.getHeaders().getLocation())
+				.hasToString("/celebrations-of-life");
+		assertThat(articleRedirect.getStatusCode()).isEqualTo(HttpStatus.MOVED_PERMANENTLY);
+		assertThat(articleRedirect.getHeaders().getLocation())
+				.hasToString("/blog/how-to-shape-a-celebration-of-life-tribute");
+		assertThat(ceremoniesRedirect.getStatusCode()).isEqualTo(HttpStatus.MOVED_PERMANENTLY);
+		assertThat(ceremoniesRedirect.getHeaders().getLocation())
+				.hasToString("/services");
 	}
 
 	@Test

@@ -15,7 +15,10 @@
 
             <aside class="thank-you-confirmation" aria-label="Enquiry confirmation">
                 <div class="thank-you-mark">
-                    <img th:src="@{${wreathLogoPath}}" alt="" aria-hidden="true">
+                    <span class="logo-composite thank-you-logo" aria-hidden="true">
+                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    </span>
                 </div>
                 <div>
                     <p class="thank-you-status">Safely submitted</p>

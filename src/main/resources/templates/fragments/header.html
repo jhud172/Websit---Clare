@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
 <header class="site-header" data-site-header th:fragment="site-header(activePage)">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <div class="shell header-inner">
         <a class="brand" th:href="@{/}" aria-label="Go to the home page">
             <span class="brand-lockup">
@@ -30,18 +31,36 @@
             </span>
         </button>
 
-        <nav class="site-nav" id="site-navigation" data-site-nav>
-            <a th:href="@{/}" th:classappend="${activePage == 'home'} ? ' is-active'">Home</a>
-            <a th:href="@{/about}" th:classappend="${activePage == 'about'} ? ' is-active'">About</a>
-            <a th:href="@{/services}" th:classappend="${activePage == 'services'} ? ' is-active'">Services</a>
-            <a th:href="@{/weddings}" th:classappend="${activePage == 'weddings'} ? ' is-active'">Weddings</a>
-            <a th:href="@{/celebrations-of-life}" th:classappend="${activePage == 'celebrations-of-life'} ? ' is-active'">Celebrations of Life</a>
-            <a th:href="@{/faq}" th:classappend="${activePage == 'faq'} ? ' is-active'">FAQ</a>
-            <a th:href="@{/reviews}" th:classappend="${activePage == 'reviews'} ? ' is-active'">Reviews</a>
+        <nav class="site-nav" id="site-navigation" aria-label="Primary navigation" data-site-nav>
+            <a th:href="@{/}"
+               th:classappend="${activePage == 'home'} ? ' is-active'"
+               th:attr="aria-current=${activePage == 'home' ? 'page' : null}">Home</a>
+            <a th:href="@{/about}"
+               th:classappend="${activePage == 'about'} ? ' is-active'"
+               th:attr="aria-current=${activePage == 'about' ? 'page' : null}">About</a>
+            <a th:href="@{/services}"
+               th:classappend="${activePage == 'services'} ? ' is-active'"
+               th:attr="aria-current=${activePage == 'services' ? 'page' : null}">Services</a>
+            <a th:href="@{/weddings}"
+               th:classappend="${activePage == 'weddings'} ? ' is-active'"
+               th:attr="aria-current=${activePage == 'weddings' ? 'page' : null}">Weddings</a>
+            <a th:href="@{/celebrations-of-life}"
+               th:classappend="${activePage == 'celebrations-of-life'} ? ' is-active'"
+               th:attr="aria-current=${activePage == 'celebrations-of-life' ? 'page' : null}">Celebrations of Life</a>
+            <a th:href="@{/faq}"
+               th:classappend="${activePage == 'faq'} ? ' is-active'"
+               th:attr="aria-current=${activePage == 'faq' ? 'page' : null}">FAQ</a>
+            <a th:href="@{/reviews}"
+               th:classappend="${activePage == 'reviews'} ? ' is-active'"
+               th:attr="aria-current=${activePage == 'reviews' ? 'page' : null}">Reviews</a>
+            <button class="site-nav-enquiry button button-peacock"
+                    type="button"
+                    aria-haspopup="dialog"
+                    data-open-enquiry-modal>Make an enquiry</button>
         </nav>
 
         <div class="header-actions">
-            <button class="button button-peacock header-cta" type="button" data-open-enquiry-modal>
+            <button class="button button-peacock header-cta" type="button" aria-haspopup="dialog" data-open-enquiry-modal>
                 <span class="header-cta-label">Make an enquiry</span>
                 <span class="header-cta-sub">Tell Clare about your ceremony</span>
                 <span class="feather left"></span>

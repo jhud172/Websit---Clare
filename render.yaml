@@ -19,7 +19,7 @@ services:
       - key: SITE_INSTAGRAM_URL
         value: ""
       - key: SITE_BASE_URL
-        value: https://www.clarebruntonlifeceremonies.com
+        value: https://clareslifecelebrations.com
       - key: SITE_FROM_EMAIL
         sync: false
       - key: INQUIRY_NOTIFICATION_EMAIL

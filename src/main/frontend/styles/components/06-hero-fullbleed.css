@@ -236,7 +236,7 @@
    Mobile nav slide-in animation
 ─────────────────────────────────────────── */
 
-@media (max-width: 1040px) {
+@media (max-width: 1240px) {
     [data-site-nav].is-open {
         animation: nav-enter 260ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
     }
@@ -250,6 +250,12 @@
             opacity: 1;
             transform: translateY(0) scale(1);
         }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-site-nav].is-open {
+        animation: none;
     }
 }
 

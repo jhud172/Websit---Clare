@@ -2,31 +2,41 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'blog', ~{::main})}">
 <main class="theme-journal">
-    <section class="page-hero">
+    <section class="page-hero section-reveal-zone" aria-labelledby="journal-heading">
         <div class="shell page-hero-inner">
             <div>
                 <p class="eyebrow">Journal</p>
-                <h1>Notes on ceremony, meaning and moments that matter.</h1>
+                <h1 id="journal-heading">Notes on ceremony, meaning and moments that matter.</h1>
             </div>
             <p class="lead">Reflections and practical guidance for couples, families and anyone planning a ceremony with warmth, dignity and individuality.</p>
         </div>
     </section>
 
-    <section class="section">
-        <div class="shell article-stack">
-            <article class="article-row" th:each="post : ${posts}">
-                <div class="article-column">
-                    <p class="article-meta">
-                        <span th:text="${post.category()}">Planning</span>
-                        <span th:text="${post.publishedOn()}">May 2026</span>
-                    </p>
-                    <h2 th:text="${post.title()}">Questions to ask before booking a celebrant</h2>
-                </div>
-                <div class="article-column">
-                    <p th:text="${post.excerpt()}">Placeholder excerpt.</p>
-                    <a class="text-link" th:href="@{/blog/{slug}(slug=${post.slug()})}">Open article</a>
-                </div>
-            </article>
+    <section class="section section-reveal-zone" aria-labelledby="journal-guidance-heading">
+        <div class="shell">
+            <div class="section-heading">
+                <p class="eyebrow">Ideas and guidance</p>
+                <h2 id="journal-guidance-heading">Helpful reading for ceremonies that feel personal.</h2>
+                <p>Explore thoughtful advice from Clare on wedding ceremonies, celebrations of life and the meaningful moments in between.</p>
+            </div>
+            <div class="article-stack">
+                <article class="article-row" th:each="post : ${posts}">
+                    <div class="article-column">
+                        <p class="article-meta">
+                            <span th:text="${post.category()}">Planning</span>
+                            <span th:text="${post.publishedOn()}">May 2026</span>
+                        </p>
+                        <h3>
+                            <a th:href="@{/blog/{slug}(slug=${post.slug()})}"
+                               th:text="${post.title()}">Questions to ask before booking a celebrant</a>
+                        </h3>
+                    </div>
+                    <div class="article-column">
+                        <p th:text="${post.excerpt()}">Practical guidance to help you plan a ceremony that feels natural, meaningful and completely your own.</p>
+                        <a class="text-link" th:href="@{/blog/{slug}(slug=${post.slug()})}">Read article</a>
+                    </div>
+                </article>
+            </div>
         </div>
     </section>
 </main>

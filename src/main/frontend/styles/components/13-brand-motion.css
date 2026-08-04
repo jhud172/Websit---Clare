@@ -1,0 +1,204 @@
+/* Shared peacock-light interaction for every layered Clare emblem. */
+
+:where(.logo-composite, .peacock-badge-logo) {
+    position: relative;
+    isolation: isolate;
+    transform-origin: center;
+    transition:
+        transform 520ms cubic-bezier(0.22, 1, 0.36, 1),
+        filter 520ms ease;
+}
+
+:where(.logo-composite, .peacock-badge-logo)::before {
+    content: "";
+    position: absolute;
+    inset: -18%;
+    z-index: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 28% 30%, rgba(20, 173, 170, 0.28), transparent 35%),
+        radial-gradient(circle at 72% 68%, rgba(214, 199, 145, 0.3), transparent 38%),
+        radial-gradient(circle, rgba(36, 124, 135, 0.15), transparent 68%);
+    opacity: 0;
+    transform: scale(0.74);
+    filter: blur(10px);
+    transition:
+        opacity 480ms ease,
+        transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:where(.logo-composite, .peacock-badge-logo)::after {
+    content: "";
+    position: absolute;
+    inset: -5%;
+    z-index: 6;
+    border-radius: 50%;
+    clip-path: circle(48%);
+    pointer-events: none;
+    background: linear-gradient(
+        112deg,
+        transparent 28%,
+        rgba(255, 246, 205, 0.48) 46%,
+        rgba(20, 173, 170, 0.3) 53%,
+        transparent 70%
+    );
+    opacity: 0;
+    mix-blend-mode: screen;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    :is(.logo-composite, .peacock-badge-logo):hover,
+    :where(
+        .brand,
+        .footer-brand,
+        .service-path-card,
+        .detail-card,
+        .wedding-intro-points article,
+        .funeral-support-grid article,
+        .reviews-hero-photo-mark,
+        .reviews-hero-photo-stack,
+        .reviews-proof-item,
+        .review-submission-form,
+        .secondary-empty-state,
+        .service-rail-item,
+        .faq-hero-panel
+    ):is(:hover, :focus-visible, :focus-within) :is(.logo-composite, .peacock-badge-logo) {
+        transform: translateY(-2px) scale(1.02);
+        filter:
+            drop-shadow(0 17px 32px rgba(0, 0, 0, 0.28))
+            drop-shadow(0 0 18px rgba(20, 173, 170, 0.14));
+    }
+
+    :is(.logo-composite, .peacock-badge-logo):hover::before,
+    :where(
+        .brand,
+        .footer-brand,
+        .service-path-card,
+        .detail-card,
+        .wedding-intro-points article,
+        .funeral-support-grid article,
+        .reviews-hero-photo-mark,
+        .reviews-hero-photo-stack,
+        .reviews-proof-item,
+        .review-submission-form,
+        .secondary-empty-state,
+        .service-rail-item,
+        .faq-hero-panel
+    ):is(:hover, :focus-visible, :focus-within) :is(.logo-composite, .peacock-badge-logo)::before {
+        opacity: 1;
+        transform: scale(1.06);
+    }
+
+    :is(.logo-composite, .peacock-badge-logo):hover::after,
+    :where(
+        .brand,
+        .footer-brand,
+        .service-path-card,
+        .detail-card,
+        .wedding-intro-points article,
+        .funeral-support-grid article,
+        .reviews-hero-photo-mark,
+        .reviews-hero-photo-stack,
+        .reviews-proof-item,
+        .review-submission-form,
+        .secondary-empty-state,
+        .service-rail-item,
+        .faq-hero-panel
+    ):is(:hover, :focus-visible, :focus-within) :is(.logo-composite, .peacock-badge-logo)::after {
+        animation: peacock-logo-sheen 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    :is(.logo-composite, .peacock-badge-logo):hover .logo-wreath,
+    :where(
+        .brand,
+        .footer-brand,
+        .service-path-card,
+        .detail-card,
+        .wedding-intro-points article,
+        .funeral-support-grid article,
+        .reviews-hero-photo-mark,
+        .reviews-hero-photo-stack,
+        .reviews-proof-item,
+        .review-submission-form,
+        .secondary-empty-state,
+        .service-rail-item,
+        .faq-hero-panel
+    ):is(:hover, :focus-visible, :focus-within) :is(.logo-composite, .peacock-badge-logo) .logo-wreath {
+        transform: scale(calc(var(--logo-wreath-scale, 1.2) * 1.025));
+        filter:
+            saturate(1.08)
+            brightness(1.05)
+            drop-shadow(0 0 16px rgba(214, 199, 145, 0.24))
+            drop-shadow(0 13px 24px rgba(0, 0, 0, 0.25));
+    }
+
+    :is(.logo-composite, .peacock-badge-logo):hover .logo-clc,
+    :where(
+        .brand,
+        .footer-brand,
+        .service-path-card,
+        .detail-card,
+        .wedding-intro-points article,
+        .funeral-support-grid article,
+        .reviews-hero-photo-mark,
+        .reviews-hero-photo-stack,
+        .reviews-proof-item,
+        .review-submission-form,
+        .secondary-empty-state,
+        .service-rail-item,
+        .faq-hero-panel
+    ):is(:hover, :focus-visible, :focus-within) :is(.logo-composite, .peacock-badge-logo) .logo-clc {
+        transform: translateY(-0.5%) scale(1.025);
+        filter:
+            brightness(1.06)
+            drop-shadow(0 3px 11px rgba(0, 0, 0, 0.28))
+            drop-shadow(0 0 11px rgba(214, 199, 145, 0.18));
+    }
+}
+
+@keyframes peacock-logo-sheen {
+    0% {
+        opacity: 0;
+        transform: translateX(-58%) skewX(-13deg);
+    }
+
+    36% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(58%) skewX(-13deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :where(.logo-composite, .peacock-badge-logo),
+    :where(.logo-composite, .peacock-badge-logo)::before,
+    :where(.logo-composite, .peacock-badge-logo)::after,
+    :where(.logo-composite, .peacock-badge-logo) .logo-clc,
+    :where(.logo-composite, .peacock-badge-logo) .logo-wreath {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    :where(.logo-composite, .peacock-badge-logo) {
+        transform: none !important;
+    }
+
+    :where(.logo-composite, .peacock-badge-logo)::before,
+    :where(.logo-composite, .peacock-badge-logo)::after {
+        opacity: 0 !important;
+    }
+
+    .logo-composite .logo-wreath,
+    .peacock-badge-logo .logo-wreath {
+        transform: scale(var(--logo-wreath-scale, 1.2)) !important;
+    }
+
+    .logo-composite .logo-clc,
+    .peacock-badge-logo .logo-clc {
+        transform: translateY(1%) scale(1) !important;
+    }
+}

@@ -162,14 +162,6 @@
     touch-action: manipulation;
 }
 
-.protected-heading,
-.hero-copy h1,
-.media-stage-overlay,
-.visual-caption {
-    -webkit-user-select: none;
-    user-select: none;
-}
-
 .theme-about .page-hero {
     background:
         radial-gradient(circle at 88% 16%, color-mix(in srgb, var(--peacock-gold) 18%, transparent), transparent 18rem),
@@ -261,10 +253,9 @@
     opacity: 0;
     transform: translateX(4%) scale(1.015);
     transition:
-        opacity 700ms ease,
-        transform 920ms cubic-bezier(0.18, 0.86, 0.24, 1),
-        filter 920ms ease;
-    will-change: opacity, transform, filter;
+        opacity var(--motion-editorial) ease,
+        transform var(--motion-editorial) var(--ease-expressive),
+        filter var(--motion-editorial) ease;
 }
 
 .about-image-slide.is-active,
@@ -289,12 +280,12 @@
 
 .about-image-carousel[data-carousel-direction="next"] .about-image-slide.is-entering,
 .about-story-carousel[data-carousel-direction="next"] .about-story-slide.is-entering {
-    animation: about-slide-in-next 920ms cubic-bezier(0.18, 0.86, 0.24, 1) both;
+    animation: about-slide-in-next var(--motion-editorial) var(--ease-expressive) both;
 }
 
 .about-image-carousel[data-carousel-direction="previous"] .about-image-slide.is-entering,
 .about-story-carousel[data-carousel-direction="previous"] .about-story-slide.is-entering {
-    animation: about-slide-in-previous 920ms cubic-bezier(0.18, 0.86, 0.24, 1) both;
+    animation: about-slide-in-previous var(--motion-editorial) var(--ease-expressive) both;
 }
 
 .about-image-slide::before,
@@ -468,22 +459,22 @@
 
 @keyframes about-slide-in-next {
     0% {
-        clip-path: inset(0 100% 0 0 round var(--radius));
-        transform: translateX(5%) scale(1.025);
+        opacity: 0;
+        transform: translateX(3%) scale(1.018);
     }
     100% {
-        clip-path: inset(0 0 0 0 round var(--radius));
+        opacity: 1;
         transform: translateX(0) scale(1);
     }
 }
 
 @keyframes about-slide-in-previous {
     0% {
-        clip-path: inset(0 0 0 100% round var(--radius));
-        transform: translateX(-5%) scale(1.025);
+        opacity: 0;
+        transform: translateX(-3%) scale(1.018);
     }
     100% {
-        clip-path: inset(0 0 0 0 round var(--radius));
+        opacity: 1;
         transform: translateX(0) scale(1);
     }
 }
@@ -546,23 +537,18 @@
 }
 
 .services-hero-slide {
-    opacity: 0;
-    transform: scale(1.04);
-    transition:
-        opacity 900ms ease,
-        transform 6400ms ease;
-    will-change: opacity, transform;
+    opacity: 1;
+    transition: none;
 }
 
 .services-hero-slide.is-active,
 .services-hero-slide.is-entering {
     opacity: 1;
-    transform: scale(1);
 }
 
 .services-hero-slide.is-entering {
     z-index: 2;
-    animation: services-image-wipe 880ms cubic-bezier(0.18, 0.86, 0.24, 1) both;
+    animation: none;
 }
 
 .services-hero-slide.is-leaving {
@@ -620,7 +606,7 @@
 }
 
 .services-hero-copy h1 {
-    font-size: clamp(3.5rem, 6.3vw, 6.95rem);
+    font-size: clamp(3.5rem, 5.2vw, 5.8rem);
     line-height: 1.02;
     max-width: 13.4ch;
 }
@@ -634,8 +620,9 @@
 .service-rail-item {
     position: relative;
     display: grid;
-    grid-template-columns: 2.5rem minmax(0, 1fr);
+    grid-template-columns: 3.65rem minmax(0, 1fr);
     gap: 0.25rem 1rem;
+    align-items: center;
     padding: 1.1rem 1.15rem;
     border-radius: 18px;
     border: 1px solid rgba(243, 244, 246, 0.13);
@@ -681,11 +668,14 @@
     transform: translateY(0);
 }
 
-.service-rail-item span {
-    grid-row: span 2;
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    color: var(--peacock-gold);
+.service-rail-logo {
+    --logo-clc-size: 82;
+    --logo-wreath-scale: 1.18;
+    grid-row: 1 / span 2;
+    align-self: center;
+    justify-self: center;
+    width: clamp(2.8rem, 4vw, 3.25rem);
+    overflow: visible;
 }
 
 .service-rail-item strong {
@@ -853,6 +843,103 @@
     background: #d6c791;
 }
 
+.life-packages-section {
+    padding-top: clamp(6rem, 10vw, 9rem);
+    padding-bottom: clamp(6rem, 10vw, 9rem);
+    background:
+        radial-gradient(circle at 14% 8%, rgba(0, 137, 123, 0.08), transparent 24rem),
+        radial-gradient(circle at 88% 38%, rgba(214, 199, 145, 0.08), transparent 28rem),
+        linear-gradient(155deg, #111417 0%, #1b1e22 48%, #090b0d 100%);
+}
+
+.ceremony-package-block {
+    min-width: 0;
+}
+
+.ceremony-package-block-separated {
+    margin-top: clamp(5rem, 9vw, 8rem);
+    padding-top: clamp(4rem, 7vw, 6rem);
+    border-top: 1px solid rgba(243, 244, 246, 0.12);
+}
+
+.ceremony-package-heading {
+    max-width: 62rem;
+    margin-bottom: clamp(2rem, 4vw, 3.2rem);
+}
+
+.ceremony-package-heading h2 {
+    max-width: 14ch;
+    margin-bottom: 1.25rem;
+    color: rgba(247, 247, 244, 0.95);
+    font-size: clamp(3rem, 5.6vw, 5.8rem);
+    line-height: 1.04;
+    overflow-wrap: anywhere;
+}
+
+.ceremony-package-heading p:not(.eyebrow) {
+    max-width: 52rem;
+    color: rgba(238, 240, 238, 0.76);
+    line-height: 1.72;
+}
+
+.ceremony-package-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 2.4vw, 1.6rem);
+    align-items: stretch;
+}
+
+.life-package-card {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    min-height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+    padding: clamp(1.4rem, 3vw, 2.4rem);
+    border: 1px solid rgba(243, 244, 246, 0.12);
+    border-radius: 30px;
+    background:
+        radial-gradient(circle at 86% 10%, rgba(214, 199, 145, 0.1), transparent 13rem),
+        linear-gradient(145deg, rgba(39, 43, 51, 0.96), rgba(15, 17, 22, 0.96));
+    box-shadow: 0 28px 72px rgba(0, 0, 0, 0.34);
+    transition:
+        transform 280ms cubic-bezier(0.2, 0.75, 0.25, 1),
+        border-color 280ms ease,
+        box-shadow 280ms ease;
+}
+
+.life-package-card-featured {
+    border-color: rgba(214, 199, 145, 0.38);
+    background:
+        radial-gradient(circle at 74% 8%, rgba(214, 199, 145, 0.18), transparent 15rem),
+        radial-gradient(circle at 8% 92%, rgba(0, 137, 123, 0.08), transparent 12rem),
+        linear-gradient(145deg, rgba(48, 52, 58, 0.98), rgba(18, 20, 25, 0.96));
+}
+
+.life-package-card:hover,
+.life-package-card:focus-within {
+    transform: translateY(-0.45rem);
+    border-color: rgba(214, 199, 145, 0.34);
+    box-shadow: 0 34px 86px rgba(0, 0, 0, 0.46);
+}
+
+.life-package-card h3 {
+    max-width: 15ch;
+    color: rgba(247, 247, 244, 0.95);
+    font-size: clamp(2.35rem, 4vw, 4rem);
+    line-height: 1.04;
+    overflow-wrap: anywhere;
+}
+
+.life-package-card li {
+    color: rgba(238, 240, 238, 0.74);
+}
+
+.ceremony-extras-block {
+    margin-top: clamp(5rem, 9vw, 8rem);
+}
+
 .service-path-panel:hover .service-path-image img,
 .service-path-panel:focus-within .service-path-image img {
     transform: scale(1.075);
@@ -929,9 +1016,8 @@
     opacity: 0;
     transform: translateX(5%) scale(1.02);
     transition:
-        opacity 680ms ease,
-        transform 900ms cubic-bezier(0.18, 0.86, 0.24, 1);
-    will-change: opacity, transform;
+        opacity var(--motion-editorial) ease,
+        transform var(--motion-editorial) var(--ease-expressive);
     z-index: 1;
     backface-visibility: hidden;
     transform-origin: center;
@@ -973,7 +1059,6 @@
     filter: saturate(1.06) contrast(1.06) brightness(0.88);
     transform: scale(1.02);
     transition: transform 7s ease, filter 680ms ease;
-    will-change: transform;
     backface-visibility: hidden;
 }
 
@@ -1185,15 +1270,6 @@
     color: rgba(238, 240, 238, 0.72);
 }
 
-@keyframes services-image-wipe {
-    0% {
-        clip-path: inset(0 100% 0 0 round 28px);
-    }
-    100% {
-        clip-path: inset(0 0 0 0 round 28px);
-    }
-}
-
 .theme-funeral .page-hero .story-copy p,
 .theme-funeral .page-hero .story-copy .lead,
 .theme-funeral .page-hero .eyebrow {
@@ -1367,13 +1443,13 @@
 .funeral-hero-copy h1 {
     max-width: 12ch;
     margin-bottom: 1rem;
-    font-size: clamp(4.25rem, 8.8vw, 8.6rem);
+    font-size: clamp(3.8rem, 6.6vw, 6.55rem);
     line-height: 1.02;
 }
 
 .funeral-hero-copy h1 {
     max-width: 13ch;
-    font-size: clamp(4rem, 7.6vw, 7.4rem);
+    font-size: clamp(3.65rem, 6vw, 5.95rem);
 }
 
 .wedding-hero-copy .lead,
@@ -1475,7 +1551,8 @@
 
 .wedding-story-section,
 .wedding-process-section,
-.wedding-legal-section {
+.wedding-legal-section,
+.wedding-comparison-section {
     background:
         radial-gradient(circle at 18% 12%, rgba(84, 101, 103, 0.18), transparent 25rem),
         radial-gradient(circle at 92% 86%, rgba(214, 199, 145, 0.08), transparent 24rem),
@@ -1484,9 +1561,14 @@
 
 .wedding-process-section,
 .wedding-legal-section,
+.wedding-comparison-section,
 .funeral-memory-section,
 .services-final-section {
     padding-top: calc(var(--safe-header-gap) + clamp(6rem, 10vw, 9rem));
+}
+
+.wedding-comparison-section {
+    padding-top: clamp(5rem, 8vw, 7.5rem);
 }
 
 .funeral-intro-section,
@@ -1547,6 +1629,7 @@
 .wedding-packages-heading h2,
 .wedding-process h2,
 .wedding-legal-copy h2,
+.wedding-comparison-copy h2,
 .wedding-final-panel h2,
 .funeral-intro-copy h2,
 .funeral-options-heading h2,
@@ -1573,6 +1656,7 @@
 .wedding-packages-heading p,
 .wedding-process p,
 .wedding-legal-copy p,
+.wedding-comparison-copy p,
 .wedding-final-panel p,
 .funeral-intro-copy p,
 .funeral-options-heading p,
@@ -1636,19 +1720,6 @@
     align-self: start;
     width: clamp(3.4rem, 4.6vw, 4rem);
     overflow: visible;
-}
-
-.wedding-intro-points article:hover .wedding-intro-logo .logo-wreath,
-.wedding-intro-points article:focus-within .wedding-intro-logo .logo-wreath {
-    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
-    filter:
-        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
-        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
-}
-
-.wedding-intro-points article:hover .wedding-intro-logo .logo-clc,
-.wedding-intro-points article:focus-within .wedding-intro-logo .logo-clc {
-    transform: translateY(1%) scale(1.035);
 }
 
 .wedding-intro-points h3,
@@ -1720,6 +1791,47 @@
 .funeral-options-heading {
     max-width: 58rem;
     margin-bottom: clamp(1.6rem, 4vw, 3rem);
+}
+
+.package-section-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.52fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.package-section-intro .wedding-packages-heading {
+    margin-bottom: 0;
+}
+
+.wedding-network-membership {
+    display: grid;
+    grid-template-columns: clamp(7.5rem, 11vw, 10.5rem) minmax(0, 1fr);
+    gap: clamp(1rem, 2vw, 1.5rem);
+    align-items: center;
+    min-width: 0;
+    padding: clamp(1rem, 2.2vw, 1.5rem);
+    border-block: 1px solid rgba(214, 199, 145, 0.24);
+}
+
+.wedding-network-membership img {
+    display: block;
+    width: 100%;
+    max-width: 10.5rem;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.36));
+}
+
+.wedding-network-membership .eyebrow {
+    margin-bottom: 0.55rem;
+}
+
+.wedding-network-membership p:last-child {
+    margin: 0;
+    color: rgba(247, 247, 244, 0.8);
+    line-height: 1.55;
 }
 
 .wedding-editorial-carousel,
@@ -1842,7 +1954,10 @@
 
 .wedding-package,
 .funeral-option {
+    display: flex;
     min-height: 28rem;
+    min-width: 0;
+    flex-direction: column;
     padding: clamp(1.4rem, 3vw, 2.4rem);
     border-radius: 30px;
     transition:
@@ -1876,6 +1991,169 @@
 .wedding-package-featured:hover,
 .wedding-package-featured:focus-within {
     transform: translateY(-1rem);
+}
+
+.wedding-package h3,
+.funeral-option h3 {
+    max-width: 16ch;
+    font-size: clamp(2.2rem, 3.4vw, 3.5rem);
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+}
+
+.wedding-package .package-tag,
+.funeral-option .package-tag,
+.life-package-card .package-tag {
+    color: rgba(214, 199, 145, 0.88);
+}
+
+.wedding-package .package-price,
+.funeral-option .package-price,
+.life-package-card .package-price {
+    margin: 0.85rem 0 1rem;
+    color: #f2dda1;
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 3.4vw, 3rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.package-summary {
+    margin: 0 0 1.35rem;
+    color: rgba(247, 247, 244, 0.82);
+    line-height: 1.64;
+}
+
+.package-includes-label {
+    margin: 0 0 0.85rem;
+    color: rgba(214, 199, 145, 0.9);
+    font-size: 0.76rem;
+    font-weight: 900;
+    letter-spacing: 0.13em;
+    line-height: 1.35;
+    text-transform: uppercase;
+}
+
+.package-ideal {
+    margin: auto 0 0;
+    padding-top: 1.35rem;
+    border-top: 1px solid rgba(243, 244, 246, 0.1);
+    color: rgba(247, 247, 244, 0.78);
+    line-height: 1.6;
+}
+
+.package-ideal strong {
+    color: rgba(247, 247, 244, 0.94);
+}
+
+.package-enquiry-link {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 1.2rem;
+    padding: 0.5rem 0;
+    border: 0;
+    background: transparent;
+    color: rgba(247, 247, 244, 0.92);
+    font: inherit;
+    font-weight: 800;
+    text-align: left;
+}
+
+.package-extras-block {
+    display: grid;
+    grid-template-columns: minmax(15rem, 0.42fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    margin-top: clamp(4rem, 7vw, 6rem);
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid rgba(243, 244, 246, 0.14);
+}
+
+.package-extras-heading h3 {
+    max-width: 12ch;
+    margin-bottom: 1rem;
+    color: rgba(247, 247, 244, 0.94);
+    font-size: clamp(2.2rem, 4vw, 3.8rem);
+    line-height: 1.06;
+}
+
+.package-extras-heading p:not(.eyebrow) {
+    color: rgba(238, 240, 238, 0.72);
+    line-height: 1.65;
+}
+
+.package-extras-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: start;
+    gap: 0;
+    min-width: 0;
+    margin: 0;
+}
+
+.package-extras-grid > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+    min-width: 0;
+    padding: 1rem clamp(0.75rem, 1.6vw, 1.25rem);
+    border-bottom: 1px solid rgba(243, 244, 246, 0.1);
+}
+
+.package-extras-grid dt,
+.package-extras-grid dd {
+    min-width: 0;
+    margin: 0;
+    line-height: 1.45;
+}
+
+.package-extras-grid dt {
+    color: rgba(238, 240, 238, 0.74);
+    overflow-wrap: anywhere;
+}
+
+.package-extras-grid dd {
+    color: #f2dda1;
+    font-weight: 850;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.ceremony-format-guide {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 2.4vw, 1.6rem);
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.ceremony-format-guide article {
+    min-width: 0;
+    padding: clamp(1.3rem, 2.8vw, 2rem);
+    border-top: 1px solid rgba(214, 199, 145, 0.3);
+    background: rgba(243, 244, 246, 0.035);
+}
+
+.ceremony-format-guide h3 {
+    max-width: 20ch;
+    margin-bottom: 0.8rem;
+    color: rgba(247, 247, 244, 0.93);
+    font-size: clamp(1.65rem, 2.8vw, 2.45rem);
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+}
+
+.ceremony-format-guide p:not(.package-tag) {
+    color: rgba(238, 240, 238, 0.74);
+    line-height: 1.62;
+}
+
+.ceremony-format-guide .format-guide-price {
+    margin-bottom: 0;
+    color: #f2dda1;
+    font-weight: 850;
 }
 
 .wedding-smallprint,
@@ -1933,8 +2211,162 @@
     margin: 0;
 }
 
-.wedding-legal-image {
-    height: clamp(28rem, 42vw, 42rem);
+.wedding-comparison-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(20rem, 0.82fr);
+    gap: clamp(2rem, 5vw, 5.5rem);
+    align-items: start;
+}
+
+.wedding-comparison-copy {
+    min-width: 0;
+}
+
+.wedding-comparison-copy h2 {
+    max-width: 14ch;
+    margin-bottom: 1.25rem;
+    font-size: clamp(3rem, 5.15vw, 5.6rem);
+    line-height: 1.04;
+}
+
+.wedding-comparison-copy > .lead {
+    max-width: 44rem;
+    margin: 0;
+    color: rgba(247, 247, 244, 0.88);
+    font-size: clamp(1.08rem, 1.7vw, 1.28rem);
+    line-height: 1.72;
+}
+
+.wedding-role-comparison {
+    display: grid;
+    gap: 1rem;
+    margin-top: clamp(1.7rem, 3vw, 2.5rem);
+}
+
+.wedding-role-card,
+.wedding-roles-together {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(243, 244, 246, 0.13);
+    border-radius: 24px;
+    background:
+        radial-gradient(circle at 88% 10%, rgba(20, 173, 170, 0.11), transparent 15rem),
+        linear-gradient(145deg, rgba(39, 43, 51, 0.92), rgba(14, 17, 22, 0.95));
+    box-shadow: 0 24px 58px rgba(0, 0, 0, 0.24);
+}
+
+.wedding-role-card {
+    padding: clamp(1.25rem, 2.5vw, 1.9rem);
+}
+
+.wedding-role-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: linear-gradient(180deg, #14adaa, #247c87 54%, #d6c791);
+}
+
+.wedding-role-card-registrar::before {
+    background: linear-gradient(180deg, #d6c791, #a47f42 58%, #247c87);
+}
+
+.wedding-role-card h3,
+.wedding-roles-together h3 {
+    max-width: 28ch;
+    margin: 0 0 0.75rem;
+    color: #fff8d8;
+    font-family: var(--font-display);
+    font-size: clamp(1.65rem, 2.7vw, 2.35rem);
+    line-height: 1.12;
+}
+
+.wedding-role-card p:not(.package-tag),
+.wedding-roles-together p:not(.package-tag) {
+    max-width: 58rem;
+    margin: 0.65rem 0 0;
+    color: rgba(238, 240, 238, 0.76);
+    line-height: 1.68;
+}
+
+.wedding-roles-together {
+    margin-top: 1rem;
+    padding: clamp(1.35rem, 2.8vw, 2.1rem);
+    border-color: rgba(214, 199, 145, 0.28);
+    background:
+        radial-gradient(circle at 86% 10%, rgba(214, 199, 145, 0.15), transparent 17rem),
+        linear-gradient(145deg, rgba(31, 48, 51, 0.93), rgba(12, 17, 21, 0.96));
+}
+
+.wedding-destination-note {
+    margin: 1.5rem 0 0;
+}
+
+.wedding-legal-note {
+    margin: 1rem 0 0;
+    padding-left: 1rem;
+    border-left: 2px solid rgba(214, 199, 145, 0.6);
+    font-size: 0.92rem;
+    line-height: 1.65;
+}
+
+.wedding-legal-note a {
+    color: #f2dda1;
+    font-weight: 750;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+}
+
+.wedding-comparison-graphic {
+    position: sticky;
+    top: calc(var(--safe-header-gap) + 1.5rem);
+    width: min(100%, 38rem);
+    margin: 0;
+    padding: clamp(0.8rem, 1.5vw, 1.15rem);
+    overflow: hidden;
+    border: 1px solid rgba(214, 199, 145, 0.25);
+    border-radius: 30px;
+    background:
+        radial-gradient(circle at 76% 8%, rgba(20, 173, 170, 0.13), transparent 18rem),
+        rgba(8, 11, 15, 0.88);
+    box-shadow:
+        0 36px 90px rgba(0, 0, 0, 0.42),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.wedding-comparison-image-link {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 21px;
+    background: #080a0d;
+}
+
+.wedding-comparison-image-link img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.wedding-comparison-image-link span {
+    display: block;
+    padding: 0.78rem 0.9rem;
+    border-top: 1px solid rgba(255, 248, 216, 0.16);
+    background: rgba(12, 16, 20, 0.96);
+    color: #fff8d8;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-align: center;
+}
+
+.wedding-comparison-graphic figcaption {
+    margin: 0;
+    padding: 0.9rem 0.35rem 0.15rem;
+    color: rgba(238, 240, 238, 0.68);
+    font-size: 0.82rem;
+    line-height: 1.55;
 }
 
 .wedding-final-panel,
@@ -1998,19 +2430,6 @@
     height: 100%;
 }
 
-.funeral-support-grid article:hover .funeral-support-logo .logo-wreath,
-.funeral-support-grid article:focus-within .funeral-support-logo .logo-wreath {
-    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
-    filter:
-        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
-        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
-}
-
-.funeral-support-grid article:hover .funeral-support-logo .logo-clc,
-.funeral-support-grid article:focus-within .funeral-support-logo .logo-clc {
-    transform: translateY(1%) scale(1.035);
-}
-
 .funeral-intro-image {
     min-height: clamp(31rem, 46vw, 42rem);
 }
@@ -2037,6 +2456,7 @@
     .wedding-intro-grid,
     .wedding-story-grid,
     .wedding-legal-grid,
+    .wedding-comparison-layout,
     .funeral-intro-grid,
     .funeral-memory-grid,
     .wedding-process,
@@ -2050,8 +2470,21 @@
 
     .wedding-package-lane,
     .funeral-options-grid,
-    .funeral-support-grid {
+    .funeral-support-grid,
+    .ceremony-package-grid,
+    .package-section-intro,
+    .package-extras-block {
         grid-template-columns: 1fr;
+    }
+
+    .wedding-comparison-graphic {
+        position: relative;
+        top: auto;
+        justify-self: center;
+    }
+
+    .wedding-network-membership {
+        max-width: 42rem;
     }
 
     .wedding-package-featured,
@@ -2082,6 +2515,21 @@
         min-height: auto;
     }
 
+    .wedding-comparison-graphic {
+        width: 100%;
+        padding: 0.55rem;
+        border-radius: 22px;
+    }
+
+    .wedding-comparison-image-link {
+        border-radius: 16px;
+    }
+
+    .wedding-role-card,
+    .wedding-roles-together {
+        border-radius: 20px;
+    }
+
     .wedding-hero-inner,
     .funeral-hero-inner {
         padding-top: 6rem;
@@ -2096,6 +2544,7 @@
     .wedding-packages-heading h2,
     .wedding-process h2,
     .wedding-legal-copy h2,
+    .wedding-comparison-copy h2,
     .wedding-final-panel h2,
     .funeral-intro-copy h2,
     .funeral-options-heading h2,
@@ -2107,6 +2556,27 @@
         font-size: clamp(2.2rem, 8.8vw, 2.9rem);
         line-height: 1.12;
         overflow-wrap: anywhere;
+    }
+
+    .ceremony-package-heading h2 {
+        max-width: 100%;
+        margin-bottom: 1rem;
+        font-size: clamp(2.2rem, 8.8vw, 2.9rem);
+        line-height: 1.12;
+    }
+
+    .ceremony-format-guide,
+    .package-extras-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .package-extras-grid > div {
+        padding-inline: 0;
+    }
+
+    .wedding-network-membership {
+        grid-template-columns: clamp(6.25rem, 24vw, 8rem) minmax(0, 1fr);
+        padding-inline: 0;
     }
 
     .wedding-hero-note {
@@ -2176,6 +2646,34 @@
     }
 }
 
+@media (max-width: 420px) {
+    .package-extras-grid > div {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+    }
+
+    .package-extras-grid dd {
+        text-align: left;
+        white-space: normal;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wedding-package,
+    .funeral-option,
+    .life-package-card,
+    .wedding-package-featured,
+    .wedding-package:hover,
+    .wedding-package:focus-within,
+    .funeral-option:hover,
+    .funeral-option:focus-within,
+    .life-package-card:hover,
+    .life-package-card:focus-within {
+        transition: none;
+        transform: none;
+    }
+}
+
 .review-gallery-card {
     position: relative;
     overflow: hidden;
@@ -2242,14 +2740,14 @@
 .reviews-wall-heading h2,
 .reviews-submit-copy h2 {
     max-width: 12.5ch;
-    font-size: clamp(3.6rem, 7vw, 7.3rem);
+    font-size: clamp(3.35rem, 5.8vw, 6rem);
     line-height: 1.03;
     letter-spacing: 0;
 }
 
 .reviews-hero-copy h1 {
     margin-bottom: clamp(1.35rem, 2.3vw, 2.2rem);
-    font-size: clamp(3.45rem, 6.2vw, 6.4rem);
+    font-size: clamp(3.35rem, 5.25vw, 5.5rem);
     line-height: 1.08;
 }
 
@@ -2348,21 +2846,6 @@
     overflow: visible;
 }
 
-.reviews-hero-photo-mark:hover .reviews-hero-logo .logo-wreath,
-.reviews-hero-photo-mark:focus-within .reviews-hero-logo .logo-wreath,
-.reviews-hero-photo-stack:hover .reviews-hero-logo .logo-wreath {
-    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
-    filter:
-        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
-        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
-}
-
-.reviews-hero-photo-mark:hover .reviews-hero-logo .logo-clc,
-.reviews-hero-photo-mark:focus-within .reviews-hero-logo .logo-clc,
-.reviews-hero-photo-stack:hover .reviews-hero-logo .logo-clc {
-    transform: translateY(1%) scale(1.035);
-}
-
 .reviews-hero-proof {
     position: relative;
     z-index: 1;
@@ -2409,19 +2892,6 @@
     --logo-wreath-scale: 1.2;
     width: clamp(3.1rem, 5vw, 3.75rem);
     overflow: visible;
-}
-
-.reviews-proof-item:hover .reviews-proof-logo .logo-wreath,
-.reviews-proof-item:focus-within .reviews-proof-logo .logo-wreath {
-    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
-    filter:
-        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
-        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
-}
-
-.reviews-proof-item:hover .reviews-proof-logo .logo-clc,
-.reviews-proof-item:focus-within .reviews-proof-logo .logo-clc {
-    transform: translateY(1%) scale(1.035);
 }
 
 .reviews-feature-section,
@@ -2529,11 +2999,18 @@
 }
 
 .review-story-card-text-only {
+    flex-basis: min(100%, 58rem);
+    max-width: 58rem;
     min-height: 100%;
 }
 
 .review-story-card-text-only .review-story-content {
     min-height: 100%;
+}
+
+.review-story-card-text-only .review-story-message {
+    max-height: none;
+    overflow: visible;
 }
 
 .review-story-card:hover,
@@ -2624,6 +3101,7 @@
     line-height: 1.62;
     overflow-wrap: anywhere;
     word-break: break-word;
+    white-space: pre-line;
     scrollbar-width: thin;
 }
 
@@ -3207,11 +3685,7 @@
     }
 
     .service-rail-item {
-        grid-template-columns: 1fr;
-    }
-
-    .service-rail-item span {
-        grid-row: auto;
+        grid-template-columns: 3.4rem minmax(0, 1fr);
     }
 
     .services-pathways {
@@ -3839,7 +4313,7 @@ li,
     inset: 0;
     pointer-events: none;
     background:
-        url("/images/objects/feather-horizontal.png") right 8vw top 9vh / min(20rem, 34vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-512.webp") right 8vw top 9vh / min(20rem, 34vw) auto no-repeat,
         radial-gradient(circle at 74% 20%, rgba(201, 154, 51, 0.14), transparent 21rem),
         radial-gradient(circle at 15% 82%, rgba(0, 118, 168, 0.16), transparent 25rem);
     opacity: 0.9;
@@ -3860,8 +4334,8 @@ li,
 .secondary-hero-copy h1 {
     max-width: 11ch;
     margin: 0;
-    font-size: clamp(3.3rem, 8vw, 7rem);
-    line-height: 0.95;
+    font-size: clamp(3.2rem, 5.7vw, 5.65rem);
+    line-height: 1;
     letter-spacing: 0;
 }
 
@@ -3906,13 +4380,34 @@ li,
     border-radius: 26px;
 }
 
-.secondary-brand-panel img {
+.secondary-brand-panel > img {
     width: clamp(5.4rem, 11vw, 8rem);
     height: auto;
     padding: 0.35rem;
     border-radius: 999px;
     background: rgba(246, 241, 231, 0.95);
     box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+:is(.faq-hero-logo, .secondary-panel-logo) {
+    --logo-clc-size: 82;
+    --logo-wreath-scale: 1.18;
+    width: clamp(5.6rem, 11vw, 8rem);
+    height: clamp(5.6rem, 11vw, 8rem);
+    padding: 0;
+    overflow: visible;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.secondary-brand-panel :is(.faq-hero-logo, .secondary-panel-logo) img {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
 }
 
 .secondary-status,
@@ -3925,7 +4420,7 @@ li,
     text-transform: uppercase;
 }
 
-.secondary-brand-panel span {
+.secondary-brand-panel > span:not(.logo-composite) {
     max-width: 18rem;
     color: rgba(243, 244, 246, 0.72);
     line-height: 1.6;
@@ -4742,19 +5237,6 @@ li,
     z-index: 4;
 }
 
-.secondary-empty-state:hover .admin-empty-logo .logo-wreath,
-.secondary-empty-state:focus-within .admin-empty-logo .logo-wreath {
-    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
-    filter:
-        drop-shadow(0 0 14px rgba(214, 199, 145, 0.2))
-        drop-shadow(0 14px 26px rgba(0, 0, 0, 0.26));
-}
-
-.secondary-empty-state:hover .admin-empty-logo .logo-clc,
-.secondary-empty-state:focus-within .admin-empty-logo .logo-clc {
-    transform: translateY(1%) scale(1.035);
-}
-
 .admin-empty-copy h2 {
     max-width: 14ch;
     margin: 0.25rem 0 0.65rem;
@@ -4923,9 +5405,9 @@ li,
     inset: 0;
     pointer-events: none;
     background:
-        url("/images/objects/feather-horizontal-mirrored.png") left 6vw top 8rem / min(19rem, 32vw) auto no-repeat,
-        url("/images/objects/feather-horizontal.png") right 5vw top 9rem / min(21rem, 34vw) auto no-repeat,
-        url("/images/objects/feather-vertical.png") right 12vw bottom 11rem / min(15rem, 24vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-mirrored-512.webp") left 6vw top 8rem / min(19rem, 32vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-512.webp") right 5vw top 9rem / min(21rem, 34vw) auto no-repeat,
+        url("/images/objects/feather-vertical-384.webp") right 12vw bottom 11rem / min(15rem, 24vw) auto no-repeat,
         linear-gradient(115deg, transparent 0 46%, rgba(0, 118, 168, 0.1) 46% 46.16%, transparent 46.16% 100%);
     opacity: 0.58;
 }
@@ -5001,7 +5483,7 @@ li,
     border-top-color: rgba(201, 154, 51, 0.34);
     border-radius: 28px;
     background:
-        url("/images/objects/feather-horizontal.png") right -4.5rem top 1.4rem / min(12rem, 30vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-512.webp") right -4.5rem top 1.4rem / min(12rem, 30vw) auto no-repeat,
         radial-gradient(circle at 86% 8%, rgba(201, 154, 51, 0.12), transparent 13rem),
         radial-gradient(circle at 16% 90%, rgba(0, 137, 123, 0.12), transparent 16rem),
         linear-gradient(145deg, rgba(39, 44, 52, 0.94), rgba(12, 15, 20, 0.96));
@@ -5026,15 +5508,26 @@ li,
     width: clamp(5.8rem, 9vw, 7.5rem);
     aspect-ratio: 1;
     border-radius: 999px;
-    border: 1px solid rgba(201, 154, 51, 0.34);
-    background: rgba(246, 241, 231, 0.96);
-    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(201, 154, 51, 0.2);
+    background:
+        radial-gradient(circle at 50% 44%, rgba(20, 173, 170, 0.12), transparent 44%),
+        rgba(8, 11, 15, 0.56);
+    box-shadow:
+        0 18px 42px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.thank-you-mark img {
+.thank-you-logo {
+    --logo-clc-size: 82;
+    --logo-wreath-scale: 1.18;
     width: 82%;
-    height: auto;
-    display: block;
+    height: 82%;
+    overflow: visible;
+}
+
+.thank-you-mark .thank-you-logo img {
+    width: 100%;
+    height: 100%;
 }
 
 .thank-you-status {
@@ -5090,7 +5583,7 @@ li,
 .thank-you-flow {
     padding: clamp(3rem, 6vw, 5rem) 0;
     background:
-        url("/images/objects/feather-horizontal-mirrored.png") left 8vw top 2.5rem / min(17rem, 34vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-mirrored-512.webp") left 8vw top 2.5rem / min(17rem, 34vw) auto no-repeat,
         radial-gradient(circle at 15% 15%, rgba(0, 118, 168, 0.09), transparent 22rem),
         linear-gradient(180deg, rgba(17, 20, 26, 0.98), rgba(9, 11, 15, 0.98));
     box-shadow:
@@ -5257,6 +5750,504 @@ li,
 
     .thank-you-contact-list a {
         align-items: flex-start;
+    }
+}
+
+/* Finished FAQ search experience */
+.faq-hero-panel {
+    min-height: auto;
+    align-content: start;
+}
+
+.faq-hero-note {
+    max-width: 28rem;
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: 1.65;
+}
+
+.faq-hero-chips,
+.faq-search-dictionary-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+}
+
+.faq-hero-chip,
+.faq-search-dictionary-chip {
+    min-height: 2.5rem;
+    padding: 0.58rem 0.85rem;
+    border: 1px solid rgba(155, 203, 184, 0.2);
+    border-radius: 999px;
+    background: rgba(95, 159, 136, 0.075);
+    color: rgba(246, 242, 233, 0.82);
+    font-size: 0.82rem;
+    font-weight: 780;
+    line-height: 1;
+    transition:
+        color var(--motion-fast) ease,
+        border-color var(--motion-fast) ease,
+        background var(--motion-fast) ease,
+        box-shadow var(--motion-fast) ease;
+}
+
+.faq-hero-chip:hover,
+.faq-hero-chip:focus-visible,
+.faq-hero-chip.is-active,
+.faq-hero-chip[aria-pressed="true"],
+.faq-search-dictionary-chip:hover,
+.faq-search-dictionary-chip:focus-visible,
+.faq-search-dictionary-chip.is-active,
+.faq-search-dictionary-chip[aria-pressed="true"] {
+    border-color: rgba(211, 173, 114, 0.58);
+    background:
+        linear-gradient(135deg, rgba(95, 159, 136, 0.2), rgba(211, 173, 114, 0.13)),
+        rgba(10, 21, 25, 0.92);
+    color: #fff5d8;
+    box-shadow: 0 0 0 4px rgba(211, 173, 114, 0.065);
+}
+
+.faq-body-section {
+    padding-top: clamp(3.5rem, 7vw, 6rem);
+}
+
+.faq-toolbar {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.92fr);
+    gap: 1rem clamp(1.3rem, 3vw, 2.6rem);
+    margin-bottom: clamp(2rem, 5vw, 3.75rem);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    overflow: hidden;
+    border: 1px solid rgba(230, 216, 183, 0.13);
+    border-top-color: rgba(211, 173, 114, 0.38);
+    border-radius: 26px;
+    background:
+        radial-gradient(circle at 88% 5%, rgba(211, 173, 114, 0.11), transparent 15rem),
+        linear-gradient(145deg, rgba(20, 35, 38, 0.98), rgba(7, 15, 19, 0.98));
+    box-shadow:
+        0 24px 64px rgba(0, 0, 0, 0.36),
+        inset 0 1px 0 rgba(246, 242, 233, 0.07);
+}
+
+.faq-search-heading {
+    grid-row: span 2;
+    align-self: center;
+}
+
+.faq-search-heading h2 {
+    max-width: 13ch;
+    font-size: clamp(2.35rem, 4vw, 4rem);
+    line-height: 1.04;
+}
+
+.faq-search-label {
+    align-self: end;
+    color: rgba(246, 242, 233, 0.72);
+    font-size: 0.78rem;
+    font-weight: 850;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.faq-search-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 3.75rem;
+    border: 1px solid rgba(155, 203, 184, 0.28);
+    border-radius: 18px;
+    background: rgba(5, 13, 17, 0.82);
+    box-shadow: inset 0 1px 0 rgba(246, 242, 233, 0.055);
+    transition: border-color var(--motion-fast) ease, box-shadow var(--motion-fast) ease;
+}
+
+.faq-search-field:focus-within {
+    border-color: var(--peacock-gold);
+    box-shadow: 0 0 0 4px rgba(211, 173, 114, 0.1);
+}
+
+.faq-search-icon {
+    flex: 0 0 auto;
+    width: 3rem;
+    color: var(--sage-deep);
+    font-size: 1.45rem;
+    text-align: center;
+}
+
+.faq-search-input {
+    min-width: 0;
+    width: 100%;
+    min-height: 3.65rem;
+    padding: 0.9rem 0.45rem;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--ink);
+}
+
+.faq-search-input::-webkit-search-cancel-button {
+    display: none;
+}
+
+.faq-search-clear {
+    flex: 0 0 auto;
+    min-height: 2.5rem;
+    margin-right: 0.55rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgba(211, 173, 114, 0.26);
+    border-radius: 12px;
+    background: rgba(211, 173, 114, 0.08);
+    color: #f3d992;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.faq-search-meta {
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.faq-search-summary {
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: 0.88rem;
+}
+
+.faq-search-count-pill {
+    flex: 0 0 auto;
+    padding: 0.42rem 0.68rem;
+    border: 1px solid rgba(95, 159, 136, 0.24);
+    border-radius: 999px;
+    background: rgba(95, 159, 136, 0.09);
+    color: var(--sage-deep);
+    font-size: 0.72rem;
+    font-weight: 850;
+}
+
+.faq-search-dictionary {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.8rem 1rem;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(230, 216, 183, 0.1);
+}
+
+.faq-search-dictionary-label {
+    color: var(--clay);
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.faq-search-dictionary-chip {
+    min-height: 2.25rem;
+    padding-block: 0.48rem;
+    font-size: 0.76rem;
+}
+
+.faq-enhanced-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.faq-enhanced-list .faq-card {
+    position: relative;
+    min-height: 100%;
+    padding: clamp(1.2rem, 2.4vw, 1.65rem);
+    border: 1px solid rgba(230, 216, 183, 0.11);
+    border-left: 3px solid rgba(95, 159, 136, 0.42);
+    border-radius: 20px;
+    background:
+        linear-gradient(135deg, rgba(95, 159, 136, 0.055), transparent 40%),
+        rgba(9, 18, 22, 0.86);
+    box-shadow: 0 14px 38px rgba(0, 0, 0, 0.24);
+}
+
+.faq-enhanced-list .faq-card::before {
+    content: "";
+    position: absolute;
+    top: 1.4rem;
+    right: 1.4rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: var(--clay);
+    box-shadow: 0 0 0 5px rgba(211, 173, 114, 0.08);
+}
+
+.faq-enhanced-list .faq-card h3 {
+    max-width: calc(100% - 1.8rem);
+    margin-bottom: 0.8rem;
+    font-size: clamp(1.45rem, 2.25vw, 1.9rem);
+    line-height: 1.14;
+}
+
+.faq-enhanced-list .faq-card p {
+    margin: 0;
+    color: var(--ink-soft);
+    line-height: 1.7;
+}
+
+.faq-empty-state {
+    padding: 2rem;
+    border: 1px dashed rgba(211, 173, 114, 0.34);
+    border-radius: 20px;
+    background: rgba(211, 173, 114, 0.055);
+    color: var(--ink-soft);
+    text-align: center;
+}
+
+/* Journal pages */
+.theme-journal .page-hero {
+    min-height: min(64vh, 42rem);
+    display: grid;
+    align-items: center;
+}
+
+.theme-journal .page-hero-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(20rem, 0.65fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: end;
+    padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+.theme-journal .page-hero h1 {
+    max-width: 13ch;
+    font-size: clamp(3.3rem, 5.6vw, 5.7rem);
+    line-height: 1.02;
+}
+
+.theme-journal .page-hero .lead {
+    max-width: 34rem;
+    margin: 0;
+}
+
+.article-stack {
+    display: grid;
+    border-top: 1px solid rgba(211, 173, 114, 0.22);
+}
+
+.article-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: clamp(1.5rem, 5vw, 5rem);
+    padding: clamp(2rem, 4.5vw, 3.5rem) 0;
+    border-bottom: 1px solid rgba(230, 216, 183, 0.12);
+}
+
+.article-row::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(45% - 1px);
+    width: 1px;
+    background: linear-gradient(180deg, transparent, rgba(95, 159, 136, 0.22), transparent);
+}
+
+.article-column {
+    min-width: 0;
+}
+
+.article-column h3 {
+    max-width: 15ch;
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    line-height: 1.06;
+}
+
+.article-column h3 a,
+.article-card h3 a {
+    transition: color var(--motion-fast) ease;
+}
+
+.article-column h3 a:hover,
+.article-column h3 a:focus-visible,
+.article-card h3 a:hover,
+.article-card h3 a:focus-visible {
+    color: var(--clay);
+}
+
+.article-column p:not(.article-meta) {
+    max-width: 46rem;
+}
+
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.article-meta span {
+    padding: 0.4rem 0.62rem;
+    border: 1px solid rgba(95, 159, 136, 0.2);
+    border-radius: 999px;
+    background: rgba(95, 159, 136, 0.075);
+    color: var(--sage-deep);
+    font-size: 0.7rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.article-page {
+    padding-top: clamp(5rem, 10vw, 9rem);
+}
+
+.article-page-grid {
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.72fr) minmax(0, 1.18fr);
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: start;
+}
+
+.article-page-grid > :first-child {
+    position: sticky;
+    top: calc(var(--header-height) + 2rem);
+}
+
+.article-page h1 {
+    max-width: 13ch;
+    font-size: clamp(3rem, 5.2vw, 5.25rem);
+    line-height: 1.02;
+}
+
+.article-body {
+    max-width: 48rem;
+    padding: clamp(1.2rem, 3vw, 2.2rem);
+    border: 1px solid rgba(230, 216, 183, 0.12);
+    border-top-color: rgba(211, 173, 114, 0.34);
+    border-radius: 24px;
+    background:
+        linear-gradient(145deg, rgba(20, 35, 38, 0.96), rgba(8, 16, 20, 0.96));
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.34);
+}
+
+.article-body p {
+    color: rgba(246, 242, 233, 0.82);
+    font-size: clamp(1.02rem, 1.5vw, 1.12rem);
+    line-height: 1.9;
+}
+
+.article-body p:first-child::first-letter {
+    float: left;
+    margin: 0.08em 0.12em 0 0;
+    color: var(--clay);
+    font-family: var(--font-serif);
+    font-size: 4.2rem;
+    line-height: 0.78;
+}
+
+.article-body .button {
+    margin-top: 1rem;
+}
+
+.section-tint {
+    background:
+        radial-gradient(circle at 86% 14%, rgba(211, 173, 114, 0.09), transparent 22rem),
+        linear-gradient(180deg, rgba(12, 22, 26, 0.98), rgba(6, 13, 16, 0.98));
+}
+
+.article-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.article-card {
+    min-height: 100%;
+    padding: clamp(1.2rem, 2.4vw, 1.65rem);
+    border: 1px solid rgba(230, 216, 183, 0.12);
+    border-top-color: rgba(95, 159, 136, 0.34);
+    border-radius: 20px;
+    background: rgba(10, 20, 24, 0.9);
+    box-shadow: 0 16px 42px rgba(0, 0, 0, 0.26);
+}
+
+.article-card h3 {
+    margin-bottom: 1.2rem;
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+}
+
+@media (max-width: 900px) {
+    .faq-toolbar,
+    .theme-journal .page-hero-inner,
+    .article-page-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .faq-search-heading {
+        grid-row: auto;
+    }
+
+    .faq-search-meta {
+        grid-column: 1;
+    }
+
+    .article-page-grid > :first-child {
+        position: static;
+    }
+}
+
+@media (max-width: 720px) {
+    .faq-hero-chips {
+        gap: 0.45rem;
+    }
+
+    .faq-toolbar {
+        border-radius: 20px;
+    }
+
+    .faq-search-heading h2 {
+        max-width: 100%;
+        font-size: clamp(2.15rem, 10vw, 3rem);
+    }
+
+    .faq-search-meta,
+    .faq-search-dictionary {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+
+    .faq-search-meta {
+        flex-direction: column;
+    }
+
+    .faq-search-count-pill {
+        align-self: flex-start;
+    }
+
+    .faq-enhanced-list,
+    .article-row,
+    .article-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .article-row::before {
+        content: none;
+    }
+
+    .theme-journal .page-hero h1,
+    .article-page h1 {
+        max-width: 100%;
+        font-size: clamp(2.65rem, 12vw, 3.75rem);
+    }
+
+    .article-body {
+        padding: 1.2rem;
+        border-radius: 20px;
     }
 }
 

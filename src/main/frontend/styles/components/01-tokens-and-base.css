@@ -1,3 +1,19 @@
+@font-face {
+    font-family: "Cormorant Garamond";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url("/fonts/cormorant-garamond-latin.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Manrope";
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url("/fonts/manrope-latin.woff2") format("woff2");
+}
+
 :root {
     --canvas: #f4eee5;
     --canvas-deep: #e7ddd0;
@@ -46,6 +62,11 @@
     --callout-bg: rgba(157, 117, 94, 0.09);
     --callout-border: #9d755e;
     --selection-bg: rgba(113, 128, 107, 0.24);
+    --motion-fast: 180ms;
+    --motion-standard: 260ms;
+    --motion-panel: 420ms;
+    --motion-editorial: 720ms;
+    --ease-expressive: cubic-bezier(0.22, 1, 0.36, 1);
     color-scheme: light;
 }
 
@@ -165,6 +186,8 @@ html {
 }
 
 body {
+    position: relative;
+    isolation: isolate;
     margin: 0;
     padding-top: var(--header-height);
     min-height: 100vh;
@@ -259,26 +282,46 @@ section,
     color: var(--ink);
 }
 
-* {
+html,
+.site-nav,
+.enquiry-modal-dialog,
+.field-option-list,
+.phone-option-list,
+.reviews-marquee-track {
     scrollbar-width: thin;
     scrollbar-color:
         color-mix(in srgb, var(--theme-accent-strong, var(--sage-deep)) 58%, transparent)
         color-mix(in srgb, var(--theme-bg-mid, var(--page-bg-mid)) 72%, transparent);
 }
 
-*::-webkit-scrollbar {
+html::-webkit-scrollbar,
+.site-nav::-webkit-scrollbar,
+.enquiry-modal-dialog::-webkit-scrollbar,
+.field-option-list::-webkit-scrollbar,
+.phone-option-list::-webkit-scrollbar,
+.reviews-marquee-track::-webkit-scrollbar {
     width: 0.72rem;
     height: 0.72rem;
 }
 
-*::-webkit-scrollbar-track {
+html::-webkit-scrollbar-track,
+.site-nav::-webkit-scrollbar-track,
+.enquiry-modal-dialog::-webkit-scrollbar-track,
+.field-option-list::-webkit-scrollbar-track,
+.phone-option-list::-webkit-scrollbar-track,
+.reviews-marquee-track::-webkit-scrollbar-track {
     background:
         linear-gradient(180deg,
             color-mix(in srgb, var(--theme-bg-start, var(--page-bg-start)) 72%, transparent),
             color-mix(in srgb, var(--theme-bg-end, var(--page-bg-end)) 72%, transparent));
 }
 
-*::-webkit-scrollbar-thumb {
+html::-webkit-scrollbar-thumb,
+.site-nav::-webkit-scrollbar-thumb,
+.enquiry-modal-dialog::-webkit-scrollbar-thumb,
+.field-option-list::-webkit-scrollbar-thumb,
+.phone-option-list::-webkit-scrollbar-thumb,
+.reviews-marquee-track::-webkit-scrollbar-thumb {
     border: 0.18rem solid transparent;
     border-radius: 999px;
     background:
@@ -288,12 +331,28 @@ section,
         padding-box;
 }
 
-*::-webkit-scrollbar-thumb:hover {
+html::-webkit-scrollbar-thumb:hover,
+.site-nav::-webkit-scrollbar-thumb:hover,
+.enquiry-modal-dialog::-webkit-scrollbar-thumb:hover,
+.field-option-list::-webkit-scrollbar-thumb:hover,
+.phone-option-list::-webkit-scrollbar-thumb:hover,
+.reviews-marquee-track::-webkit-scrollbar-thumb:hover {
     background:
         linear-gradient(180deg,
             color-mix(in srgb, var(--ink) 78%, var(--theme-accent-strong, var(--sage-deep))),
             color-mix(in srgb, var(--theme-accent-strong, var(--sage-deep)) 70%, var(--clay)))
         padding-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    body {
+        animation: none;
+    }
+
 }
 
 img {

@@ -3,15 +3,9 @@
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'services', ~{::main})}">
 <main class="theme-services">
     <section class="services-hero section-reveal-zone">
-        <div class="services-hero-media" data-carousel data-carousel-interval="6200" data-carousel-transition="880" aria-hidden="true">
-            <figure class="services-hero-slide is-active" data-carousel-slide>
+        <div class="services-hero-media" aria-hidden="true">
+            <figure class="services-hero-slide is-active">
                 <img th:src="@{/images/weddings/home-hero.jpg}" alt="" loading="eager" fetchpriority="high" decoding="async">
-            </figure>
-            <figure class="services-hero-slide" data-carousel-slide>
-                <img th:src="@{/images/clare/wedding-symbolism-ribbons.jpg}" alt="" loading="lazy" decoding="async">
-            </figure>
-            <figure class="services-hero-slide" data-carousel-slide>
-                <img th:src="@{/images/funerals/memorial-flowers-detail.jpg}" alt="" loading="lazy" decoding="async">
             </figure>
         </div>
         <div class="services-hero-overlay"></div>
@@ -27,22 +21,34 @@
             </div>
             <div class="services-hero-rail" aria-label="Ceremony services">
                 <a class="service-rail-item" th:href="@{/weddings}">
-                    <span>01</span>
+                    <span class="logo-composite service-rail-logo" aria-hidden="true">
+                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    </span>
                     <strong>Weddings</strong>
                     <small>Bespoke celebrant-led ceremonies with freedom, personality and polish.</small>
                 </a>
                 <a class="service-rail-item" th:href="@{/celebrations-of-life}">
-                    <span>02</span>
+                    <span class="logo-composite service-rail-logo" aria-hidden="true">
+                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    </span>
                     <strong>Celebrations of Life</strong>
                     <small>Respectful, personal tributes written with sensitivity and care.</small>
                 </a>
                 <a class="service-rail-item" href="#naming-ceremonies">
-                    <span>03</span>
+                    <span class="logo-composite service-rail-logo" aria-hidden="true">
+                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    </span>
                     <strong>Naming Ceremonies</strong>
                     <small>Warm, joyful welcomes shaped around your child and family.</small>
                 </a>
                 <a class="service-rail-item" href="#vow-renewals">
-                    <span>04</span>
+                    <span class="logo-composite service-rail-logo" aria-hidden="true">
+                        <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
+                        <img class="logo-layer logo-wreath" th:src="@{${wreathLogoPath}}" alt="">
+                    </span>
                     <strong>Vow Renewals</strong>
                     <small>Meaningful ceremonies that celebrate your story and promises.</small>
                 </a>
@@ -85,7 +91,7 @@
                 </div>
             </article>
 
-            <article class="service-path-panel" id="naming-ceremonies">
+            <article class="service-path-panel" id="naming-ceremonies-overview">
                 <button class="service-path-image" type="button" data-open-enquiry-modal data-enquiry-service="Naming ceremony" aria-label="Enquire about naming ceremonies">
                     <img th:src="@{/images/clare/weddings-confetti-alt.jpg}"
                          loading="lazy"
@@ -95,18 +101,17 @@
                     <p class="eyebrow">Naming Ceremonies</p>
                     <h3>A joyful welcome, created around your child and family.</h3>
                     <p>A warm, inclusive ceremony for welcoming a child, celebrating their name and bringing together the people who will support them as they grow.</p>
-                    <p class="life-package-status">Price to be confirmed</p>
+                    <p class="life-package-status">Packages from £395</p>
                     <ul class="life-package-inclusions">
-                        <li>Planning consultation and ceremony guidance</li>
-                        <li>A bespoke script shaped around your family</li>
-                        <li>Promises, readings and symbolic elements</li>
-                        <li>Warm, confident delivery on the day</li>
+                        <li>Two personalised package levels</li>
+                        <li>Family and guideparent promises</li>
+                        <li>Certificates and keepsake options</li>
                     </ul>
-                    <button class="text-link" type="button" data-open-enquiry-modal data-enquiry-service="Naming ceremony">Enquire about a naming ceremony</button>
+                    <a class="text-link" href="#naming-ceremonies">View naming ceremony packages</a>
                 </div>
             </article>
 
-            <article class="service-path-panel" id="vow-renewals">
+            <article class="service-path-panel" id="vow-renewals-overview">
                 <button class="service-path-image" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal" aria-label="Enquire about vow renewals">
                     <img th:src="@{/images/weddings/detail-rings.jpg}"
                          loading="lazy"
@@ -116,16 +121,135 @@
                     <p class="eyebrow">Vow Renewals</p>
                     <h3>Celebrate the story you have shared and the promises still ahead.</h3>
                     <p>A personal ceremony for an anniversary, a new chapter or simply the right moment to reaffirm your commitment in front of the people you love.</p>
-                    <p class="life-package-status">Price to be confirmed</p>
+                    <p class="life-package-status">Packages from £695</p>
                     <ul class="life-package-inclusions">
-                        <li>Planning conversation and ceremony guidance</li>
-                        <li>Your shared story written into a bespoke script</li>
-                        <li>Support shaping renewed vows and promises</li>
-                        <li>Readings, music, symbolic elements and delivery</li>
+                        <li>Two personalised package levels</li>
+                        <li>New or original vow guidance</li>
+                        <li>Milestone and keepsake options</li>
                     </ul>
-                    <button class="text-link" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal">Enquire about a vow renewal</button>
+                    <a class="text-link" href="#vow-renewals">View vow renewal packages</a>
                 </div>
             </article>
+        </div>
+    </section>
+
+    <section class="section life-packages-section section-divider section-reveal-zone" aria-label="Naming ceremony and vow renewal packages">
+        <div class="shell ceremony-package-block" id="naming-ceremonies">
+            <div class="ceremony-package-heading">
+                <p class="eyebrow">Naming Ceremonies</p>
+                <h2>Welcome a name, a person and a new family chapter.</h2>
+                <p>Celebrate your newest arrival with a joyful ceremony full of love, laughter and promises for the future. Naming ceremonies are suitable for babies, children, blended families and adults choosing a new name.</p>
+            </div>
+            <div class="ceremony-package-grid">
+                <article class="life-package-card">
+                    <p class="package-tag">Naming package 01</p>
+                    <h3>Little Star</h3>
+                    <p class="package-price">£395</p>
+                    <p class="package-summary">A warm, personal ceremony that brings together the people who will support and encourage this new chapter.</p>
+                    <p class="package-includes-label">Includes</p>
+                    <ul class="package-list">
+                        <li>Complimentary consultation</li>
+                        <li>Personal planning questionnaire</li>
+                        <li>Fully bespoke ceremony written around your family</li>
+                        <li>Family and friend promises</li>
+                        <li>Guideparent or mentor promises</li>
+                        <li>Naming certificate</li>
+                        <li>Ceremony delivered at your chosen venue</li>
+                        <li>Travel included within 30 miles</li>
+                    </ul>
+                    <p class="package-ideal"><strong>Perfect for:</strong> families wanting a meaningful alternative to a traditional christening.</p>
+                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Naming ceremony">Enquire about Little Star</button>
+                </article>
+                <article class="life-package-card life-package-card-featured">
+                    <p class="package-tag">Naming package 02</p>
+                    <h3>Grow With Love</h3>
+                    <p class="package-price">£545</p>
+                    <p class="package-summary">A fully personalised family celebration with keepsakes you will treasure for years.</p>
+                    <p class="package-includes-label">Everything in Little Star, plus</p>
+                    <ul class="package-list">
+                        <li>Additional planning meeting</li>
+                        <li>Venue visit, where appropriate</li>
+                        <li>Sand ceremony, wish tree or time capsule included</li>
+                        <li>Sibling and grandparent involvement</li>
+                        <li>Printed keepsake ceremony script</li>
+                        <li>Guideparent certificates</li>
+                        <li>Luxury naming certificate</li>
+                        <li>Unlimited planning support</li>
+                    </ul>
+                    <p class="package-ideal"><strong>Perfect for:</strong> families wanting to create lasting memories together.</p>
+                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Naming ceremony">Enquire about Grow With Love</button>
+                </article>
+            </div>
+        </div>
+
+        <div class="shell ceremony-package-block ceremony-package-block-separated" id="vow-renewals">
+            <div class="ceremony-package-heading">
+                <p class="eyebrow">Vow Renewals</p>
+                <h2>Choose each other, all over again.</h2>
+                <p>Celebrate the journey you have shared and the promises you would choose all over again. A vow renewal can mark an anniversary, create the ceremony you always wished you had, or simply honour the chapter you are in now.</p>
+            </div>
+            <div class="ceremony-package-grid">
+                <article class="life-package-card">
+                    <p class="package-tag">Vow renewal package 01</p>
+                    <h3>Forever Yours</h3>
+                    <p class="package-price">£695</p>
+                    <p class="package-summary">A heartfelt ceremony celebrating your past, present and future together.</p>
+                    <p class="package-includes-label">Includes</p>
+                    <ul class="package-list">
+                        <li>Complimentary discovery call</li>
+                        <li>Personal planning questionnaire</li>
+                        <li>Relaxed planning meeting</li>
+                        <li>Bespoke ceremony telling your story</li>
+                        <li>Guidance with new or original vows</li>
+                        <li>Personalised ring-exchange wording</li>
+                        <li>Ceremony delivered on the day</li>
+                        <li>Professional PA system, where required</li>
+                        <li>Travel included within 30 miles</li>
+                    </ul>
+                    <p class="package-ideal"><strong>Perfect for:</strong> an intimate celebration, milestone anniversary or meaningful new chapter.</p>
+                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal">Enquire about Forever Yours</button>
+                </article>
+                <article class="life-package-card life-package-card-featured">
+                    <p class="package-tag">Vow renewal package 02</p>
+                    <h3>Forever &amp; Always</h3>
+                    <p class="package-price">£895</p>
+                    <p class="package-summary">An unforgettable celebration with extra planning, guidance and beautiful keepsakes.</p>
+                    <p class="package-includes-label">Everything in Forever Yours, plus</p>
+                    <ul class="package-list">
+                        <li>Venue visit before the celebration</li>
+                        <li>Ceremony rehearsal, where appropriate</li>
+                        <li>Unlimited planning meetings, calls and emails</li>
+                        <li>Help with music, readings and symbolic rituals</li>
+                        <li>Luxury printed keepsake ceremony script</li>
+                        <li>Vow keepsake cards</li>
+                        <li>Vow renewal certificate</li>
+                        <li>Coordination with your venue and photographer</li>
+                    </ul>
+                    <p class="package-ideal"><strong>Perfect for:</strong> silver, ruby or golden anniversaries and destination celebrations.</p>
+                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal">Enquire about Forever &amp; Always</button>
+                </article>
+            </div>
+        </div>
+
+        <div class="shell package-extras-block ceremony-extras-block">
+            <div class="package-extras-heading">
+                <p class="eyebrow">Optional ceremony extras</p>
+                <h3>Personal touches and lasting keepsakes.</h3>
+                <p>Availability depends on your ceremony type, venue and chosen package.</p>
+            </div>
+            <dl class="package-extras-grid">
+                <div><dt>Handfasting ceremony</dt><dd>£75</dd></div>
+                <div><dt>Sand ceremony</dt><dd>£65</dd></div>
+                <div><dt>Unity candle ceremony</dt><dd>£65</dd></div>
+                <div><dt>Tree-planting ceremony</dt><dd>£85</dd></div>
+                <div><dt>Memory or remembrance section</dt><dd>£50</dd></div>
+                <div><dt>Luxury keepsake ceremony book</dt><dd>£55</dd></div>
+                <div><dt>Personal vow booklets, pair</dt><dd>£35</dd></div>
+                <div><dt>Framed commemorative certificate</dt><dd>£40</dd></div>
+                <div><dt>Additional venue rehearsal</dt><dd>£125</dd></div>
+                <div><dt>Additional travel</dt><dd>50p per mile</dd></div>
+                <div><dt>Weekend venue planning visit</dt><dd>£75</dd></div>
+            </dl>
         </div>
     </section>
 
@@ -141,7 +265,7 @@
                     <span>Confident delivery</span>
                 </div>
             </div>
-            <div class="services-showcase" data-carousel data-carousel-interval="5600" data-carousel-transition="860">
+            <div class="services-showcase" data-carousel data-carousel-interval="5600" data-carousel-transition="720">
                 <figure class="services-showcase-slide is-active" data-carousel-slide>
                     <img th:src="@{/images/clare/clare-folder-portrait.jpg}"
                          loading="lazy"

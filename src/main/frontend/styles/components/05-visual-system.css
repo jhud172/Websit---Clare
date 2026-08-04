@@ -7,15 +7,14 @@ main {
 
 main::before {
     content: "";
-    position: fixed;
+    position: absolute;
     inset: 0;
     pointer-events: none;
     background:
-        radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.2), transparent 18%),
-        radial-gradient(circle at 82% 8%, rgba(113, 128, 107, 0.08), transparent 16%),
-        radial-gradient(circle at 76% 62%, rgba(157, 117, 94, 0.08), transparent 18%),
-        repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.05) 0, rgba(255, 255, 255, 0.05) 1px, transparent 1px, transparent 80px);
-    opacity: 0.85;
+        radial-gradient(circle at 10% 12%, rgba(95, 159, 136, 0.08), transparent 19%),
+        radial-gradient(circle at 84% 8%, rgba(211, 173, 114, 0.075), transparent 17%),
+        radial-gradient(circle at 76% 62%, rgba(23, 95, 103, 0.07), transparent 20%);
+    opacity: 0.72;
     z-index: 0;
 }
 
@@ -124,7 +123,7 @@ main::before {
     top: 50%;
     width: clamp(8rem, 16vw, 14rem);
     aspect-ratio: 0.45;
-    background: url("/images/objects/feather-vertical.png") center / contain no-repeat;
+    background: url("/images/objects/feather-vertical-384.webp") center / contain no-repeat;
     opacity: 0.14;
     transform: translateY(-50%) rotate(7deg);
     pointer-events: none;
@@ -211,7 +210,7 @@ main::before {
     bottom: -3.4rem;
     width: min(18rem, 46vw);
     height: clamp(1.45rem, 4vw, 2.45rem);
-    background: url("/images/objects/feather-horizontal.png") center / contain no-repeat;
+    background: url("/images/objects/feather-horizontal-512.webp") center / contain no-repeat;
     filter: drop-shadow(0 8px 14px rgba(32, 76, 90, 0.12));
     opacity: 0.46;
     transform: translateX(-50%);
@@ -324,31 +323,38 @@ main::before {
 .gallery-card,
 .faq-list article {
     transition:
-        transform 420ms cubic-bezier(0.2, 0.75, 0.25, 1),
-        box-shadow 320ms ease,
-        border-color 320ms ease,
-        background 320ms ease;
+        transform var(--motion-panel) var(--ease-expressive),
+        box-shadow var(--motion-standard) ease,
+        border-color var(--motion-standard) ease,
+        background var(--motion-standard) ease;
 }
 
 .path-panel:hover,
 .path-panel:focus-visible,
+.package-card:hover,
+.gallery-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 26px 64px rgba(0, 0, 0, 0.28);
+    border-color: color-mix(in srgb, var(--theme-accent-strong) 42%, transparent);
+}
+
 .detail-card:hover,
 .quote-card:hover,
-.package-card:hover,
 .contact-panel:hover,
 .contact-form:hover,
 .cta-panel:hover,
-.gallery-card:hover,
 .faq-list article:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 30px 80px rgba(36, 31, 27, 0.13);
-    border-color: rgba(113, 128, 107, 0.28);
+    transform: none;
+    border-color: color-mix(in srgb, var(--theme-accent) 28%, var(--line));
+    box-shadow:
+        0 20px 52px rgba(0, 0, 0, 0.26),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
 .visual-stage:hover,
 .visual-stage:focus-within {
-    transform: translateY(-6px) scale(1.01);
-    box-shadow: 0 30px 80px rgba(36, 31, 27, 0.14);
+    transform: translateY(-3px) scale(1.005);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.3);
 }
 
 .visual-stage img,
@@ -422,26 +428,6 @@ main::before {
 
 .faq-list article + article {
     margin-top: 0.2rem;
-}
-
-.site-header,
-.header-inner,
-.brand,
-.brand-lockup,
-.brand-mark-image,
-.brand-name,
-.brand-tagline,
-.site-nav,
-.header-actions {
-    transition:
-        width 320ms ease,
-        max-width 320ms ease,
-        min-height 320ms ease,
-        opacity 220ms ease,
-        transform 320ms cubic-bezier(0.2, 0.75, 0.25, 1),
-        gap 320ms ease,
-        padding 320ms ease,
-        font-size 320ms ease;
 }
 
 .site-nav,
@@ -764,65 +750,14 @@ main::before {
     color: var(--theme-accent-strong, var(--sage-deep));
 }
 
-@media (min-width: 1041px) {
-    .site-header.is-condensed .header-inner {
-        width: min(31rem, calc(100vw - 2rem));
-        min-height: 4.55rem;
-        gap: 0.6rem;
-        justify-content: flex-start;
-    }
-
-    .site-header.is-condensed .brand {
-        flex: 1 1 auto;
-    }
-
-    .site-header.is-condensed .brand-lockup {
-        width: 4.4rem;
-    }
-
-    .site-header.is-condensed .brand-mark-image {
-        width: 4.2rem;
-        height: 4.2rem;
-        padding: 0.28rem;
-    }
-
-    .site-header.is-condensed .brand-name {
-        font-size: 1.28rem;
-    }
-
-    .site-header.is-condensed .brand-tagline {
-        font-size: 0.78rem;
-    }
-
-    .site-header.is-condensed .site-nav,
-    .site-header.is-condensed .header-actions {
-        max-width: 0;
-        opacity: 0;
-        transform: translateX(1rem) scale(0.96);
-        overflow: hidden;
-        pointer-events: none;
-        gap: 0;
-        margin: 0;
-        padding: 0;
-    }
-}
-
 .reveal-ready {
     opacity: 0;
-    transform: translate3d(0, 1.15rem, 0) scale(0.992);
-    filter: blur(3px);
-    transition:
-        opacity 860ms cubic-bezier(0.22, 1, 0.36, 1),
-        transform 860ms cubic-bezier(0.22, 1, 0.36, 1),
-        filter 860ms cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: 40ms;
-    will-change: opacity, transform, filter;
+    transition: opacity 520ms var(--ease-expressive);
+    transition-delay: 20ms;
 }
 
 .reveal-ready.is-visible {
     opacity: 1;
-    transform: none;
-    filter: none;
 }
 
 .reveal-delay-1 {
@@ -854,7 +789,6 @@ main::before {
     .header-inner,
     .brand,
     .brand-lockup,
-    .logo-wreath,
     .site-nav,
     .header-actions {
         transition: none !important;
@@ -863,6 +797,7 @@ main::before {
         filter: none !important;
         opacity: 1 !important;
     }
+
 }
 
 @media (max-width: 1040px) {

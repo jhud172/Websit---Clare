@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'blog', ~{::main})}">
 <main class="theme-journal">
-    <article class="section article-page">
+    <article class="section article-page section-reveal-zone" aria-labelledby="article-heading">
         <div class="shell article-page-grid">
             <div>
                 <p class="eyebrow" th:text="${post.heroEyebrow()}">Editorial guidance for modern wedding ceremonies</p>
-                <h1 th:text="${post.title()}">Creating a wedding ceremony that still feels like you</h1>
+                <h1 id="article-heading" th:text="${post.title()}">Creating a wedding ceremony that still feels like you</h1>
                 <p class="article-meta">
                     <span th:text="${post.category()}">Weddings</span>
                     <span th:text="${post.readTime()}">4 min read</span>
@@ -15,17 +15,19 @@
             </div>
 
             <div class="article-body">
-                <p th:each="paragraph : ${post.paragraphs()}" th:text="${paragraph}">Placeholder paragraph.</p>
-                <button class="button button-secondary" type="button" data-open-enquiry-modal>Ask about this service</button>
+                <p th:each="paragraph : ${post.paragraphs()}" th:text="${paragraph}">Clare shares practical, thoughtful guidance to help you plan a ceremony that feels true to you.</p>
+                <button class="button button-secondary" type="button" aria-haspopup="dialog" data-open-enquiry-modal>Talk to Clare about your ceremony</button>
             </div>
         </div>
     </article>
 
-    <section class="section section-tint">
+    <section class="section section-tint section-reveal-zone"
+             aria-labelledby="related-reading-heading"
+             th:if="${#lists.size(posts) > 1}">
         <div class="shell">
             <div class="section-heading">
-                <p class="eyebrow">More reading</p>
-                <h2>Use this area for related posts, FAQs or local planning content.</h2>
+                <p class="eyebrow">Continue reading</p>
+                <h2 id="related-reading-heading">More thoughtful guidance for planning a meaningful ceremony.</h2>
             </div>
             <div class="article-grid">
                 <article class="article-card" th:each="relatedPost : ${posts}" th:if="${relatedPost.slug() != post.slug()}">
@@ -33,7 +35,11 @@
                         <span th:text="${relatedPost.category()}">Planning</span>
                         <span th:text="${relatedPost.readTime()}">3 min read</span>
                     </p>
-                    <h3 th:text="${relatedPost.title()}">Questions to ask before booking a celebrant</h3>
+                    <h3>
+                        <a th:href="@{/blog/{slug}(slug=${relatedPost.slug()})}"
+                           th:text="${relatedPost.title()}">Questions to ask before booking a celebrant</a>
+                    </h3>
+                    <p th:text="${relatedPost.excerpt()}">Practical ideas for creating a ceremony with warmth, personality and purpose.</p>
                     <a class="text-link" th:href="@{/blog/{slug}(slug=${relatedPost.slug()})}">Read article</a>
                 </article>
             </div>

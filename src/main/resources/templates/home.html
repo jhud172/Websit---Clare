@@ -12,13 +12,13 @@
                      decoding="async">
             </figure>
             <figure class="hero-media" data-carousel-slide>
-                <img th:src="@{/images/weddings/amy-wedding-1.jpg}"
+                <img data-src="/images/weddings/amy-wedding-1.jpg"
                      alt=""
                      loading="lazy"
                      decoding="async">
             </figure>
             <figure class="hero-media" data-carousel-slide>
-                <img th:src="@{/images/weddings/amy-wedding-2.jpg}"
+                <img data-src="/images/weddings/amy-wedding-2.jpg"
                      alt=""
                      loading="lazy"
                      decoding="async">
@@ -27,8 +27,7 @@
         <div class="hero-overlay" aria-hidden="true"></div>
         <div class="shell">
             <div class="hero-copy hero-fullbleed-copy">
-                <p class="eyebrow hero-locality-eyebrow">Wedding and Celebration of Life celebrant in Durham</p>
-                <p class="eyebrow">Clare's Life Celebrations · For Moments That Matter</p>
+                <p class="eyebrow hero-locality-eyebrow">Weddings and Celebrations of Life in Durham</p>
                 <h1>Ceremonies filled with warmth, soul and genuine emotion</h1>
                 <p class="lead">Welcome to a place where life's most meaningful moments are honoured with beauty, compassion and individuality, from joyful weddings to heartfelt celebrations of life.</p>
                 <div class="hero-actions">
@@ -79,10 +78,10 @@
             </div>
             <div class="symbolism-mark" aria-hidden="true">
                 <div class="symbolism-brand-panel">
-                    <img class="symbolism-brand-art" th:src="@{/images/brand/clc-wreath-extra-feather.png}" alt="">
+                    <img class="symbolism-brand-art" th:src="@{/images/brand/clc-wreath-extra-feather-640.webp}" width="640" height="640" loading="lazy" decoding="async" fetchpriority="low" alt="">
                 </div>
                 <figure class="symbolism-couple-card">
-                    <img th:src="@{/images/weddings/amy-wedding-9.jpg}" alt="">
+                    <img th:src="@{/images/weddings/amy-wedding-9.jpg}" loading="lazy" decoding="async" fetchpriority="low" alt="">
                 </figure>
                 <div class="symbolism-points">
                     <span>Love and joy</span>
@@ -184,13 +183,18 @@
         <div class="shell review-carousel" data-carousel data-carousel-interval="5200" data-carousel-transition="720">
             <div class="review-carousel-track">
                 <article class="review-card is-active" data-carousel-slide th:each="review, stat : ${featuredReviews}" th:classappend="${stat.index == 0} ? ' is-active'">
-                    <p class="review-stars">★★★★★</p>
+                    <p class="review-stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></p>
                     <h3 th:text="${review.headline != null ? review.headline : 'A ceremony to remember'}">A ceremony to remember</h3>
-                    <p th:text="${review.message}">Review text</p>
-                    <p class="review-meta"><strong th:text="${review.reviewerName}">Reviewer</strong> · <span th:text="${review.ceremonyType}">Wedding ceremony</span></p>
+                    <p class="review-card-message" th:text="${review.message}">Review text</p>
+                    <a class="text-link review-card-link" th:href="@{/reviews}">Read the full review</a>
+                    <p class="review-meta">
+                        <strong th:text="${review.reviewerName}">Reviewer</strong> · <span th:text="${review.ceremonyType}">Wedding ceremony</span>
+                        <span th:if="${review.eventDate != null}"> · </span>
+                        <time th:if="${review.eventDate != null}" th:attr="datetime=${review.eventDate}" th:text="${review.eventDateDisplay}">24 May 2026</time>
+                    </p>
                 </article>
                 <article class="review-card is-active" data-carousel-slide th:if="${#lists.isEmpty(featuredReviews)}">
-                    <p class="review-stars">★★★★★</p>
+                    <p class="review-stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></p>
                     <h3>Five-star reviews are now being collected</h3>
                     <p>Every review is checked before publication to keep this space trustworthy and genuine.</p>
                 </article>

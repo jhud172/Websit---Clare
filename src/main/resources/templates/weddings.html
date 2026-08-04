@@ -3,7 +3,7 @@
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'weddings', ~{::main})}">
 <main class="theme-wedding wedding-page">
     <section class="wedding-hero section-reveal-zone">
-        <div class="wedding-hero-media" data-carousel data-carousel-interval="5400" data-carousel-transition="920">
+        <div class="wedding-hero-media" data-carousel data-carousel-interval="5400" data-carousel-transition="720">
             <figure class="wedding-hero-slide is-active" data-carousel-slide>
                 <img th:src="@{/images/weddings/amy-wedding-1.jpg}" alt="A newly married couple walking through confetti with smiling guests around them." loading="eager" fetchpriority="high" decoding="async">
             </figure>
@@ -11,7 +11,7 @@
                 <img th:src="@{/images/weddings/home-hero.jpg}" alt="A bride smiling during a joyful wedding ceremony." loading="lazy" decoding="async">
             </figure>
             <figure class="wedding-hero-slide" data-carousel-slide>
-                <img th:src="@{/images/weddings/amy-wedding-1.jpg}" alt="A wedding couple celebrating as they walk back down the aisle." loading="lazy" decoding="async">
+                <img th:src="@{/images/weddings/amy-wedding-3.jpg}" alt="A newly married couple sharing a joyful dip outside a grand North East venue." loading="lazy" decoding="async">
             </figure>
         </div>
         <div class="wedding-hero-overlay"></div>
@@ -92,7 +92,7 @@
             <p class="eyebrow">The feeling of the day</p>
             <h2>Bright, emotional and full of movement.</h2>
         </div>
-        <div class="shell wedding-editorial-carousel" data-carousel data-carousel-interval="5200" data-carousel-transition="920">
+        <div class="shell wedding-editorial-carousel" data-carousel data-carousel-interval="5200" data-carousel-transition="720">
             <figure class="wedding-editorial-slide is-active" data-carousel-slide>
                 <img th:src="@{/images/weddings/amy-wedding-9.jpg}" loading="lazy" alt="A bride and groom smiling during their outdoor ceremony.">
                 <figcaption>
@@ -127,48 +127,102 @@
     </section>
 
     <section class="section wedding-packages-section section-divider section-reveal-zone" id="wedding-packages">
-        <div class="shell wedding-packages-heading">
-            <p class="eyebrow">Wedding investment</p>
-            <h2>Three clear levels of support, all written with care.</h2>
-            <p>Wedding package wording and prices are being refreshed with Clare. Please enquire for current details while the final packages are agreed.</p>
+        <div class="shell package-section-intro">
+            <div class="wedding-packages-heading">
+                <p class="eyebrow">Wedding investment</p>
+                <h2>Three clear levels of support, all written with care.</h2>
+                <p>Choose the level of planning and on-the-day support that feels right for you. Every package includes a fully bespoke ceremony, written from your story and delivered by Clare.</p>
+            </div>
+            <aside class="wedding-network-membership" aria-label="North East Wedding Network membership">
+                <img th:src="@{/images/brand/north-east-wedding-network-member-480.webp}"
+                     width="480"
+                     height="480"
+                     loading="lazy"
+                     alt="">
+                <div>
+                    <p class="eyebrow">Trusted connection</p>
+                    <p>Clare is an Official Network Member of the North East Wedding Network.</p>
+                </div>
+            </aside>
         </div>
         <div class="shell wedding-package-lane">
             <article class="wedding-package">
-                <p class="package-tag">Essential</p>
+                <p class="package-tag">Wedding package 01</p>
                 <h3>Essential Ceremony</h3>
-                <p class="package-price">Price to be confirmed</p>
+                <p class="package-price">£725</p>
+                <p class="package-summary">A beautifully personalised ceremony, thoughtfully written and delivered with warmth and professionalism.</p>
+                <p class="package-includes-label">Includes</p>
                 <ul class="package-list">
-                    <li>Initial consultation</li>
-                    <li>Getting to know you meeting</li>
-                    <li>Bespoke ceremony writing</li>
-                    <li>Ceremony delivery on the day</li>
+                    <li>Complimentary discovery call</li>
+                    <li>Personal planning questionnaire</li>
+                    <li>Relaxed planning meeting</li>
+                    <li>Fully bespoke ceremony written from your story</li>
+                    <li>Unlimited revisions until you are happy</li>
+                    <li>Guidance with vows, promises and commitments</li>
+                    <li>Ceremony delivered on your wedding day</li>
+                    <li>Professional PA system, where required</li>
+                    <li>Travel included within 30 miles</li>
                 </ul>
+                <p class="package-ideal"><strong>Perfect for:</strong> couples wanting a unique ceremony without the extras.</p>
+                <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Enquire about Essential</button>
             </article>
             <article class="wedding-package wedding-package-featured">
-                <p class="package-tag">Signature</p>
+                <p class="package-tag">Wedding package 02</p>
                 <h3>Signature Ceremony</h3>
-                <p class="package-price">Price to be confirmed</p>
+                <p class="package-price">£925</p>
+                <p class="package-summary">Everything you need for a seamless, stress-free ceremony with additional planning and support.</p>
+                <p class="package-includes-label">Everything in Essential, plus</p>
                 <ul class="package-list">
-                    <li>Everything in Essential</li>
-                    <li>Venue visit within reasonable distance</li>
-                    <li>Rehearsal support</li>
-                    <li>Additional planning contact</li>
+                    <li>Venue visit before your wedding, within 40 miles</li>
+                    <li>Ceremony rehearsal, where practical</li>
+                    <li>Unlimited planning meetings, calls and emails</li>
+                    <li>Help involving family members, children or pets</li>
+                    <li>Guidance with readings and symbolic ceremonies</li>
+                    <li>Coordination with your photographer and venue before the ceremony</li>
+                    <li>Printed ceremony script as a keepsake</li>
                 </ul>
+                <p class="package-ideal"><strong>Perfect for:</strong> couples wanting extra guidance and complete peace of mind.</p>
+                <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Enquire about Signature</button>
             </article>
             <article class="wedding-package">
-                <p class="package-tag">Complete</p>
+                <p class="package-tag">Wedding package 03</p>
                 <h3>Complete Ceremony Experience</h3>
-                <p class="package-price">Price to be confirmed</p>
+                <p class="package-price">£1,195</p>
+                <p class="package-summary">The ultimate celebrant experience, with every detail carefully planned and beautifully presented.</p>
+                <p class="package-includes-label">Everything in Signature, plus</p>
                 <ul class="package-list">
-                    <li>Everything in Signature</li>
-                    <li>Keepsake printout of the ceremony</li>
-                    <li>Vows and commitments copy</li>
-                    <li>Support shaping keepsake wording</li>
+                    <li>Luxury printed keepsake ceremony book</li>
+                    <li>Keepsake version of your personal vows, promises and commitments</li>
+                    <li>Bespoke symbolic ritual, such as handfasting, a unity candle, sand ceremony, wedding cocktail creation, tree planting and more</li>
+                    <li>Priority planning and support throughout your journey</li>
+                    <li>Wedding-day timeline assistance for the ceremony</li>
+                    <li>Commemorative signing certificate</li>
+                    <li>Small emergency wedding kit on the day</li>
                 </ul>
+                <p class="package-ideal"><strong>Perfect for:</strong> couples wanting an unforgettable ceremony experience with beautiful keepsakes.</p>
+                <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Enquire about Complete</button>
             </article>
         </div>
-        <div class="shell wedding-smallprint">
-            <p>Further afield may include extra costs.</p>
+        <div class="shell package-extras-block">
+            <div class="package-extras-heading">
+                <p class="eyebrow">Optional extras</p>
+                <h3>Add the details that matter to you.</h3>
+                <p>Where they are not already included, optional additions can be discussed during planning and added to your chosen package.</p>
+            </div>
+            <dl class="package-extras-grid">
+                <div><dt>Additional planning meeting</dt><dd>£50</dd></div>
+                <div><dt>Rehearsal outside your package</dt><dd>£125</dd></div>
+                <div><dt>Travel beyond the included mileage</dt><dd>50p per mile</dd></div>
+                <div><dt>Handfasting ceremony</dt><dd>£75</dd></div>
+                <div><dt>Sand ceremony</dt><dd>£65</dd></div>
+                <div><dt>Unity candle ceremony</dt><dd>£65</dd></div>
+                <div><dt>Quaich ceremony</dt><dd>£75</dd></div>
+                <div><dt>Tree-planting ceremony</dt><dd>£85</dd></div>
+                <div><dt>Personal love-story booklet</dt><dd>£45</dd></div>
+                <div><dt>Luxury vow booklets, pair</dt><dd>£35</dd></div>
+                <div><dt>Framed commemorative ceremony certificate</dt><dd>£40</dd></div>
+                <div><dt>Booking within six weeks, subject to availability</dt><dd>£100</dd></div>
+            </dl>
         </div>
     </section>
 
@@ -188,16 +242,55 @@
         </div>
     </section>
 
-    <section class="section wedding-legal-section section-divider section-reveal-zone">
-        <div class="shell wedding-legal-grid">
-            <div class="wedding-legal-copy">
-                <p class="eyebrow">Legal and destination ceremonies</p>
-                <h2>The paperwork stays simple. The ceremony gets to be meaningful.</h2>
-                <p>In England and Wales, the legal marriage service is completed separately with a registrar. Your celebrant ceremony is where the rings, vows, promises and personal words can take centre stage.</p>
-                <p>Clare can support destination wedding ceremonies across the UK and beyond, with travel logistics discussed clearly as part of your quote.</p>
+    <section class="section wedding-comparison-section section-divider section-reveal-zone"
+             aria-labelledby="celebrant-registrar-title">
+        <div class="shell wedding-comparison-layout">
+            <div class="wedding-comparison-copy">
+                <p class="eyebrow">Celebrant and registrar</p>
+                <h2 id="celebrant-registrar-title">Different roles. One ceremony plan that feels completely yours.</h2>
+                <p class="lead">For couples choosing a civil legal ceremony in England and Wales, a registrar and an independent celebrant do different jobs — and many couples choose both.</p>
+
+                <div class="wedding-role-comparison">
+                    <article class="wedding-role-card wedding-role-card-celebrant">
+                        <p class="package-tag">Personal ceremony</p>
+                        <h3>What Clare does as your celebrant</h3>
+                        <p>Clare gets to know you, writes a ceremony from your story and leads it in a setting and style that suit you. It can include personal promises, readings, music, symbolic rituals and the people you want to involve.</p>
+                        <p>As the law currently stands in England and Wales, Clare's independent celebrant-led ceremony is not, by itself, a legally binding marriage.</p>
+                    </article>
+
+                    <article class="wedding-role-card wedding-role-card-registrar">
+                        <p class="package-tag">Legal civil ceremony</p>
+                        <h3>What a registrar does</h3>
+                        <p>A registrar conducts or attends the civil ceremony that fulfils the legal marriage requirements. Civil ceremonies take place at a register office or council-approved venue and require two witnesses.</p>
+                        <p>They can include agreed personal wording, readings and music, while following the legal framework and the rule that civil ceremonies cannot include religious content.</p>
+                    </article>
+                </div>
+
+                <aside class="wedding-roles-together" aria-label="How celebrants and registrars can work together">
+                    <p class="package-tag">Many couples choose both</p>
+                    <h3>Complete the legal ceremony, then make the celebration unmistakably yours.</h3>
+                    <p>You can complete the civil legal ceremony with a registrar and hold your celebrant-led ceremony on the same day or on another date. Your local register office can confirm the notice, documents, witnesses, approved location and registrar arrangements required for your plans.</p>
+                </aside>
+
+                <p class="wedding-destination-note">Clare can also support destination wedding ceremonies across the UK and beyond, with permissions and travel logistics discussed clearly as part of your quote.</p>
+                <p class="wedding-legal-note">Legal requirements can change. Read the current <a href="https://www.gov.uk/marriages-civil-partnerships/plan-your-ceremony" target="_blank" rel="noopener noreferrer">GOV.UK guidance on planning a civil ceremony</a> or speak to your local register office before making arrangements.</p>
             </div>
-            <figure class="wedding-legal-image">
-                <img th:src="@{/images/weddings/wedding-couple-moment.jpg}" loading="lazy" alt="A wedding couple sharing a quiet moment together after their ceremony.">
+
+            <figure class="wedding-comparison-graphic">
+                <a class="wedding-comparison-image-link"
+                   th:href="@{/images/weddings/celebrant-vs-registrar.jpg}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="Open Clare's Celebrant versus Registrar comparison graphic at full size">
+                    <img th:src="@{/images/weddings/celebrant-vs-registrar.jpg}"
+                         width="1024"
+                         height="1536"
+                         loading="lazy"
+                         decoding="async"
+                         alt="Peacock-themed Celebrant versus Registrar comparison graphic.">
+                    <span>Open the graphic full size</span>
+                </a>
+                <figcaption>Clare's visual comparison. For the current legal distinction in England and Wales, use the written guidance alongside it and confirm your plans with your local register office.</figcaption>
             </figure>
         </div>
     </section>

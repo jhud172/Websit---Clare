@@ -10,6 +10,7 @@
 @import "./components/11-force-dark.css";
 @import "./components/08-modal.css";
 @import "./components/12-atmospheric-feathers.css";
+@import "./components/13-brand-motion.css";
 
 @tailwind base;
 @tailwind components;

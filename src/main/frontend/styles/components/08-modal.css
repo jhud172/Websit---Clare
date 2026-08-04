@@ -1,4 +1,6 @@
 /* Modal enquiry experience */
+html:has(body.is-modal-open),
+body.is-modal-open,
 .is-modal-open {
     overflow: hidden;
 }
@@ -35,8 +37,8 @@
     inset: 0;
     z-index: 0;
     background:
-        url("/images/objects/feather-horizontal.png") right 7vw top 7vh / min(19rem, 34vw) auto no-repeat,
-        url("/images/objects/feather-horizontal-mirrored.png") left 6vw bottom 8vh / min(18rem, 38vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-512.webp") right 7vw top 7vh / min(19rem, 34vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-mirrored-512.webp") left 6vw bottom 8vh / min(18rem, 38vw) auto no-repeat,
         radial-gradient(circle at 72% 8%, rgba(0, 118, 168, 0.24), transparent 24rem),
         radial-gradient(circle at 18% 82%, rgba(201, 154, 51, 0.18), transparent 23rem),
         radial-gradient(circle at 44% 48%, rgba(39, 149, 111, 0.12), transparent 34rem),
@@ -223,7 +225,7 @@
     border-radius: 28px 28px 0 0;
     background:
         linear-gradient(90deg, rgba(7, 10, 14, 0.94) 0%, rgba(9, 18, 25, 0.9) 55%, rgba(7, 10, 14, 0.72) 100%),
-        url("/images/objects/feather-vertical.png") right clamp(-3.2rem, -4vw, -1rem) center / min(18rem, 32vw) auto no-repeat,
+        url("/images/objects/feather-vertical-384.webp") right clamp(-3.2rem, -4vw, -1rem) center / min(18rem, 32vw) auto no-repeat,
         radial-gradient(circle at 86% 48%, rgba(0, 118, 168, 0.2), transparent 17rem),
         radial-gradient(circle at 12% 98%, rgba(201, 154, 51, 0.16), transparent 16rem);
     user-select: none;
@@ -349,7 +351,7 @@
 
 .enquiry-modal-form::before {
     background:
-        url("/images/objects/feather-horizontal-mirrored.png") left -6rem bottom -3.2rem / min(15rem, 28vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-mirrored-512.webp") left -6rem bottom -3.2rem / min(15rem, 28vw) auto no-repeat,
         radial-gradient(circle at 6% 92%, rgba(201, 154, 51, 0.1), transparent 14rem);
     opacity: 0.34;
 }
@@ -620,7 +622,7 @@
 
     .enquiry-modal-form::before {
         background:
-            url("/images/objects/feather-horizontal-mirrored.png") left -5.8rem bottom -2.75rem / 12rem auto no-repeat,
+            url("/images/objects/feather-horizontal-mirrored-512.webp") left -5.8rem bottom -2.75rem / 12rem auto no-repeat,
             radial-gradient(circle at 4% 92%, rgba(201, 154, 51, 0.12), transparent 12rem);
     }
 
@@ -670,8 +672,8 @@
     inset: 0;
     pointer-events: none;
     background:
-        url("/images/objects/feather-horizontal.png") right 6vw top 8rem / min(18rem, 30vw) auto no-repeat,
-        url("/images/objects/feather-horizontal-mirrored.png") left 7vw bottom 5rem / min(17rem, 34vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-512.webp") right 6vw top 8rem / min(18rem, 30vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-mirrored-512.webp") left 7vw bottom 5rem / min(17rem, 34vw) auto no-repeat,
         radial-gradient(circle at 78% 14%, rgba(0, 118, 168, 0.15), transparent 24rem),
         radial-gradient(circle at 18% 88%, rgba(201, 154, 51, 0.12), transparent 22rem);
     opacity: 0.56;
@@ -766,7 +768,7 @@
     inset: auto -2.5rem -2rem auto;
     width: min(18rem, 30vw);
     aspect-ratio: 0.55;
-    background: url("/images/objects/feather-vertical.png") center / contain no-repeat;
+    background: url("/images/objects/feather-vertical-384.webp") center / contain no-repeat;
     opacity: 0.34;
     filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.38));
     pointer-events: none;
@@ -782,7 +784,7 @@
     border: 1px solid rgba(243, 244, 246, 0.1);
     border-radius: clamp(18px, 1.7vw, 26px);
     background:
-        url("/images/objects/feather-horizontal.png") right -4.5rem top 1.3rem / min(13rem, 22vw) auto no-repeat,
+        url("/images/objects/feather-horizontal-512.webp") right -4.5rem top 1.3rem / min(13rem, 22vw) auto no-repeat,
         radial-gradient(circle at 94% 3%, rgba(39, 149, 111, 0.14), transparent 15rem),
         radial-gradient(circle at 0% 100%, rgba(214, 199, 145, 0.08), transparent 17rem),
         linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.018)),
@@ -810,11 +812,6 @@
     --logo-wreath-scale: 1.22;
     width: clamp(3.9rem, 6vw, 5.25rem);
     overflow: visible;
-}
-
-.review-submission-form:hover .review-form-logo .logo-wreath,
-.review-submission-form:focus-within .review-form-logo .logo-wreath {
-    transform: rotate(360deg) scale(calc(var(--logo-wreath-scale) * 1.045));
 }
 
 .review-form-intro .eyebrow {
@@ -987,6 +984,17 @@
     color: rgba(243, 244, 246, 0.84);
 }
 
+.review-submission-form .form-privacy-note {
+    margin: -0.45rem 0 0.5rem;
+    color: rgba(243, 244, 246, 0.62);
+    font-size: 0.84rem;
+    line-height: 1.55;
+}
+
+.review-submission-form .form-privacy-note .text-link {
+    color: rgba(243, 244, 246, 0.9);
+}
+
 .review-submission-form.enquiry-modal-form > .button,
 .review-form-actions > .button {
     width: 100%;
@@ -1039,7 +1047,7 @@
 
     .reviews-submit-section::before {
         background:
-            url("/images/objects/feather-horizontal.png") right -4rem top 2rem / 13rem auto no-repeat,
+            url("/images/objects/feather-horizontal-512.webp") right -4rem top 2rem / 13rem auto no-repeat,
             radial-gradient(circle at 80% 12%, rgba(0, 118, 168, 0.14), transparent 15rem);
         opacity: 0.42;
     }
