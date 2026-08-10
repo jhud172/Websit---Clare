@@ -45,6 +45,102 @@ body::before {
     opacity: 0.34;
 }
 
+.atmospheric-feather-field {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    pointer-events: none;
+    contain: strict;
+}
+
+.atmospheric-feather {
+    --feather-size: clamp(4.75rem, 7vw, 7.25rem);
+    --feather-rotation: -18deg;
+    position: absolute;
+    top: -24vh;
+    left: 5vw;
+    width: var(--feather-size);
+    aspect-ratio: 2 / 1;
+    background: url("/images/objects/feather-horizontal-512.webp") center / contain no-repeat;
+    opacity: 0.19;
+    filter:
+        saturate(0.88)
+        drop-shadow(0 10px 18px rgba(0, 0, 0, 0.24))
+        drop-shadow(0 0 10px rgba(214, 199, 145, 0.08));
+    transform: translate3d(0, -24vh, 0) rotate(var(--feather-rotation));
+    transform-origin: center;
+    will-change: transform;
+    animation: atmospheric-feather-drift 26s linear infinite;
+}
+
+.atmospheric-feather-one {
+    left: 2vw;
+    animation-delay: -4s;
+}
+
+.atmospheric-feather-two {
+    --feather-size: clamp(3.75rem, 5.5vw, 5.75rem);
+    --feather-rotation: 22deg;
+    left: 18vw;
+    background-image: url("/images/objects/feather-horizontal-mirrored-512.webp");
+    opacity: 0.15;
+    animation-delay: -17s;
+    animation-duration: 31s;
+}
+
+.atmospheric-feather-three {
+    --feather-size: clamp(4rem, 6vw, 6.25rem);
+    --feather-rotation: -34deg;
+    left: 43vw;
+    opacity: 0.13;
+    animation-delay: -10s;
+    animation-duration: 29s;
+}
+
+.atmospheric-feather-four {
+    --feather-size: clamp(4.25rem, 6.5vw, 6.75rem);
+    --feather-rotation: 16deg;
+    left: 68vw;
+    background-image: url("/images/objects/feather-horizontal-mirrored-512.webp");
+    opacity: 0.16;
+    animation-delay: -23s;
+    animation-duration: 34s;
+}
+
+.atmospheric-feather-five {
+    --feather-size: clamp(5rem, 7.5vw, 7.75rem);
+    --feather-rotation: -24deg;
+    left: 86vw;
+    opacity: 0.18;
+    animation-delay: -13s;
+    animation-duration: 28s;
+}
+
+.atmospheric-feather-six {
+    --feather-size: clamp(3.5rem, 5vw, 5.25rem);
+    --feather-rotation: 28deg;
+    left: 96vw;
+    background-image: url("/images/objects/feather-horizontal-mirrored-512.webp");
+    opacity: 0.14;
+    animation-delay: -27s;
+    animation-duration: 36s;
+}
+
+@keyframes atmospheric-feather-drift {
+    0% {
+        transform: translate3d(-3vw, -24vh, 0) rotate(var(--feather-rotation));
+    }
+
+    46% {
+        transform: translate3d(4vw, 48vh, 0) rotate(calc(var(--feather-rotation) + 74deg));
+    }
+
+    100% {
+        transform: translate3d(-1vw, 132vh, 0) rotate(calc(var(--feather-rotation) + 152deg));
+    }
+}
+
 .site-header,
 .site-header.is-scrolled,
 .site-header.is-scroll-up {
@@ -221,6 +317,25 @@ main > .section-divider:first-child > .shell:first-child::after {
 }
 
 @media (max-width: 720px) {
+    .atmospheric-feather {
+        --feather-size: clamp(3.25rem, 16vw, 4.5rem);
+        opacity: 0.14;
+    }
+
+    .atmospheric-feather-two,
+    .atmospheric-feather-three,
+    .atmospheric-feather-six {
+        display: none;
+    }
+
+    .atmospheric-feather-four {
+        left: 58vw;
+    }
+
+    .atmospheric-feather-five {
+        left: 88vw;
+    }
+
     .section-symbolism::before {
         right: -8rem;
         top: 2rem;
@@ -236,5 +351,11 @@ main > .section-divider:first-child > .shell:first-child::after {
     .section-divider > .shell:first-child::before {
         top: -2.95rem;
         width: min(15rem, 62vw);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .atmospheric-feather-field {
+        display: none;
     }
 }

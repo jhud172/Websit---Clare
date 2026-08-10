@@ -1836,6 +1836,11 @@
         drop-shadow(0 0 18px rgba(201, 154, 51, 0.08));
 }
 
+.accreditation-logo-network {
+    border-radius: 0;
+    background: transparent;
+}
+
 .accreditation-logo-link {
     text-decoration: none;
     transition:
@@ -1859,11 +1864,36 @@
     border-radius: 1rem;
 }
 
-.accreditation-logo-hitched {
+.accreditation-hitched-badge {
+    display: grid;
     width: 100%;
-    aspect-ratio: auto;
+    min-height: 4.8rem;
+    align-content: center;
+    justify-items: center;
+    gap: 0.05rem;
+    padding: 0.55rem 0.8rem 0.65rem;
+    border: 1px solid rgba(85, 50, 105, 0.2);
     border-radius: 1rem;
-    padding: 0.35rem 0.45rem;
+    background: rgba(255, 255, 255, 0.98);
+    color: #5d2b70;
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.22);
+    text-align: center;
+}
+
+.accreditation-hitched-badge span {
+    color: #4d4052;
+    font-size: 0.7rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.accreditation-hitched-badge strong {
+    font-family: var(--font-serif);
+    font-size: clamp(1.65rem, 2.8vw, 2.15rem);
+    font-style: italic;
+    line-height: 0.95;
 }
 
 .sr-only {

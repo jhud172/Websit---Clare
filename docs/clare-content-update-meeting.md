@@ -1,10 +1,15 @@
 # Clare website content update: implementation record and meeting questions
 
-Updated: 3 August 2026
+Updated: 10 August 2026
 
 Sources supplied by Clare: `Wedding Ceremony Packages draft.docx`, the North East Wedding Network membership badge and the peacock-themed Celebrant versus Registrar comparison graphic.
 
 ## Completed in this update
+
+- Restored gently floating peacock feathers across the site in a non-interactive visual layer, with fewer feathers on small screens and no animation when reduced motion is requested.
+- Corrected the Wedding hero so Amy and Rob's confetti photograph is the first image and removed the Beamish Hall photograph from the carousel.
+- Added the North East Wedding Network member badge to the shared site footer while retaining its supporting placement beside the Wedding packages.
+- Replaced the unreliable third-party Hitched badge image with a local styled profile link after the external badge source began returning an access-denied response.
 
 - Replaced every wedding-package placeholder with Clare's supplied names, descriptions, inclusions, ideal-client wording and prices.
 - Added all twelve supplied wedding optional extras and prices in a responsive, accessible list.
@@ -14,7 +19,7 @@ Sources supplied by Clare: `Wedding Ceremony Packages draft.docx`, the North Eas
 - Added the supplied concise venue-ceremony guide price of **£275–£350** and the extended Celebration of Life range of **£395–£595**.
 - Added all eleven shared ceremony extras and prices supplied for Naming Ceremonies and Vow Renewals.
 - Replaced the remaining public price-confirmation messages in the service FAQs with the confirmed package figures.
-- Added the North East Wedding Network badge beside the wedding-package introduction, with intrinsic dimensions and responsive sizing to prevent layout shift.
+- Added the North East Wedding Network badge beside the wedding-package introduction and in the shared footer, with intrinsic dimensions and responsive sizing to prevent layout shift.
 - Added Jessica's client-supplied five-star wedding review, headline and ceremony date of 24 May 2026.
 - Removed the four fictional demo testimonials that were previously displayed as approved feedback; Jessica is now the only source-backed review until more genuine reviews are approved.
 - Added British-format review dates, accessible star-rating labels, a readable homepage excerpt and the complete review on the Reviews page.
@@ -123,3 +128,6 @@ These points do not block the website update, but they should be confirmed befor
 - Temporary browser diagnostics and generated local analytics test data were removed after verification. The authoritative baseline/final screenshots remain under `output/playwright/`, and the verified local application is intentionally left running on port 8091 for James to review.
 - The final release pass rechecked 11 rendered routes with no new browser console warnings or errors, found no duplicate IDs, missing image alternatives or unnamed links/buttons, and confirmed all 46 discovered internal links/assets resolve successfully.
 - The final Maven result is 7 suites and 48 tests with 0 failures, 0 errors and 0 skipped; gzip delivery, seven-day static caching and locally served brand fonts were also verified.
+- The 10 August follow-up pass confirmed Amy and Rob's confetti photograph is the first Wedding hero image and that the Beamish Hall photograph is no longer referenced by that carousel.
+- Follow-up browser checks at 320×720, 390×844 and 1440×900 confirmed no horizontal overflow, no broken images and no console warnings or errors. Six feathers animate on larger screens, three remain on small screens, and the layer is removed when reduced motion is requested.
+- The footer Network Member artwork loaded at its 480-pixel intrinsic width and remained accessible at every checked size. The Hitched profile link now renders locally without contacting the third-party image URL that returned an access-denied response during verification.
