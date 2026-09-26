@@ -55,9 +55,9 @@
                          th:classappend="${#lists.isEmpty(review.photoFileNames)} ? ' review-story-card-text-only'">
                     <div class="review-story-content">
                         <div class="review-story-top">
-                            <p class="review-stars" th:attr="aria-label=|${review.rating} out of 5 stars|">
+                            <div class="review-stars" role="img" th:attr="aria-label=|${review.rating} out of 5 stars|">
                                 <span aria-hidden="true" th:each="star : ${#numbers.sequence(1, review.rating)}">★</span>
-                            </p>
+                            </div>
                             <span th:text="${review.ceremonyType}">Wedding ceremony</span>
                         </div>
                         <h3 th:text="${review.headline != null ? review.headline : 'A heartfelt experience'}">A heartfelt experience</h3>
@@ -131,6 +131,13 @@
                       method="post"
                       enctype="multipart/form-data"
                       novalidate>
+                    <input type="hidden" th:field="*{formStartedAt}" data-form-started-at>
+                    <input type="hidden" th:field="*{submissionToken}" data-submission-token>
+                    <input type="hidden" th:field="*{turnstileResponse}" data-turnstile-response>
+                    <div class="form-honeypot" aria-hidden="true">
+                        <label for="reviewWebsite">Leave this field empty</label>
+                        <input id="reviewWebsite" type="text" th:field="*{website}" tabindex="-1" autocomplete="off">
+                    </div>
                     <div class="review-form-intro">
                         <span class="logo-composite review-form-logo" aria-hidden="true">
                             <img class="logo-layer logo-clc" th:src="@{${clcLogoPath}}" alt="">
@@ -273,6 +280,10 @@
                     </div>
                     <p class="field-error" th:if="${#fields.hasErrors('consentAccepted')}" th:errors="*{consentAccepted}">Consent error</p>
                     <p class="form-privacy-note">You can ask for your published review or photos to be removed. See the <a class="text-link" th:href="@{/privacy#reviews-and-photos}">privacy policy</a> for details.</p>
+
+                    <div th:if="${turnstileEnabled}" class="turnstile-widget" data-turnstile-widget
+                         th:attr="data-turnstile-site-key=${turnstileSiteKey}"
+                         aria-label="Spam protection check"></div>
 
                     <div class="review-form-actions">
                         <button class="button button-peacock" type="submit" data-review-submit>Submit review for approval</button>

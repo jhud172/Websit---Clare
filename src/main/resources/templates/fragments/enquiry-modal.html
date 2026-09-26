@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div class="enquiry-modal"
+<div class="enquiry-modal enquiry-experience"
      th:fragment="enquiry-modal"
      data-enquiry-modal
      th:attr="data-open-on-load=${openEnquiryModal == true}"
@@ -9,186 +9,188 @@
      th:hidden="${openEnquiryModal != true}">
     <div class="enquiry-modal-backdrop" data-enquiry-modal-close></div>
     <div class="enquiry-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="enquiry-modal-title" tabindex="-1" data-enquiry-modal-dialog>
-        <button class="enquiry-modal-close" type="button" aria-label="Close enquiry form" data-enquiry-modal-close>
+        <button class="enquiry-modal-close" type="button" aria-label="Close availability form" data-enquiry-modal-close>
             <span aria-hidden="true">×</span>
         </button>
+
+        <aside class="enquiry-welcome" aria-label="A personal welcome from Clare">
+            <img class="enquiry-portrait" th:src="@{/images/clare/clare-brunton-portrait.jpg}" alt="Clare Brunton, your celebrant" width="964" height="1280" loading="lazy">
+            <div class="enquiry-welcome-copy">
+                <p class="eyebrow">Clare’s Life Celebrations</p>
+                <h2>A little about you.<br>A moment that matters.</h2>
+                <p>Whatever you’re planning, it starts with a conversation.</p>
+                <span class="enquiry-personal-note">A personal reply from Clare</span>
+            </div>
+        </aside>
+
+        <div class="enquiry-workspace">
         <div class="enquiry-modal-header">
-            <p class="eyebrow">Make an enquiry</p>
-            <h2 id="enquiry-modal-title">Tell Clare about your moment</h2>
-            <p>Share a few details about the ceremony you are imagining, and Clare will guide the next steps with warmth and clarity.</p>
+            <p class="eyebrow">Let’s begin</p>
+            <h2 id="enquiry-modal-title">Your ceremony, your way.</h2>
+            <p>A few essentials now. The finer details can follow.</p>
+        </div>
+
+        <div class="enquiry-progress" aria-label="Enquiry progress">
+            <span class="is-active" data-enquiry-progress="1" aria-current="step"><strong>1</strong> Your ceremony</span>
+            <span data-enquiry-progress="2"><strong>2</strong> A little more</span>
         </div>
 
         <form class="contact-form enquiry-modal-form"
-              data-contact-form
+              data-contact-form data-progressive-enquiry
               th:action="@{/contact}"
               th:object="${inquiryForm}"
               method="post"
               enctype="multipart/form-data"
               novalidate>
-            <div class="field-group" data-form-field="fullName">
-                <label for="fullName">Full name</label>
-                <div class="field-control" th:classappend="${#fields.hasErrors('fullName')} ? ' is-invalid'">
-                    <input id="fullName" type="text" th:field="*{fullName}" placeholder="Your full name" autocomplete="name" required
-                           aria-describedby="fullName-error" th:attr="aria-invalid=${#fields.hasErrors('fullName')}">
-                </div>
-                <p class="field-error" id="fullName-error" role="alert" aria-live="polite"
-                   th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Full name error</p>
+            <input type="hidden" th:field="*{packageName}" data-enquiry-package>
+            <input type="hidden" th:field="*{sourcePage}" data-enquiry-source>
+            <input type="hidden" th:field="*{formStartedAt}" data-form-started-at>
+            <input type="hidden" th:field="*{submissionToken}" data-submission-token>
+            <input type="hidden" th:field="*{turnstileResponse}" data-turnstile-response>
+            <div class="form-honeypot" aria-hidden="true">
+                <label for="website">Leave this field empty</label>
+                <input id="website" type="text" th:field="*{website}" tabindex="-1" autocomplete="off">
             </div>
 
-            <div class="field-row">
-                <div class="field-group" data-form-field="email">
-                    <label for="email">Email</label>
-                    <div class="field-control" th:classappend="${#fields.hasErrors('email')} ? ' is-invalid'">
-                        <input id="email" type="email" th:field="*{email}" placeholder="you@example.com" autocomplete="email" inputmode="email" spellcheck="false" required
-                               aria-describedby="email-error" th:attr="aria-invalid=${#fields.hasErrors('email')}">
+            <div class="enquiry-step" data-enquiry-step="1">
+                <div class="enquiry-section-heading"><h3>What do you have in mind?</h3><p>You don’t need to have everything decided.</p></div>
+                <div class="enquiry-ceremony-fields">
+                    <div class="field-group" data-form-field="serviceType">
+                        <label for="serviceType">Ceremony type</label>
+                        <div class="field-control" th:classappend="${#fields.hasErrors('serviceType')} ? ' is-invalid'">
+                            <select id="serviceType" th:field="*{serviceType}" required aria-describedby="serviceType-error" data-enquiry-choice>
+                                <option value="">Choose a ceremony</option>
+                                <option th:each="option : ${serviceOptions}" th:value="${option}" th:text="${option}">Wedding ceremony</option>
+                            </select>
+                        </div>
+                        <p class="field-error" id="serviceType-error" role="alert" aria-live="polite"
+                           th:if="${#fields.hasErrors('serviceType')}" th:errors="*{serviceType}">Ceremony type error</p>
                     </div>
-                    <p class="field-error" id="email-error" role="alert" aria-live="polite"
-                       th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</p>
-                </div>
-                <div class="field-group phone-field" data-form-field="phone" data-phone-field>
-                    <label for="phoneNumber">Phone</label>
-                    <div class="field-control field-control-phone" th:classappend="${#fields.hasErrors('phone')} ? ' is-invalid'">
-                        <button class="phone-code-btn" type="button" aria-label="Choose country code" aria-haspopup="listbox"
-                                aria-expanded="false" aria-controls="phone-country-code-list" data-phone-code-trigger>
-                            <span class="phone-region" data-phone-flag>GB</span>
-                            <span data-phone-code>+44</span>
-                            <span class="phone-chevron" aria-hidden="true"></span>
-                        </button>
-                        <input id="phone" type="hidden" th:field="*{phone}" data-phone-combined>
-                        <input id="phoneNumber" class="phone-number-input" type="tel" placeholder="7700 900123" autocomplete="tel-national" inputmode="tel"
-                               data-phone-number required aria-describedby="phone-error" th:attr="aria-invalid=${#fields.hasErrors('phone')}">
-                    </div>
-                    <div class="field-popup field-popup-phone" data-phone-popup>
-                        <ul class="field-option-list phone-option-list" id="phone-country-code-list" role="listbox" aria-label="Country code">
-                            <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-flag="GB" data-code="+44" data-national-min="10" data-national-max="10" data-national-format="4 6" data-placeholder="7700 900123"><span class="phone-option-region">GB</span><span class="phone-option-name">United Kingdom</span><span class="phone-option-code">+44</span></button></li>
-                            <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-flag="IE" data-code="+353" data-national-min="9" data-national-max="9" data-national-format="2 3 4" data-placeholder="87 123 4567"><span class="phone-option-region">IE</span><span class="phone-option-name">Ireland</span><span class="phone-option-code">+353</span></button></li>
-                            <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-flag="US" data-code="+1" data-national-min="10" data-national-max="10" data-national-format="3 3 4" data-placeholder="555 123 4567"><span class="phone-option-region">US</span><span class="phone-option-name">US &amp; Canada</span><span class="phone-option-code">+1</span></button></li>
-                            <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-flag="AU" data-code="+61" data-national-min="9" data-national-max="9" data-national-format="3 3 3" data-placeholder="412 345 678"><span class="phone-option-region">AU</span><span class="phone-option-name">Australia</span><span class="phone-option-code">+61</span></button></li>
-                            <li><button class="field-option phone-option" type="button" role="option" data-phone-option data-flag="NZ" data-code="+64" data-national-min="8" data-national-max="9" data-national-format="2 3 4" data-placeholder="21 123 4567"><span class="phone-option-region">NZ</span><span class="phone-option-name">New Zealand</span><span class="phone-option-code">+64</span></button></li>
-                        </ul>
-                    </div>
-                    <p class="field-error" id="phone-error" role="alert" aria-live="polite"
-                       th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone error</p>
-                </div>
-            </div>
 
-            <div class="field-row">
-                <div class="field-group form-choice" data-form-field="serviceType" data-choice-select>
-                    <label id="serviceType-label" for="serviceType">Ceremony type</label>
-                    <input id="serviceType" type="hidden" th:field="*{serviceType}" data-choice-input>
-                    <button class="field-control field-control-button is-placeholder" type="button" aria-haspopup="listbox" aria-expanded="false"
-                            aria-controls="serviceType-listbox" aria-labelledby="serviceType-label serviceType-value" aria-required="true"
-                            aria-describedby="serviceType-error" data-choice-trigger data-choice-placeholder="Select a ceremony type"
-                            th:attr="aria-invalid=${#fields.hasErrors('serviceType')}"
-                            th:classappend="${#fields.hasErrors('serviceType')} ? ' is-invalid'">
-                        <span class="field-control-text" id="serviceType-value" data-choice-label>Select a ceremony type</span>
-                        <span class="field-icon" aria-hidden="true">⌄</span>
-                    </button>
-                    <div class="field-popup">
-                        <div class="field-popup-select" id="serviceType-listbox" role="listbox" aria-labelledby="serviceType-label">
-                            <p class="field-option-placeholder">Choose the closest fit</p>
-                            <ul class="field-option-list">
-                                <li th:each="option : ${serviceOptions}">
-                                    <button class="field-option" type="button" role="option" data-choice-option th:attr="data-value=${option}" th:text="${option}">Wedding ceremony</button>
-                                </li>
-                            </ul>
+                    <div class="field-group" data-form-field="datePreference">
+                        <label for="datePreference">How certain is the date?</label>
+                        <div class="field-control">
+                            <select id="datePreference" th:field="*{datePreference}" data-date-preference data-enquiry-date-choices>
+                                <option value="Not decided yet">Not decided yet</option>
+                                <option value="Flexible">We’re flexible</option>
+                                <option value="Date selected">I have a date</option>
+                            </select>
                         </div>
                     </div>
-                    <p class="field-error" id="serviceType-error" role="alert" aria-live="polite"
-                       th:if="${#fields.hasErrors('serviceType')}" th:errors="*{serviceType}">Service type error</p>
                 </div>
-                <div class="field-group form-choice" data-form-field="eventDate" data-date-picker>
-                    <label id="eventDate-label" for="eventDate">Preferred date</label>
-                    <input id="eventDate" type="hidden" th:field="*{eventDate}" data-date-input>
-                    <button class="field-control field-control-button is-placeholder" type="button" aria-haspopup="dialog" aria-expanded="false"
-                            aria-controls="eventDate-picker" aria-labelledby="eventDate-label eventDate-value" aria-required="true"
-                            aria-describedby="eventDate-error" data-date-trigger data-date-placeholder="dd/mm/yyyy"
-                            th:attr="aria-invalid=${#fields.hasErrors('eventDate')}"
-                            th:classappend="${#fields.hasErrors('eventDate')} ? ' is-invalid'">
-                        <span class="field-control-text" id="eventDate-value" data-date-label>dd/mm/yyyy</span>
-                        <span class="field-icon" aria-hidden="true">⌄</span>
-                    </button>
-                    <div class="field-popup field-popup-date">
-                        <div class="date-picker-shell" id="eventDate-picker" role="dialog" aria-labelledby="eventDate-label eventDate-month">
-                            <div class="date-picker-header">
-                                <button class="date-picker-nav" type="button" aria-label="Previous month" data-date-nav="prev">‹</button>
-                                <p class="date-picker-month" id="eventDate-month" aria-live="polite" data-date-month>Month year</p>
-                                <button class="date-picker-nav" type="button" aria-label="Next month" data-date-nav="next">›</button>
-                            </div>
-                            <div class="date-picker-weekdays" aria-hidden="true">
-                                <span>Mon</span>
-                                <span>Tue</span>
-                                <span>Wed</span>
-                                <span>Thu</span>
-                                <span>Fri</span>
-                                <span>Sat</span>
-                                <span>Sun</span>
-                            </div>
-                            <div class="date-picker-grid" role="grid" data-date-grid></div>
-                            <div class="date-picker-actions">
-                                <button class="date-picker-action" type="button" data-date-action="clear">Clear</button>
-                                <button class="date-picker-action" type="button" data-date-action="today">Today</button>
-                            </div>
-                        </div>
+
+                <div class="field-group" data-form-field="eventDate" data-date-wrapper hidden>
+                    <label for="eventDate">Preferred date</label>
+                    <div class="field-control" th:classappend="${#fields.hasErrors('eventDate')} ? ' is-invalid'">
+                        <input id="eventDate" type="date" th:field="*{eventDate}" aria-describedby="eventDate-error">
                     </div>
                     <p class="field-error" id="eventDate-error" role="alert" aria-live="polite"
                        th:if="${#fields.hasErrors('eventDate')}" th:errors="*{eventDate}">Date error</p>
                 </div>
-            </div>
 
-            <div class="field-group" data-form-field="venue">
-                <label for="venue">Venue or location</label>
-                <div class="field-control" th:classappend="${#fields.hasErrors('venue')} ? ' is-invalid'">
-                    <input id="venue" type="text" th:field="*{venue}" placeholder="Venue, town or location" required
-                           aria-describedby="venue-error" th:attr="aria-invalid=${#fields.hasErrors('venue')}">
+                <div class="enquiry-section-heading enquiry-section-divider"><h3>How can Clare reach you?</h3><p>Just your name and email to get started.</p></div>
+                <div class="field-row">
+                    <div class="field-group" data-form-field="fullName">
+                        <label for="fullName">Full name</label>
+                        <div class="field-control" th:classappend="${#fields.hasErrors('fullName')} ? ' is-invalid'">
+                            <input id="fullName" type="text" th:field="*{fullName}" placeholder="Your full name" autocomplete="name" required
+                                   aria-describedby="fullName-error">
+                        </div>
+                        <p class="field-error" id="fullName-error" role="alert" aria-live="polite"
+                           th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Full name error</p>
+                    </div>
+
+                    <div class="field-group" data-form-field="email">
+                        <label for="email">Email</label>
+                        <div class="field-control" th:classappend="${#fields.hasErrors('email')} ? ' is-invalid'">
+                            <input id="email" type="email" th:field="*{email}" placeholder="you@example.com" autocomplete="email" inputmode="email" required
+                                   aria-describedby="email-error">
+                        </div>
+                        <p class="field-error" id="email-error" role="alert" aria-live="polite"
+                           th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</p>
+                    </div>
                 </div>
-                <p class="field-error" id="venue-error" role="alert" aria-live="polite"
-                   th:if="${#fields.hasErrors('venue')}" th:errors="*{venue}">Venue error</p>
+
+                <button class="button enquiry-next" type="button" data-enquiry-next>Continue <span class="enquiry-button-arrow" aria-hidden="true">→</span></button>
+                <p class="form-microcopy">No commitment. Clare will confirm availability personally.</p>
             </div>
 
-            <div class="field-group" data-form-field="message">
-                <label for="message">Tell Clare a little more</label>
-                <div class="field-control field-control-textarea" th:classappend="${#fields.hasErrors('message')} ? ' is-invalid'">
-                    <textarea id="message" th:field="*{message}" rows="6" minlength="20" maxlength="2000"
-                              placeholder="Share the kind of ceremony you are planning, the people at its heart, and anything Clare should know." required
-                              aria-describedby="message-error" th:attr="aria-invalid=${#fields.hasErrors('message')}"></textarea>
+            <div class="enquiry-step" data-enquiry-step="2">
+                <div class="enquiry-section-heading"><h3>Make it personal</h3><p>These details are optional. Share only what feels useful.</p></div>
+                <p class="enquiry-summary" data-enquiry-summary hidden></p>
+                <div class="field-row">
+                    <div class="field-group" data-form-field="phone">
+                        <label for="phone">Phone <span class="field-optional">Optional</span></label>
+                        <div class="field-control" th:classappend="${#fields.hasErrors('phone')} ? ' is-invalid'">
+                            <input id="phone" type="tel" th:field="*{phone}" placeholder="Your phone number" autocomplete="tel" inputmode="tel"
+                                   aria-describedby="phone-error">
+                        </div>
+                        <p class="field-error" id="phone-error" role="alert" aria-live="polite"
+                           th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Phone error</p>
+                    </div>
+
+                    <div class="field-group" data-form-field="venue">
+                        <label for="venue">Venue or location <span class="field-optional">Optional</span></label>
+                        <div class="field-control" th:classappend="${#fields.hasErrors('venue')} ? ' is-invalid'">
+                            <input id="venue" type="text" th:field="*{venue}" placeholder="Not chosen yet, venue or town" autocomplete="street-address"
+                                   aria-describedby="venue-error">
+                        </div>
+                        <p class="field-error" id="venue-error" role="alert" aria-live="polite"
+                           th:if="${#fields.hasErrors('venue')}" th:errors="*{venue}">Venue error</p>
+                    </div>
                 </div>
-                <p class="field-error" id="message-error" role="alert" aria-live="polite"
-                   th:if="${#fields.hasErrors('message')}" th:errors="*{message}">Message error</p>
-            </div>
 
-            <div class="field-group">
-                <label for="attachments">Optional files (up to 3, max 5MB each)</label>
-                <div class="file-dropzone" data-file-dropzone>
-                    <input class="file-input" id="attachments" name="attachments" type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" multiple
-                           aria-describedby="attachments-help attachments-error" data-file-input data-file-list-target="attachment-list">
-                    <span class="file-dropzone-copy">
-                        <span class="file-dropzone-title">Add inspiration, notes or documents</span>
-                        <span class="file-dropzone-note" id="attachments-help">JPG, PNG, WebP or PDF. Up to 3 files.</span>
-                    </span>
-                    <span class="file-dropzone-action">Choose files</span>
+                <div class="field-group" data-form-field="message">
+                    <label for="message">Anything else Clare should know? <span class="field-optional">Optional</span></label>
+                    <div class="field-control field-control-textarea" th:classappend="${#fields.hasErrors('message')} ? ' is-invalid'">
+                        <textarea id="message" th:field="*{message}" rows="4" maxlength="2000"
+                                  placeholder="Share as much or as little as feels useful." aria-describedby="message-error"></textarea>
+                    </div>
+                    <p class="enquiry-character-count" data-message-count aria-hidden="true">0 / 2,000</p>
+                    <p class="field-error" id="message-error" role="alert" aria-live="polite"
+                       th:if="${#fields.hasErrors('message')}" th:errors="*{message}">Message error</p>
                 </div>
-                <ul class="file-list" id="attachment-list" hidden></ul>
-                <p class="field-error" id="attachments-error" role="alert" aria-live="polite" data-file-error
-                   th:if="${attachmentError != null}" th:text="${attachmentError}">Attachment error</p>
-            </div>
 
-            <div class="checkbox-row" data-form-field="privacyAccepted" th:classappend="${#fields.hasErrors('privacyAccepted')} ? ' is-invalid'">
-                <input class="checkbox-input" id="privacyAccepted" type="checkbox" th:field="*{privacyAccepted}" required
-                       aria-describedby="privacyAccepted-error" th:attr="aria-invalid=${#fields.hasErrors('privacyAccepted')}">
-                <label class="checkbox-label" for="privacyAccepted">
-                    <span class="checkbox-box" aria-hidden="true"></span>
-                    <span class="checkbox-copy">
-                        I am happy for my details to be used so Clare can respond to this enquiry in line with the
-                        <a class="text-link" th:href="@{/privacy}">privacy notice</a>.
-                    </span>
-                </label>
-            </div>
-            <p class="field-error" id="privacyAccepted-error" role="alert" aria-live="polite"
-               th:if="${#fields.hasErrors('privacyAccepted')}" th:errors="*{privacyAccepted}">Privacy error</p>
+                <div class="field-group">
+                    <label for="attachments">Files <span class="field-optional">Optional · up to 3, 5 MB each</span></label>
+                    <div class="file-dropzone" data-file-dropzone>
+                        <input class="file-input" id="attachments" name="attachments" type="file" accept=".jpg,.jpeg,.png,.webp,.pdf" multiple
+                               aria-describedby="attachments-help attachments-error" data-file-input data-file-list-target="attachment-list">
+                        <svg class="enquiry-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/></svg>
+                        <span class="file-dropzone-copy">
+                            <span class="file-dropzone-title">Add inspiration, notes or documents</span>
+                            <span class="file-dropzone-note" id="attachments-help">JPG, PNG, WebP or PDF.</span>
+                        </span>
+                        <span class="file-dropzone-action">Choose files</span>
+                    </div>
+                    <ul class="file-list" id="attachment-list" hidden></ul>
+                    <p class="field-error" id="attachments-error" role="alert" aria-live="polite" data-file-error
+                       th:if="${attachmentError != null}" th:text="${attachmentError}">Attachment error</p>
+                </div>
 
-            <button class="button" type="submit">Send enquiry</button>
+                <div class="checkbox-row" data-form-field="privacyAccepted" th:classappend="${#fields.hasErrors('privacyAccepted')} ? ' is-invalid'">
+                    <input class="checkbox-input" id="privacyAccepted" type="checkbox" th:field="*{privacyAccepted}" required
+                           aria-describedby="privacyAccepted-error">
+                    <label class="checkbox-label" for="privacyAccepted">
+                        <span class="checkbox-box" aria-hidden="true"></span>
+                        <span class="checkbox-copy">I am happy for Clare to use these details to respond, in line with the <a class="text-link" th:href="@{/privacy}">privacy notice</a>.</span>
+                    </label>
+                </div>
+                <p class="field-error" id="privacyAccepted-error" role="alert" aria-live="polite"
+                   th:if="${#fields.hasErrors('privacyAccepted')}" th:errors="*{privacyAccepted}">Privacy error</p>
+
+                <div th:if="${turnstileEnabled}" class="turnstile-widget" data-turnstile-widget
+                     th:attr="data-turnstile-site-key=${turnstileSiteKey}"
+                     aria-label="Spam protection check"></div>
+
+                <div class="enquiry-step-actions">
+                    <button class="button button-secondary" type="button" data-enquiry-back>Back</button>
+                    <button class="button" type="submit">Send my enquiry <span class="enquiry-button-arrow" aria-hidden="true">→</span></button>
+                </div>
+                <p class="form-microcopy">Clare will confirm availability personally. No commitment.</p>
+            </div>
         </form>
+        </div>
     </div>
 </div>
 </body>

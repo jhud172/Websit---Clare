@@ -16,7 +16,7 @@
                 <p class="lead">From joyful weddings to dignified farewells and meaningful family milestones, Clare creates personal ceremonies with warmth, soul and calm structure.</p>
                 <div class="hero-actions">
                     <a class="button button-secondary" th:href="@{/weddings}">Explore weddings</a>
-                    <button class="button button-peacock" type="button" data-open-enquiry-modal>Make an enquiry</button>
+                    <button class="button button-peacock" type="button" data-open-enquiry-modal>Check Clare’s availability</button>
                 </div>
             </div>
             <div class="services-hero-rail" aria-label="Ceremony services">
@@ -92,11 +92,11 @@
             </article>
 
             <article class="service-path-panel" id="naming-ceremonies-overview">
-                <button class="service-path-image" type="button" data-open-enquiry-modal data-enquiry-service="Naming ceremony" aria-label="Enquire about naming ceremonies">
+                <a class="service-path-image" th:href="@{/naming-ceremonies}" aria-label="Explore naming ceremonies">
                     <img th:src="@{/images/clare/weddings-confetti-alt.jpg}"
                          loading="lazy"
                          alt="Clare creating a joyful petal moment in a garden.">
-                </button>
+                </a>
                 <div class="service-path-content">
                     <p class="eyebrow">Naming Ceremonies</p>
                     <h3>A joyful welcome, created around your child and family.</h3>
@@ -107,16 +107,16 @@
                         <li>Family and guideparent promises</li>
                         <li>Certificates and keepsake options</li>
                     </ul>
-                    <a class="text-link" href="#naming-ceremonies">View naming ceremony packages</a>
+                    <a class="text-link" th:href="@{/naming-ceremonies}">Explore naming ceremonies</a>
                 </div>
             </article>
 
             <article class="service-path-panel" id="vow-renewals-overview">
-                <button class="service-path-image" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal" aria-label="Enquire about vow renewals">
+                <a class="service-path-image" th:href="@{/vow-renewals}" aria-label="Explore vow renewals">
                     <img th:src="@{/images/weddings/detail-rings.jpg}"
                          loading="lazy"
                          alt="Wedding rings arranged as a symbol of lasting promises.">
-                </button>
+                </a>
                 <div class="service-path-content">
                     <p class="eyebrow">Vow Renewals</p>
                     <h3>Celebrate the story you have shared and the promises still ahead.</h3>
@@ -127,7 +127,7 @@
                         <li>New or original vow guidance</li>
                         <li>Milestone and keepsake options</li>
                     </ul>
-                    <a class="text-link" href="#vow-renewals">View vow renewal packages</a>
+                    <a class="text-link" th:href="@{/vow-renewals}">Explore vow renewals</a>
                 </div>
             </article>
         </div>
@@ -158,7 +158,7 @@
                         <li>Travel included within 30 miles</li>
                     </ul>
                     <p class="package-ideal"><strong>Perfect for:</strong> families wanting a meaningful alternative to a traditional christening.</p>
-                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Naming ceremony">Enquire about Little Star</button>
+                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Naming ceremony" data-enquiry-package="Little Star — £395" data-enquiry-source="/services">Enquire about this package</button>
                 </article>
                 <article class="life-package-card life-package-card-featured">
                     <p class="package-tag">Naming package 02</p>
@@ -177,7 +177,7 @@
                         <li>Unlimited planning support</li>
                     </ul>
                     <p class="package-ideal"><strong>Perfect for:</strong> families wanting to create lasting memories together.</p>
-                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Naming ceremony">Enquire about Grow With Love</button>
+                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Naming ceremony" data-enquiry-package="Grow With Love — £545" data-enquiry-source="/services">Enquire about this package</button>
                 </article>
             </div>
         </div>
@@ -207,7 +207,7 @@
                         <li>Travel included within 30 miles</li>
                     </ul>
                     <p class="package-ideal"><strong>Perfect for:</strong> an intimate celebration, milestone anniversary or meaningful new chapter.</p>
-                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal">Enquire about Forever Yours</button>
+                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal" data-enquiry-package="Forever Yours — £695" data-enquiry-source="/services">Enquire about this package</button>
                 </article>
                 <article class="life-package-card life-package-card-featured">
                     <p class="package-tag">Vow renewal package 02</p>
@@ -226,7 +226,7 @@
                         <li>Coordination with your venue and photographer</li>
                     </ul>
                     <p class="package-ideal"><strong>Perfect for:</strong> silver, ruby or golden anniversaries and destination celebrations.</p>
-                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal">Enquire about Forever &amp; Always</button>
+                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal" data-enquiry-package="Forever &amp; Always — £895" data-enquiry-source="/services">Enquire about this package</button>
                 </article>
             </div>
         </div>
@@ -351,7 +351,7 @@
                 <h2>Tell Clare what you are planning, and she will guide the next step.</h2>
                 <p>Whether you already know exactly what you need or you are still shaping the idea, the best place to start is a conversation.</p>
             </div>
-            <button class="button button-peacock" type="button" data-open-enquiry-modal>Start your ceremony enquiry</button>
+            <button class="button button-peacock" type="button" data-open-enquiry-modal>Check my date</button>
         </div>
     </section>
 </main>

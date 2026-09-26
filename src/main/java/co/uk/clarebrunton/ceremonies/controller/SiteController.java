@@ -1,16 +1,17 @@
 package co.uk.clarebrunton.ceremonies.controller;
 
 import java.net.URI;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,15 +31,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import co.uk.clarebrunton.ceremonies.config.ReviewProperties;
 import co.uk.clarebrunton.ceremonies.model.InquiryForm;
+import co.uk.clarebrunton.ceremonies.model.InquiryStatus;
 import co.uk.clarebrunton.ceremonies.model.ReviewEntry;
 import co.uk.clarebrunton.ceremonies.model.ReviewForm;
 import co.uk.clarebrunton.ceremonies.service.AnalyticsService;
 import co.uk.clarebrunton.ceremonies.service.BlogService;
 import co.uk.clarebrunton.ceremonies.service.InquiryNotificationService;
+import co.uk.clarebrunton.ceremonies.service.InquiryService;
 import co.uk.clarebrunton.ceremonies.service.ReviewService;
-import jakarta.servlet.http.HttpSession;
+import co.uk.clarebrunton.ceremonies.security.PublicSubmissionGuard;
+import co.uk.clarebrunton.ceremonies.security.PublicSubmissionGuard.SubmissionRejectedException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Controller
@@ -56,7 +60,6 @@ public class SiteController {
 	private static final int MAX_ATTACHMENT_COUNT = 3;
 	private static final long MAX_ATTACHMENT_SIZE_BYTES = 5L * 1024L * 1024L;
 	private static final Set<String> ALLOWED_ATTACHMENT_EXTENSIONS = Set.of("jpg", "jpeg", "png", "webp", "pdf");
-	private static final String REVIEW_ADMIN_SESSION_KEY = "reviewAdminAuthenticated";
 
 	private static final List<Map<String, String>> SERVICE_FAQS = List.of(
 			faq(
@@ -213,23 +216,26 @@ public class SiteController {
 	private final AnalyticsService analyticsService;
 
 	private final InquiryNotificationService inquiryNotificationService;
+	private final InquiryService inquiryService;
 
 	private final ReviewService reviewService;
 
-	private final ReviewProperties reviewProperties;
+	private final PublicSubmissionGuard submissionGuard;
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	public SiteController(BlogService blogService,
 			AnalyticsService analyticsService,
 			InquiryNotificationService inquiryNotificationService,
+			InquiryService inquiryService,
 			ReviewService reviewService,
-			ReviewProperties reviewProperties) {
+			PublicSubmissionGuard submissionGuard) {
 		this.blogService = blogService;
 		this.analyticsService = analyticsService;
 		this.inquiryNotificationService = inquiryNotificationService;
+		this.inquiryService = inquiryService;
 		this.reviewService = reviewService;
-		this.reviewProperties = reviewProperties;
+		this.submissionGuard = submissionGuard;
 	}
 
 	@ModelAttribute("serviceOptions")
@@ -302,6 +308,22 @@ public class SiteController {
 		return "funerals";
 	}
 
+	@GetMapping("/naming-ceremonies")
+	public String namingCeremonies(Model model) {
+		model.addAttribute("logoPath", LOGO_CLARE);
+		model.addAttribute("pageTitle", "Naming ceremonies in Durham");
+		model.addAttribute("pageDescription", "Warm, personal naming ceremonies by Clare Brunton, created to welcome and celebrate your child with the people who matter most.");
+		return "naming-ceremonies";
+	}
+
+	@GetMapping("/vow-renewals")
+	public String vowRenewals(Model model) {
+		model.addAttribute("logoPath", LOGO_CLARE);
+		model.addAttribute("pageTitle", "Vow renewal ceremonies in Durham");
+		model.addAttribute("pageDescription", "Personal vow renewal ceremonies by Clare Brunton, celebrating the story, promises and life you continue to share.");
+		return "vow-renewals";
+	}
+
 	@GetMapping("/funerals")
 	public ResponseEntity<Void> funeralsRedirect() {
 		return permanentRedirect("/celebrations-of-life");
@@ -321,7 +343,8 @@ public class SiteController {
 			BindingResult bindingResult,
 			@RequestParam(name = "reviewPhotos", required = false) List<MultipartFile> reviewPhotos,
 			Model model,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes,
+			HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("logoPath", LOGO_CLARE);
 			model.addAttribute("pageTitle", "Reviews");
@@ -331,10 +354,11 @@ public class SiteController {
 		}
 
 		try {
+			submissionGuard.checkReview(request, reviewForm.getWebsite(), reviewForm.getFormStartedAt(), reviewForm.getTurnstileResponse());
 			ReviewEntry submittedReview = reviewService.submitReview(reviewForm, reviewPhotos);
-			inquiryNotificationService.notifyReviewSubmitted(submittedReview);
+			if (submittedReview.isNewlySubmitted()) inquiryNotificationService.notifyReviewSubmitted(submittedReview);
 		}
-		catch (IllegalArgumentException exception) {
+		catch (IllegalArgumentException | SubmissionRejectedException exception) {
 			model.addAttribute("logoPath", LOGO_CLARE);
 			model.addAttribute("pageTitle", "Reviews");
 			model.addAttribute("pageDescription", "Read approved reviews for Clare's Life Celebrations and share your own experience for moderation.");
@@ -351,7 +375,8 @@ public class SiteController {
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> submitReviewAjax(@Valid @ModelAttribute("reviewForm") ReviewForm reviewForm,
 			BindingResult bindingResult,
-			@RequestParam(name = "reviewPhotos", required = false) List<MultipartFile> reviewPhotos) {
+			@RequestParam(name = "reviewPhotos", required = false) List<MultipartFile> reviewPhotos,
+			HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			Map<String, String> errors = new LinkedHashMap<>();
 			bindingResult.getFieldErrors().forEach((error) -> errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
@@ -363,10 +388,11 @@ public class SiteController {
 		}
 
 		try {
+			submissionGuard.checkReview(request, reviewForm.getWebsite(), reviewForm.getFormStartedAt(), reviewForm.getTurnstileResponse());
 			ReviewEntry submittedReview = reviewService.submitReview(reviewForm, reviewPhotos);
-			inquiryNotificationService.notifyReviewSubmitted(submittedReview);
+			if (submittedReview.isNewlySubmitted()) inquiryNotificationService.notifyReviewSubmitted(submittedReview);
 		}
-		catch (IllegalArgumentException exception) {
+		catch (IllegalArgumentException | SubmissionRejectedException exception) {
 			Map<String, Object> body = new LinkedHashMap<>();
 			body.put("success", false);
 			body.put("message", exception.getMessage());
@@ -380,64 +406,67 @@ public class SiteController {
 	}
 
 	@GetMapping("/reviews/admin/login")
-	public String reviewAdminLogin(Model model, HttpSession session) {
-		if (isReviewAdminAuthenticated(session)) {
-			return "redirect:/reviews/admin";
-		}
-
+	public String reviewAdminLogin(Model model,
+			@RequestParam(name = "error", required = false) String error,
+			@RequestParam(name = "locked", required = false) String locked,
+			@RequestParam(name = "logout", required = false) String logout) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Review admin login");
-		model.addAttribute("pageDescription", "Admin login for review moderation.");
+		model.addAttribute("pageTitle", "Clare Dashboard login");
+		model.addAttribute("pageDescription", "Secure login for Clare's enquiry and review dashboard.");
 		model.addAttribute("robotsContent", "noindex, nofollow");
+		if (locked != null) model.addAttribute("reviewAdminError", "Too many failed attempts. Please wait 15 minutes and try again.");
+		else if (error != null) model.addAttribute("reviewAdminError", "Login details were not recognised.");
+		if (logout != null) model.addAttribute("reviewAdminMessage", "You have been signed out securely.");
 		return "reviews-admin-login";
 	}
 
-	@PostMapping("/reviews/admin/login")
-	public String submitReviewAdminLogin(@RequestParam("username") String username,
-			@RequestParam("password") String password,
-			RedirectAttributes redirectAttributes,
-			HttpSession session) {
-		if (!areReviewAdminCredentialsConfigured()) {
-			redirectAttributes.addFlashAttribute("reviewAdminError", "Admin login is not configured. Set REVIEWS_ADMIN_USERNAME and REVIEWS_ADMIN_PASSWORD in the environment.");
-			return "redirect:/reviews/admin/login";
-		}
-
-		if (reviewProperties.getAdminUsername().equals(username) && reviewProperties.getAdminPassword().equals(password)) {
-			session.setAttribute(REVIEW_ADMIN_SESSION_KEY, Boolean.TRUE);
-			return "redirect:/reviews/admin";
-		}
-
-		redirectAttributes.addFlashAttribute("reviewAdminError", "Login details were not recognised.");
-		return "redirect:/reviews/admin/login";
-	}
-
-	@PostMapping("/reviews/admin/logout")
-	public String logoutReviewAdmin(HttpSession session) {
-		session.removeAttribute(REVIEW_ADMIN_SESSION_KEY);
-		return "redirect:/reviews/admin/login";
-	}
-
 	@GetMapping("/reviews/admin")
-	public String reviewAdmin(Model model, HttpSession session) {
-		if (!isReviewAdminAuthenticated(session)) {
-			return "redirect:/reviews/admin/login";
-		}
-
+	public String reviewAdmin(Model model,
+			@RequestParam(name = "q", required = false) String query,
+			@RequestParam(name = "status", required = false) InquiryStatus status,
+			@RequestParam(name = "service", required = false) String service,
+			@RequestParam(name = "sort", defaultValue = "newest") String sort,
+			@RequestParam(name = "includeArchived", defaultValue = "false") boolean includeArchived) {
 		model.addAttribute("logoPath", LOGO_CLARE);
-		model.addAttribute("pageTitle", "Review moderation");
-		model.addAttribute("pageDescription", "Approve or reject submitted reviews.");
+		model.addAttribute("pageTitle", "Clare Dashboard");
+		model.addAttribute("pageDescription", "Manage enquiries, reviews and website conversion activity.");
 		model.addAttribute("robotsContent", "noindex, nofollow");
 		model.addAttribute("pendingReviews", reviewService.getPendingReviews());
 		model.addAttribute("analyticsSummary", analyticsService.getSummary());
+		model.addAttribute("funnelSummary", analyticsService.getFunnelSummary());
+		model.addAttribute("analyticsBreakdown", analyticsService.getBreakdown());
+		model.addAttribute("inquiries", inquiryService.findForDashboard(query, status, service, sort, includeArchived));
+		model.addAttribute("newInquiryCount", inquiryService.countNew());
+		model.addAttribute("inquiryStatuses", InquiryStatus.values());
+		model.addAttribute("inquiryStatusCounts", inquiryService.statusCounts());
+		model.addAttribute("inquiryServiceTypes", inquiryService.serviceTypes());
+		model.addAttribute("filterQuery", query);
+		model.addAttribute("filterStatus", status);
+		model.addAttribute("filterService", service);
+		model.addAttribute("filterSort", sort);
+		model.addAttribute("includeArchived", includeArchived);
 		return "reviews-admin";
 	}
 
-	@GetMapping("/reviews/admin/manage")
-	public String manageReviews(Model model, HttpSession session) {
-		if (!isReviewAdminAuthenticated(session)) {
-			return "redirect:/reviews/admin/login";
-		}
+	public String reviewAdmin(Model model) {
+		return reviewAdmin(model, null, null, null, "newest", false);
+	}
 
+	@GetMapping("/reviews/admin/inquiries/{inquiryId}/attachments/{filename:.+}")
+	@ResponseBody
+	public ResponseEntity<Resource> inquiryAttachment(@PathVariable String inquiryId, @PathVariable String filename) {
+		var media = inquiryService.loadAttachment(inquiryId, filename)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		MediaType mediaType = StringUtils.hasText(media.contentType())
+				? MediaType.parseMediaType(media.contentType()) : MediaType.APPLICATION_OCTET_STREAM;
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(media.originalName()).build().toString())
+				.contentType(mediaType).contentLength(media.content().length)
+				.body(new ByteArrayResource(media.content()));
+	}
+
+	@GetMapping("/reviews/admin/manage")
+	public String manageReviews(Model model) {
 		model.addAttribute("logoPath", LOGO_CLARE);
 		model.addAttribute("pageTitle", "Manage all reviews");
 		model.addAttribute("pageDescription", "Enable, disable, approve, reject or delete saved reviews.");
@@ -450,12 +479,7 @@ public class SiteController {
 	public String approveReview(@PathVariable String reviewId,
 			@RequestParam(name = "note", required = false) String note,
 			@RequestParam(name = "returnTo", required = false) String returnTo,
-			RedirectAttributes redirectAttributes,
-			HttpSession session) {
-		if (!isReviewAdminAuthenticated(session)) {
-			return "redirect:/reviews/admin/login";
-		}
-
+			RedirectAttributes redirectAttributes) {
 		ReviewEntry approvedReview = reviewService.approveReview(reviewId, note);
 		inquiryNotificationService.notifyReviewReady(approvedReview);
 		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review approved.");
@@ -466,12 +490,7 @@ public class SiteController {
 	public String rejectReview(@PathVariable String reviewId,
 			@RequestParam(name = "note", required = false) String note,
 			@RequestParam(name = "returnTo", required = false) String returnTo,
-			RedirectAttributes redirectAttributes,
-			HttpSession session) {
-		if (!isReviewAdminAuthenticated(session)) {
-			return "redirect:/reviews/admin/login";
-		}
-
+			RedirectAttributes redirectAttributes) {
 		reviewService.rejectReview(reviewId, note);
 		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review rejected and deleted.");
 		return redirectAfterReviewAction(returnTo);
@@ -479,12 +498,7 @@ public class SiteController {
 
 	@PostMapping("/reviews/admin/{reviewId}/enable")
 	public String enableReview(@PathVariable String reviewId,
-			RedirectAttributes redirectAttributes,
-			HttpSession session) {
-		if (!isReviewAdminAuthenticated(session)) {
-			return "redirect:/reviews/admin/login";
-		}
-
+			RedirectAttributes redirectAttributes) {
 		reviewService.enableReview(reviewId);
 		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review enabled.");
 		return "redirect:/reviews/admin/manage";
@@ -492,12 +506,7 @@ public class SiteController {
 
 	@PostMapping("/reviews/admin/{reviewId}/disable")
 	public String disableReview(@PathVariable String reviewId,
-			RedirectAttributes redirectAttributes,
-			HttpSession session) {
-		if (!isReviewAdminAuthenticated(session)) {
-			return "redirect:/reviews/admin/login";
-		}
-
+			RedirectAttributes redirectAttributes) {
 		reviewService.disableReview(reviewId);
 		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review disabled.");
 		return "redirect:/reviews/admin/manage";
@@ -505,41 +514,33 @@ public class SiteController {
 
 	@PostMapping("/reviews/admin/{reviewId}/delete")
 	public String deleteReview(@PathVariable String reviewId,
-			RedirectAttributes redirectAttributes,
-			HttpSession session) {
-		if (!isReviewAdminAuthenticated(session)) {
-			return "redirect:/reviews/admin/login";
-		}
-
+			RedirectAttributes redirectAttributes) {
 		reviewService.deleteReview(reviewId);
 		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Review deleted permanently.");
 		return "redirect:/reviews/admin/manage";
 	}
 
-	@GetMapping("/review-photos/{filename}")
+	@GetMapping("/review-photos/{category}/{filename}")
 	@ResponseBody
-	public ResponseEntity<Resource> reviewPhoto(@PathVariable String filename) {
-		Path resourcePath = reviewService.resolvePhotoPath(filename);
-		Resource resource = new FileSystemResource(resourcePath);
+	public ResponseEntity<Resource> reviewPhoto(@PathVariable String category, @PathVariable String filename) {
+		var media = reviewService.loadPhoto(category + "/" + filename)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		MediaType mediaType = StringUtils.hasText(media.contentType())
+				? MediaType.parseMediaType(media.contentType()) : MediaType.APPLICATION_OCTET_STREAM;
+		return ResponseEntity.ok()
+				.contentType(mediaType)
+				.contentLength(media.content().length)
+				.body(new ByteArrayResource(media.content()));
+	}
 
-		if (!resource.exists()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-		}
-
-		MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
-		String extension = StringUtils.getFilenameExtension(filename);
-
-		if ("jpg".equalsIgnoreCase(extension) || "jpeg".equalsIgnoreCase(extension)) {
-			mediaType = MediaType.IMAGE_JPEG;
-		}
-		else if ("png".equalsIgnoreCase(extension)) {
-			mediaType = MediaType.IMAGE_PNG;
-		}
-		else if ("webp".equalsIgnoreCase(extension)) {
-			mediaType = MediaType.parseMediaType("image/webp");
-		}
-
-		return ResponseEntity.ok().contentType(mediaType).body(resource);
+	@PostMapping("/reviews/admin/inquiries/{inquiryId}")
+	public String updateInquiry(@PathVariable String inquiryId,
+			@RequestParam InquiryStatus status,
+			@RequestParam(name = "notes", required = false) String notes,
+			RedirectAttributes redirectAttributes) {
+		inquiryService.update(inquiryId, status, notes);
+		redirectAttributes.addFlashAttribute("reviewAdminMessage", "Enquiry updated.");
+		return "redirect:/reviews/admin#enquiries";
 	}
 
 	@GetMapping("/ceremonies")
@@ -581,12 +582,23 @@ public class SiteController {
 		return "redirect:/";
 	}
 
+	@PostMapping("/analytics/events")
+	@ResponseBody
+	public ResponseEntity<Void> trackEvent(@RequestParam String eventType,
+			@RequestParam(name = "pagePath", required = false) String pagePath,
+			@RequestParam(name = "serviceType", required = false) String serviceType,
+			@RequestParam(name = "packageName", required = false) String packageName) {
+		analyticsService.recordFunnelEvent(eventType, pagePath, serviceType, packageName);
+		return ResponseEntity.noContent().build();
+	}
+
 	@PostMapping("/contact")
 	public String submitContact(@Valid @ModelAttribute("inquiryForm") InquiryForm inquiryForm,
 			BindingResult bindingResult,
 			@RequestParam(name = "attachments", required = false) List<MultipartFile> attachments,
 			Model model,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes,
+			HttpServletRequest request) {
 		List<MultipartFile> uploadedAttachments = normaliseAttachments(attachments);
 		String attachmentError = validateAttachments(uploadedAttachments);
 
@@ -599,21 +611,19 @@ public class SiteController {
 			return "home";
 		}
 
-		if (uploadedAttachments.isEmpty()) {
-			inquiryNotificationService.handleInquiry(inquiryForm);
+		try {
+			submissionGuard.checkInquiry(request, inquiryForm.getWebsite(), inquiryForm.getFormStartedAt(), inquiryForm.getTurnstileResponse());
+			inquiryService.submit(inquiryForm, uploadedAttachments);
+			analyticsService.recordFunnelEvent("ENQUIRY_SUBMITTED", inquiryForm.getSourcePage(), inquiryForm.getServiceType(), inquiryForm.getPackageName());
 		}
-		else {
-			inquiryNotificationService.handleInquiry(inquiryForm, uploadedAttachments);
+		catch (IllegalArgumentException | SubmissionRejectedException exception) {
+			prepareHomeModel(model);
+			model.addAttribute("openEnquiryModal", true);
+			model.addAttribute("attachmentError", exception.getMessage());
+			return "home";
 		}
 		redirectAttributes.addFlashAttribute("submittedServiceType", inquiryForm.getServiceType());
 		return "redirect:/thank-you";
-	}
-
-	public String submitContact(InquiryForm inquiryForm,
-			BindingResult bindingResult,
-			Model model,
-			RedirectAttributes redirectAttributes) {
-		return submitContact(inquiryForm, bindingResult, List.of(), model, redirectAttributes);
 	}
 
 	@GetMapping("/thank-you")
@@ -707,16 +717,6 @@ public class SiteController {
 		catch (JsonProcessingException exception) {
 			return null;
 		}
-	}
-
-	private boolean isReviewAdminAuthenticated(HttpSession session) {
-		Object value = session.getAttribute(REVIEW_ADMIN_SESSION_KEY);
-		return value instanceof Boolean authenticated && authenticated;
-	}
-
-	private boolean areReviewAdminCredentialsConfigured() {
-		return StringUtils.hasText(reviewProperties.getAdminUsername())
-				&& StringUtils.hasText(reviewProperties.getAdminPassword());
 	}
 
 	private String redirectAfterReviewAction(String returnTo) {

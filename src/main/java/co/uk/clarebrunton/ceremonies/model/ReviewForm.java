@@ -11,6 +11,17 @@ import jakarta.validation.constraints.Size;
 
 public class ReviewForm {
 
+	@Size(max = 120)
+	private String website;
+
+	private long formStartedAt;
+
+	@Size(max = 36)
+	private String submissionToken;
+
+	@Size(max = 2048)
+	private String turnstileResponse;
+
 	@NotBlank(message = "Please add your name.")
 	@Size(max = 100, message = "Please keep your name under 100 characters.")
 	private String reviewerName;
@@ -101,5 +112,14 @@ public class ReviewForm {
 	public void setConsentAccepted(boolean consentAccepted) {
 		this.consentAccepted = consentAccepted;
 	}
+
+	public String getWebsite() { return website; }
+	public void setWebsite(String website) { this.website = website; }
+	public long getFormStartedAt() { return formStartedAt; }
+	public void setFormStartedAt(long formStartedAt) { this.formStartedAt = formStartedAt; }
+	public String getSubmissionToken() { return submissionToken; }
+	public void setSubmissionToken(String submissionToken) { this.submissionToken = submissionToken; }
+	public String getTurnstileResponse() { return turnstileResponse; }
+	public void setTurnstileResponse(String turnstileResponse) { this.turnstileResponse = turnstileResponse; }
 
 }

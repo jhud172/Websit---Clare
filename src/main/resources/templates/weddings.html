@@ -3,7 +3,7 @@
       th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'weddings', ~{::main})}">
 <main class="theme-wedding wedding-page">
     <section class="wedding-hero section-reveal-zone">
-        <div class="wedding-hero-media" data-carousel data-carousel-interval="5400" data-carousel-transition="720">
+        <div class="wedding-hero-media" data-carousel data-carousel-interval="5400" data-carousel-transition="720" aria-label="Wedding hero images">
             <figure class="wedding-hero-slide is-active" data-carousel-slide>
                 <img th:src="@{/images/weddings/amy-wedding-2.jpg}" alt="Amy and Rob walking through confetti with smiling guests around them." loading="eager" fetchpriority="high" decoding="async">
             </figure>
@@ -21,7 +21,7 @@
                 <h1>Joyful ceremonies written around the two of you.</h1>
                 <p class="lead">A modern celebrant-led wedding gives you the freedom to create a ceremony that feels warm, personal, relaxed and completely yours.</p>
                 <div class="hero-actions">
-                    <button class="button button-peacock" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Start your wedding enquiry</button>
+                    <button class="button button-peacock" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony" data-enquiry-source="/weddings">Check Clare’s availability</button>
                     <a class="button button-secondary" href="#wedding-packages">View packages</a>
                 </div>
             </div>
@@ -92,7 +92,7 @@
             <p class="eyebrow">The feeling of the day</p>
             <h2>Bright, emotional and full of movement.</h2>
         </div>
-        <div class="shell wedding-editorial-carousel" data-carousel data-carousel-interval="5200" data-carousel-transition="720">
+        <div class="shell wedding-editorial-carousel" data-carousel data-carousel-interval="5200" data-carousel-transition="720" aria-label="Wedding gallery images">
             <figure class="wedding-editorial-slide is-active" data-carousel-slide>
                 <img th:src="@{/images/weddings/amy-wedding-9.jpg}" loading="lazy" alt="A bride and groom smiling during their outdoor ceremony.">
                 <figcaption>
@@ -125,6 +125,9 @@
             </div>
         </div>
     </section>
+
+    <section th:replace="~{fragments/ceremony-media :: gallery}"></section>
+    <section th:replace="~{fragments/ceremony-media :: film}"></section>
 
     <section class="section wedding-packages-section section-divider section-reveal-zone" id="wedding-packages">
         <div class="shell package-section-intro">
@@ -164,7 +167,7 @@
                     <li>Travel included within 30 miles</li>
                 </ul>
                 <p class="package-ideal"><strong>Perfect for:</strong> couples wanting a unique ceremony without the extras.</p>
-                <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Enquire about Essential</button>
+                <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony" data-enquiry-package="Essential Ceremony — £725" data-enquiry-source="/weddings">Enquire about this package</button>
             </article>
             <article class="wedding-package wedding-package-featured">
                 <p class="package-tag">Wedding package 02</p>
@@ -182,7 +185,7 @@
                     <li>Printed ceremony script as a keepsake</li>
                 </ul>
                 <p class="package-ideal"><strong>Perfect for:</strong> couples wanting extra guidance and complete peace of mind.</p>
-                <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Enquire about Signature</button>
+                <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony" data-enquiry-package="Signature Ceremony — £925" data-enquiry-source="/weddings">Enquire about this package</button>
             </article>
             <article class="wedding-package">
                 <p class="package-tag">Wedding package 03</p>
@@ -200,7 +203,7 @@
                     <li>Small emergency wedding kit on the day</li>
                 </ul>
                 <p class="package-ideal"><strong>Perfect for:</strong> couples wanting an unforgettable ceremony experience with beautiful keepsakes.</p>
-                <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Enquire about Complete</button>
+                <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony" data-enquiry-package="Complete Ceremony Experience — £1,195" data-enquiry-source="/weddings">Enquire about this package</button>
             </article>
         </div>
         <div class="shell package-extras-block">
@@ -299,7 +302,7 @@
         <div class="shell wedding-final-panel">
             <p class="eyebrow">Planning your wedding?</p>
             <h2>Tell Clare about your date, your venue and the feeling you want guests to remember.</h2>
-            <button class="button button-peacock" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Tell Clare about your ceremony</button>
+            <button class="button button-peacock" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony" data-enquiry-source="/weddings">Check my date</button>
         </div>
     </section>
 </main>

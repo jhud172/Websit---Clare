@@ -32,7 +32,7 @@
                 <p class="lead">Welcome to a place where life's most meaningful moments are honoured with beauty, compassion and individuality, from joyful weddings to heartfelt celebrations of life.</p>
                 <div class="hero-actions">
                     <a class="button" th:href="@{/weddings}">Explore wedding ceremonies</a>
-                    <button class="button-light button-peacock button-light-accent" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony">Make an enquiry</button>
+                    <button class="button-light button-peacock button-light-accent" type="button" data-open-enquiry-modal data-enquiry-service="Wedding ceremony" data-enquiry-source="/">Check Clare’s availability</button>
                 </div>
                 <div class="carousel-controls" aria-label="Hero images">
                     <button class="carousel-arrow" type="button" data-carousel-prev aria-label="Previous image">‹</button>
@@ -56,10 +56,11 @@
                 <p>Her approach blends calm structure, thoughtful writing and a warm presence, helping couples and families feel genuinely looked after from the first conversation.</p>
                 <a class="text-link" th:href="@{/about}">Meet Clare</a>
             </div>
-            <figure class="visual-stage media-stage media-stage-detail">
-                <img th:src="@{/images/clare/weddings-confetti-alt.jpg}"
+            <figure class="visual-stage media-stage media-stage-detail clare-portrait-stage">
+                <img th:src="@{/images/clare/clare-brunton-portrait.jpg}"
+                     width="964" height="1280" decoding="async"
                      loading="lazy"
-                     alt="Clare smiling warmly as confetti fills the air around her — full of joy and personality.">
+                     alt="Clare Brunton smiling, wearing a black dress with a decorative brooch.">
                 <figcaption class="media-stage-overlay">
                     <p class="media-stage-kicker">Clare's approach</p>
                     <p class="visual-caption">Modern, meaningful and personal in tone, with a professional structure behind every ceremony.</p>
@@ -183,7 +184,7 @@
         <div class="shell review-carousel" data-carousel data-carousel-interval="5200" data-carousel-transition="720">
             <div class="review-carousel-track">
                 <article class="review-card is-active" data-carousel-slide th:each="review, stat : ${featuredReviews}" th:classappend="${stat.index == 0} ? ' is-active'">
-                    <p class="review-stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></p>
+                    <div class="review-stars" role="img" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></div>
                     <h3 th:text="${review.headline != null ? review.headline : 'A ceremony to remember'}">A ceremony to remember</h3>
                     <p class="review-card-message" th:text="${review.message}">Review text</p>
                     <a class="text-link review-card-link" th:href="@{/reviews}">Read the full review</a>
@@ -194,7 +195,7 @@
                     </p>
                 </article>
                 <article class="review-card is-active" data-carousel-slide th:if="${#lists.isEmpty(featuredReviews)}">
-                    <p class="review-stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></p>
+                    <div class="review-stars" role="img" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></div>
                     <h3>Five-star reviews are now being collected</h3>
                     <p>Every review is checked before publication to keep this space trustworthy and genuine.</p>
                 </article>
@@ -230,7 +231,7 @@
                 <h2>If you are ready to create a moment that feels true to you, start with a message.</h2>
                 <p>Tell Clare what you are planning and she will guide you towards the right ceremony format and next steps.</p>
             </div>
-            <button class="button button-peacock" type="button" data-open-enquiry-modal>Enquire now</button>
+            <button class="button button-peacock" type="button" data-open-enquiry-modal>Check my date</button>
         </div>
     </section>
 </main>

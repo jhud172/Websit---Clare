@@ -10,31 +10,70 @@ const revealSelectors = [
     ".page-hero-grid > *",
     ".hero .visual-stage",
     ".section-heading",
-    ".path-panel",
-    ".detail-card",
     ".quote-card",
     ".package-card",
     ".gallery-card",
-    ".story-copy",
     ".split-layout .visual-stage",
-    ".process-list li",
-    ".faq-toolbar",
-    ".faq-list article",
-    ".services-faq-heading",
-    ".services-faq-list article",
-    ".contact-panel",
-    ".contact-form",
     ".cta-panel",
-    ".policy-index",
-    ".policy-card",
     ".review-story-card",
     ".reviews-hero-proof",
-    ".reviews-submit-copy",
     ".reviews-submit-panel"
 ];
 
 const modalTriggerSelector = "[data-open-enquiry-modal]";
 const reducedMotionRequested = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const createSubmissionToken = () => {
+    if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (character) => {
+        const random = Math.floor(Math.random() * 16);
+        const value = character === "x" ? random : (random & 0x3) | 0x8;
+        return value.toString(16);
+    });
+};
+
+document.querySelectorAll("form[data-confirm]").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+        if (!window.confirm(form.dataset.confirm)) event.preventDefault();
+    });
+});
+
+const trackFunnelEvent = (eventType, details = {}) => {
+    const csrfToken = document.querySelector("meta[name='_csrf']")?.content;
+    const csrfHeader = document.querySelector("meta[name='_csrf_header']")?.content;
+    const body = new URLSearchParams({
+        eventType,
+        pagePath: window.location.pathname,
+        serviceType: details.serviceType || "",
+        packageName: details.packageName || ""
+    });
+    const headers = { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" };
+    if (csrfToken && csrfHeader) headers[csrfHeader] = csrfToken;
+    window.fetch("/analytics/events", { method: "POST", headers, body, keepalive: true }).catch(() => {});
+};
+
+const serviceByPath = {
+    "/weddings": "Wedding ceremony",
+    "/celebrations-of-life": "Celebration of Life or memorial",
+    "/naming-ceremonies": "Naming ceremony",
+    "/vow-renewals": "Vow renewal"
+};
+if (serviceByPath[window.location.pathname]) {
+    trackFunnelEvent("SERVICE_VIEWED", { serviceType: serviceByPath[window.location.pathname] });
+}
+
+if ("IntersectionObserver" in window) {
+    const viewedPackages = new WeakSet();
+    const packageObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting || viewedPackages.has(entry.target)) return;
+            viewedPackages.add(entry.target);
+            const trigger = entry.target.querySelector("[data-enquiry-package]");
+            if (trigger) trackFunnelEvent("PACKAGE_VIEWED", { serviceType: trigger.dataset.enquiryService, packageName: trigger.dataset.enquiryPackage });
+            packageObserver.unobserve(entry.target);
+        });
+    }, { threshold: 0.55 });
+    document.querySelectorAll(".package-card, .life-package-card").forEach((card) => packageObserver.observe(card));
+}
 
 const applyTheme = (theme) => {
     document.documentElement.dataset.theme = theme;
@@ -109,15 +148,71 @@ if (siteHeader) {
     window.addEventListener("resize", requestHeaderSync, { passive: true });
 }
 
+const servicesNavigation = document.querySelector(".nav-services");
+const servicesToggle = document.querySelector("[data-services-toggle]");
+const servicesMenu = document.querySelector("#ceremony-services-menu");
+let servicesCloseTimer;
+
+const setServicesOpen = (open) => {
+    if (!servicesNavigation || !servicesToggle || !servicesMenu) return;
+    window.clearTimeout(servicesCloseTimer);
+    servicesNavigation.classList.toggle("is-open", open);
+    servicesToggle.setAttribute("aria-expanded", String(open));
+    servicesToggle.setAttribute("aria-label", open ? "Hide ceremony services" : "Show ceremony services");
+    servicesMenu.inert = !open;
+};
+
+if (servicesNavigation && servicesToggle && servicesMenu) {
+    const hoverNavigation = window.matchMedia("(min-width: 1241px) and (hover: hover) and (pointer: fine)");
+    servicesNavigation.dataset.servicesReady = "true";
+    setServicesOpen(false);
+
+    servicesToggle.addEventListener("click", () => {
+        setServicesOpen(servicesToggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    servicesNavigation.addEventListener("pointerenter", () => {
+        if (hoverNavigation.matches) setServicesOpen(true);
+    });
+    servicesNavigation.addEventListener("pointerleave", () => {
+        if (hoverNavigation.matches && !servicesMenu.contains(document.activeElement)) {
+            servicesCloseTimer = window.setTimeout(() => setServicesOpen(false), 180);
+        }
+    });
+    servicesMenu.addEventListener("pointerenter", () => window.clearTimeout(servicesCloseTimer));
+    servicesNavigation.addEventListener("focusout", (event) => {
+        if (!servicesNavigation.contains(event.relatedTarget)) setServicesOpen(false);
+    });
+    servicesNavigation.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && servicesToggle.getAttribute("aria-expanded") === "true") {
+            event.preventDefault();
+            event.stopPropagation();
+            setServicesOpen(false);
+            servicesToggle.focus();
+        }
+        if (event.key === "ArrowDown" && event.target.closest(".nav-services-heading")) {
+            event.preventDefault();
+            setServicesOpen(true);
+            servicesMenu.querySelector("a")?.focus();
+        }
+    });
+    document.addEventListener("pointerdown", (event) => {
+        if (!servicesNavigation.contains(event.target)) setServicesOpen(false);
+    });
+    hoverNavigation.addEventListener("change", () => setServicesOpen(false));
+}
+
 if (navToggle && siteNav) {
     const closeNav = () => {
         siteNav.classList.remove("is-open");
         navToggle.setAttribute("aria-expanded", "false");
+        setServicesOpen(false);
     };
 
     navToggle.addEventListener("click", () => {
         const isOpen = siteNav.classList.toggle("is-open");
         navToggle.setAttribute("aria-expanded", String(isOpen));
+        if (!isOpen) setServicesOpen(false);
     });
 
     siteNav.querySelectorAll("a").forEach((link) => {
@@ -149,10 +244,15 @@ if (enquiryModal) {
     const modalTriggers = document.querySelectorAll(modalTriggerSelector);
     let previousFocus = null;
     let modalScrollFrame = null;
+    let modalFocusTimer = null;
+    let modalCloseTimer = null;
 
     const getFocusableElements = () => Array.from(modalDialog.querySelectorAll(
         "a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex='-1'])"
-    )).filter((element) => !element.hasAttribute("hidden"));
+    )).filter((element) => element.tabIndex >= 0
+        && !element.hasAttribute("hidden")
+        && !element.closest("[aria-hidden='true']")
+        && (element.offsetWidth > 0 || element.offsetHeight > 0 || element.getClientRects().length > 0));
 
     const lockScroll = (locked) => {
         document.body.classList.toggle("is-modal-open", locked);
@@ -181,8 +281,17 @@ if (enquiryModal) {
     };
 
     const closeModal = () => {
-        enquiryModal.hidden = true;
-        enquiryModal.classList.remove("is-open");
+        if (modalFocusTimer !== null) {
+            window.clearTimeout(modalFocusTimer);
+            modalFocusTimer = null;
+        }
+        if (enquiryModal.classList.contains("is-closing")) return;
+        enquiryModal.classList.add("is-closing");
+        modalCloseTimer = window.setTimeout(() => {
+            enquiryModal.hidden = true;
+            enquiryModal.classList.remove("is-open", "is-closing");
+            modalCloseTimer = null;
+        }, reducedMotionRequested() ? 0 : 240);
         modalDialog?.classList.remove("is-scrolled", "is-at-bottom");
         lockScroll(false);
         if (previousFocus && typeof previousFocus.focus === "function") {
@@ -191,6 +300,8 @@ if (enquiryModal) {
     };
 
     const openModal = (trigger) => {
+        window.clearTimeout(modalCloseTimer);
+        enquiryModal.classList.remove("is-closing");
         const openedFromNavigation = Boolean(trigger?.closest("[data-site-nav]"));
         previousFocus = openedFromNavigation ? navToggle : (trigger || document.activeElement);
         if (siteNav?.classList.contains("is-open")) {
@@ -212,7 +323,19 @@ if (enquiryModal) {
             serviceField.dispatchEvent(new Event("change", { bubbles: true }));
         }
 
-        window.setTimeout(() => {
+        const packageName = trigger?.dataset.enquiryPackage || "";
+        const packageField = modalDialog.querySelector("[data-enquiry-package]");
+        const sourceField = modalDialog.querySelector("[data-enquiry-source]");
+        const startedAtField = modalDialog.querySelector("[data-form-started-at]");
+		const submissionTokenField = modalDialog.querySelector("[data-submission-token]");
+        if (packageField) packageField.value = packageName;
+        if (sourceField) sourceField.value = trigger?.dataset.enquirySource || window.location.pathname;
+        if (startedAtField) startedAtField.value = String(Date.now());
+		if (submissionTokenField && !submissionTokenField.value) submissionTokenField.value = createSubmissionToken();
+        trackFunnelEvent("ENQUIRY_OPENED", { serviceType, packageName });
+
+        modalFocusTimer = window.setTimeout(() => {
+            modalFocusTimer = null;
             const focusTargets = getFocusableElements();
             if (focusTargets.length > 0) {
                 focusTargets[0].focus({ preventScroll: true });
@@ -236,6 +359,13 @@ if (enquiryModal) {
     if (enquiryModal.dataset.openOnLoad === "true") {
         window.setTimeout(() => openModal(null), 60);
     }
+
+    window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !enquiryModal.hidden) {
+            event.preventDefault();
+            closeModal();
+        }
+    });
 
     enquiryModal.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
@@ -265,7 +395,7 @@ if (enquiryModal) {
             event.preventDefault();
             first.focus();
         }
-    });
+    }, true);
 }
 
 document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
@@ -284,7 +414,11 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         || carouselRoot.classList.contains("wedding-editorial-carousel")
         || carouselRoot.classList.contains("funeral-memory-carousel");
     const intervalMs = Number(carouselRoot.dataset.carouselInterval || 6000);
-    const transitionMs = Number(carouselRoot.dataset.carouselTransition || 980);
+    const transitionMs = Number(carouselRoot.dataset.carouselTransition || 720);
+    carouselRoot.style.setProperty("--carousel-transition", `${transitionMs}ms`);
+    carouselRoot.classList.toggle("motion-carousel", !isReviewCarousel);
+    let preparingSlide = false;
+    let pendingMove = null;
     let currentIndex = slides.findIndex((slide) => slide.classList.contains("is-active"));
     let reviewTrackIndex = currentIndex;
     let timerId = null;
@@ -313,6 +447,9 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
 
     const hydrateSlideImages = (index) => {
         const slide = slides[normaliseIndex(index)];
+
+        // Prepare the next image even while its slide is hidden.
+        slide?.querySelectorAll("img").forEach((image) => { image.loading = "eager"; });
 
         slide?.querySelectorAll("img[data-src]").forEach((image) => {
             const source = image.dataset.src;
@@ -350,8 +487,11 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         }
 
         slides.forEach((slide, index) => {
-            slide.setAttribute("role", "group");
-            slide.setAttribute("aria-roledescription", "slide");
+            const hasSemanticRole = ["ARTICLE", "FIGURE"].includes(slide.tagName);
+            if (!hasSemanticRole) {
+                slide.setAttribute("role", "group");
+                slide.setAttribute("aria-roledescription", "slide");
+            }
             slide.setAttribute("aria-label", `${index + 1} of ${slides.length}`);
         });
     }
@@ -451,6 +591,8 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
     };
 
     const finishTransition = () => {
+        window.clearTimeout(transitionTimerId);
+        transitionTimerId = null;
         slides.forEach((slide, index) => {
             const active = index === currentIndex;
             slide.classList.toggle("is-active", active);
@@ -472,6 +614,11 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
             carouselStatus.textContent = `Showing slide ${currentIndex + 1} of ${slides.length}.`;
         }
         announceNextChange = false;
+        if (pendingMove) {
+            const move = pendingMove;
+            pendingMove = null;
+            window.requestAnimationFrame(() => moveTo(move.index, move.direction, move.announce));
+        }
     };
 
     const directionFromIndexes = (nextIndex) => {
@@ -481,8 +628,9 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         return forwardDistance <= backwardDistance ? "next" : "previous";
     };
 
-    const moveTo = (nextIndex, requestedDirection, announce = false) => {
-        if (carouselRoot.classList.contains("is-transitioning")) {
+    const moveTo = async (nextIndex, requestedDirection, announce = false) => {
+        if (preparingSlide || carouselRoot.classList.contains("is-transitioning")) {
+            if (announce) pendingMove = { index: nextIndex, direction: requestedDirection, announce };
             return;
         }
 
@@ -496,6 +644,17 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         const direction = requestedDirection || directionFromIndexes(normalisedNext);
         hydrateSlideImages(normalisedNext);
         hydrateSlideImages(normalisedNext + (direction === "previous" ? -1 : 1));
+        if (!isReviewCarousel) {
+            preparingSlide = true;
+            const ready = await Promise.all(Array.from(slides[normalisedNext].querySelectorAll("img"),
+                (image) => image.decode().then(() => true).catch(() => false)));
+            preparingSlide = false;
+            if (ready.includes(false)) {
+                // Retain the visible photograph if its replacement could not load.
+                finishTransition();
+                return;
+            }
+        }
         currentIndex = normalisedNext;
         announceNextChange = announce;
         carouselRoot.dataset.carouselDirection = direction;
@@ -543,8 +702,17 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
         carouselRoot.classList.add("is-transitioning");
         setReviewTrackPosition();
         setReviewSlideStates();
-        transitionTimerId = window.setTimeout(finishTransition, transitionMs);
+        transitionTimerId = window.setTimeout(finishTransition, transitionMs + 100);
     };
+
+    carouselRoot.addEventListener("animationend", (event) => {
+        if (event.animationName === "ceremony-crossfade" && event.target === slides[currentIndex]
+                && carouselRoot.classList.contains("is-transitioning")) finishTransition();
+    });
+    track?.addEventListener("transitionend", (event) => {
+        if (event.target === track && event.propertyName === "transform"
+                && carouselRoot.classList.contains("is-transitioning")) finishTransition();
+    });
 
     const restartTimer = () => {
         if (timerId) {
@@ -552,7 +720,7 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
             timerId = null;
         }
 
-        if (userPaused || !carouselIsVisible || carouselIsHovered || carouselHasFocus) {
+        if (userPaused || document.hidden || !carouselIsVisible || carouselIsHovered || carouselHasFocus) {
             updatePauseButton();
             return;
         }
@@ -569,6 +737,11 @@ document.querySelectorAll("[data-carousel]").forEach((carouselRoot) => {
             timerId = null;
         }
     };
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) stopTimer();
+        else restartTimer();
+    });
 
     pauseButton?.addEventListener("click", () => {
         userPaused = !userPaused;
@@ -1122,6 +1295,75 @@ const formatMonthLabel = (date) => new Intl.DateTimeFormat("en-GB", {
     year: "numeric"
 }).format(date);
 
+// Enhance the bound native controls only after JavaScript is available.
+// Their names and values remain the source of truth for server validation.
+document.querySelectorAll("[data-enquiry-choice]").forEach((select) => {
+    const root = select.closest("[data-form-field]");
+    root.classList.add("form-choice");
+    root.dataset.choiceSelect = "";
+    select.dataset.choiceInput = "";
+    select.closest(".field-control").hidden = true;
+    const trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "field-control field-control-button";
+    trigger.dataset.choiceTrigger = "";
+    trigger.dataset.choicePlaceholder = select.options[0].textContent;
+    trigger.setAttribute("aria-haspopup", "listbox");
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.id = `${select.id}-trigger`;
+    root.querySelector("label").htmlFor = trigger.id;
+    trigger.innerHTML = '<span class="field-control-text" data-choice-label></span><svg class="enquiry-choice-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/><path d="M12 3c-3 2-3 4 0 5 3-1 3-3 0-5Z"/></svg>';
+    const popup = document.createElement("div");
+    popup.className = "field-popup field-popup-select";
+    popup.setAttribute("role", "listbox");
+    const list = document.createElement("div");
+    list.className = "field-option-list";
+    Array.from(select.options).filter((option) => option.value).forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "field-option";
+        button.dataset.choiceOption = "";
+        button.dataset.value = option.value;
+        button.setAttribute("role", "option");
+        button.textContent = option.textContent;
+        list.append(button);
+    });
+    popup.append(list);
+    root.querySelector(".field-control").after(trigger, popup);
+});
+
+document.querySelectorAll("[data-enquiry-date-choices]").forEach((select) => {
+    const root = select.closest("[data-form-field]");
+    const fieldLabel = root.querySelector("label");
+    fieldLabel.id = `${select.id}-label`;
+    const group = document.createElement("div");
+    group.className = "enquiry-date-choices";
+    group.setAttribute("role", "radiogroup");
+    group.setAttribute("aria-labelledby", fieldLabel.id);
+    Array.from(select.options).forEach((option, index) => {
+        const label = document.createElement("label");
+        label.className = "enquiry-date-choice";
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = `${select.id}Choice`;
+        radio.id = `${select.id}-choice-${index}`;
+        radio.value = option.value;
+        radio.checked = option.selected;
+        const text = document.createElement("span");
+        text.textContent = option.textContent;
+        label.append(radio, text);
+        group.append(label);
+        radio.addEventListener("change", () => {
+            select.value = radio.value;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+        });
+    });
+    select.addEventListener("change", () => group.querySelectorAll("input").forEach((radio) => { radio.checked = radio.value === select.value; }));
+    fieldLabel.htmlFor = `${select.id}-choice-0`;
+    select.closest(".field-control").hidden = true;
+    root.append(group);
+});
+
 const customFieldRoots = Array.from(document.querySelectorAll("[data-choice-select], [data-date-picker], [data-phone-field]"));
 let customFieldId = 0;
 
@@ -1157,8 +1399,9 @@ const positionCustomField = (root) => {
     const rootRect = root.getBoundingClientRect();
     const popupRect = popup.getBoundingClientRect();
     const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-    const spaceBelow = viewportHeight - rootRect.bottom - 18;
-    const spaceAbove = rootRect.top - 18;
+    const dialogRect = root.closest("[data-enquiry-modal-dialog]")?.getBoundingClientRect();
+    const spaceBelow = Math.min(viewportHeight, dialogRect?.bottom ?? viewportHeight) - rootRect.bottom - 18;
+    const spaceAbove = rootRect.top - Math.max(0, dialogRect?.top ?? 0) - 18;
     const openAbove = spaceBelow < Math.min(popupRect.height, 300) && spaceAbove > spaceBelow;
     const availableSpace = Math.max(180, Math.floor(openAbove ? spaceAbove : spaceBelow));
 
@@ -1349,8 +1592,6 @@ document.querySelectorAll("[data-choice-select]").forEach((root) => {
     const fieldLabelId = ensureElementId(fieldLabel, "choice-label");
     const valueLabelId = ensureElementId(label, "choice-value");
     const listboxId = ensureElementId(listbox, "choice-listbox");
-    const fieldName = input.name || input.id || root.dataset.formField || root.dataset.reviewField || "";
-
     if (fieldLabelId && valueLabelId) {
         trigger.setAttribute("aria-labelledby", `${fieldLabelId} ${valueLabelId}`);
     }
@@ -1363,10 +1604,6 @@ document.querySelectorAll("[data-choice-select]").forEach((root) => {
         listbox.querySelectorAll("ul").forEach((list) => list.setAttribute("role", "presentation"));
         listbox.querySelectorAll("li").forEach((item) => item.setAttribute("role", "presentation"));
     }
-    if (["serviceType", "ceremonyType", "rating"].includes(fieldName)) {
-        trigger.setAttribute("aria-required", "true");
-    }
-
     const syncChoice = () => {
         const selected = options.find((option) => option.dataset.value === input.value);
         const labelText = selected ? selected.textContent.trim() : placeholder;
@@ -1441,10 +1678,6 @@ document.querySelectorAll("[data-date-picker]").forEach((root) => {
     grid.setAttribute("role", "group");
     dateDialog?.setAttribute("role", "dialog");
     monthLabel.setAttribute("aria-live", "polite");
-    if (root.dataset.formField === "eventDate") {
-        trigger.setAttribute("aria-required", "true");
-    }
-
     let selectedDate = parseIsoDate(input.value);
     let viewDate = selectedDate ? new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1) : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
@@ -1771,9 +2004,9 @@ if (contactForm) {
     const fieldOrder = [
         "fullName",
         "email",
-        "phone",
         "serviceType",
         "eventDate",
+        "phone",
         "venue",
         "message",
         "privacyAccepted"
@@ -1939,12 +2172,10 @@ if (contactForm) {
         },
         phone: {
             input: contactForm.querySelector("#phone"),
-            focusTarget: contactForm.querySelector("#phoneNumber"),
+            focusTarget: contactForm.querySelector("#phoneNumber") || contactForm.querySelector("#phone"),
             validate: (value) => {
                 const trimmed = value.trim();
-                if (!trimmed) {
-                    return "Please add a phone number.";
-                }
+                if (!trimmed) return "";
                 const phoneRoot = contactForm.querySelector("[data-phone-field]");
                 const selectedCode = phoneRoot?.querySelector("[data-phone-code]")?.textContent.trim() || "";
                 const selectedOption = Array.from(phoneRoot?.querySelectorAll("[data-phone-option]") || [])
@@ -1962,16 +2193,16 @@ if (contactForm) {
         },
         serviceType: {
             input: contactForm.querySelector("#serviceType"),
-            focusTarget: contactForm.querySelector("[data-choice-trigger]"),
+            focusTarget: contactForm.querySelector("#serviceType-trigger") || contactForm.querySelector("#serviceType"),
             validate: (value) => value.trim() ? "" : "Please choose the type of ceremony."
         },
         eventDate: {
             input: contactForm.querySelector("#eventDate"),
-            focusTarget: contactForm.querySelector("[data-date-trigger]"),
+            focusTarget: contactForm.querySelector("#eventDate"),
             validate: (value) => {
-                if (!value.trim()) {
-                    return "Please add a preferred date.";
-                }
+                const preference = contactForm.querySelector("#datePreference")?.value;
+                if (preference !== "Date selected") return "";
+                if (!value.trim()) return "Please choose the date you have in mind.";
 
                 const parsed = parseIsoDate(value);
 
@@ -1985,7 +2216,7 @@ if (contactForm) {
         venue: {
             input: contactForm.querySelector("#venue"),
             focusTarget: contactForm.querySelector("#venue"),
-            validate: (value) => value.trim() ? "" : "Please add the venue or location."
+            validate: () => ""
         },
         message: {
             input: contactForm.querySelector("#message"),
@@ -1993,11 +2224,7 @@ if (contactForm) {
             validate: (value) => {
                 const trimmed = value.trim();
 
-                if (!trimmed) {
-                    return "Please tell us a little about the ceremony.";
-                }
-
-                return trimmed.length >= 20 ? "" : "Please give between 20 and 2000 characters.";
+                return trimmed.length <= 2000 ? "" : "Please keep this under 2000 characters.";
             }
         },
         privacyAccepted: {
@@ -2008,6 +2235,74 @@ if (contactForm) {
     };
 
     attachNameAutoFormat(fieldConfig.fullName.input);
+
+    const enquirySteps = Array.from(contactForm.querySelectorAll("[data-enquiry-step]"));
+    const progressSteps = Array.from(document.querySelectorAll("[data-enquiry-progress]"));
+    const datePreference = contactForm.querySelector("[data-date-preference]");
+    const dateWrapper = contactForm.querySelector("[data-date-wrapper]");
+    const startedAtField = contactForm.querySelector("[data-form-started-at]");
+    if (startedAtField && Number(startedAtField.value) <= 0) startedAtField.value = String(Date.now());
+	const submissionTokenField = contactForm.querySelector("[data-submission-token]");
+	if (submissionTokenField && !submissionTokenField.value) submissionTokenField.value = createSubmissionToken();
+
+    const showEnquiryStep = (number) => {
+        enquirySteps.forEach((step) => { step.hidden = step.dataset.enquiryStep !== String(number); });
+        progressSteps.forEach((step) => {
+            const active = step.dataset.enquiryProgress === String(number);
+            step.classList.toggle("is-active", active);
+            step.classList.toggle("is-complete", Number(step.dataset.enquiryProgress) < Number(number));
+            if (active) step.setAttribute("aria-current", "step");
+            else step.removeAttribute("aria-current");
+        });
+        const summary = contactForm.querySelector("[data-enquiry-summary]");
+        if (summary) {
+            const service = fieldConfig.serviceType.input?.value;
+            const date = parseIsoDate(fieldConfig.eventDate.input?.value);
+            summary.textContent = [service, date ? formatDisplayDate(date) : datePreference?.value].filter(Boolean).join(" · ");
+            summary.hidden = !service;
+        }
+        contactForm.closest("[data-enquiry-modal-dialog]")?.scrollTo({ top: 0, behavior: reducedMotionRequested() ? "auto" : "smooth" });
+    };
+
+    const syncDatePreference = () => {
+        const hasDate = datePreference?.value === "Date selected";
+        if (dateWrapper) dateWrapper.hidden = !hasDate;
+        if (!hasDate && fieldConfig.eventDate.input) {
+            fieldConfig.eventDate.input.value = "";
+            clearFieldError("eventDate");
+        }
+    };
+
+    datePreference?.addEventListener("change", () => {
+        syncDatePreference();
+        if (datePreference.value === "Date selected") trackFunnelEvent("DATE_SELECTED", { serviceType: fieldConfig.serviceType.input?.value });
+    });
+    syncDatePreference();
+    showEnquiryStep(contactForm.querySelector(".field-error:not([hidden])")?.closest("[data-enquiry-step]")?.dataset.enquiryStep || 1);
+
+    contactForm.querySelector("[data-enquiry-next]")?.addEventListener("click", () => {
+        const firstStepFields = ["serviceType", "eventDate", "fullName", "email"];
+        const invalid = firstStepFields.map((fieldName) => ({ fieldName, message: validateField(fieldName) })).filter((entry) => entry.message);
+        firstStepFields.forEach(clearFieldError);
+        invalid.forEach(({ fieldName, message }) => setFieldError(fieldName, message));
+        if (invalid.length) {
+            focusAndScrollToField(invalid[0].fieldName);
+            return;
+        }
+        trackFunnelEvent("FORM_STARTED", { serviceType: fieldConfig.serviceType.input?.value, packageName: contactForm.querySelector("[data-enquiry-package]")?.value });
+        showEnquiryStep(2);
+        contactForm.querySelector("[data-enquiry-step='2'] input, [data-enquiry-step='2'] textarea")?.focus({ preventScroll: true });
+    });
+    contactForm.querySelector("[data-enquiry-back]")?.addEventListener("click", () => {
+        showEnquiryStep(1);
+        fieldConfig.serviceType.focusTarget?.focus({ preventScroll: true });
+    });
+    const messageCount = contactForm.querySelector("[data-message-count]");
+    const updateMessageCount = () => {
+        if (messageCount) messageCount.textContent = `${(fieldConfig.message.input?.value.length || 0).toLocaleString("en-GB")} / 2,000`;
+    };
+    fieldConfig.message.input?.addEventListener("input", updateMessageCount);
+    updateMessageCount();
 
     const validateField = (fieldName) => {
         const config = fieldConfig[fieldName];
@@ -2098,6 +2393,12 @@ if (contactForm) {
     }
 
     contactForm.addEventListener("submit", (event) => {
+        if (enquirySteps.some((step) => step.dataset.enquiryStep === "1" && !step.hidden)) {
+            event.preventDefault();
+            contactForm.querySelector("[data-enquiry-next]")?.click();
+            return;
+        }
+		trackFunnelEvent("SUBMISSION_ATTEMPTED", { serviceType: fieldConfig.serviceType.input?.value, packageName: contactForm.querySelector("[data-enquiry-package]")?.value });
         fieldOrder.forEach((fieldName) => clearFieldError(fieldName));
 
         const invalidFields = fieldOrder
@@ -2114,6 +2415,8 @@ if (contactForm) {
             setFieldError(fieldName, message);
         });
 
+        const invalidStep = getFieldWrapper(invalidFields[0].fieldName)?.closest("[data-enquiry-step]");
+        if (invalidStep) showEnquiryStep(invalidStep.dataset.enquiryStep);
         focusAndScrollToField(invalidFields[0].fieldName);
     });
 }
@@ -2135,6 +2438,10 @@ if (reviewForm) {
         "reviewPhotos",
         "consentAccepted"
     ];
+    const reviewStartedAt = reviewForm.querySelector("[data-form-started-at]");
+    if (reviewStartedAt && Number(reviewStartedAt.value) <= 0) reviewStartedAt.value = String(Date.now());
+	const reviewSubmissionToken = reviewForm.querySelector("[data-submission-token]");
+	if (reviewSubmissionToken && !reviewSubmissionToken.value) reviewSubmissionToken.value = createSubmissionToken();
 
     const getReviewFieldWrapper = (fieldName) => reviewForm.querySelector(`[data-review-field="${fieldName}"]`);
 
@@ -2681,7 +2988,7 @@ if (lightboxTriggers.length > 0) {
         <button class="image-lightbox-backdrop" type="button" data-lightbox-close aria-label="Close image preview" tabindex="-1"></button>
         <div class="image-lightbox-dialog" role="dialog" aria-modal="true" aria-label="Image preview" tabindex="-1">
             <button class="image-lightbox-close" type="button" data-lightbox-close aria-label="Close image preview">×</button>
-            <img class="image-lightbox-image protected-image" alt="Expanded review photo" draggable="false">
+            <img class="image-lightbox-image protected-image" alt="Expanded photograph" draggable="false">
         </div>
     `;
     document.body.appendChild(lightbox);
@@ -2732,7 +3039,7 @@ if (lightboxTriggers.length > 0) {
             previousLightboxFocus = trigger;
             const thumbnail = trigger.querySelector("img");
             lightboxImage.src = trigger.dataset.lightboxSrc || "";
-            lightboxImage.alt = thumbnail?.alt || trigger.getAttribute("aria-label") || "Expanded review photo";
+            lightboxImage.alt = thumbnail?.alt || trigger.getAttribute("aria-label") || "Expanded photograph";
             lightbox.hidden = false;
             document.documentElement.classList.add("is-modal-open");
             window.requestAnimationFrame(() => {
@@ -2781,5 +3088,27 @@ if (lightboxTriggers.length > 0) {
 document.querySelectorAll(".protected-image").forEach((image) => {
     image.addEventListener("contextmenu", (event) => {
         event.preventDefault();
+    });
+});
+
+document.querySelectorAll("[data-turnstile-widget]").forEach((container) => {
+    const responseInput = container.closest("form")?.querySelector("[data-turnstile-response]");
+    const sitekey = container.dataset.turnstileSiteKey;
+
+    if (!responseInput || !sitekey || !window.turnstile) {
+        return;
+    }
+
+    window.turnstile.render(container, {
+        sitekey,
+        callback: (token) => {
+            responseInput.value = token;
+        },
+        "expired-callback": () => {
+            responseInput.value = "";
+        },
+        "error-callback": () => {
+            responseInput.value = "";
+        }
     });
 });

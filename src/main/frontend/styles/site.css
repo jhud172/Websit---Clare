@@ -11,6 +11,10 @@
 @import "./components/08-modal.css";
 @import "./components/12-atmospheric-feathers.css";
 @import "./components/13-brand-motion.css";
+@import "./components/14-ceremony-media.css";
+@import "./components/15-services-navigation.css";
+@import "./components/16-carousel-motion.css";
+@import "./components/17-enquiry-experience.css";
 
 @tailwind base;
 @tailwind components;

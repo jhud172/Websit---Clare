@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.uk.clarebrunton.ceremonies.config.SiteProperties;
+import co.uk.clarebrunton.ceremonies.config.IntegrationProperties;
 import co.uk.clarebrunton.ceremonies.model.InquiryForm;
 import co.uk.clarebrunton.ceremonies.service.SiteUrlResolver;
 import jakarta.servlet.http.HttpServletRequest;
@@ -46,12 +48,15 @@ public class SiteModelAdvice {
 
 	private final SiteProperties siteProperties;
 	private final SiteUrlResolver siteUrlResolver;
+	private final IntegrationProperties integrationProperties;
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 
-	public SiteModelAdvice(SiteProperties siteProperties, SiteUrlResolver siteUrlResolver) {
+	public SiteModelAdvice(SiteProperties siteProperties, SiteUrlResolver siteUrlResolver,
+			IntegrationProperties integrationProperties) {
 		this.siteProperties = siteProperties;
 		this.siteUrlResolver = siteUrlResolver;
+		this.integrationProperties = integrationProperties;
 	}
 
 	@ModelAttribute
@@ -64,12 +69,16 @@ public class SiteModelAdvice {
 		model.addAttribute("wreathLogoPath", WREATH_LOGO_PATH);
 		model.addAttribute("horizontalFeatherPath", HORIZONTAL_FEATHER_PATH);
 		model.addAttribute("verticalFeatherPath", VERTICAL_FEATHER_PATH);
+		model.addAttribute("ceremonyFilmAvailable", new ClassPathResource("static/videos/weddings/woodland/woodland-wedding-ceremony.mp4").exists());
+		model.addAttribute("ceremonyFilmCaptionsAvailable", new ClassPathResource("static/videos/weddings/woodland/woodland-wedding-ceremony.en.vtt").exists());
 		if (!StringUtils.hasText(siteProperties.getInstagramUrl())) {
 			siteProperties.setInstagramUrl(DEFAULT_INSTAGRAM_URL);
 		}
 		model.addAttribute("canonicalUrl", canonicalUrl);
 		model.addAttribute("openGraphImageUrl", baseUrl + OPEN_GRAPH_IMAGE_PATH);
 		model.addAttribute("structuredDataJson", buildStructuredDataJson(baseUrl));
+		model.addAttribute("turnstileEnabled", integrationProperties.getTurnstile().isEnabled());
+		model.addAttribute("turnstileSiteKey", integrationProperties.getTurnstile().getSiteKey());
 		if (!model.containsAttribute("serviceOptions")) {
 			model.addAttribute("serviceOptions", SERVICE_OPTIONS);
 		}

@@ -51,7 +51,7 @@ public class InquiryNotificationService {
 	@Value("${inquiry.notification-email:}")
 	private String notificationEmail;
 
-	@Value("${inquiry.fallback-directory:data/inquiries}")
+	@Value("${inquiry.fallback-directory:}")
 	private String fallbackDirectory;
 
 	@Value("${reviews.notification-email:}")
@@ -70,53 +70,49 @@ public class InquiryNotificationService {
 		this.siteProperties = siteProperties;
 	}
 
-	public void handleInquiry(InquiryForm inquiryForm, List<MultipartFile> attachments) {
+	public void handleInquiry(String referenceId, InquiryForm inquiryForm, List<MultipartFile> attachments) {
 		String recipient = StringUtils.hasText(notificationEmail) ? notificationEmail : siteProperties.getContactEmail();
 		JavaMailSender mailSender = mailSenderProvider.getIfAvailable();
 		ResendEmailClient resendEmailClient = resendEmailClientProvider != null ? resendEmailClientProvider.getIfAvailable() : null;
 		List<MultipartFile> safeAttachments = attachments == null ? List.of() : attachments;
 
 		if (!StringUtils.hasText(recipient)) {
-			logger.info("Inquiry received (no outbound email configured): name={}, service={}, email={}, attachments={}",
-					inquiryForm.getFullName(),
-					inquiryForm.getServiceType(),
-					inquiryForm.getEmail(),
-					safeAttachments.size());
+			logger.info("Inquiry {} saved; outbound email is not configured (attachments={})", referenceId, safeAttachments.size());
 			writeFallbackRecord(inquiryForm, safeAttachments, "outbound-email-not-configured");
 			return;
 		}
 
 		if (resendEmailClient != null && resendEmailClient.isConfigured()) {
-			sendInquiryWithResend(resendEmailClient, recipient, inquiryForm, safeAttachments);
+			sendInquiryWithResend(referenceId, resendEmailClient, recipient, inquiryForm, safeAttachments);
 			return;
 		}
 
 		if (mailSender == null) {
-			logger.info("Inquiry received (no outbound email configured): name={}, service={}, email={}, attachments={}",
-					inquiryForm.getFullName(),
-					inquiryForm.getServiceType(),
-					inquiryForm.getEmail(),
-					safeAttachments.size());
+			logger.info("Inquiry {} saved; outbound email is not configured (attachments={})", referenceId, safeAttachments.size());
 			writeFallbackRecord(inquiryForm, safeAttachments, "outbound-email-not-configured");
 			return;
 		}
 
 		try {
 			mailSender.send(createAdminMessage(mailSender, recipient, inquiryForm, safeAttachments));
-			logger.info("Admin notification sent to {} for inquiry from {}", recipient, inquiryForm.getEmail());
+			logger.info("Admin notification sent for inquiry {}", referenceId);
 		}
 		catch (MailException | MessagingException exception) {
-			logSmtpFailure("Admin notification", inquiryForm.getEmail(), exception);
+			logSmtpFailure("Admin notification for inquiry " + referenceId, referenceId, exception);
 			writeFallbackRecord(inquiryForm, safeAttachments, "admin-email-send-failed");
 		}
 
 		try {
 			mailSender.send(createConfirmationMessage(inquiryForm));
-			logger.info("Confirmation email sent to {}", inquiryForm.getEmail());
+			logger.info("Confirmation email sent for inquiry {}", referenceId);
 		}
 		catch (MailException | MessagingException exception) {
-			logSmtpFailure("Confirmation email", inquiryForm.getEmail(), exception);
+			logSmtpFailure("Confirmation email for inquiry " + referenceId, referenceId, exception);
 		}
+	}
+
+	public void handleInquiry(InquiryForm inquiryForm, List<MultipartFile> attachments) {
+		handleInquiry("unpersisted", inquiryForm, attachments);
 	}
 
 	public void handleInquiry(InquiryForm inquiryForm) {
@@ -152,8 +148,7 @@ public class InquiryNotificationService {
 		ResendEmailClient resendEmailClient = resendEmailClientProvider != null ? resendEmailClientProvider.getIfAvailable() : null;
 
 		if (!StringUtils.hasText(recipient)) {
-			logger.info("Review notification skipped (no outbound email configured): reviewer={}, status={}",
-					review.getReviewerName(), review.getStatus());
+			logger.info("Review {} notification skipped because outbound email is not configured", review.getId());
 			return;
 		}
 
@@ -166,7 +161,7 @@ public class InquiryNotificationService {
 						buildReviewPlainText(review, statusLabel, nextStep),
 						buildReviewHtml(review, heading, intro, statusLabel, nextStep),
 						List.of());
-				logger.info("Review notification sent via Resend to {} for review {}", recipient, review.getId());
+				logger.info("Review notification sent via Resend for review {}", review.getId());
 			}
 			catch (ResendEmailClient.EmailDeliveryException | IllegalStateException exception) {
 				logger.error("Review notification could not be sent for review {}. Check Resend settings.", review.getId(), exception);
@@ -175,17 +170,16 @@ public class InquiryNotificationService {
 		}
 
 		if (mailSender == null) {
-			logger.info("Review notification skipped (no outbound email configured): reviewer={}, status={}",
-					review.getReviewerName(), review.getStatus());
+			logger.info("Review {} notification skipped because outbound email is not configured", review.getId());
 			return;
 		}
 
 		try {
 			mailSender.send(createReviewMessage(mailSender, recipient, review, subject, heading, intro, statusLabel, nextStep));
-			logger.info("Review notification sent to {} for review {}", recipient, review.getId());
+			logger.info("Review notification sent for review {}", review.getId());
 		}
 		catch (MailException | MessagingException exception) {
-			logSmtpFailure("Review notification", recipient, exception);
+			logSmtpFailure("Review notification", review.getId(), exception);
 		}
 	}
 
@@ -215,7 +209,7 @@ public class InquiryNotificationService {
 		return false;
 	}
 
-	private void sendInquiryWithResend(ResendEmailClient resendEmailClient,
+	private void sendInquiryWithResend(String referenceId, ResendEmailClient resendEmailClient,
 			String recipient,
 			InquiryForm inquiryForm,
 			List<MultipartFile> attachments) {
@@ -227,11 +221,10 @@ public class InquiryNotificationService {
 					buildAdminPlainText(inquiryForm, attachments),
 					buildAdminHtml(inquiryForm, attachments),
 					attachments);
-			logger.info("Admin notification sent via Resend to {} for inquiry from {}", recipient, inquiryForm.getEmail());
+			logger.info("Admin notification sent via Resend for inquiry {}", referenceId);
 		}
 		catch (ResendEmailClient.EmailDeliveryException | IllegalStateException exception) {
-			logger.error("Admin notification could not be sent for inquiry from {}. Check Resend settings.",
-					inquiryForm.getEmail(), exception);
+			logger.error("Admin notification could not be sent for inquiry {}. Check Resend settings.", referenceId, exception);
 			writeFallbackRecord(inquiryForm, attachments, "admin-email-send-failed");
 		}
 
@@ -243,11 +236,10 @@ public class InquiryNotificationService {
 					buildConfirmationPlainText(inquiryForm),
 					buildConfirmationHtml(inquiryForm),
 					List.of());
-			logger.info("Confirmation email sent via Resend to {}", inquiryForm.getEmail());
+			logger.info("Confirmation email sent via Resend for inquiry {}", referenceId);
 		}
 		catch (ResendEmailClient.EmailDeliveryException | IllegalStateException exception) {
-			logger.error("Confirmation email could not be sent to {}. Check Resend settings.",
-					inquiryForm.getEmail(), exception);
+			logger.error("Confirmation email could not be sent for inquiry {}. Check Resend settings.", referenceId, exception);
 		}
 	}
 
@@ -334,7 +326,10 @@ public class InquiryNotificationService {
 
 				Ceremony details
 				Service: %s
+				Package: %s
+				Enquiry source: %s
 				Event date: %s
+				Date flexibility: %s
 				Venue: %s
 				Attachments: %s
 
@@ -350,7 +345,10 @@ public class InquiryNotificationService {
 				orNotSupplied(inquiryForm.getEmail()),
 				orNotSupplied(inquiryForm.getPhone()),
 				orNotSupplied(inquiryForm.getServiceType()),
+				orNotSupplied(inquiryForm.getPackageName()),
+				orNotSupplied(inquiryForm.getSourcePage()),
 				formatDate(inquiryForm.getEventDate()),
+				orNotSupplied(inquiryForm.getDatePreference()),
 				orNotSupplied(inquiryForm.getVenue()),
 				attachments.isEmpty() ? "None" : attachments.size() + " file(s) attached",
 				orNotSupplied(inquiryForm.getMessage()),
@@ -727,11 +725,10 @@ public class InquiryNotificationService {
 					StandardCharsets.UTF_8,
 					StandardOpenOption.CREATE_NEW,
 					StandardOpenOption.WRITE);
-			logger.warn("Inquiry fallback record saved to {}", recordPath);
+			logger.warn("Inquiry fallback record saved successfully");
 		}
 		catch (Exception exception) {
-			logger.error("Inquiry fallback record could not be saved. Manual follow-up may be required for {}.",
-					inquiryForm.getEmail(), exception);
+			logger.error("Inquiry fallback record could not be saved. Manual follow-up may be required.", exception);
 		}
 	}
 

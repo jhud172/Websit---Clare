@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<section th:fragment="gallery" class="section section-atmosphere-sage section-divider section-reveal-zone" id="ceremony-moments" aria-labelledby="ceremony-moments-title">
+    <div class="shell">
+        <div class="ceremony-moments-heading">
+            <p class="eyebrow">Real ceremonies, personal moments</p>
+            <h2 id="ceremony-moments-title">From the quiet details to the just-married smiles.</h2>
+            <p>A glimpse of the people, places and little touches that make every celebration different. Select a photograph to take a closer look.</p>
+        </div>
+        <div class="ceremony-photo-grid">
+            <figure class="ceremony-photo">
+                <button class="ceremony-photo-open" type="button"
+                        th:attr="data-lightbox-src=@{/images/weddings/woodland/woodland-wedding-couple-with-clare.jpg}"
+                        aria-label="Enlarge photograph: Together in a woodland setting">
+                    <img th:src="@{/images/weddings/woodland/woodland-wedding-couple-with-clare.jpg}"
+                         width="480" height="640"
+                         loading="lazy" decoding="async"
+                         alt="Clare with a wedding couple on a wooden walkway surrounded by trees.">
+                    <span aria-hidden="true">↗</span>
+                </button>
+                <figcaption>Together in a woodland setting.</figcaption>
+            </figure>
+            <figure class="ceremony-photo">
+                <button class="ceremony-photo-open" type="button"
+                        th:attr="data-lightbox-src=@{/images/weddings/woodland/woodland-wedding-first-kiss.jpg}"
+                        aria-label="Enlarge photograph: A moment just for the two of you">
+                    <img th:src="@{/images/weddings/woodland/woodland-wedding-first-kiss.jpg}"
+                         width="480" height="640"
+                         loading="lazy" decoding="async"
+                         alt="A bride and groom sharing a kiss in a woodland ceremony shelter.">
+                    <span aria-hidden="true">↗</span>
+                </button>
+                <figcaption>A moment just for the two of you.</figcaption>
+            </figure>
+            <figure class="ceremony-photo">
+                <button class="ceremony-photo-open" type="button"
+                        th:attr="data-lightbox-src=@{/images/weddings/woodland/woodland-wedding-preparations.jpg}"
+                        aria-label="Enlarge photograph: A reassuring presence on the day">
+                    <img th:src="@{/images/weddings/woodland/woodland-wedding-preparations.jpg}"
+                         width="480" height="640"
+                         loading="lazy" decoding="async"
+                         alt="Clare smiling with the groom in a wooden ceremony shelter, with flowers in the foreground.">
+                    <span aria-hidden="true">↗</span>
+                </button>
+                <figcaption>A reassuring presence on the day.</figcaption>
+            </figure>
+            <figure class="ceremony-photo ceremony-photo-detail">
+                <button class="ceremony-photo-open" type="button"
+                        th:attr="data-lightbox-src=@{/images/weddings/floral-arch/floral-arch-wedding-couple-with-clare.jpg}"
+                        aria-label="Enlarge photograph: Smiles beneath the floral arch">
+                    <img th:src="@{/images/weddings/floral-arch/floral-arch-wedding-couple-with-clare.jpg}"
+                         width="480" height="640"
+                         loading="lazy" decoding="async"
+                         alt="Clare and a wedding couple standing beneath a floral arch behind the ceremony table.">
+                    <span aria-hidden="true">↗</span>
+                </button>
+                <figcaption>Smiles beneath the floral arch.</figcaption>
+            </figure>
+            <figure class="ceremony-photo ceremony-photo-detail">
+                <button class="ceremony-photo-open" type="button"
+                        th:attr="data-lightbox-src=@{/images/weddings/floral-arch/floral-arch-wedding-handfasting-ribbons.jpg}"
+                        aria-label="Enlarge photograph: Little details, personal meaning">
+                    <img th:src="@{/images/weddings/floral-arch/floral-arch-wedding-handfasting-ribbons.jpg}"
+                         width="480" height="640"
+                         loading="lazy" decoding="async"
+                         alt="Pale green and ivory handfasting ribbons beside flowers on a wooden ceremony table.">
+                    <span aria-hidden="true">↗</span>
+                </button>
+                <figcaption>Little details, personal meaning.</figcaption>
+            </figure>
+            <figure class="ceremony-photo ceremony-photo-landscape">
+                <button class="ceremony-photo-open" type="button"
+                        th:attr="data-lightbox-src=@{/images/weddings/floral-arch/floral-arch-wedding-ceremony.jpg}"
+                        aria-label="Enlarge photograph: Words at the heart of the ceremony">
+                    <img th:src="@{/images/weddings/floral-arch/floral-arch-wedding-ceremony.jpg}"
+                         width="640" height="296"
+                         loading="lazy" decoding="async"
+                         alt="Clare holding a microphone and ceremony folder as a bride and groom face one another.">
+                    <span aria-hidden="true">↗</span>
+                </button>
+                <figcaption>Words at the heart of the ceremony.</figcaption>
+            </figure>
+        </div>
+        <p class="ceremony-moments-link"><a class="text-link" th:href="@{/reviews}">Read what couples say</a></p>
+    </div>
+</section>
+<section th:fragment="film" th:if="${ceremonyFilmAvailable}"
+         class="section section-atmosphere-clay section-divider section-reveal-zone"
+         id="ceremony-film" aria-labelledby="ceremony-film-title">
+    <div class="shell ceremony-film-layout">
+        <div class="ceremony-film-copy">
+            <p class="eyebrow">A glimpse of the day</p>
+            <h2 id="ceremony-film-title">See a little more of the celebration.</h2>
+            <p>A quiet moment from a woodland wedding, with Clare guiding the couple through their ceremony.</p>
+            <a class="text-link" th:href="@{/contact}">Talk to Clare about your ceremony</a>
+        </div>
+        <figure class="ceremony-film-player">
+            <video controls playsinline preload="none" width="512" height="910"
+                   th:poster="@{/images/weddings/woodland/woodland-wedding-ceremony-poster.jpg}"
+                   aria-label="Clare leading a woodland wedding ceremony, a five-second silent film" aria-describedby="ceremony-film-caption">
+                <source th:src="@{/videos/weddings/woodland/woodland-wedding-ceremony.mp4}" type="video/mp4">
+                <track th:if="${ceremonyFilmCaptionsAvailable}" kind="captions"
+                       th:src="@{/videos/weddings/woodland/woodland-wedding-ceremony.en.vtt}" srclang="en" label="English" default>
+                Your browser does not support embedded video. <a th:href="@{/videos/weddings/woodland/woodland-wedding-ceremony.mp4}">Open the ceremony film</a>.
+            </video>
+            <figcaption id="ceremony-film-caption">A five-second glimpse · No sound.<br>
+                <a class="text-link" th:href="@{/videos/weddings/woodland/woodland-wedding-ceremony.mp4}">Open the film in your browser</a>.
+            </figcaption>
+        </figure>
+    </div>
+</section>
+</html>

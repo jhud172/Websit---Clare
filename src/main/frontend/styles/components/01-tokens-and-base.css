@@ -22,12 +22,12 @@
     --surface-deep: #1f1c19;
     --surface-deep-2: #292521;
     --ink: #241f1b;
-    --ink-soft: rgba(36, 31, 27, 0.76);
-    --ink-muted: rgba(36, 31, 27, 0.58);
+    --ink-soft: rgba(27, 48, 46, 0.86);
+    --ink-muted: rgba(27, 48, 46, 0.74);
     --cream: #fbf6f0;
-    --sage: #71806b;
-    --sage-deep: #4d5d47;
-    --clay: #9d755e;
+    --sage: #536b61;
+    --sage-deep: #344e46;
+    --clay: #795b4c;
     --line: rgba(36, 31, 27, 0.12);
     --line-strong: rgba(36, 31, 27, 0.2);
     --shadow: 0 22px 70px rgba(36, 31, 27, 0.08);
