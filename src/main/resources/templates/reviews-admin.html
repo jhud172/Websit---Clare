@@ -5,9 +5,9 @@
     <section class="secondary-hero admin-hero section-reveal-zone">
         <div class="shell secondary-hero-grid">
             <div class="secondary-hero-copy">
-                <p class="eyebrow">Review moderation</p>
-                <h1>Pending reviews</h1>
-                <p class="lead">Check new submissions before they are allowed onto the public reviews page.</p>
+                <p class="eyebrow">Clare Dashboard</p>
+                <h1>Enquiries, reviews and website activity.</h1>
+                <p class="lead">Keep every new enquiry safe, move conversations forward and moderate client reviews in one place.</p>
                 <div class="admin-hero-actions">
                     <a class="button button-secondary" th:href="@{/reviews/admin/manage}">Manage all reviews</a>
                     <a class="button button-secondary" th:href="@{/reviews}">View public reviews</a>
@@ -15,17 +15,60 @@
             </div>
             <div class="secondary-brand-panel admin-count-panel">
                 <div class="admin-count-panel-top">
-                    <p class="secondary-status">Awaiting decision</p>
+                    <p class="secondary-status">New enquiries</p>
                     <span class="admin-count-status"
-                          th:classappend="${#lists.isEmpty(pendingReviews)} ? ' is-clear' : ' is-active'"
-                          th:text="${#lists.isEmpty(pendingReviews)} ? 'Clear' : 'Needs review'">Clear</span>
+                          th:classappend="${newInquiryCount == 0} ? ' is-clear' : ' is-active'"
+                          th:text="${newInquiryCount == 0} ? 'Clear' : 'Follow up'">Clear</span>
                 </div>
-                <strong th:text="${#lists.size(pendingReviews)}">0</strong>
-                <span th:text="${#lists.size(pendingReviews) == 1} ? 'submission waiting for moderation' : 'submissions waiting for moderation'">pending review(s)</span>
+                <strong th:text="${newInquiryCount}">0</strong>
+                <span th:text="${newInquiryCount == 1} ? 'new enquiry awaiting contact' : 'new enquiries awaiting contact'">new enquiries</span>
                 <div class="admin-count-meter" aria-hidden="true">
-                    <span th:style="${'--meter-width: ' + (#lists.isEmpty(pendingReviews) ? 8 : (#lists.size(pendingReviews) > 10 ? 100 : #lists.size(pendingReviews) * 10)) + '%'}"></span>
+                    <span th:classappend="${'meter-level-' + (newInquiryCount == 0 ? 1 : (newInquiryCount > 10 ? 10 : newInquiryCount))}"></span>
                 </div>
             </div>
+
+            <section class="admin-enquiries-panel" id="enquiries" aria-labelledby="admin-enquiries-heading">
+                <div class="admin-analytics-heading">
+                    <p class="eyebrow">Enquiry workflow</p>
+                    <h2 id="admin-enquiries-heading">Client conversations</h2>
+                    <p>Move each enquiry through the real booking journey. Email remains a notification; this dashboard is the saved record.</p>
+                </div>
+                <form class="admin-enquiry-filters" method="get" th:action="@{/reviews/admin}" aria-label="Filter enquiries">
+                    <label>Search<input type="search" name="q" th:value="${filterQuery}" placeholder="Name, email, phone or venue"></label>
+                    <label>Status<select name="status"><option value="">All active statuses</option><option th:each="option : ${inquiryStatuses}" th:value="${option}" th:text="${#strings.replace(option.name(), '_', ' ') + ' (' + inquiryStatusCounts[option.name()] + ')'}" th:selected="${option == filterStatus}">New</option></select></label>
+                    <label>Service<select name="service"><option value="">All services</option><option th:each="option : ${inquiryServiceTypes}" th:value="${option}" th:text="${option}" th:selected="${option == filterService}">Service</option></select></label>
+                    <label>Order<select name="sort"><option value="newest" th:selected="${filterSort == 'newest'}">Newest first</option><option value="oldest" th:selected="${filterSort == 'oldest'}">Oldest first</option></select></label>
+                    <label class="admin-filter-check"><input type="checkbox" name="includeArchived" value="true" th:checked="${includeArchived}"> Include archived</label>
+                    <div class="admin-filter-actions"><button class="button button-secondary" type="submit">Apply filters</button><a th:href="@{/reviews/admin#enquiries}">Clear</a></div>
+                </form>
+                <div class="admin-inquiry-list" th:if="${!#lists.isEmpty(inquiries)}">
+                    <article class="admin-inquiry-row" th:each="inquiry : ${inquiries}" th:classappend="${inquiry.followUpOverdue} ? ' is-overdue' : ''">
+                        <div class="admin-inquiry-heading">
+                            <div><p class="eyebrow" th:text="${inquiry.serviceType}">Wedding ceremony</p><h3 th:text="${inquiry.fullName}">Client name</h3></div>
+                            <div class="admin-inquiry-badges"><span class="reviews-manage-status is-overdue" th:if="${inquiry.followUpOverdue}">Follow-up overdue</span><span class="reviews-manage-status" th:text="${#strings.replace(inquiry.status.name(), '_', ' ')}">NEW</span></div>
+                        </div>
+                        <dl class="admin-inquiry-details">
+                            <div><dt>Email</dt><dd><a th:href="${'mailto:' + inquiry.email}" th:text="${inquiry.email}">email</a></dd></div>
+                            <div th:if="${inquiry.phone != null}"><dt>Phone</dt><dd><a th:href="${'tel:' + inquiry.phone}" th:text="${inquiry.phone}">phone</a></dd></div>
+                            <div><dt>Date</dt><dd th:text="${inquiry.eventDate != null ? inquiry.eventDate : inquiry.datePreference}">Not decided</dd></div>
+                            <div><dt>Venue</dt><dd th:text="${inquiry.venue != null ? inquiry.venue : 'Not chosen yet'}">Not chosen</dd></div>
+                            <div th:if="${inquiry.packageName != null}"><dt>Package</dt><dd th:text="${inquiry.packageName}">Package</dd></div>
+                            <div><dt>Source</dt><dd th:text="${inquiry.sourcePage != null ? inquiry.sourcePage : 'Website'}">Website</dd></div>
+                        </dl>
+                        <p class="reviews-admin-message" th:if="${inquiry.message != null}" th:text="${inquiry.message}">Message</p>
+                        <div class="admin-attachment-list" th:if="${!#lists.isEmpty(inquiry.attachmentKeys)}">
+                            <strong>Private attachments</strong>
+                            <a th:each="key : ${inquiry.attachmentKeys}" th:href="@{'/reviews/admin/inquiries/' + ${inquiry.id} + '/attachments/' + ${#strings.substringAfterLast(key, '/')}}" th:text="${#strings.substringAfterLast(key, '/')}">Download attachment</a>
+                        </div>
+                        <form class="admin-inquiry-form" th:action="@{'/reviews/admin/inquiries/' + ${inquiry.id}}" method="post">
+                            <label>Status<select name="status"><option th:each="option : ${inquiryStatuses}" th:value="${option}" th:text="${#strings.replace(option.name(), '_', ' ')}" th:selected="${option == inquiry.status}">New</option></select></label>
+                            <label>Private notes<textarea name="notes" rows="2" th:text="${inquiry.adminNotes}" placeholder="Call outcome, quote detail or next action"></textarea></label>
+                            <button class="button button-secondary" type="submit">Save update</button>
+                        </form>
+                    </article>
+                </div>
+                <div class="secondary-empty-state" th:if="${#lists.isEmpty(inquiries)}"><div class="admin-empty-copy"><h3>No enquiries yet</h3><p>New availability requests will be saved here before any email is sent.</p></div></div>
+            </section>
         </div>
     </section>
 
@@ -88,7 +131,7 @@
                     <div class="admin-analytics-chart" aria-label="Visits over the last 7 days">
                         <div class="admin-chart-bar"
                              th:each="day : ${analyticsSummary.lastSevenDays}"
-                             th:style="${'--bar-height: ' + day.percentage + '%'}"
+                             th:classappend="${'bar-level-' + day.roundedPercentage}"
                              th:attr="aria-label=${day.dayLabel + ' ' + day.dateLabel + ': ' + day.visits + ' visits'}">
                             <span class="admin-chart-value" th:text="${day.visits}">0</span>
                             <span class="admin-chart-track"><span class="admin-chart-fill"></span></span>
@@ -107,6 +150,27 @@
                             <small>No IP or user profile storage</small>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <section class="admin-funnel-panel" aria-labelledby="admin-funnel-heading">
+                <div class="admin-analytics-heading"><p class="eyebrow">Conversion journey</p><h2 id="admin-funnel-heading">Enquiry funnel</h2><p>Aggregate actions only—no IP addresses or personal browsing profiles.</p></div>
+                <ol class="admin-funnel-list">
+                    <li><span>Service viewed</span><strong th:text="${funnelSummary['SERVICE_VIEWED']}">0</strong></li>
+                    <li><span>Package viewed</span><strong th:text="${funnelSummary['PACKAGE_VIEWED']}">0</strong></li>
+                    <li><span>Enquiry opened</span><strong th:text="${funnelSummary['ENQUIRY_OPENED']}">0</strong></li>
+                    <li><span>Step one completed</span><strong th:text="${funnelSummary['FORM_STARTED']}">0</strong></li>
+                    <li><span>Submission attempted</span><strong th:text="${funnelSummary['SUBMISSION_ATTEMPTED']}">0</strong></li>
+                    <li><span>Enquiry received</span><strong th:text="${funnelSummary['ENQUIRY_SUBMITTED']}">0</strong></li>
+                </ol>
+                <div class="admin-conversion-grid">
+                    <article><span>Opened to received</span><strong th:text="${analyticsBreakdown.enquiryOpenToSubmitRate + '%'}">0%</strong></article>
+                    <article><span>Started to received</span><strong th:text="${analyticsBreakdown.formStartToSubmitRate + '%'}">0%</strong></article>
+                </div>
+                <div class="admin-breakdown-grid">
+                    <section><h3>Interest by service</h3><ul><li th:each="entry : ${analyticsBreakdown.services}"><span th:text="${entry.key}">Service</span><strong th:text="${entry.value}">0</strong></li></ul></section>
+                    <section><h3>Interest by package</h3><ul><li th:each="entry : ${analyticsBreakdown.packages}"><span th:text="${entry.key}">Package</span><strong th:text="${entry.value}">0</strong></li></ul></section>
+                    <section><h3>Enquiry sources</h3><ul><li th:each="entry : ${analyticsBreakdown.sources}"><span th:text="${entry.key}">Page</span><strong th:text="${entry.value}">0</strong></li></ul></section>
                 </div>
             </section>
 

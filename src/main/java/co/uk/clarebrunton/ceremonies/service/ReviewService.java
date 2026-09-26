@@ -1,303 +1,169 @@
 package co.uk.clarebrunton.ceremonies.service;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import co.uk.clarebrunton.ceremonies.config.ReviewProperties;
 import co.uk.clarebrunton.ceremonies.model.ReviewEntry;
 import co.uk.clarebrunton.ceremonies.model.ReviewForm;
 import co.uk.clarebrunton.ceremonies.model.ReviewStatus;
+import co.uk.clarebrunton.ceremonies.repository.ReviewRepository;
 
 @Service
 public class ReviewService {
 
-	private static final String DATA_FILE_NAME = "reviews.json";
+	private static final Set<String> IMAGE_TYPES = Set.of("jpg", "jpeg", "png", "webp");
+	private final ReviewProperties properties;
+	private final ReviewRepository reviews;
+	private final MediaStorage mediaStorage;
+	private final UploadInspector uploadInspector;
 
-	private static final List<String> ALLOWED_IMAGE_EXTENSIONS = List.of("jpg", "jpeg", "png", "webp");
-
-	private static final TypeReference<List<ReviewEntry>> REVIEW_LIST_TYPE = new TypeReference<>() {
-	};
-
-	private final ReviewProperties reviewProperties;
-
-	private final ObjectMapper objectMapper;
-
-	public ReviewService(ReviewProperties reviewProperties) {
-		this.reviewProperties = reviewProperties;
-		this.objectMapper = new ObjectMapper();
-		this.objectMapper.registerModule(new JavaTimeModule());
+	public ReviewService(ReviewProperties properties, ReviewRepository reviews,
+			MediaStorage mediaStorage, UploadInspector uploadInspector) {
+		this.properties = properties;
+		this.reviews = reviews;
+		this.mediaStorage = mediaStorage;
+		this.uploadInspector = uploadInspector;
 	}
 
-	public synchronized List<ReviewEntry> getApprovedReviews() {
-		List<ReviewEntry> persistedReviews = loadAll();
-		List<ReviewEntry> approvedReviews = new ArrayList<>(persistedReviews.stream()
-				.filter(entry -> entry.getStatus() == ReviewStatus.APPROVED)
-				.sorted(Comparator.comparing(ReviewEntry::getSubmittedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
-				.toList());
+	@Transactional(readOnly = true)
+	public List<ReviewEntry> getApprovedReviews() {
+		List<ReviewEntry> approved = new ArrayList<>(reviews.findByStatusOrderBySubmittedAtDesc(ReviewStatus.APPROVED));
+		for (ReviewEntry curated : curatedApprovedReviews()) {
+			boolean stableOverride = reviews.existsById(curated.getId());
+			boolean duplicate = approved.stream().anyMatch(entry -> hasSameReviewFingerprint(entry, curated));
+			if (!stableOverride && !duplicate) approved.add(0, curated);
+		}
+		return List.copyOf(approved);
+	}
 
-		for (ReviewEntry curatedReview : curatedApprovedReviews()) {
-			boolean hasStableIdOverride = persistedReviews.stream()
-					.anyMatch(entry -> curatedReview.getId().equals(entry.getId()));
-			boolean hasApprovedDuplicate = approvedReviews.stream()
-					.anyMatch(entry -> hasSameReviewFingerprint(entry, curatedReview));
+	@Transactional(readOnly = true)
+	public List<ReviewEntry> getApprovedFiveStarReviews() {
+		return getApprovedReviews().stream().filter(entry -> entry.getRating() == 5).toList();
+	}
 
-			if (!hasStableIdOverride && !hasApprovedDuplicate) {
-				approvedReviews.add(0, curatedReview);
+	@Transactional(readOnly = true)
+	public List<ReviewEntry> getPendingReviews() {
+		return reviews.findByStatusOrderBySubmittedAtDesc(ReviewStatus.PENDING);
+	}
+
+	@Transactional(readOnly = true)
+	public List<ReviewEntry> getManageableReviews() {
+		return reviews.findAllByOrderBySubmittedAtDesc();
+	}
+
+	public ReviewEntry submitReview(ReviewForm form, List<MultipartFile> photos) {
+		String submissionId = validSubmissionId(form.getSubmissionToken());
+		var existing = reviews.findById(submissionId);
+		if (existing.isPresent()) { existing.get().setNewlySubmitted(false); return existing.get(); }
+		List<MultipartFile> safePhotos = photos == null ? List.of() : photos.stream().filter(file -> file != null && !file.isEmpty()).toList();
+		if (safePhotos.size() > properties.getMaxPhotoCount()) {
+			throw new IllegalArgumentException("Please upload up to " + properties.getMaxPhotoCount() + " photos.");
+		}
+		for (MultipartFile photo : safePhotos) {
+			if (photo.getSize() > properties.getMaxPhotoSizeBytes()) {
+				throw new IllegalArgumentException("Each photo must be 5 MB or smaller.");
 			}
 		}
-
-		return List.copyOf(approvedReviews);
-	}
-
-	public synchronized List<ReviewEntry> getApprovedFiveStarReviews() {
-		return getApprovedReviews().stream()
-				.filter(entry -> entry.getRating() == 5)
+		List<UploadInspector.InspectedUpload> inspectedPhotos = safePhotos.stream()
+				.map(photo -> uploadInspector.inspect(photo, IMAGE_TYPES))
 				.toList();
-	}
 
-	public synchronized List<ReviewEntry> getPendingReviews() {
-		return loadAll().stream()
-				.filter(entry -> entry.getStatus() == ReviewStatus.PENDING)
-				.sorted(Comparator.comparing(ReviewEntry::getSubmittedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
-				.toList();
-	}
-
-	public synchronized List<ReviewEntry> getManageableReviews() {
-		return loadAll().stream()
-				.sorted(Comparator.comparing(ReviewEntry::getSubmittedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
-				.toList();
-	}
-
-	public synchronized ReviewEntry submitReview(ReviewForm form, List<MultipartFile> photos) {
-		List<MultipartFile> safePhotos = normalisePhotos(photos);
-		String validationError = validatePhotos(safePhotos);
-
-		if (validationError != null) {
-			throw new IllegalArgumentException(validationError);
-		}
-
-		List<ReviewEntry> entries = loadAll();
 		ReviewEntry entry = new ReviewEntry();
-		entry.setId(UUID.randomUUID().toString());
+		entry.setId(submissionId);
 		entry.setReviewerName(form.getReviewerName().trim());
-		entry.setReviewerRole(cleanNullable(form.getReviewerRole()));
+		entry.setReviewerRole(clean(form.getReviewerRole()));
 		entry.setCeremonyType(form.getCeremonyType().trim());
 		entry.setRating(form.getRating());
-		entry.setHeadline(cleanNullable(form.getHeadline()));
+		entry.setHeadline(clean(form.getHeadline()));
 		entry.setMessage(form.getMessage().trim());
 		entry.setEventDate(form.getEventDate());
 		entry.setStatus(ReviewStatus.PENDING);
 		entry.setSubmittedAt(OffsetDateTime.now());
-		entry.setPhotoFileNames(storePhotos(safePhotos));
 
-		entries.add(entry);
-		saveAll(entries);
-		return entry;
-	}
-
-	public synchronized ReviewEntry approveReview(String reviewId, String note) {
-		return moderate(reviewId, ReviewStatus.APPROVED, note);
-	}
-
-	public synchronized void rejectReview(String reviewId, String note) {
-		deleteReview(reviewId);
-	}
-
-	public synchronized void deleteReview(String reviewId) {
-		List<ReviewEntry> entries = loadAll();
-		ReviewEntry matched = findReview(entries, reviewId);
-		entries.remove(matched);
-		deletePhotos(matched.getPhotoFileNames());
-		saveAll(entries);
-	}
-
-	public synchronized void enableReview(String reviewId) {
-		moderate(reviewId, ReviewStatus.APPROVED, "Enabled for public display.");
-	}
-
-	public synchronized void disableReview(String reviewId) {
-		moderate(reviewId, ReviewStatus.DISABLED, "Disabled from public display.");
-	}
-
-	public Path resolvePhotoPath(String filename) {
-		Path root = getPhotoDirectoryPath();
-		Path resolved = root.resolve(filename).normalize();
-
-		if (!resolved.startsWith(root)) {
-			throw new IllegalArgumentException("Invalid photo path.");
-		}
-
-		return resolved;
-	}
-
-	private ReviewEntry moderate(String reviewId, ReviewStatus status, String note) {
-		List<ReviewEntry> entries = loadAll();
-		ReviewEntry matched = findReview(entries, reviewId);
-
-		matched.setStatus(status);
-		matched.setModerationNote(cleanNullable(note));
-		matched.setModeratedAt(OffsetDateTime.now());
-		saveAll(entries);
-		return matched;
-	}
-
-	private ReviewEntry findReview(List<ReviewEntry> entries, String reviewId) {
-		return entries.stream()
-				.filter(entry -> entry.getId().equals(reviewId))
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("Review not found."));
-	}
-
-	private void deletePhotos(List<String> photoFileNames) {
-		if (photoFileNames == null || photoFileNames.isEmpty()) {
-			return;
-		}
-
-		for (String photoFileName : photoFileNames) {
-			if (!StringUtils.hasText(photoFileName) || photoFileName.startsWith("/")) {
-				continue;
-			}
-
-			try {
-				Files.deleteIfExists(resolvePhotoPath(photoFileName));
-			}
-			catch (IOException exception) {
-				throw new IllegalStateException("Unable to delete rejected review image.", exception);
-			}
-		}
-	}
-
-	private List<ReviewEntry> loadAll() {
-		Path file = getDataFilePath();
-
-		if (!Files.exists(file)) {
-			return new ArrayList<>();
-		}
-
+		List<String> keys = new ArrayList<>();
+		boolean persisted = false;
 		try {
-			return objectMapper.readValue(file.toFile(), REVIEW_LIST_TYPE);
+			for (var inspected : inspectedPhotos) {
+				keys.add(mediaStorage.store("reviews/" + entry.getId(), inspected.originalName(), inspected.contentType(), inspected.content()));
+			}
+			entry.setPhotoFileNames(keys);
+			ReviewEntry saved = reviews.save(entry);
+			saved.setNewlySubmitted(true);
+			persisted = true;
+			return saved;
 		}
-		catch (IOException exception) {
-			throw new IllegalStateException("Unable to read reviews data.", exception);
+		catch (RuntimeException exception) {
+			if (!persisted) {
+				keys.forEach(this::deleteQuietly);
+			}
+			throw exception;
 		}
 	}
 
-	private void saveAll(List<ReviewEntry> entries) {
-		Path file = getDataFilePath();
+	@Transactional
+	public ReviewEntry approveReview(String id, String note) { return moderate(id, ReviewStatus.APPROVED, note); }
 
+	@Transactional
+	public void rejectReview(String id, String note) { deleteReview(id); }
+
+	@Transactional
+	public void deleteReview(String id) {
+		ReviewEntry entry = find(id);
+		entry.getPhotoFileNames().forEach(mediaStorage::delete);
+		reviews.delete(entry);
+	}
+
+	@Transactional
+	public void enableReview(String id) { moderate(id, ReviewStatus.APPROVED, "Enabled for public display."); }
+
+	@Transactional
+	public void disableReview(String id) { moderate(id, ReviewStatus.DISABLED, "Disabled from public display."); }
+
+	public java.util.Optional<MediaStorage.StoredMedia> loadPhoto(String key) {
+		if (!StringUtils.hasText(key) || key.contains("..") || !key.startsWith("reviews-")) return java.util.Optional.empty();
+		return mediaStorage.load(key);
+	}
+
+	private String validSubmissionId(String token) {
 		try {
-			Files.createDirectories(file.getParent());
-			objectMapper.writerWithDefaultPrettyPrinter().writeValue(file.toFile(), entries);
-		}
-		catch (IOException exception) {
-			throw new IllegalStateException("Unable to save reviews data.", exception);
+			return UUID.fromString(token).toString();
+		} catch (IllegalArgumentException | NullPointerException invalid) {
+			return UUID.randomUUID().toString();
 		}
 	}
 
-	private List<String> storePhotos(List<MultipartFile> photos) {
-		if (photos.isEmpty()) {
-			return List.of();
-		}
+	private ReviewEntry moderate(String id, ReviewStatus status, String note) {
+		ReviewEntry entry = find(id);
+		entry.setStatus(status);
+		entry.setModerationNote(clean(note));
+		entry.setModeratedAt(OffsetDateTime.now());
+		return reviews.save(entry);
+	}
 
-		Path photoDir = getPhotoDirectoryPath();
-		List<String> storedNames = new ArrayList<>();
+	private ReviewEntry find(String id) {
+		return reviews.findById(id).orElseThrow(() -> new IllegalArgumentException("Review not found."));
+	}
 
+	private String clean(String value) { return StringUtils.hasText(value) ? value.trim() : null; }
+
+	private void deleteQuietly(String assetKey) {
 		try {
-			Files.createDirectories(photoDir);
+			mediaStorage.delete(assetKey);
 		}
-		catch (IOException exception) {
-			throw new IllegalStateException("Unable to create review image directory.", exception);
+		catch (RuntimeException ignored) {
+			// Preserve the original submission error; orphan cleanup can be retried operationally.
 		}
-
-		for (MultipartFile photo : photos) {
-			String extension = getExtension(photo.getOriginalFilename());
-			String filename = UUID.randomUUID() + "." + extension;
-			Path destination = photoDir.resolve(filename);
-
-			try (InputStream inputStream = photo.getInputStream()) {
-				Files.copy(inputStream, destination, StandardCopyOption.REPLACE_EXISTING);
-			}
-			catch (IOException exception) {
-				throw new IllegalStateException("Unable to store uploaded review image.", exception);
-			}
-
-			storedNames.add(filename);
-		}
-
-		return storedNames;
-	}
-
-	private List<MultipartFile> normalisePhotos(List<MultipartFile> photos) {
-		if (photos == null) {
-			return List.of();
-		}
-
-		return photos.stream()
-				.filter(file -> file != null && !file.isEmpty())
-				.toList();
-	}
-
-	private String validatePhotos(List<MultipartFile> photos) {
-		if (photos.size() > reviewProperties.getMaxPhotoCount()) {
-			return "Please upload up to " + reviewProperties.getMaxPhotoCount() + " photos.";
-		}
-
-		for (MultipartFile photo : photos) {
-			if (photo.getSize() > reviewProperties.getMaxPhotoSizeBytes()) {
-				return "Each photo must be 5 MB or smaller.";
-			}
-
-			String extension = getExtension(photo.getOriginalFilename());
-			if (!ALLOWED_IMAGE_EXTENSIONS.contains(extension)) {
-				return "Please upload JPG, PNG or WEBP images only.";
-			}
-		}
-
-		return null;
-	}
-
-	private String getExtension(String originalName) {
-		String extension = StringUtils.getFilenameExtension(originalName);
-		if (!StringUtils.hasText(extension)) {
-			return "";
-		}
-		return extension.toLowerCase(Locale.ROOT);
-	}
-
-	private Path getDataFilePath() {
-		return Path.of(reviewProperties.getStorageDirectory()).resolve(DATA_FILE_NAME).toAbsolutePath().normalize();
-	}
-
-	private Path getPhotoDirectoryPath() {
-		return Path.of(reviewProperties.getStorageDirectory())
-				.resolve(reviewProperties.getPhotoDirectory())
-				.toAbsolutePath()
-				.normalize();
-	}
-
-	private String cleanNullable(String value) {
-		if (!StringUtils.hasText(value)) {
-			return null;
-		}
-		return value.trim();
 	}
 
 	private List<ReviewEntry> curatedApprovedReviews() {
@@ -325,14 +191,12 @@ public class ReviewService {
 	}
 
 	private boolean hasSameReviewFingerprint(ReviewEntry first, ReviewEntry second) {
-		return normaliseFingerprintText(first.getReviewerName()).equals(normaliseFingerprintText(second.getReviewerName()))
-				&& first.getEventDate() != null
-				&& first.getEventDate().equals(second.getEventDate())
-				&& normaliseFingerprintText(first.getHeadline()).equals(normaliseFingerprintText(second.getHeadline()));
+		return normalise(first.getReviewerName()).equals(normalise(second.getReviewerName()))
+				&& first.getEventDate() != null && first.getEventDate().equals(second.getEventDate())
+				&& normalise(first.getHeadline()).equals(normalise(second.getHeadline()));
 	}
 
-	private String normaliseFingerprintText(String value) {
+	private String normalise(String value) {
 		return value == null ? "" : value.trim().replaceAll("\\s+", " ").toLowerCase(Locale.ROOT);
 	}
-
 }

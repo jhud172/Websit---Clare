@@ -20,24 +20,41 @@ public class InquiryForm {
 	@Email(message = "Please use a valid email address.")
 	private String email;
 
-	@NotBlank(message = "Please add a phone number.")
-	@Size(min = 7, max = 24, message = "Please add a valid phone number.")
+	@Size(max = 24, message = "Please add a valid phone number.")
 	private String phone;
 
 	@NotBlank(message = "Please choose the type of ceremony.")
 	private String serviceType;
 
-	@NotNull(message = "Please add a preferred date.")
 	@FutureOrPresent(message = "Please choose a date that is today or later.")
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate eventDate;
 
-	@NotBlank(message = "Please add the venue or location.")
+	@Size(max = 180, message = "Please keep the venue or location under 180 characters.")
 	private String venue;
 
-	@NotBlank(message = "Please tell us a little about the ceremony.")
-	@Size(min = 20, max = 2000, message = "Please give between 20 and 2000 characters.")
+	@Size(max = 2000, message = "Please keep the message under 2000 characters.")
 	private String message;
+
+	@Size(max = 120)
+	private String packageName;
+
+	@Size(max = 120)
+	private String sourcePage;
+
+	@Size(max = 24)
+	private String datePreference;
+
+	@Size(max = 120)
+	private String website;
+
+	private long formStartedAt;
+
+	@Size(max = 36)
+	private String submissionToken;
+
+	@Size(max = 2048)
+	private String turnstileResponse;
 
 	@AssertTrue(message = "Please confirm that you are happy for us to handle your details.")
 	private boolean privacyAccepted;
@@ -97,6 +114,21 @@ public class InquiryForm {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+	public String getPackageName() { return packageName; }
+	public void setPackageName(String packageName) { this.packageName = packageName; }
+	public String getSourcePage() { return sourcePage; }
+	public void setSourcePage(String sourcePage) { this.sourcePage = sourcePage; }
+	public String getDatePreference() { return datePreference; }
+	public void setDatePreference(String datePreference) { this.datePreference = datePreference; }
+	public String getWebsite() { return website; }
+	public void setWebsite(String website) { this.website = website; }
+	public long getFormStartedAt() { return formStartedAt; }
+	public void setFormStartedAt(long formStartedAt) { this.formStartedAt = formStartedAt; }
+	public String getSubmissionToken() { return submissionToken; }
+	public void setSubmissionToken(String submissionToken) { this.submissionToken = submissionToken; }
+	public String getTurnstileResponse() { return turnstileResponse; }
+	public void setTurnstileResponse(String turnstileResponse) { this.turnstileResponse = turnstileResponse; }
 
 	public boolean isPrivacyAccepted() {
 		return privacyAccepted;

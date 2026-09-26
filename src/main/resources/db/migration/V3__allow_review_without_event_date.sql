@@ -1,0 +1,1 @@
+ALTER TABLE reviews ALTER COLUMN event_date DROP NOT NULL;

@@ -32,37 +32,64 @@
         </button>
 
         <nav class="site-nav" id="site-navigation" aria-label="Primary navigation" data-site-nav>
-            <a th:href="@{/}"
-               th:classappend="${activePage == 'home'} ? ' is-active'"
-               th:attr="aria-current=${activePage == 'home' ? 'page' : null}">Home</a>
-            <a th:href="@{/about}"
-               th:classappend="${activePage == 'about'} ? ' is-active'"
-               th:attr="aria-current=${activePage == 'about' ? 'page' : null}">About</a>
-            <a th:href="@{/services}"
-               th:classappend="${activePage == 'services'} ? ' is-active'"
-               th:attr="aria-current=${activePage == 'services' ? 'page' : null}">Services</a>
-            <a th:href="@{/weddings}"
-               th:classappend="${activePage == 'weddings'} ? ' is-active'"
-               th:attr="aria-current=${activePage == 'weddings' ? 'page' : null}">Weddings</a>
-            <a th:href="@{/celebrations-of-life}"
-               th:classappend="${activePage == 'celebrations-of-life'} ? ' is-active'"
-               th:attr="aria-current=${activePage == 'celebrations-of-life' ? 'page' : null}">Celebrations of Life</a>
-            <a th:href="@{/faq}"
-               th:classappend="${activePage == 'faq'} ? ' is-active'"
-               th:attr="aria-current=${activePage == 'faq' ? 'page' : null}">FAQ</a>
+            <div class="nav-services" th:classappend="${activePage == 'services' or activePage == 'weddings' or activePage == 'celebrations-of-life' or activePage == 'naming-ceremonies' or activePage == 'vow-renewals'} ? ' is-active'">
+                <div class="nav-services-heading">
+                    <a class="nav-services-trigger" th:href="@{/services}"
+                       th:attr="aria-current=${activePage == 'services' ? 'page' : null}">Services</a>
+                    <button class="nav-services-toggle" type="button" aria-label="Show ceremony services"
+                            aria-expanded="false" aria-controls="ceremony-services-menu" data-services-toggle>
+                        <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false">
+                            <path class="nav-feather-eye" d="M16 3C10 6 10 13 16 15C22 13 22 6 16 3Z"/>
+                            <ellipse class="nav-feather-centre" cx="16" cy="9" rx="2" ry="2.8"/>
+                            <path class="nav-feather-chevron" d="M8 19L16 25L24 19"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="nav-services-menu" id="ceremony-services-menu" aria-label="Ceremony services">
+                    <div class="nav-services-intro">
+                        <span>For moments that matter</span>
+                        <p>Ceremonies, made personal.</p>
+                    </div>
+                    <a class="nav-service-link" th:href="@{/weddings}" th:attr="aria-current=${activePage == 'weddings' ? 'page' : null}">
+                        <span class="nav-service-eye" aria-hidden="true"></span>
+                        <span><strong>Weddings</strong><small>Your story, your celebration</small></span>
+                        <span class="nav-service-arrow" aria-hidden="true">↗</span>
+                    </a>
+                    <a class="nav-service-link" th:href="@{/celebrations-of-life}" th:attr="aria-current=${activePage == 'celebrations-of-life' ? 'page' : null}">
+                        <span class="nav-service-eye" aria-hidden="true"></span>
+                        <span><strong>Celebrations of Life</strong><small>Remembered with love and care</small></span>
+                        <span class="nav-service-arrow" aria-hidden="true">↗</span>
+                    </a>
+                    <a class="nav-service-link" th:href="@{/naming-ceremonies}" th:attr="aria-current=${activePage == 'naming-ceremonies' ? 'page' : null}">
+                        <span class="nav-service-eye" aria-hidden="true"></span>
+                        <span><strong>Naming Ceremonies</strong><small>A warm welcome to the world</small></span>
+                        <span class="nav-service-arrow" aria-hidden="true">↗</span>
+                    </a>
+                    <a class="nav-service-link" th:href="@{/vow-renewals}" th:attr="aria-current=${activePage == 'vow-renewals' ? 'page' : null}">
+                        <span class="nav-service-eye" aria-hidden="true"></span>
+                        <span><strong>Vow Renewals</strong><small>Celebrate the journey together</small></span>
+                        <span class="nav-service-arrow" aria-hidden="true">↗</span>
+                    </a>
+                    <a class="nav-services-overview" th:href="@{/services}">Explore all ceremonies <span aria-hidden="true">→</span></a>
+                </div>
+            </div>
+            <a th:href="@{/about}" th:classappend="${activePage == 'about'} ? ' is-active'"
+               th:attr="aria-current=${activePage == 'about' ? 'page' : null}">About Clare</a>
             <a th:href="@{/reviews}"
                th:classappend="${activePage == 'reviews'} ? ' is-active'"
                th:attr="aria-current=${activePage == 'reviews' ? 'page' : null}">Reviews</a>
+            <a th:href="@{/blog}" th:classappend="${activePage == 'blog'} ? ' is-active'"
+               th:attr="aria-current=${activePage == 'blog' ? 'page' : null}">Journal</a>
             <button class="site-nav-enquiry button button-peacock"
                     type="button"
                     aria-haspopup="dialog"
-                    data-open-enquiry-modal>Make an enquiry</button>
+                    data-open-enquiry-modal>Check my date</button>
         </nav>
 
         <div class="header-actions">
             <button class="button button-peacock header-cta" type="button" aria-haspopup="dialog" data-open-enquiry-modal>
-                <span class="header-cta-label">Make an enquiry</span>
-                <span class="header-cta-sub">Tell Clare about your ceremony</span>
+                <span class="header-cta-label">Check my date</span>
+                <span class="header-cta-sub">Ask about Clare’s availability</span>
                 <span class="feather left"></span>
                 <span class="feather right"></span>
             </button>

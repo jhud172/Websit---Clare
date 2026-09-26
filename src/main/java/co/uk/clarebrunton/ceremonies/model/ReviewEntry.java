@@ -9,34 +9,61 @@ import java.util.Locale;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+
+@Entity
+@Table(name = "reviews")
 public class ReviewEntry {
+	@Transient
+	private boolean newlySubmitted;
 
 	private static final DateTimeFormatter EVENT_DATE_FORMATTER = DateTimeFormatter.ofPattern("d MMMM uuuu", Locale.UK);
 
+	@Id
 	private String id;
 
+	@Column(nullable = false)
 	private String reviewerName;
 
 	private String reviewerRole;
 
+	@Column(nullable = false)
 	private String ceremonyType;
 
+	@Column(nullable = false)
 	private int rating;
 
 	private String headline;
 
+	@Column(nullable = false, length = 2000)
 	private String message;
 
 	private LocalDate eventDate;
 
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false, length = 40)
 	private ReviewStatus status;
 
 	private String moderationNote;
 
+	@Column(nullable = false)
 	private OffsetDateTime submittedAt;
 
 	private OffsetDateTime moderatedAt;
 
+	@ElementCollection(fetch = FetchType.EAGER)
+	@CollectionTable(name = "review_photos", joinColumns = @JoinColumn(name = "review_id"))
+	@Column(name = "asset_key", nullable = false)
 	private List<String> photoFileNames = new ArrayList<>();
 
 	public String getId() {
@@ -147,5 +174,7 @@ public class ReviewEntry {
 	public void setPhotoFileNames(List<String> photoFileNames) {
 		this.photoFileNames = photoFileNames;
 	}
+	public boolean isNewlySubmitted() { return newlySubmitted; }
+	public void setNewlySubmitted(boolean newlySubmitted) { this.newlySubmitted = newlySubmitted; }
 
 }

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: page(${pageTitle}, ${pageDescription}, 'vow-renewals', ~{::main})}">
+<main class="life-service-page theme-vow-renewal">
+    <section class="life-service-hero section-reveal-zone">
+        <div class="life-service-hero-media">
+            <img th:src="@{/images/weddings/couple-walk.jpg}" alt="A couple walking together after their ceremony" fetchpriority="high">
+        </div>
+        <div class="shell life-service-hero-content">
+            <p class="eyebrow">Vow Renewals</p>
+            <h1>Choose each other, all over again.</h1>
+            <p>Celebrate the story you have shared, the promises that still matter and the life you continue to build together.</p>
+            <div class="hero-actions">
+                <button class="button button-peacock" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal" data-enquiry-source="/vow-renewals">Check Clare’s availability</button>
+                <a class="text-link" href="#vow-packages">Explore vow renewal packages</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section life-service-intro section-divider">
+        <div class="shell editorial-intro-grid">
+            <p class="eyebrow">Your next chapter</p>
+            <div><h2>A ceremony shaped by everything that came before.</h2>
+                <p>Mark an anniversary, create the ceremony you always wished you had, or gather your favourite people simply because choosing one another still deserves celebrating.</p></div>
+        </div>
+    </section>
+
+    <section class="section life-packages-section section-divider" id="vow-packages" aria-labelledby="vow-packages-heading">
+        <div class="shell ceremony-package-block">
+            <div class="ceremony-package-heading">
+                <p class="eyebrow">Choose your level of support</p><h2 id="vow-packages-heading">Vow renewal packages</h2>
+                <p>Personal writing, vow guidance and thoughtful delivery are at the heart of both packages.</p>
+            </div>
+            <div class="ceremony-package-grid">
+                <article class="life-package-card">
+                    <p class="package-tag">Vow renewal package 01</p><h3>Forever Yours</h3><p class="package-price">£695</p>
+                    <p class="package-summary">A heartfelt ceremony celebrating your past, present and future together.</p>
+                    <ul class="package-list">
+                        <li>Discovery call, questionnaire and planning meeting</li><li>Bespoke ceremony telling your story</li>
+                        <li>Guidance with new or original vows</li><li>Personalised ring-exchange wording</li>
+                        <li>Professional delivery and PA where required</li><li>Travel within 30 miles</li>
+                    </ul>
+                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal" data-enquiry-package="Forever Yours — £695" data-enquiry-source="/vow-renewals">Enquire about this package</button>
+                </article>
+                <article class="life-package-card life-package-card-featured">
+                    <p class="package-tag">Vow renewal package 02</p><h3>Forever &amp; Always</h3><p class="package-price">£895</p>
+                    <p class="package-summary">An unforgettable celebration with extra planning, guidance and keepsakes.</p>
+                    <ul class="package-list">
+                        <li>Everything in Forever Yours</li><li>Venue visit and rehearsal where appropriate</li>
+                        <li>Unlimited planning meetings, calls and emails</li><li>Music, reading and symbolic ritual guidance</li>
+                        <li>Luxury printed script, vow cards and certificate</li><li>Venue and photographer coordination</li>
+                    </ul>
+                    <button class="text-link package-enquiry-link" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal" data-enquiry-package="Forever &amp; Always — £895" data-enquiry-source="/vow-renewals">Enquire about this package</button>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="section services-final-section section-reveal-zone">
+        <div class="shell services-final-panel">
+            <p class="eyebrow">Begin with the date</p><h2>Let’s see whether Clare is free to celebrate with you.</h2>
+            <button class="button button-peacock" type="button" data-open-enquiry-modal data-enquiry-service="Vow renewal" data-enquiry-source="/vow-renewals">Check my date</button>
+        </div>
+    </section>
+</main>
+</html>

@@ -76,7 +76,7 @@
                             <input type="hidden" name="returnTo" value="manage">
                             <button class="button" type="submit">Approve review</button>
                         </form>
-                        <form th:if="${review.status.name() == 'PENDING'}" th:action="@{'/reviews/admin/' + ${review.id} + '/reject'}" method="post">
+                        <form th:if="${review.status.name() == 'PENDING'}" th:action="@{'/reviews/admin/' + ${review.id} + '/reject'}" method="post" data-confirm="Reject and permanently delete this review and its photos?">
                             <input type="hidden" name="returnTo" value="manage">
                             <button class="button button-secondary button-danger" type="submit">Reject and delete</button>
                         </form>
@@ -86,7 +86,7 @@
                         <form th:if="${review.status.name() == 'APPROVED'}" th:action="@{'/reviews/admin/' + ${review.id} + '/disable'}" method="post">
                             <button class="button button-secondary" type="submit">Disable review</button>
                         </form>
-                        <form th:if="${review.status.name() != 'PENDING'}" th:action="@{'/reviews/admin/' + ${review.id} + '/delete'}" method="post">
+                        <form th:if="${review.status.name() != 'PENDING'}" th:action="@{'/reviews/admin/' + ${review.id} + '/delete'}" method="post" data-confirm="Permanently delete this review and its photos? This cannot be undone.">
                             <button class="button button-secondary button-danger" type="submit">Delete permanently</button>
                         </form>
                     </div>

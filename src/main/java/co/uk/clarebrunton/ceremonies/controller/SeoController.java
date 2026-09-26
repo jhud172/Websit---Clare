@@ -19,6 +19,8 @@ public class SeoController {
 			"/services",
 			"/weddings",
 			"/celebrations-of-life",
+			"/naming-ceremonies",
+			"/vow-renewals",
 			"/faq",
 			"/reviews",
 			"/privacy",

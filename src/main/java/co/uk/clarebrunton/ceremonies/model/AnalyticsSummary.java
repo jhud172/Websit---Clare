@@ -102,6 +102,7 @@ public class AnalyticsSummary {
 	}
 
 	public record DailyVisit(String dayLabel, String dateLabel, long visits, int percentage) {
+		public int roundedPercentage() { return Math.round(percentage / 10.0f) * 10; }
 	}
 
 }

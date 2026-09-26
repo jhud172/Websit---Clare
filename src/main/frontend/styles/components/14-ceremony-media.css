@@ -1,0 +1,155 @@
+/* Real ceremony photographs retain their original framing and proportions. */
+.clare-portrait-stage {
+    aspect-ratio: 3 / 4;
+}
+
+.clare-portrait-stage img,
+.about-image-slide .clare-warm-portrait {
+    object-position: 50% 24%;
+}
+
+.ceremony-moments-heading {
+    max-width: 44rem;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+}
+
+.ceremony-moments-heading h2,
+.ceremony-film-copy h2 {
+    margin-bottom: 1rem;
+}
+
+.ceremony-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    align-items: start;
+}
+
+.ceremony-photo {
+    grid-column: span 4;
+    min-width: 0;
+    margin: 0;
+}
+
+.ceremony-photo-detail {
+    grid-column: span 3;
+}
+
+.ceremony-photo-landscape {
+    grid-column: span 6;
+    align-self: center;
+}
+
+.ceremony-photo-open {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding: 0;
+    border: 1px solid rgba(226, 209, 178, 0.2);
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #161a19;
+    cursor: zoom-in;
+}
+
+.ceremony-photo-open img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: filter 200ms ease;
+}
+
+.ceremony-photo-open:hover img {
+    filter: brightness(1.08);
+}
+
+.ceremony-photo-open:focus-visible {
+    outline: 3px solid #dbc498;
+    outline-offset: 5px;
+}
+
+.ceremony-photo-open span {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    background: rgba(12, 19, 18, 0.85);
+    color: #fff8ef;
+    font-size: 1.25rem;
+}
+
+.ceremony-photo figcaption {
+    padding: 0.9rem 0.15rem 0;
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+.ceremony-moments-link {
+    margin-top: 2.5rem;
+}
+
+.ceremony-film-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+}
+
+.ceremony-film-player {
+    min-width: 0;
+    width: min(100%, 420px, calc(75svh * 512 / 910));
+    margin: 0 auto;
+}
+
+.ceremony-film-player video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 512 / 910;
+    object-fit: contain;
+    border: 1px solid rgba(226, 209, 178, 0.3);
+    border-radius: 1rem;
+    background: #090d0c;
+}
+
+.ceremony-film-player figcaption {
+    padding-top: 1rem;
+    font-size: 0.88rem;
+}
+
+@media (max-width: 800px) {
+    .ceremony-photo,
+    .ceremony-photo-detail,
+    .ceremony-photo-landscape {
+        grid-column: span 6;
+    }
+
+    .ceremony-film-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 520px) {
+    .ceremony-photo-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+    }
+
+    .ceremony-photo,
+    .ceremony-photo-detail,
+    .ceremony-photo-landscape {
+        grid-column: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ceremony-photo-open img {
+        transition: none;
+    }
+}

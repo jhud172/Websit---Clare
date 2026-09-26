@@ -157,6 +157,63 @@
     }
 }
 
+/* Header signature: rotate the feather artwork independently of the lettermark.
+   A transition can reverse from its current angle without restarting a keyframe. */
+.site-header .brand .brand-logo-composite {
+    transform: none;
+    filter: none;
+    transition: none;
+}
+
+.site-header .brand .brand-logo-composite .logo-wreath {
+    rotate: 0deg;
+    transform: scale(var(--logo-wreath-scale, 1.2));
+    filter: drop-shadow(0 0 8px rgba(214, 199, 145, 0.18));
+    transition: rotate 1800ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-header .brand .brand-logo-composite .logo-clc {
+    transform: translateY(1%) scale(1);
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.22));
+    transition: none;
+}
+
+.site-header .brand .brand-logo-composite::before {
+    inset: -12%;
+    opacity: 0;
+    transform: scale(0.86);
+    background:
+        radial-gradient(ellipse at 25% 35%, rgba(20, 173, 170, 0.3), transparent 55%),
+        radial-gradient(ellipse at 75% 65%, rgba(214, 199, 145, 0.26), transparent 55%);
+    transition: opacity 500ms ease, transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.site-header .brand .brand-logo-composite::after {
+    /* Keep the moving wreath clear rather than washing out the letters. */
+    animation: none;
+    opacity: 0;
+}
+
+.site-header .brand:focus-visible .brand-logo-composite .logo-wreath {
+    rotate: 360deg;
+}
+
+.site-header .brand:focus-visible .brand-logo-composite::before {
+    opacity: 1;
+    transform: scale(1.08);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .site-header .brand:hover .brand-logo-composite .logo-wreath {
+        rotate: 360deg;
+    }
+
+    .site-header .brand:hover .brand-logo-composite::before {
+        opacity: 1;
+        transform: scale(1.08);
+    }
+}
+
 @keyframes peacock-logo-sheen {
     0% {
         opacity: 0;
@@ -174,6 +231,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .site-header .brand .brand-logo-composite .logo-wreath {
+        rotate: none !important;
+    }
+
     :where(.logo-composite, .peacock-badge-logo),
     :where(.logo-composite, .peacock-badge-logo)::before,
     :where(.logo-composite, .peacock-badge-logo)::after,

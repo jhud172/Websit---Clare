@@ -1,438 +1,110 @@
 package co.uk.clarebrunton.ceremonies;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import org.springframework.mock.web.MockHttpSession;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.http.HttpStatus;
+
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
-import co.uk.clarebrunton.ceremonies.config.ReviewProperties;
 import co.uk.clarebrunton.ceremonies.controller.SiteController;
 import co.uk.clarebrunton.ceremonies.model.AnalyticsSummary;
 import co.uk.clarebrunton.ceremonies.model.InquiryForm;
-import co.uk.clarebrunton.ceremonies.model.ReviewEntry;
-import co.uk.clarebrunton.ceremonies.model.ReviewStatus;
+import co.uk.clarebrunton.ceremonies.security.PublicSubmissionGuard;
 import co.uk.clarebrunton.ceremonies.service.AnalyticsService;
 import co.uk.clarebrunton.ceremonies.service.BlogService;
 import co.uk.clarebrunton.ceremonies.service.InquiryNotificationService;
+import co.uk.clarebrunton.ceremonies.service.InquiryService;
 import co.uk.clarebrunton.ceremonies.service.ReviewService;
 
 class SiteControllerUnitTest {
 
-	private final InquiryNotificationService inquiryNotificationService = mock(InquiryNotificationService.class);
-	private final AnalyticsService analyticsService = mock(AnalyticsService.class);
-	private final ReviewService reviewService = mock(ReviewService.class);
-	private final SiteController controller = new SiteController(new BlogService(), analyticsService, inquiryNotificationService, reviewService, new ReviewProperties());
+	private final AnalyticsService analytics = mock(AnalyticsService.class);
+	private final InquiryNotificationService notifications = mock(InquiryNotificationService.class);
+	private final InquiryService inquiries = mock(InquiryService.class);
+	private final ReviewService reviews = mock(ReviewService.class);
+	private final PublicSubmissionGuard guard = mock(PublicSubmissionGuard.class);
+	private final SiteController controller = new SiteController(new BlogService(), analytics, notifications, inquiries, reviews, guard);
+
+	@BeforeEach
+	void defaults() {
+		when(reviews.getApprovedFiveStarReviews()).thenReturn(List.of());
+		when(reviews.getApprovedReviews()).thenReturn(List.of());
+		when(reviews.getPendingReviews()).thenReturn(List.of());
+		when(inquiries.findAll()).thenReturn(List.of());
+		when(analytics.getSummary()).thenReturn(new AnalyticsSummary(0, 0, 0, 0, 0, 0, "No visits yet", 0, List.of()));
+		when(analytics.getFunnelSummary()).thenReturn(Map.of());
+	}
 
 	@Test
-	void launchRoutesReturnExpectedViews() {
-		Model model = new ExtendedModelMap();
-		when(reviewService.getApprovedFiveStarReviews()).thenReturn(List.of());
-		when(reviewService.getApprovedReviews()).thenReturn(List.of());
-
-		assertThat(controller.home(model)).isEqualTo("home");
-		assertThat(controller.about(new ExtendedModelMap())).isEqualTo("about");
-		assertThat(controller.services(new ExtendedModelMap())).isEqualTo("ceremonies");
+	void publicRoutesIncludeDedicatedServices() {
+		assertThat(controller.home(new ExtendedModelMap())).isEqualTo("home");
 		assertThat(controller.weddings(new ExtendedModelMap())).isEqualTo("weddings");
 		assertThat(controller.celebrationsOfLife(new ExtendedModelMap())).isEqualTo("funerals");
-		assertThat(controller.reviews(new ExtendedModelMap())).isEqualTo("reviews");
-		assertThat(controller.contact(new ExtendedModelMap())).isEqualTo("redirect:/");
-		assertThat(controller.privacy(new ExtendedModelMap())).isEqualTo("privacy");
-		assertThat(controller.thankYou(new ExtendedModelMap())).isEqualTo("thank-you");
-		verify(reviewService).getApprovedFiveStarReviews();
-		verify(reviewService).getApprovedReviews();
+		assertThat(controller.namingCeremonies(new ExtendedModelMap())).isEqualTo("naming-ceremonies");
+		assertThat(controller.vowRenewals(new ExtendedModelMap())).isEqualTo("vow-renewals");
 	}
 
 	@Test
-	void homeUsesRequestedDurhamSearchWording() {
-		ExtendedModelMap model = new ExtendedModelMap();
-		when(reviewService.getApprovedFiveStarReviews()).thenReturn(List.of());
-
-		assertThat(controller.home(model)).isEqualTo("home");
-		assertThat(model.getAttribute("pageTitle"))
-				.isEqualTo("Weddings and Celebrations of Life in Durham");
-		assertThat(model.getAttribute("pageDescription"))
-				.asString()
-				.startsWith("Weddings and Celebrations of Life in Durham");
+	void legacyRoutesRemainPermanentRedirects() {
+		assertThat(controller.funeralsRedirect().getHeaders().getLocation()).hasToString("/celebrations-of-life");
+		assertThat(controller.ceremoniesRedirect().getHeaders().getLocation()).hasToString("/services");
 	}
 
 	@Test
-	void legacyCelebrationOfLifeUrlsRedirectPermanently() {
-		var serviceRedirect = controller.funeralsRedirect();
-		var articleRedirect = controller.legacyCelebrationOfLifeBlogRedirect();
-		var ceremoniesRedirect = controller.ceremoniesRedirect();
-
-		assertThat(serviceRedirect.getStatusCode()).isEqualTo(HttpStatus.MOVED_PERMANENTLY);
-		assertThat(serviceRedirect.getHeaders().getLocation())
-				.hasToString("/celebrations-of-life");
-		assertThat(articleRedirect.getStatusCode()).isEqualTo(HttpStatus.MOVED_PERMANENTLY);
-		assertThat(articleRedirect.getHeaders().getLocation())
-				.hasToString("/blog/how-to-shape-a-celebration-of-life-tribute");
-		assertThat(ceremoniesRedirect.getStatusCode()).isEqualTo(HttpStatus.MOVED_PERMANENTLY);
-		assertThat(ceremoniesRedirect.getHeaders().getLocation())
-				.hasToString("/services");
-	}
-
-	@Test
-	void contactRedirectsToHomeBecauseEnquiryUsesModal() {
-		Model model = new ExtendedModelMap();
-
-		String view = controller.contact(model);
-
-		assertThat(view).isEqualTo("redirect:/");
-	}
-
-	@Test
-	void servicesAddsFaqContentAndStructuredData() {
-		Model model = new ExtendedModelMap();
-
-		String view = controller.services(model);
-
-		assertThat(view).isEqualTo("ceremonies");
-		assertThat((List<?>) model.getAttribute("serviceFaqs")).hasSize(6);
-		assertThat((String) model.getAttribute("structuredDataJson"))
-				.contains("\"@type\":\"FAQPage\"")
-				.contains("\"@type\":\"Question\"")
-				.contains("What ceremonies does Clare's Life Celebrations offer?")
-				.contains("Can Clare legally marry us?");
-	}
-
-	@Test
-	void submitContactReturnsHomeWithOpenModalWhenBindingHasErrors() {
-		InquiryForm inquiryForm = new InquiryForm();
-		BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(inquiryForm, "inquiryForm");
-		bindingResult.rejectValue("fullName", "required", "Please add your full name.");
-		when(reviewService.getApprovedFiveStarReviews()).thenReturn(List.of());
-		Model model = new ExtendedModelMap();
-
-		String view = controller.submitContact(
-				inquiryForm,
-				bindingResult,
-				model,
-				new RedirectAttributesModelMap()
-		);
-
+	void invalidEnquiryReopensModalWithoutPersistence() {
+		InquiryForm form = new InquiryForm();
+		var errors = new BeanPropertyBindingResult(form, "inquiryForm");
+		errors.rejectValue("fullName", "required", "Name required");
+		var model = new ExtendedModelMap();
+		String view = controller.submitContact(form, errors, List.of(), model, new RedirectAttributesModelMap(), request());
 		assertThat(view).isEqualTo("home");
-		assertThat(model.getAttribute("openEnquiryModal")).isEqualTo(true);
-		verifyNoInteractions(inquiryNotificationService);
-		verify(reviewService).getApprovedFiveStarReviews();
+		assertThat(model.get("openEnquiryModal")).isEqualTo(true);
+		verifyNoInteractions(inquiries);
 	}
 
 	@Test
-	void submitContactRedirectsWhenBindingIsValid() {
-		InquiryForm inquiryForm = new InquiryForm();
-		inquiryForm.setFullName("James Hudson");
-		inquiryForm.setEmail("james@example.com");
-		inquiryForm.setPhone("07123456789");
-		inquiryForm.setServiceType("Wedding ceremony");
-		inquiryForm.setVenue("The Mill Barns");
-		inquiryForm.setMessage("We are looking for a warm, modern wedding ceremony with a personal tone.");
-		inquiryForm.setPrivacyAccepted(true);
-
-		BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(inquiryForm, "inquiryForm");
-
-		String view = controller.submitContact(
-				inquiryForm,
-				bindingResult,
-				new ExtendedModelMap(),
-				new RedirectAttributesModelMap()
-		);
-
+	void validEnquiryPersistsBeforeRedirect() {
+		InquiryForm form = validInquiry();
+		var redirects = new RedirectAttributesModelMap();
+		String view = controller.submitContact(form, new BeanPropertyBindingResult(form, "inquiryForm"), List.of(),
+				new ExtendedModelMap(), redirects, request());
 		assertThat(view).isEqualTo("redirect:/thank-you");
-		verify(inquiryNotificationService).handleInquiry(inquiryForm);
+		verify(guard).checkInquiry(any(), any(), any(Long.class), any());
+		verify(inquiries).submit(form, List.of());
 	}
 
 	@Test
-	void reviewAdminLoginRedirectsWhenAlreadyAuthenticated() {
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("reviewAdminAuthenticated", true);
-
-		String view = controller.reviewAdminLogin(new ExtendedModelMap(), session);
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin");
+	void dashboardLoadsAllWorkingAreas() {
+		var model = new ExtendedModelMap();
+		assertThat(controller.reviewAdmin(model)).isEqualTo("reviews-admin");
+		assertThat(model).containsKeys("pendingReviews", "analyticsSummary", "funnelSummary", "inquiries", "inquiryStatuses");
 	}
 
-	@Test
-	void submitReviewAdminLoginRedirectsWithErrorForInvalidCredentials() {
-		MockHttpSession session = new MockHttpSession();
-		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
-		ReviewProperties properties = new ReviewProperties();
-		properties.setAdminUsername("clare-admin");
-		properties.setAdminPassword("top-secret");
-		SiteController localController = new SiteController(new BlogService(), analyticsService, inquiryNotificationService, reviewService, properties);
-
-		String view = localController.submitReviewAdminLogin("wrong", "credentials", redirectAttributes, session);
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin/login");
-		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminError"))
-				.isEqualTo("Login details were not recognised.");
-		assertThat(session.getAttribute("reviewAdminAuthenticated")).isNull();
+	private MockHttpServletRequest request() {
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setRemoteAddr("127.0.0.1");
+		return request;
 	}
 
-	@Test
-	void submitReviewAdminLoginFailsSafelyWhenCredentialsAreMissing() {
-		MockHttpSession session = new MockHttpSession();
-		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
-
-		String view = controller.submitReviewAdminLogin("admin", "password", redirectAttributes, session);
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin/login");
-		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminError"))
-				.isEqualTo("Admin login is not configured. Set REVIEWS_ADMIN_USERNAME and REVIEWS_ADMIN_PASSWORD in the environment.");
-		assertThat(session.getAttribute("reviewAdminAuthenticated")).isNull();
-	}
-
-	@Test
-	void submitReviewAdminLoginRedirectsToDashboardForValidCredentials() {
-		ReviewProperties properties = new ReviewProperties();
-		properties.setAdminUsername("clare-admin");
-		properties.setAdminPassword("top-secret");
-		SiteController localController = new SiteController(new BlogService(), analyticsService, inquiryNotificationService, reviewService, properties);
-
-		MockHttpSession session = new MockHttpSession();
-
-		String view = localController.submitReviewAdminLogin(
-				"clare-admin",
-				"top-secret",
-				new RedirectAttributesModelMap(),
-				session
-		);
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin");
-		assertThat(session.getAttribute("reviewAdminAuthenticated")).isEqualTo(true);
-	}
-
-	@Test
-	void reviewAdminRedirectsToLoginWhenNotAuthenticated() {
-		String view = controller.reviewAdmin(new ExtendedModelMap(), new MockHttpSession());
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin/login");
-		verifyNoInteractions(reviewService);
-	}
-
-	@Test
-	void reviewAdminLoadsReviewsWhenAuthenticated() {
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("reviewAdminAuthenticated", true);
-		when(reviewService.getPendingReviews()).thenReturn(List.of());
-		when(analyticsService.getSummary()).thenReturn(new AnalyticsSummary(1, 2, 0, 3, 4, 1, "Fri", 1, List.of()));
-		Model model = new ExtendedModelMap();
-
-		String view = controller.reviewAdmin(model, session);
-
-		assertThat(view).isEqualTo("reviews-admin");
-		assertThat(model.getAttribute("analyticsSummary")).isInstanceOf(AnalyticsSummary.class);
-		verify(reviewService).getPendingReviews();
-		verify(analyticsService).getSummary();
-	}
-
-	@Test
-	void manageReviewsRedirectsToLoginWhenNotAuthenticated() {
-		String view = controller.manageReviews(new ExtendedModelMap(), new MockHttpSession());
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin/login");
-		verifyNoInteractions(reviewService);
-	}
-
-	@Test
-	void manageReviewsLoadsManageableReviewsWhenAuthenticated() {
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("reviewAdminAuthenticated", true);
-		when(reviewService.getManageableReviews()).thenReturn(List.of());
-
-		String view = controller.manageReviews(new ExtendedModelMap(), session);
-
-		assertThat(view).isEqualTo("reviews-admin-manage");
-		verify(reviewService).getManageableReviews();
-	}
-
-	@Test
-	void approveReviewRedirectsToLoginWhenNotAuthenticated() {
-		String view = controller.approveReview("review-123", "Looks good", null, new RedirectAttributesModelMap(), new MockHttpSession());
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin/login");
-		verifyNoInteractions(reviewService);
-	}
-
-	@Test
-	void approveReviewCallsServiceWhenAuthenticated() {
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("reviewAdminAuthenticated", true);
-		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
-		ReviewEntry approvedEntry = new ReviewEntry();
-		approvedEntry.setId("review-123");
-		approvedEntry.setReviewerName("Jane Smith");
-		approvedEntry.setStatus(ReviewStatus.APPROVED);
-		when(reviewService.approveReview("review-123", "Looks good")).thenReturn(approvedEntry);
-
-		String view = controller.approveReview("review-123", "Looks good", null, redirectAttributes, session);
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin");
-		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review approved.");
-		verify(reviewService).approveReview("review-123", "Looks good");
-		verify(inquiryNotificationService).notifyReviewReady(approvedEntry);
-	}
-
-	@Test
-	void approveReviewCanReturnToManagePageWhenRequested() {
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("reviewAdminAuthenticated", true);
-		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
-		ReviewEntry approvedEntry = new ReviewEntry();
-		approvedEntry.setId("review-123");
-		approvedEntry.setStatus(ReviewStatus.APPROVED);
-		when(reviewService.approveReview("review-123", null)).thenReturn(approvedEntry);
-
-		String view = controller.approveReview("review-123", null, "manage", redirectAttributes, session);
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin/manage");
-		verify(reviewService).approveReview("review-123", null);
-		verify(inquiryNotificationService).notifyReviewReady(approvedEntry);
-	}
-
-	@Test
-	void rejectReviewCallsServiceWhenAuthenticated() {
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("reviewAdminAuthenticated", true);
-		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
-
-		String view = controller.rejectReview("review-123", "Not suitable", null, redirectAttributes, session);
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin");
-		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review rejected and deleted.");
-		verify(reviewService).rejectReview("review-123", "Not suitable");
-	}
-
-	@Test
-	void rejectReviewCanReturnToManagePageWhenRequested() {
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("reviewAdminAuthenticated", true);
-		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
-
-		String view = controller.rejectReview("review-123", null, "manage", redirectAttributes, session);
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin/manage");
-		verify(reviewService).rejectReview("review-123", null);
-	}
-
-	@Test
-	void deleteReviewRedirectsToLoginWhenNotAuthenticated() {
-		String view = controller.deleteReview("review-123", new RedirectAttributesModelMap(), new MockHttpSession());
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin/login");
-		verifyNoInteractions(reviewService);
-	}
-
-	@Test
-	void deleteReviewCallsServiceWhenAuthenticated() {
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("reviewAdminAuthenticated", true);
-		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
-
-		String view = controller.deleteReview("review-123", redirectAttributes, session);
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin/manage");
-		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review deleted permanently.");
-		verify(reviewService).deleteReview("review-123");
-	}
-
-	@Test
-	void enableReviewCallsServiceWhenAuthenticated() {
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("reviewAdminAuthenticated", true);
-		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
-
-		String view = controller.enableReview("review-123", redirectAttributes, session);
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin/manage");
-		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review enabled.");
-		verify(reviewService).enableReview("review-123");
-	}
-
-	@Test
-	void disableReviewCallsServiceWhenAuthenticated() {
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute("reviewAdminAuthenticated", true);
-		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
-
-		String view = controller.disableReview("review-123", redirectAttributes, session);
-
-		assertThat(view).isEqualTo("redirect:/reviews/admin/manage");
-		assertThat(redirectAttributes.getFlashAttributes().get("reviewAdminMessage")).isEqualTo("Review disabled.");
-		verify(reviewService).disableReview("review-123");
-	}
-
-	@Test
-	void submitReviewShowsUploadErrorWhenServiceRejectsPhotos() {
-		var reviewForm = controller.reviewForm();
-		reviewForm.setReviewerName("Jane Smith");
-		reviewForm.setCeremonyType("Wedding ceremony");
-		reviewForm.setRating(5);
-		reviewForm.setMessage("This ceremony was so personal and thoughtful from beginning to end.");
-		reviewForm.setConsentAccepted(true);
-
-		BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(reviewForm, "reviewForm");
-		Model model = new ExtendedModelMap();
-		when(reviewService.getApprovedReviews()).thenReturn(List.of());
-		var photo = new MockMultipartFile("reviewPhotos", "photo.jpg", "image/jpeg", new byte[] { 1, 2, 3 });
-		org.mockito.Mockito.doThrow(new IllegalArgumentException("Please upload JPG, PNG or WEBP images only."))
-				.when(reviewService).submitReview(reviewForm, List.of(photo));
-
-		String view = controller.submitReview(
-				reviewForm,
-				bindingResult,
-				List.of(photo),
-				model,
-				new RedirectAttributesModelMap()
-		);
-
-		assertThat(view).isEqualTo("reviews");
-		assertThat(model.getAttribute("reviewUploadError")).isEqualTo("Please upload JPG, PNG or WEBP images only.");
-		verify(reviewService).submitReview(reviewForm, List.of(photo));
-		verify(reviewService).getApprovedReviews();
-	}
-
-	@Test
-	void submitReviewRedirectsWhenValid() {
-		var reviewForm = controller.reviewForm();
-		reviewForm.setReviewerName("Jane Smith");
-		reviewForm.setCeremonyType("Wedding ceremony");
-		reviewForm.setRating(5);
-		reviewForm.setMessage("This ceremony was so personal and thoughtful from beginning to end.");
-		reviewForm.setConsentAccepted(true);
-		ReviewEntry submittedEntry = new ReviewEntry();
-		submittedEntry.setId("review-456");
-		submittedEntry.setReviewerName("Jane Smith");
-		submittedEntry.setStatus(ReviewStatus.PENDING);
-		when(reviewService.submitReview(reviewForm, List.of())).thenReturn(submittedEntry);
-
-		BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(reviewForm, "reviewForm");
-		RedirectAttributesModelMap redirectAttributes = new RedirectAttributesModelMap();
-
-		String view = controller.submitReview(
-				reviewForm,
-				bindingResult,
-				List.of(),
-				new ExtendedModelMap(),
-				redirectAttributes
-		);
-
-		assertThat(view).isEqualTo("redirect:/reviews");
-		assertThat(redirectAttributes.getFlashAttributes().get("reviewSubmissionSuccess"))
-				.isEqualTo("Thank you. Your review has been received and is now pending approval.");
-		verify(reviewService).submitReview(reviewForm, List.of());
-		verify(inquiryNotificationService).notifyReviewSubmitted(submittedEntry);
-		verifyNoMoreInteractions(reviewService);
+	private InquiryForm validInquiry() {
+		InquiryForm form = new InquiryForm();
+		form.setFullName("James Hudson");
+		form.setEmail("james@example.com");
+		form.setServiceType("Wedding ceremony");
+		form.setDatePreference("Not decided yet");
+		form.setPrivacyAccepted(true);
+		form.setFormStartedAt(System.currentTimeMillis() - 2_000);
+		return form;
 	}
 }

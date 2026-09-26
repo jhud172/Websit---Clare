@@ -1,5 +1,7 @@
 HELP.md
 target/
+target-*/
+backups/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -41,3 +43,7 @@ npm-debug.log*
 
 ### Local enquiry fallback records ###
 data/
+
+### Local browser verification artifacts ###
+output/playwright/
+.playwright-cli/
