@@ -2104,7 +2104,7 @@
 .wedding-evening-offer-price {
     margin: 0;
     color: #f2dda1;
-    font-family: var(--font-serif);
+    font-family: "Cormorant Garamond", Georgia, serif;
     font-size: clamp(2.5rem, 4vw, 3.5rem);
     line-height: 1.15;
 }
@@ -2113,7 +2113,7 @@
     display: block;
     margin-bottom: 0.75rem;
     color: rgba(247, 247, 244, 0.82);
-    font-family: var(--font-sans);
+    font-family: "Manrope", sans-serif;
     font-size: 1rem;
     line-height: 1.5;
 }
