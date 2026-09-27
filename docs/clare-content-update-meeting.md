@@ -38,14 +38,14 @@ Sources supplied by Clare: `Wedding Ceremony Packages draft.docx`, the North Eas
 
 ## Confirmed public prices now implemented
 
-Wedding packages are £450, £550 and £650, as corrected by James. Other ceremony packages and the standalone evening handfasting service reflect Clare's £100 reduction. Vow renewals use her explicit prices of £495 for Forever Yours and £595 for Forever & Always; concise venue farewells are £250–£300. Optional extras and travel charges remain unchanged. These prices include the subsequent correction to keep the three wedding package prices at £450, £550 and £650.
+Wedding packages are £450, £550 and £650, as corrected by James. Evening handfasting is from £400, as corrected by James. Other ceremony packages reflect Clare's revised prices. Vow renewals use her explicit prices of £495 for Forever Yours and £595 for Forever & Always; concise venue farewells are £250–£300. Optional extras and travel charges remain unchanged. These prices include the subsequent correction to keep the three wedding package prices at £450, £550 and £650.
 
 | Service | Package | Price |
 | --- | --- | ---: |
 | Wedding | Essential Ceremony | £450 |
 | Wedding | Signature Ceremony | £550 |
 | Wedding | Complete Ceremony Experience | £650 |
-| Wedding | Evening handfasting ceremony | From £300 |
+| Wedding | Evening handfasting ceremony | From £400 |
 | Naming Ceremony | Little Star | £295 |
 | Naming Ceremony | Grow With Love | £445 |
 | Vow Renewal | Forever Yours | £495 |

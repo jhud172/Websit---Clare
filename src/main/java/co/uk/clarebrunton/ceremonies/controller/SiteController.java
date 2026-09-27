@@ -80,7 +80,7 @@ public class SiteController {
 			),
 			faq(
 					"How much does a ceremony cost?",
-					"Wedding packages are £450, £550 and £650, with evening handfasting ceremonies from £300. Naming Ceremony packages are £295 and £445, Vow Renewal packages are £495 and £595, and Celebration of Life packages are £295 and £495. Concise venue farewells are typically £250 to £300. Optional extras and additional travel may affect the final total."
+					"Wedding packages are £450, £550 and £650, with evening handfasting ceremonies from £400. Naming Ceremony packages are £295 and £445, Vow Renewal packages are £495 and £595, and Celebration of Life packages are £295 and £495. Concise venue farewells are typically £250 to £300. Optional extras and additional travel may affect the final total."
 			),
 			faq(
 					"How do I enquire about availability?",
@@ -99,7 +99,7 @@ public class SiteController {
 			),
 			faq(
 					"How much does a celebrant cost?",
-					"Clare's wedding packages are £450, £550 and £650, with evening handfasting ceremonies from £300. Naming Ceremony packages start at £295, Vow Renewal packages at £495 and Celebration of Life packages at £295. The service pages show each package, its inclusions and optional extras, and Clare will confirm the final total for your plans before booking."
+					"Clare's wedding packages are £450, £550 and £650, with evening handfasting ceremonies from £400. Naming Ceremony packages start at £295, Vow Renewal packages at £495 and Celebration of Life packages at £295. The service pages show each package, its inclusions and optional extras, and Clare will confirm the final total for your plans before booking."
 			),
 			faq(
 					"How far in advance should I book a celebrant?",
