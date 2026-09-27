@@ -7826,6 +7826,57 @@ main::before {
     text-align: left;
 }
 
+.wedding-evening-offer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    align-items: center;
+    gap: clamp(1.75rem, 4vw, 4rem);
+    margin-top: clamp(2rem, 4vw, 3.5rem);
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border: 1px solid rgba(214, 199, 145, 0.3);
+    border-radius: 30px;
+    background:
+        radial-gradient(ellipse at top right, rgba(214, 199, 145, 0.12), transparent 65%),
+        linear-gradient(135deg, rgba(16, 62, 57, 0.65), rgba(18, 24, 25, 0.96));
+}
+
+.wedding-evening-offer h3 {
+    max-width: 22ch;
+    margin-bottom: 1rem;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    line-height: 1.12;
+}
+
+.wedding-evening-offer p:not(.eyebrow):not(.wedding-evening-offer-price) {
+    max-width: 55ch;
+    margin-bottom: 0;
+    color: rgba(247, 247, 244, 0.82);
+    line-height: 1.65;
+}
+
+.wedding-evening-offer-action {
+    min-width: 0;
+    padding-left: clamp(1rem, 2vw, 2rem);
+    border-left: 2px solid rgba(214, 199, 145, 0.4);
+}
+
+.wedding-evening-offer-price {
+    margin: 0;
+    color: #f2dda1;
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    line-height: 1.15;
+}
+
+.wedding-evening-offer-price span {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: rgba(247, 247, 244, 0.82);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
 .package-extras-block {
     display: grid;
     grid-template-columns: minmax(15rem, 0.42fr) minmax(0, 1fr);

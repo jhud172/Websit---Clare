@@ -38,11 +38,14 @@ Sources supplied by Clare: `Wedding Ceremony Packages draft.docx`, the North Eas
 
 ## Confirmed public prices now implemented
 
+Wedding prices updated on 27 September 2026 from Clare's WhatsApp instructions: £450, £550 and £650 across the three packages, plus a separate evening handfasting offer from £400. The £75 handfasting ritual add-on to an existing ceremony remains unchanged.
+
 | Service | Package | Price |
 | --- | --- | ---: |
-| Wedding | Essential Ceremony | £725 |
-| Wedding | Signature Ceremony | £925 |
-| Wedding | Complete Ceremony Experience | £1,195 |
+| Wedding | Essential Ceremony | £450 |
+| Wedding | Signature Ceremony | £550 |
+| Wedding | Complete Ceremony Experience | £650 |
+| Wedding | Evening handfasting ceremony | From £400 |
 | Naming Ceremony | Little Star | £395 |
 | Naming Ceremony | Grow With Love | £545 |
 | Vow Renewal | Forever Yours | £695 |

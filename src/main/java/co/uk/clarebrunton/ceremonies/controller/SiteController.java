@@ -80,7 +80,7 @@ public class SiteController {
 			),
 			faq(
 					"How much does a ceremony cost?",
-					"Wedding packages are £725, £925 and £1,195. Naming Ceremony packages are £395 and £545, Vow Renewal packages are £695 and £895, and Celebration of Life packages are £395 and £595. Concise venue farewells are typically £275 to £350. Optional extras and additional travel may affect the final total."
+					"Wedding packages are £450, £550 and £650, with evening handfasting ceremonies from £400. Naming Ceremony packages are £395 and £545, Vow Renewal packages are £695 and £895, and Celebration of Life packages are £395 and £595. Concise venue farewells are typically £275 to £350. Optional extras and additional travel may affect the final total."
 			),
 			faq(
 					"How do I enquire about availability?",
@@ -99,7 +99,7 @@ public class SiteController {
 			),
 			faq(
 					"How much does a celebrant cost?",
-					"Clare's current packages range from £395 for a Naming Ceremony to £1,195 for the Complete Ceremony Experience. The service pages show each package, its inclusions and optional extras, and Clare will confirm the final total for your plans before booking."
+					"Clare's wedding packages are £450, £550 and £650, with evening handfasting ceremonies from £400. Naming Ceremony packages start at £395, Vow Renewal packages at £695 and Celebration of Life packages at £395. The service pages show each package, its inclusions and optional extras, and Clare will confirm the final total for your plans before booking."
 			),
 			faq(
 					"How far in advance should I book a celebrant?",
@@ -191,7 +191,7 @@ public class SiteController {
 			),
 			faq(
 					"How much does a wedding celebrant cost in the UK?",
-					"Clare's Wedding Ceremony packages are £725 for Essential, £925 for Signature and £1,195 for the Complete Ceremony Experience. Optional extras and travel beyond the included mileage are priced separately."
+					"Clare's Wedding Ceremony packages are £450 for Essential, £550 for Signature and £650 for the Complete Ceremony Experience. Optional extras and travel beyond the included mileage are priced separately."
 			),
 			faq(
 					"Is a celebrant wedding legally binding?",
