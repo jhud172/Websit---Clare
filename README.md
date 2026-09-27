@@ -216,7 +216,7 @@ Before launch, Clare should still sign off:
 - whether prices should be shown as fixed or “from” prices, plus their effective date
 - deposits, payment timing, cancellation and rescheduling terms
 - the exact mileage calculation and any final wording around travel
-- the preferred public label for the concise £275–£350 farewell option
+- the preferred public label for the concise £250–£300 farewell option
 - an official North East Wedding Network profile link and any badge-usage rules
 - any final social profile links
 

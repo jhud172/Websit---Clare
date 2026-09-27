@@ -39,7 +39,7 @@ class AnalyticsServiceTest {
 
 	@Test
 	void storesOnlyAllowListedFunnelEvents() {
-		service.recordFunnelEvent("ENQUIRY_OPENED", "/weddings", "Wedding ceremony", "Signature — £550");
+		service.recordFunnelEvent("ENQUIRY_OPENED", "/weddings", "Wedding ceremony", "Signature — £450");
 		assertThat(service.getFunnelSummary().get("ENQUIRY_OPENED")).isEqualTo(1);
 		assertThat(funnelEvents.findAll()).singleElement().satisfies(event -> {
 			assertThat(event.getPagePath()).isEqualTo("/weddings");

@@ -13,10 +13,10 @@ Sources supplied by Clare: `Wedding Ceremony Packages draft.docx`, the North Eas
 
 - Replaced every wedding-package placeholder with Clare's supplied names, descriptions, inclusions, ideal-client wording and prices.
 - Added all twelve supplied wedding optional extras and prices in a responsive, accessible list.
-- Added full Naming Ceremony package sections for **Little Star (£395)** and **Grow With Love (£545)**.
-- Added full Vow Renewal package sections for **Forever Yours (£695)** and **Forever & Always (£895)**.
-- Added the two supplied Celebration of Life packages: **Gentle Farewell (£395)** and **Cherished Memories (£595)**.
-- Added the supplied concise venue-ceremony guide price of **£275–£350** and the extended Celebration of Life range of **£395–£595**.
+- Added full Naming Ceremony package sections for **Little Star (£295)** and **Grow With Love (£445)**.
+- Added full Vow Renewal package sections for **Forever Yours (£495)** and **Forever & Always (£595)**.
+- Added the two supplied Celebration of Life packages: **Gentle Farewell (£295)** and **Cherished Memories (£495)**.
+- Added the supplied concise venue-ceremony guide price of **£250–£300** and the extended Celebration of Life range of **£295–£495**.
 - Added all eleven shared ceremony extras and prices supplied for Naming Ceremonies and Vow Renewals.
 - Replaced the remaining public price-confirmation messages in the service FAQs with the confirmed package figures.
 - Added the North East Wedding Network badge beside the wedding-package introduction and in the shared footer, with intrinsic dimensions and responsive sizing to prevent layout shift.
@@ -38,21 +38,21 @@ Sources supplied by Clare: `Wedding Ceremony Packages draft.docx`, the North Eas
 
 ## Confirmed public prices now implemented
 
-Wedding prices updated on 27 September 2026 from Clare's WhatsApp instructions: £450, £550 and £650 across the three packages, plus a separate evening handfasting offer from £400. The £75 handfasting ritual add-on to an existing ceremony remains unchanged.
+Prices updated from Clare's latest WhatsApp instructions: ceremony packages and the standalone evening handfasting service are £100 cheaper. Vow renewals use her explicit prices of £495 for Forever Yours and £595 for Forever & Always; concise venue farewells are £250–£300. Optional extras and travel charges remain unchanged. These prices supersede the earlier wedding-only update.
 
 | Service | Package | Price |
 | --- | --- | ---: |
-| Wedding | Essential Ceremony | £450 |
-| Wedding | Signature Ceremony | £550 |
-| Wedding | Complete Ceremony Experience | £650 |
-| Wedding | Evening handfasting ceremony | From £400 |
-| Naming Ceremony | Little Star | £395 |
-| Naming Ceremony | Grow With Love | £545 |
-| Vow Renewal | Forever Yours | £695 |
-| Vow Renewal | Forever & Always | £895 |
-| Celebration of Life | Gentle Farewell | £395 |
-| Celebration of Life | Cherished Memories | £595 |
-| Concise venue farewell | Typical guide range | £275–£350 |
+| Wedding | Essential Ceremony | £350 |
+| Wedding | Signature Ceremony | £450 |
+| Wedding | Complete Ceremony Experience | £550 |
+| Wedding | Evening handfasting ceremony | From £300 |
+| Naming Ceremony | Little Star | £295 |
+| Naming Ceremony | Grow With Love | £445 |
+| Vow Renewal | Forever Yours | £495 |
+| Vow Renewal | Forever & Always | £595 |
+| Celebration of Life | Gentle Farewell | £295 |
+| Celebration of Life | Cherished Memories | £495 |
+| Concise venue farewell | Typical guide range | £250–£300 |
 
 Additional travel is shown as 50p per mile where applicable. Each supplied optional extra is listed on the relevant service page.
 
@@ -91,7 +91,7 @@ These points do not block the website update, but they should be confirmed befor
 
 ### Celebration of Life wording
 
-11. Is “concise venue ceremony” the preferred public label for the £275–£350 option, or would Clare like a different name that still follows the site's Celebration of Life terminology?
+11. Is “concise venue ceremony” the preferred public label for the £250–£300 option, or would Clare like a different name that still follows the site's Celebration of Life terminology?
 12. Is “appointed ceremony professional” acceptable where the supplied wording referred to the recognised professional title, or may that title appear as an exception?
 
 ### Review and membership evidence
